@@ -426,6 +426,8 @@ const I18N = {
       thesis: {
         title: "Survival skills in VR",
         kicker: "Bachelor's thesis · USTP · 2024",
+        semester: "6th semester · 2024",
+        growth: "My first real user study: VR against a printed guide, with learners aged 9 to 70.",
         highlight: "User study with participants aged 9 to 70",
         summary: "Can a playful VR forest teach basic survival skills, and teach them as well as a printed guide? A Unity VR game for Meta Quest, tested against a paper guide.",
         duration: "Bachelor's thesis",
@@ -723,6 +725,8 @@ const I18N = {
       thesis: {
         title: "Überleben lernen in VR",
         kicker: "Bachelorarbeit · USTP · 2024",
+        semester: "6. Semester · 2024",
+        growth: "Meine erste echte Nutzerstudie: VR gegen einen gedruckten Leitfaden, mit Lernenden von 9 bis 70.",
         highlight: "Nutzerstudie mit Teilnehmenden von 9 bis 70",
         summary: "Kann ein spielerischer VR-Wald grundlegende Survival-Skills vermitteln, und zwar so gut wie ein gedruckter Leitfaden? Ein Unity-VR-Spiel für die Meta Quest im Vergleich mit einem Papier-Guide.",
         duration: "Bachelorarbeit",
@@ -960,7 +964,7 @@ const JOURNEY = [
   { divider: "tl.bachelor" },
   { id: "nott" }, { id: "nftrade" }, { id: "memeit" }, { id: "ocean" },
   { intern: true, when: "tl.s5" },
-  { id: "hue" },
+  { id: "hue" }, { id: "thesis" },
   { divider: "tl.master" },
   { id: "cthulhu" }, { id: "sounds" }, { id: "aroom" }, { id: "historia", today: true }
 ];
