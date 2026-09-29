@@ -687,32 +687,22 @@ html:has(.case[open]) { overflow: hidden; }
 .stat__icon img { width: 20px; height: 20px; }
 .stat__name { font-weight: 700; font-size: 15px; line-height: 1.2; min-width: 0; }
 .stat__name small { display: block; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: .06em; color: var(--ink-soft); }
-/* Minecraft-style XP bar: level number with a black outline above a segmented lime bar */
-.xp { display: grid; justify-items: center; gap: 1px; width: 118px; }
-.xp__lvl {
-  font: 800 16px/1 "Consolas", "Courier New", ui-monospace, monospace; color: #80ff20;
-  text-shadow: 2px 0 #000, -2px 0 #000, 0 2px #000, 0 -2px #000, 2px 2px #000; /* pixel-ish outline */
-}
-.xp__bar { position: relative; width: 100%; height: 11px; background: #1b1b1b; border: 2px solid #000; }
-.xp__fill {
-  position: absolute; inset: 0 auto 0 0; width: calc(var(--p) * 100%);
-  background: linear-gradient(#c8ff7a 0 25%, #80ff20 25% 70%, #4f9e12 70%); /* light top edge, darker bottom */
-}
-/* segment ticks: 5 sections, one per level */
-.xp__bar::after {
-  content: ""; position: absolute; inset: 0;
-  background: repeating-linear-gradient(90deg, transparent 0 calc(20% - 2px), rgba(0, 0, 0, .7) calc(20% - 2px) 20%);
-}
+/* diamond pips, filled ones glow turquoise */
+.pips { display: flex; gap: 7px; }
+.pip { display: block; width: 11px; height: 11px; rotate: 45deg; border-radius: 2px; border: 2px solid var(--line); }
+.pip.is-on { background: var(--turq); border-color: var(--turq); box-shadow: 0 0 8px color-mix(in srgb, var(--turq) 55%, transparent); }
+.stack.is-in .pips:not(.pips--mini) .pip.is-on { animation: pip-in .35s cubic-bezier(.3, 1.6, .5, 1) backwards; animation-delay: calc(var(--i) * 90ms + .2s); }
+@keyframes pip-in { from { scale: 0; } }
+/* small diamonds in the legend */
+.pips--mini { gap: 4px; }
+.pips--mini .pip { width: 7px; height: 7px; border-width: 1px; box-shadow: none; }
 /* legend: what the numbers mean */
 .sheet__legend {
   display: flex; flex-wrap: wrap; align-items: center; gap: 6px 16px; margin: 18px 0 0; padding-top: 14px;
   border-top: 1px dashed var(--line); font-size: 13px; font-weight: 700; color: var(--ink-soft);
 }
 .sheet__legend span { display: inline-flex; align-items: center; gap: 6px; }
-.sheet__legend .xp__lvl { font-size: 14px; }
 .sheet__legend em { font-style: normal; color: var(--turq-text); }
-.stack.is-in .xp__fill { animation: xp-fill 1.1s cubic-bezier(.3, .7, .3, 1) .25s backwards; }
-@keyframes xp-fill { from { width: 0; } }
 @media (max-width: 860px) { .sheet__cols { grid-template-columns: 1fr; } .sheet__note { margin-left: 0; width: 100%; } }
 .flip__name { font: 700 28px var(--serif); }
 .flip__hint { font-size: 12px; font-weight: 700; color: var(--ink-soft); text-transform: uppercase; letter-spacing: .08em; }
