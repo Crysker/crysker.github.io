@@ -64,7 +64,7 @@ const PROJECTS = [
     id: "ocean",
     img: IMG + "ocean.jpg",
     video: "yR7QZmcF6Uk",
-    tags: ["Unity", "C#", "VR", "A* Pathfinding", "3D Modelling", "Animation"],
+    tags: ["Unity", "C#", "Meta Quest", "Blender", "A* Pathfinding", "NavMesh", "Wwise", "Animation"],
     links: []
   },
   {
@@ -326,14 +326,14 @@ const I18N = {
         kicker: "VR game · Creative Code Lab 4",
         semester: "4th semester · 2023",
         growth: "My first VR game in a team – 3D modelling, animation and world design.",
-        highlight: "A* pathfinding sends the trash downriver – until a sea monster appears",
-        summary: "Goblin villagers keep throwing trash into the river. Collect it in VR before it reaches the ocean – let too much through and a sea monster rises that you have to fight.",
+        highlight: "Goblins litter, A* carries the trash to the sea – and a mutated shark wants revenge",
+        summary: "Goblins and ogres keep dumping straws, bottles and nuclear waste into the rivers. Fish it out in VR before it reaches the ocean – let too much through and Sigurd the Tainted, a shark mutated by the waste, comes for you. Luckily you have watermelon swords.",
         duration: "2 weeks",
-        role: "3D modelling and animation of the goblins and their houses, Unity setup, world design, UI and UI logic",
-        challenge: "Turn river pollution into a game loop where small careless acts pile up into a threat you can't ignore.",
-        approach: "The trash finds its way along the river into the ocean using A* pathfinding. The more of it gets through, the closer the sea monster gets to spawning – so collecting turns into a race before it becomes a boss fight.",
-        result: "A playable VR game, built in two weeks as team LSW-Studios.",
-        learned: "[One takeaway.]"
+        role: "3D modelling (goblins, huts, straw, bottle, nuclear waste barrel), goblin animation, Unity setup, world design, UI and UI logic",
+        challenge: "Make ocean pollution something you feel, not something you read about: small careless acts pile up until they turn into a threat you can't ignore.",
+        approach: "Five scenes, from a tutorial room to the beach, a death cell and a victory party. Goblins (fast, little trash) and ogres (slow, lots of trash) walk from their huts to the rivers via NavMesh; the trash then finds its way to the ocean with A* pathfinding. You collect it by hand into a bucket – until the boss fight starts. Sound and an in-game announcer with Wwise.",
+        result: "A playable Meta Quest game built in two weeks by our team of three (LSW-Studios), with a full boss fight, animations and an easter egg.",
+        learned: "A silly premise makes a serious topic stick – people remember the watermelon swords and the message."
       },
       deepspace: {
         title: "Deep Space Cleaner Corp",
@@ -598,14 +598,14 @@ const I18N = {
         kicker: "VR-Spiel · Creative Code Lab 4",
         semester: "4. Semester · 2023",
         growth: "Mein erstes VR-Spiel im Team – 3D-Modellierung, Animation und World Design.",
-        highlight: "A*-Pathfinding treibt den Müll flussabwärts – bis ein Seemonster auftaucht",
-        summary: "Goblin-Dorfbewohner werfen ständig Müll in den Fluss. Sammle ihn in VR ein, bevor er das Meer erreicht – kommt zu viel durch, taucht ein Seemonster auf, gegen das du kämpfen musst.",
+        highlight: "Goblins verschmutzen, A* trägt den Müll ins Meer – und ein mutierter Hai will Rache",
+        summary: "Goblins und Oger werfen ständig Strohhalme, Flaschen und Atommüll in die Flüsse. Fisch ihn in VR heraus, bevor er das Meer erreicht – kommt zu viel durch, holt dich Sigurd der Verseuchte, ein vom Müll mutierter Hai. Zum Glück gibt es Wassermelonen-Schwerter.",
         duration: "2 Wochen",
-        role: "3D-Modellierung und Animation der Goblins und ihrer Häuser, Unity-Setup, World Design, UI und UI-Logik",
-        challenge: "Flussverschmutzung als Spielschleife: Kleine achtlose Handlungen summieren sich zu einer Bedrohung, die man nicht mehr ignorieren kann.",
-        approach: "Der Müll findet per A*-Pathfinding seinen Weg den Fluss hinunter ins Meer. Je mehr durchkommt, desto näher rückt das Seemonster – aus dem Sammeln wird ein Wettlauf, bevor es zum Bosskampf kommt.",
-        result: "Ein spielbares VR-Spiel, in zwei Wochen als Team LSW-Studios entwickelt.",
-        learned: "[Eine Erkenntnis.]"
+        role: "3D-Modellierung (Goblins, Hütten, Strohhalm, Flasche, Atommüllfass), Goblin-Animation, Unity-Setup, World Design, UI und UI-Logik",
+        challenge: "Meeresverschmutzung spürbar machen statt nur darüber zu lesen: Kleine achtlose Handlungen summieren sich zu einer Bedrohung, die man nicht mehr ignorieren kann.",
+        approach: "Fünf Szenen, vom Tutorial-Raum über den Strand bis zur Todeszelle und der Siegesfeier. Goblins (schnell, wenig Müll) und Oger (langsam, viel Müll) laufen per NavMesh von ihren Hütten zu den Flüssen; der Müll findet dann per A*-Pathfinding seinen Weg ins Meer. Man sammelt ihn per Hand in einen Eimer – bis der Bosskampf beginnt. Sound und ein Ansager im Spiel mit Wwise.",
+        result: "Ein spielbares Meta-Quest-Spiel, in zwei Wochen von unserem Dreierteam (LSW-Studios) gebaut, mit komplettem Bosskampf, Animationen und einem Easter Egg.",
+        learned: "Eine alberne Prämisse lässt ein ernstes Thema hängen bleiben – man erinnert sich an die Wassermelonen-Schwerter und an die Botschaft."
       },
       deepspace: {
         title: "Deep Space Cleaner Corp",
