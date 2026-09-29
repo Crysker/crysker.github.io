@@ -9,7 +9,7 @@ const IMG = "assets/img/";
 
 /* Put your CV into assets/ and set its path here, e.g. "assets/Serkan-Soenmez-CV.pdf".
    All "Download CV" buttons stay hidden while this is empty. */
-const CV_URL = "assets/Serkan-Soenmez-CV-DE.pdf";
+const CV_URL = "assets/Serkan-Soenmez-CV-DE.pdf?v=2"; // bump ?v= when you replace the file
 
 const PROJECTS = [
   {
