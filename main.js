@@ -402,7 +402,8 @@ const filled = (v) => Array.isArray(v) ? v.length > 0 : Boolean(v) && !String(v)
 function applyLang() {
   document.documentElement.lang = lang;
   document.querySelectorAll("[data-i18n]").forEach((el) => {
-    el.innerHTML = t(el.dataset.i18n);
+    const text = I18N[lang][el.dataset.i18n] ?? I18N.en[el.dataset.i18n];
+    if (text != null) el.innerHTML = text; // keep the HTML text rather than showing a raw key
   });
   document.getElementById("heroStatus").hidden = !filled(t("hero.status"));
   document.getElementById("langToggle").setAttribute(
