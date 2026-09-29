@@ -487,8 +487,12 @@ html:has(.case[open]) { overflow: hidden; }
 .case__media .ph { aspect-ratio: 16/9; }
 
 /* Extra images in a case study */
-.case__gallery { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin-top: 8px; }
-.case__gallery img { width: 100%; aspect-ratio: 16/10; object-fit: cover; border-radius: 16px; }
+/* images keep their own shape – charts and tables must not be cropped */
+.case__gallery { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin-top: 8px; align-items: start; }
+.case__gallery img, .case__gallery video {
+  width: 100%; height: auto; border-radius: 16px; background: var(--surface-2); border: 1px solid var(--line);
+}
+.case__gallery video { max-height: 520px; object-fit: contain; background: #111; }
 
 /* "Where I started" – early semesters as a timeline that ends with today */
 .early { margin-top: 64px; }

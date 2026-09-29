@@ -86,6 +86,8 @@ const PROJECTS = [
   {
     id: "nott",
     early: true,
+    img: IMG + "nott/level1.png",
+    gallery: [IMG + "nott/boss.webp", IMG + "nott/level2.png", IMG + "nott/win.webp", IMG + "nott/architecture.png"],
     tags: ["JavaScript", "HTML Canvas", "Photoshop", "Pixel Art"],
     links: []
   },
@@ -100,6 +102,14 @@ const PROJECTS = [
   {
     id: "memeit",
     early: true,
+    img: IMG + "memeit/mockups.webp",
+    imgPos: "top", // show the first row of screens in the crop
+    // gallery items can be images or { video, poster } (short silent screen recordings)
+    gallery: [
+      { video: IMG + "memeit/userflow.mp4", poster: IMG + "memeit/userflow-poster.jpg" },
+      IMG + "memeit/heuristic.png",
+      IMG + "memeit/sus.png"
+    ],
     tags: ["Figma", "Android Studio", "Heuristic Evaluation", "User Testing", "SUS"],
     links: []
   }
@@ -709,7 +719,7 @@ const visibleProjects = () => PROJECTS.filter((pr) => filled(I18N[lang].p[pr.id]
 
 // Project image, or a placeholder with the initials while there's no image yet
 function pic(pr, lazy = true) {
-  if (pr.img) return `<img src="${pr.img}" alt=""${lazy ? ' loading="lazy"' : ""}>`;
+  if (pr.img) return `<img src="${pr.img}" alt=""${lazy ? ' loading="lazy"' : ""}${pr.imgPos ? ` style="object-position:${pr.imgPos}"` : ""}>`;
   const title = I18N[lang].p[pr.id].title;
   const initials = title.split(/\s+/).map((w) => w[0]).join("").slice(0, 3);
   return `<span class="ph" aria-hidden="true">${esc(initials)}</span>`;
@@ -859,7 +869,9 @@ function openProject(id, { push = true } = {}) {
           ${block(ui.approach, x.approach)}
           ${block(ui.result, x.result)}
           ${block(ui.learned, x.learned)}
-          ${pr.gallery ? `<div class="case__gallery">${pr.gallery.map((src) => `<img src="${src}" alt="" loading="lazy">`).join("")}</div>` : ""}
+          ${pr.gallery ? `<div class="case__gallery">${pr.gallery.map((g) => g.video
+            ? `<video src="${g.video}" poster="${g.poster}" controls muted loop playsinline preload="none"></video>`
+            : `<img src="${g}" alt="" loading="lazy">`).join("")}</div>` : ""}
         </div>
       </div>
       ${next ? `<button type="button" class="case__nextcard" data-id="${next.id}">
