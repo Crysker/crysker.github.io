@@ -127,10 +127,10 @@ const PROJECTS = [
   {
     id: "memeit",
     early: true,
-    img: IMG + "memeit/mockups.webp",
-    imgPos: "top", // show the first row of screens in the crop
+    img: IMG + "memeit/cover.webp", // app logo on the app's dark background
     // gallery items can be images or { video, poster } (short silent screen recordings)
     gallery: [
+      IMG + "memeit/mockups.webp",
       { video: IMG + "memeit/userflow.mp4", poster: IMG + "memeit/userflow-poster.jpg" },
       IMG + "memeit/heuristic.png",
       IMG + "memeit/sus.png"
