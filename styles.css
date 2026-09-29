@@ -207,7 +207,7 @@ html[lang="de"] .lang [data-lang="de"] { background: var(--ink); color: var(--bg
 }
 .hero__lead { max-width: 34ch; margin: 32px 0 24px; font-size: 19px; color: var(--ink-soft); }
 .hero__cta { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
-.captcha { margin-top: 40px; }
+.captcha { margin-top: 56px; }
 
 /* floating shapes (pure CSS, no images) */
 .shape { position: absolute; z-index: -1; animation: float 7s ease-in-out infinite; }
@@ -287,7 +287,7 @@ html[lang="de"] .lang [data-lang="de"] { background: var(--ink); color: var(--bg
   .hero__portrait { grid-area: photo; align-self: center; justify-self: center; width: min(320px, 100%); }
   .hero__lead { grid-area: lead; margin: 4px 0 28px; }
   .hero__cta { grid-area: cta; justify-content: flex-start; }
-  .captcha { grid-area: scroll; justify-self: start; margin-top: 28px; }
+  .captcha { grid-area: scroll; justify-self: start; margin-top: 56px; } /* room for the sticker above the box */
   /* keep the shapes around the edges so they never sit behind the text */
   .shape--sphere { top: -4%; left: -9%; width: 90px; height: 90px; }
   .shape--cube { top: 4%; right: -2%; }

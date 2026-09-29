@@ -1282,12 +1282,15 @@ function updateToTop() {
 }
 addEventListener("scroll", () => { if (!scrollTick) { scrollTick = true; requestAnimationFrame(updateToTop); } }, { passive: true });
 addEventListener("resize", updateToTop);
-toTop.addEventListener("click", (e) => {
+// All "to the top" links (logo, footer, button). href="#top" alone does nothing: #top is the sticky
+// header, which the browser considers already in view.
+document.querySelectorAll('a[href="#top"]').forEach((a) => a.addEventListener("click", (e) => {
   e.preventDefault();
+  setMenu(false);
   const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
   scrollTo({ top: 0, behavior: reduce ? "auto" : "smooth" });
   document.querySelector(".nav__logo").focus({ preventScroll: true }); // keep keyboard users at the top too
-});
+}));
 
 /* ============ Highlight the menu item of the section in view ============ */
 // Sections without their own menu item count towards the closest related one
