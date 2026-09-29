@@ -331,7 +331,7 @@ const I18N = {
         duration: "2 weeks",
         role: "3D modelling (goblins, huts, straw, bottle, nuclear waste barrel), goblin animation, Unity setup, world design, UI and UI logic",
         challenge: "Make ocean pollution something you feel, not something you read about: small careless acts pile up until they turn into a threat you can't ignore.",
-        approach: "Five scenes, from a tutorial room to the beach, a death cell and a victory party. Goblins (fast, little trash) and ogres (slow, lots of trash) walk from their huts to the rivers via NavMesh; the trash then finds its way to the ocean with A* pathfinding. You collect it by hand into a bucket – until the boss fight starts. Sound and an in-game announcer with Wwise.",
+        approach: "Five scenes, from a tutorial room to the beach, a death cell and a victory party. Goblins (fast, little trash) and ogres (slow, lots of trash) walk from their huts to the rivers via NavMesh; the trash then finds its way to the ocean with A* pathfinding. You collect it by hand into a bucket – until the boss fight starts, armed with watermelon swords from the Unity Asset Store. Sound and an in-game announcer with Wwise.",
         result: "A playable Meta Quest game built in two weeks by our team of three (LSW-Studios), with a full boss fight, animations and an easter egg.",
         learned: "A silly premise makes a serious topic stick – people remember the watermelon swords and the message."
       },
@@ -603,7 +603,7 @@ const I18N = {
         duration: "2 Wochen",
         role: "3D-Modellierung (Goblins, Hütten, Strohhalm, Flasche, Atommüllfass), Goblin-Animation, Unity-Setup, World Design, UI und UI-Logik",
         challenge: "Meeresverschmutzung spürbar machen statt nur darüber zu lesen: Kleine achtlose Handlungen summieren sich zu einer Bedrohung, die man nicht mehr ignorieren kann.",
-        approach: "Fünf Szenen, vom Tutorial-Raum über den Strand bis zur Todeszelle und der Siegesfeier. Goblins (schnell, wenig Müll) und Oger (langsam, viel Müll) laufen per NavMesh von ihren Hütten zu den Flüssen; der Müll findet dann per A*-Pathfinding seinen Weg ins Meer. Man sammelt ihn per Hand in einen Eimer – bis der Bosskampf beginnt. Sound und ein Ansager im Spiel mit Wwise.",
+        approach: "Fünf Szenen, vom Tutorial-Raum über den Strand bis zur Todeszelle und der Siegesfeier. Goblins (schnell, wenig Müll) und Oger (langsam, viel Müll) laufen per NavMesh von ihren Hütten zu den Flüssen; der Müll findet dann per A*-Pathfinding seinen Weg ins Meer. Man sammelt ihn per Hand in einen Eimer – bis der Bosskampf beginnt, bewaffnet mit Wassermelonen-Schwertern aus dem Unity Asset Store. Sound und ein Ansager im Spiel mit Wwise.",
         result: "Ein spielbares Meta-Quest-Spiel, in zwei Wochen von unserem Dreierteam (LSW-Studios) gebaut, mit komplettem Bosskampf, Animationen und einem Easter Egg.",
         learned: "Eine alberne Prämisse lässt ein ernstes Thema hängen bleiben – man erinnert sich an die Wassermelonen-Schwerter und an die Botschaft."
       },
