@@ -64,6 +64,13 @@ const PROJECTS = [
     id: "ocean",
     img: IMG + "ocean.jpg",
     video: "yR7QZmcF6Uk",
+    // own models first (goblins, huts, straw, bottle, nuclear barrel), then the rest of the cast
+    gallery: [
+      { video: IMG + "ocean/goblin-walk.mp4", poster: IMG + "ocean/goblin-walk.jpg", loop: true },
+      IMG + "ocean/goblin.webp", IMG + "ocean/house.webp", IMG + "ocean/straws.webp",
+      IMG + "ocean/water_bottle.webp", IMG + "ocean/nuclear_waste.webp",
+      IMG + "ocean/ogres.webp", IMG + "ocean/shark.webp", IMG + "ocean/bucket.webp"
+    ],
     tags: ["Unity", "C#", "Meta Quest", "Blender", "A* Pathfinding", "NavMesh", "Wwise", "Animation"],
     links: []
   },
@@ -104,8 +111,9 @@ const PROJECTS = [
   {
     id: "nftrade",
     early: true,
-    img: IMG + "nftrade.jpg",
+    img: IMG + "nftrade/best-deals.webp",
     video: "xd62Et5KgWA",
+    gallery: [IMG + "nftrade/inventory.webp", IMG + "nftrade/mobile-figma.webp", IMG + "nftrade/mobile-built.webp"],
     tags: ["Figma", "Node.js", "Express", "EJS", "MySQL", "Azure"],
     links: []
   },
@@ -351,13 +359,13 @@ const I18N = {
         title: "ARoom",
         kicker: "Master project · Mobile AR",
         semester: "Master",
-        growth: "[One line: what this project added]",
-        highlight: "[One-line result]",
-        summary: "[One or two sentences about the app.]",
+        growth: "Mobile AR: scanning real rooms and decorating them virtually.",
+        highlight: "See how a picture looks on your wall – before you hang it",
+        summary: "An AR app that scans your room so you can place plants, decoration and picture frames – with your own uploaded images – and see how they would look in your space.",
         duration: "[Duration]",
         role: "[Your role]",
-        challenge: "[Idea / problem]",
-        approach: "[What you built]",
+        challenge: "Will this picture work on that wall? Deciding how decoration fits a real room is hard to imagine from a shop page.",
+        approach: "The app scans the whole room and detects walls and surfaces. You place plants, decoration or picture frames, upload your own images into the frames, then scale, rotate and recolour the frames until they fit your room.",
         result: "[What came out of it]",
         learned: "[One takeaway]"
       },
@@ -623,13 +631,13 @@ const I18N = {
         title: "ARoom",
         kicker: "Masterprojekt · Mobile AR",
         semester: "Master",
-        growth: "[Eine Zeile: was dieses Projekt dazugebracht hat]",
-        highlight: "[Ergebnis in einem Satz]",
-        summary: "[Ein, zwei Sätze zur App.]",
+        growth: "Mobile AR: echte Räume scannen und virtuell einrichten.",
+        highlight: "Sieh, wie ein Bild an deiner Wand wirkt – bevor du es aufhängst",
+        summary: "Eine AR-App, die deinen Raum scannt, damit du Pflanzen, Deko und Bilderrahmen – mit eigenen hochgeladenen Bildern – platzieren und sehen kannst, wie sie bei dir wirken.",
         duration: "[Dauer]",
         role: "[Deine Rolle]",
-        challenge: "[Idee / Problem]",
-        approach: "[Was du gebaut hast]",
+        challenge: "Passt dieses Bild an diese Wand? Wie Deko in einem echten Raum wirkt, kann man sich im Onlineshop kaum vorstellen.",
+        approach: "Die App scannt den ganzen Raum und erkennt Wände und Flächen. Man platziert Pflanzen, Deko oder Bilderrahmen, lädt eigene Bilder in die Rahmen, skaliert und dreht sie und ändert die Rahmenfarbe, bis alles zum Raum passt.",
         result: "[Was daraus wurde]",
         learned: "[Eine Erkenntnis]"
       },
@@ -945,9 +953,11 @@ function openProject(id, { push = true } = {}) {
           ${block(ui.approach, x.approach)}
           ${block(ui.result, x.result)}
           ${block(ui.learned, x.learned)}
-          ${pr.gallery ? `<div class="case__gallery">${pr.gallery.map((g) => g.video
-            ? `<video src="${g.video}" poster="${g.poster}" controls muted loop playsinline preload="none"></video>`
-            : `<img src="${g}" alt="" loading="lazy">`).join("")}</div>` : ""}
+          ${pr.gallery ? `<div class="case__gallery">${pr.gallery.map((g) => !g.video
+            ? `<img src="${g}" alt="" loading="lazy">`
+            : g.loop // short animation: plays by itself like a GIF
+              ? `<video src="${g.video}" poster="${g.poster}" autoplay muted loop playsinline preload="metadata"></video>`
+              : `<video src="${g.video}" poster="${g.poster}" controls muted loop playsinline preload="none"></video>`).join("")}</div>` : ""}
         </div>
       </div>
       ${next ? `<button type="button" class="case__nextcard" data-id="${next.id}">
