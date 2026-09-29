@@ -81,7 +81,7 @@ p { margin: 0 0 1em; }
   box-shadow: var(--shadow);
 }
 .nav__logo { font: 700 22px var(--serif); text-decoration: none; letter-spacing: -.02em; }
-.nav__logo span { color: var(--turq); }
+.nav__logo span { color: var(--turq-text); }
 .nav nav { margin-left: auto; }
 .nav__links { display: flex; gap: 4px; list-style: none; margin: 0; padding: 0; }
 .nav__links a {
@@ -490,12 +490,54 @@ html:has(.case[open]) { overflow: hidden; }
 .case__media .ph { aspect-ratio: 16/9; }
 
 /* Extra images in a case study */
-/* images keep their own shape – charts and tables must not be cropped */
-.case__gallery { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin-top: 8px; align-items: start; }
+/* uniform tiles; "contain" so charts, tables and screens are never cropped – click opens the viewer */
+.case__gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; margin-top: 8px; }
 .case__gallery img, .case__gallery video {
-  width: 100%; height: auto; border-radius: 16px; background: var(--surface-2); border: 1px solid var(--line);
+  width: 100%; aspect-ratio: 4/3; object-fit: contain; border-radius: 16px;
+  background: var(--surface-2); border: 1px solid var(--line);
 }
-.case__gallery video { max-height: 520px; object-fit: contain; background: #111; }
+.case__gallery video { background: #111; }
+.case__gallery img, .case__media > img { cursor: zoom-in; transition: transform .2s, border-color .2s; }
+.case__gallery img:hover { transform: translateY(-3px); border-color: var(--turq); }
+
+/* Image viewer */
+.lightbox {
+  width: 100%; height: 100%; max-width: none; max-height: none; margin: 0; padding: 0; border: 0;
+  background: rgba(10, 10, 16, .94); color: #fff; overflow: hidden;
+}
+.lightbox::backdrop { background: rgba(10, 10, 16, .6); }
+.lightbox[open] { animation: case-in .25s ease-out; }
+.lightbox__stage {
+  position: absolute; inset: 0 0 64px; display: grid; place-items: center; overflow: hidden;
+  touch-action: none; cursor: zoom-in;
+}
+.lightbox__stage.is-zoomed { cursor: grab; }
+.lightbox__stage.is-zoomed:active { cursor: grabbing; }
+.lightbox__stage img {
+  max-width: calc(100% - 32px); max-height: calc(100% - 32px); object-fit: contain;
+  border-radius: 8px; transform-origin: center; user-select: none; -webkit-user-drag: none; pointer-events: none;
+}
+.lightbox__bar {
+  position: absolute; left: 0; right: 0; bottom: 0; height: 64px; padding: 0 16px;
+  display: flex; align-items: center; gap: 16px; background: rgba(0, 0, 0, .4);
+}
+.lightbox__count { font-weight: 800; min-width: 48px; }
+.lightbox__hint { flex: 1; font-size: 13px; opacity: .7; }
+.lightbox__tools { display: flex; gap: 8px; }
+.lightbox__btn, .lightbox__nav {
+  display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; cursor: pointer;
+  border: 1px solid rgba(255, 255, 255, .25); background: rgba(255, 255, 255, .08); color: #fff; font: 700 20px var(--sans);
+}
+.lightbox__btn:hover, .lightbox__nav:hover { background: var(--turq); border-color: var(--turq); color: #062624; }
+.lightbox__nav { position: absolute; top: calc(50% - 32px); translate: 0 -50%; width: 52px; height: 52px; }
+.lightbox__nav--prev { left: 16px; }
+.lightbox__nav--next { right: 16px; }
+@media (max-width: 600px) {
+  .lightbox__hint { display: none; }
+  .lightbox__nav { top: auto; bottom: 10px; translate: none; width: 44px; height: 44px; }
+  .lightbox__nav--prev { left: 72px; }
+  .lightbox__nav--next { left: 124px; right: auto; }
+}
 
 /* "My journey" – a vertical timeline, one row per semester, ending with today */
 .early { margin-top: 72px; }
@@ -507,6 +549,14 @@ html:has(.case[open]) { overflow: hidden; }
   background: linear-gradient(var(--line), var(--turq));
 }
 .journey__step { position: relative; }
+/* chapter labels on the rail: Bachelor / Master */
+.journey__divider { position: relative; margin: 18px 0 2px -28px; display: flex; align-items: center; gap: 12px; }
+.journey__divider:first-child { margin-top: 0; }
+.journey__divider span {
+  position: relative; z-index: 1; padding: 6px 14px; border-radius: 999px;
+  background: var(--turq); color: #062624; font: 800 12px var(--sans); letter-spacing: .06em; text-transform: uppercase;
+}
+.journey__divider::after { content: ""; flex: 1; height: 1px; background: var(--line); }
 /* dot on the rail for every step */
 .journey__step::before {
   content: ""; position: absolute; left: -26px; top: 50%; translate: 0 -50%; width: 14px; height: 14px; border-radius: 50%;

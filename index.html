@@ -11,17 +11,17 @@
   <meta property="og:description" content="Interaction & UX/UI Designer and XR / Unity Developer from St. Pölten, Austria. Available now for XR, UX/UI and Unity/C# roles.">
   <meta property="og:image" content="https://crysker.github.io/assets/img/historia.jpg">
   <meta name="twitter:card" content="summary_large_image">
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%237c5cff'/%3E%3Ctext x='32' y='42' font-family='Georgia,serif' font-size='28' font-weight='700' text-anchor='middle' fill='%23fff'%3ES%C2%B7S%3C/text%3E%3C/svg%3E">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%237c5cff'/%3E%3Ctext x='32' y='42' font-family='Georgia,serif' font-size='28' font-weight='700' text-anchor='middle' fill='%23fff'%3ES%C3%B6%3C/text%3E%3C/svg%3E">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,700;1,9..144,600;1,9..144,700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=14">
+  <link rel="stylesheet" href="styles.css?v=17">
 </head>
 <body>
   <a class="skip" href="#main" data-i18n="skip">Skip to content</a>
 
   <header class="nav" id="top">
-    <a class="nav__logo" href="#top" aria-label="Serkan Sönmez – home">S<span>·</span>S</a>
+    <a class="nav__logo" href="#top" aria-label="Serkan Sönmez – home">Se<span>Sö</span></a>
     <button class="nav__menu" id="menuToggle" type="button" aria-expanded="false" aria-controls="navLinks">
       <span class="nav__burger" aria-hidden="true"></span><span class="sr-only" data-i18n="nav.menu">Menu</span>
     </button>
@@ -239,6 +239,22 @@
     </div>
   </dialog>
 
+  <!-- Image viewer: click a project image to see it big, zoom and pan -->
+  <dialog class="lightbox" id="lightbox" aria-label="Image viewer">
+    <div class="lightbox__stage" id="lbStage"><img id="lbImg" alt=""></div>
+    <div class="lightbox__bar">
+      <span class="lightbox__count" id="lbCount"></span>
+      <span class="lightbox__hint" id="lbHint"></span>
+      <span class="lightbox__tools">
+        <button type="button" class="lightbox__btn" id="lbOut" aria-label="Zoom out">−</button>
+        <button type="button" class="lightbox__btn" id="lbIn" aria-label="Zoom in">+</button>
+        <button type="button" class="lightbox__btn" id="lbClose" aria-label="Close">✕</button>
+      </span>
+    </div>
+    <button type="button" class="lightbox__nav lightbox__nav--prev" id="lbPrev" aria-label="Previous image">←</button>
+    <button type="button" class="lightbox__nav lightbox__nav--next" id="lbNext" aria-label="Next image">→</button>
+  </dialog>
+
   <!-- Project case study: full-screen view with its own link (#project-<id>) -->
   <dialog class="case" id="projectModal" aria-labelledby="modalTitle">
     <div class="case__bar">
@@ -249,6 +265,6 @@
   </dialog>
 
   <script src="logos.js?v=2"></script>
-  <script src="main.js?v=17"></script>
+  <script src="main.js?v=21"></script>
 </body>
 </html>

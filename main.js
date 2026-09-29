@@ -21,11 +21,18 @@ const PROJECTS = [
     featured: true,
     img: IMG + "historia.jpg",
     video: "JfwlEoEAzEo", // Gameplay Trailer (the making-of is in About)
+    gallery: [
+      { video: IMG + "historia/ingame.mp4", poster: IMG + "historia/ingame.jpg" },
+      IMG + "historia/village.webp", IMG + "historia/well.webp", IMG + "historia/street.webp",
+      IMG + "historia/well-close.webp", IMG + "historia/bakery-front.webp", IMG + "historia/bakery-inside.webp"
+    ],
     tags: ["Unity", "C#", "Meta XR SDK", "Hand Tracking", "Shared Spatial Anchors", "Meta Avatars"],
     links: [
       { key: "devpost", url: "https://devpost.com/software/hisotria-virtualis" },
       { key: "award", url: "https://eudres.eu/news/the-winners-of-the-12th-edition-of-the-interactive-digital-media-student-contest-2026" },
-      { key: "vernissage", url: "https://projektevernissage.ustp.at/B/projekteinsicht/?id=1922" }
+      { key: "vernissage", url: "https://projektevernissage.ustp.at/B/projekteinsicht/?id=1922" },
+      { key: "instagram", url: "https://www.instagram.com/historia_virtualis/" },
+      { key: "tiktok", url: "https://www.tiktok.com/@historia_virtualis" }
     ]
   },
   {
@@ -188,6 +195,7 @@ const I18N = {
     themes: { all: "All", sight: "Beyond sight", abilities: "Diverse abilities", shared: "Shared realities", jams: "Jams & hackathons" },
     "jams.t": "Game jams & hackathons", "jams.p": "A weekend, a team, one idea – where I try the wild stuff fast.",
     "tl.s5": "5th semester · 2023",
+    "tl.bachelor": "Bachelor · Creative Computing · 2021–2024", "tl.master": "Master · Interactive Technologies (AR/VR) · since 2024",
     "thesis.title": "Bachelor's thesis",
     "thesis.kicker": "BSc Creative Computing · USTP · 2024",
     "thesis.name": "Learning nature survival skills in a playful VR world",
@@ -230,6 +238,7 @@ const I18N = {
     "contact.book": "Book a 30-min call",
     "contact.copy": "Copy", "contact.copied": "Email address copied",
     toTop: "Back to top", "case.back": "All projects",
+    lb: { close: "Close", prev: "Previous image", next: "Next image", zin: "Zoom in", zout: "Zoom out", hint: "Scroll, pinch or double-click to zoom · drag to move" },
     "captcha.check": "I'm not a robot", "captcha.kicker": "Security check", "captcha.note": "psst… are you human? 👀",
     "captcha.title": "Put every shape into its slot", "captcha.hint": "Drag them – or tap a shape, then its slot.",
     "captcha.memeBottom": "Now hire a human",
@@ -261,7 +270,7 @@ const I18N = {
       challenge: "Challenge", approach: "What we built", result: "Result", learned: "What I learned",
       open: "View project", close: "Close", next: "Next project", watch: "Watch video", video: "Video", tools: "Tools & tech", when: "When",
       devpost: "Devpost", ggj: "Global Game Jam page", itch: "Play on itch.io",
-      award: "Contest winners", vernissage: "USTP Projektvernissage"
+      award: "Contest winners", vernissage: "USTP Projektvernissage", instagram: "Instagram", tiktok: "TikTok"
     },
     p: {
       historia: {
@@ -460,6 +469,7 @@ const I18N = {
     themes: { all: "Alle", sight: "Mehr als Sehen", abilities: "Diverse Fähigkeiten", shared: "Geteilte Realitäten", jams: "Jams & Hackathons" },
     "jams.t": "Game Jams & Hackathons", "jams.p": "Ein Wochenende, ein Team, eine Idee – hier probiere ich die verrückten Sachen schnell aus.",
     "tl.s5": "5. Semester · 2023",
+    "tl.bachelor": "Bachelor · Creative Computing · 2021–2024", "tl.master": "Master · Interactive Technologies (AR/VR) · seit 2024",
     "thesis.title": "Bachelorarbeit",
     "thesis.kicker": "BSc Creative Computing · USTP · 2024",
     "thesis.name": "Überlebenstechniken in der Natur spielerisch in VR lernen",
@@ -502,6 +512,7 @@ const I18N = {
     "contact.book": "30-Min-Call buchen",
     "contact.copy": "Kopieren", "contact.copied": "E-Mail-Adresse kopiert",
     toTop: "Nach oben", "case.back": "Alle Projekte",
+    lb: { close: "Schließen", prev: "Vorheriges Bild", next: "Nächstes Bild", zin: "Hineinzoomen", zout: "Herauszoomen", hint: "Scrollen, mit zwei Fingern oder Doppelklick zoomen · ziehen zum Verschieben" },
     "captcha.check": "Ich bin kein Roboter", "captcha.kicker": "Sicherheitsprüfung", "captcha.note": "psst… bist du ein Mensch? 👀",
     "captcha.title": "Bring jede Form an ihren Platz", "captcha.hint": "Ziehen – oder Form antippen, dann ihren Platz.",
     "captcha.memeBottom": "Jetzt stell einen Menschen ein",
@@ -533,7 +544,7 @@ const I18N = {
       challenge: "Herausforderung", approach: "Was wir gebaut haben", result: "Ergebnis", learned: "Was ich gelernt habe",
       open: "Projekt ansehen", close: "Schließen", next: "Nächstes Projekt", watch: "Video ansehen", video: "Video", tools: "Tools & Technik", when: "Wann",
       devpost: "Devpost", ggj: "Global-Game-Jam-Seite", itch: "Auf itch.io spielen",
-      award: "Gewinner:innen des Wettbewerbs", vernissage: "USTP Projektvernissage"
+      award: "Gewinner:innen des Wettbewerbs", vernissage: "USTP Projektvernissage", instagram: "Instagram", tiktok: "TikTok"
     },
     p: {
       historia: {
@@ -858,17 +869,21 @@ function renderProjects() {
 /* "My journey" – one step per semester, from the first browser game to the master's.
    Steps point at projects (semester + growth line come from their texts); hidden projects are skipped. */
 const JOURNEY = [
+  { divider: "tl.bachelor" },
   { id: "nott" }, { id: "nftrade" }, { id: "memeit" }, { id: "ocean" },
   { intern: true, when: "tl.s5" },
   { id: "hue" },
-  { id: "historia", today: true }, { id: "aroom" }
+  { divider: "tl.master" },
+  { id: "aroom" }, { id: "historia", today: true }
 ];
 function renderEarly() {
   const P = I18N[lang].p;
   const visible = visibleProjects();
-  const steps = JOURNEY.filter((s) => s.intern || visible.some((p) => p.id === s.id));
+  const steps = JOURNEY.filter((s) => s.divider || s.intern || visible.some((p) => p.id === s.id));
   document.getElementById("early").hidden = !steps.length;
   document.getElementById("earlyList").innerHTML = steps.map((s) => {
+    if (s.divider) return `
+    <li class="journey__divider"><span>${esc(t(s.divider))}</span></li>`;
     if (s.intern) return `
     <li class="journey__step">
       <a class="early-card early-card--intern" href="#experience">
@@ -1063,6 +1078,118 @@ modal.addEventListener("click", (e) => {
   }
   const next = e.target.closest(".case__nextcard");
   if (next) openProject(next.dataset.id);
+});
+
+/* ============ Image viewer (lightbox): click, zoom, pan ============ */
+const lb = document.getElementById("lightbox");
+const lbImg = document.getElementById("lbImg");
+const lbStage = document.getElementById("lbStage");
+let lbList = [], lbIndex = 0;
+const view = { s: 1, x: 0, y: 0 }; // scale + translate (px), transform-origin is the image centre
+const MAX_ZOOM = 6;
+
+function lbApply(animate) {
+  lbImg.style.transition = animate ? "transform .2s" : "none";
+  lbImg.style.transform = `translate(${view.x}px, ${view.y}px) scale(${view.s})`;
+  lbStage.classList.toggle("is-zoomed", view.s > 1);
+}
+function lbReset() { view.s = 1; view.x = 0; view.y = 0; lbApply(true); }
+// Zoom to `next` so that the screen point (px, py) stays under the finger/cursor
+function lbZoom(next, px, py, animate) {
+  next = Math.min(MAX_ZOOM, Math.max(1, next));
+  const r = lbStage.getBoundingClientRect();
+  const cx = r.left + r.width / 2, cy = r.top + r.height / 2;
+  const k = next / view.s;
+  view.x = px - cx - (px - cx - view.x) * k;
+  view.y = py - cy - (py - cy - view.y) * k;
+  view.s = next;
+  if (next === 1) { view.x = 0; view.y = 0; }
+  lbApply(animate);
+}
+function lbShow(i) {
+  lbIndex = (i + lbList.length) % lbList.length;
+  lbImg.src = lbList[lbIndex];
+  view.s = 1; view.x = 0; view.y = 0; lbApply(false);
+  document.getElementById("lbCount").textContent = lbList.length > 1 ? `${lbIndex + 1} / ${lbList.length}` : "";
+  document.getElementById("lbPrev").hidden = document.getElementById("lbNext").hidden = lbList.length < 2;
+}
+function openLightbox(list, index) {
+  const L = t("lb");
+  document.getElementById("lbHint").textContent = L.hint;
+  [["lbClose", L.close], ["lbPrev", L.prev], ["lbNext", L.next], ["lbIn", L.zin], ["lbOut", L.zout]]
+    .forEach(([id, label]) => document.getElementById(id).setAttribute("aria-label", label));
+  lbList = list;
+  lbShow(index);
+  lb.showModal();
+}
+const lbCenter = () => { const r = lbStage.getBoundingClientRect(); return [r.left + r.width / 2, r.top + r.height / 2]; };
+document.getElementById("lbClose").addEventListener("click", () => lb.close());
+document.getElementById("lbPrev").addEventListener("click", () => lbShow(lbIndex - 1));
+document.getElementById("lbNext").addEventListener("click", () => lbShow(lbIndex + 1));
+document.getElementById("lbIn").addEventListener("click", () => lbZoom(view.s * 1.6, ...lbCenter(), true));
+document.getElementById("lbOut").addEventListener("click", () => lbZoom(view.s / 1.6, ...lbCenter(), true));
+lb.addEventListener("keydown", (e) => {
+  if (e.key === "ArrowRight") lbShow(lbIndex + 1);
+  else if (e.key === "ArrowLeft") lbShow(lbIndex - 1);
+  else if (e.key === "+" || e.key === "=") lbZoom(view.s * 1.6, ...lbCenter(), true);
+  else if (e.key === "-") lbZoom(view.s / 1.6, ...lbCenter(), true);
+});
+lbStage.addEventListener("wheel", (e) => {
+  e.preventDefault();
+  lbZoom(view.s * (e.deltaY < 0 ? 1.25 : 1 / 1.25), e.clientX, e.clientY, false);
+}, { passive: false });
+lbStage.addEventListener("dblclick", (e) => {
+  if (view.s > 1) lbReset(); else lbZoom(2.5, e.clientX, e.clientY, true);
+});
+// Pointer handling: one pointer pans (when zoomed), two pointers pinch-zoom; a tap beside the image closes
+const pointers = new Map();
+let pinchDist = 0, moved = false;
+lbStage.addEventListener("pointerdown", (e) => {
+  pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+  try { lbStage.setPointerCapture(e.pointerId); } catch (err) {}
+  moved = false;
+  if (pointers.size === 2) {
+    const [a, b] = [...pointers.values()];
+    pinchDist = Math.hypot(a.x - b.x, a.y - b.y);
+  }
+});
+lbStage.addEventListener("pointermove", (e) => {
+  const prev = pointers.get(e.pointerId);
+  if (!prev) return;
+  const cur = { x: e.clientX, y: e.clientY };
+  pointers.set(e.pointerId, cur);
+  if (Math.hypot(cur.x - prev.x, cur.y - prev.y) > 2) moved = true;
+  if (pointers.size === 2) {
+    const [a, b] = [...pointers.values()];
+    const d = Math.hypot(a.x - b.x, a.y - b.y);
+    if (pinchDist) lbZoom(view.s * (d / pinchDist), (a.x + b.x) / 2, (a.y + b.y) / 2, false);
+    pinchDist = d;
+  } else if (view.s > 1) {
+    view.x += cur.x - prev.x; view.y += cur.y - prev.y;
+    lbApply(false);
+  }
+});
+const endPointer = (e) => {
+  pointers.delete(e.pointerId);
+  if (pointers.size < 2) pinchDist = 0;
+  // a plain tap on the dark area beside the image closes the viewer
+  if (e.type === "pointerup" && !moved && pointers.size === 0 && view.s === 1) {
+    const r = lbImg.getBoundingClientRect();
+    const onImage = e.clientX >= r.left && e.clientX <= r.right && e.clientY >= r.top && e.clientY <= r.bottom;
+    if (!onImage) lb.close();
+  }
+};
+lbStage.addEventListener("pointerup", endPointer);
+lbStage.addEventListener("pointercancel", endPointer);
+// "close" arrives async – ignore it if the viewer was reopened in the meantime
+lb.addEventListener("close", () => { if (!lb.open) lbImg.removeAttribute("src"); });
+
+// Every image in a case study opens the viewer (videos keep their own player)
+modalBody.addEventListener("click", (e) => {
+  const img = e.target.closest(".case__gallery img, .case__media > img");
+  if (!img) return;
+  const all = [...modalBody.querySelectorAll(".case__media > img, .case__gallery img")];
+  openLightbox(all.map((i) => i.currentSrc || i.src), all.indexOf(img));
 });
 
 function projectIdFromHash() {
