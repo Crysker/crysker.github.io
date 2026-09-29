@@ -163,7 +163,7 @@ html[lang="de"] .lang [data-lang="de"] { background: var(--ink); color: var(--bg
 }
 /* the signature signs itself next to the name (sized with the name via em) */
 .hero__sig {
-  position: absolute; right: -.8em; bottom: -.16em; width: .64em; height: .73em;
+  position: absolute; right: -.74em; bottom: .12em; width: .78em; height: .9em;
   color: var(--turq-text); rotate: -6deg; pointer-events: none;
 }
 .hero__sig path {
