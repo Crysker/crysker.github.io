@@ -5,6 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Serkan Sönmez – Interaction Designer & XR Developer</title>
   <meta name="description" content="Portfolio of Serkan Sönmez – Interaction & UX/UI Designer and XR Developer from St. Pölten, Austria.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://crysker.github.io/">
+  <meta property="og:title" content="Serkan Sönmez – Interaction Designer & XR Developer">
+  <meta property="og:description" content="Interaction & UX/UI Designer and XR / Unity Developer from St. Pölten, Austria. Available now for XR, UX/UI and Unity/C# roles.">
+  <meta property="og:image" content="https://crysker.github.io/assets/img/historia.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%237c5cff'/%3E%3Ctext x='32' y='42' font-family='Georgia,serif' font-size='28' font-weight='700' text-anchor='middle' fill='%23fff'%3ES%C2%B7S%3C/text%3E%3C/svg%3E">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,700;1,9..144,600;1,9..144,700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -25,6 +32,7 @@
         <li><a href="#projects" data-i18n="nav.projects">Projects</a></li>
         <li><a href="#experience" data-i18n="nav.experience">Experience</a></li>
         <li><a href="#contact" data-i18n="nav.contact">Contact</a></li>
+        <li class="js-cv-item" hidden><a class="nav__cv js-cv" href="#" target="_blank" rel="noopener" data-i18n="nav.cv">CV ↓</a></li>
       </ul>
     </nav>
     <button class="lang" id="langToggle" type="button" aria-label="Switch language">
@@ -43,14 +51,17 @@
 
       <p class="hero__hello" data-i18n="hero.hello">Hi, I'm</p>
       <h1 class="hero__name"><em>Serkan</em>!</h1>
-      <p class="hero__roles" aria-live="polite"><span id="role">Interaction Designer</span></p>
+      <p class="hero__title" data-i18n="hero.title">Interaction Designer &amp; XR Developer</p>
+      <p class="hero__roles" aria-live="polite"><span class="hero__also" data-i18n="hero.also">also</span> <span id="role">UX Researcher</span></p>
+      <p class="hero__status" id="heroStatus" hidden><span class="hero__dot" aria-hidden="true"></span><span data-i18n="hero.status"></span></p>
       <div class="hero__portrait">
-        <img src="assets/img/portrait.jpg" alt="Portrait of Serkan Sönmez" width="308" height="462">
+        <span class="hero__photo"><img src="assets/img/portrait.jpg" alt="Portrait of Serkan Sönmez" width="1600" height="1066"></span>
         <span class="sticker" data-i18n="hero.sticker">🏆 2× 1st place</span>
       </div>
       <p class="hero__lead" data-i18n="hero.lead">I design and build interactive experiences — on screens, in space, and for all the senses.</p>
       <div class="hero__cta">
         <a class="btn btn--primary" href="#projects" data-i18n="hero.cta1">See my work</a>
+        <a class="btn js-cv" href="#" target="_blank" rel="noopener" hidden data-i18n="cv">Download CV</a>
         <a class="btn" href="#contact" data-i18n="hero.cta2">Let's talk</a>
       </div>
       <p class="hero__scroll" aria-hidden="true">✦ <span data-i18n="hero.scroll">scroll down and get to know me</span> ✦</p>
@@ -181,9 +192,10 @@
       <div class="contact__actions">
         <a class="btn btn--primary" href="mailto:serkan.soenmez@gmx.at">serkan.soenmez@gmx.at</a>
         <a class="btn" href="https://calendly.com/serkan5768/30min" target="_blank" rel="noopener" data-i18n="contact.book">Book a 30-min call</a>
+        <a class="btn js-cv" href="#" target="_blank" rel="noopener" hidden data-i18n="cv">Download CV</a>
       </div>
       <ul class="socials">
-        <li><a href="https://www.linkedin.com/in/serkan-s%C3%B6nmez-69a825295" target="_blank" rel="noopener">LinkedIn</a></li>
+        <li><a href="https://www.linkedin.com/in/serkan-soenmez57" target="_blank" rel="noopener">LinkedIn</a></li>
         <li><a href="https://www.youtube.com/@crysker5361" target="_blank" rel="noopener">YouTube</a></li>
         <li><a href="https://www.instagram.com/serkan_s57/" target="_blank" rel="noopener">Instagram</a></li>
       </ul>

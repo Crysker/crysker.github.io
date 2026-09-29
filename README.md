@@ -8,10 +8,11 @@ Plain HTML/CSS/JS, no build step. Open `index.html` in a browser to preview.
 - `main.js` – **all texts (EN + DE)**, project data, stack cards
 - `assets/thesis/` – thesis screenshots
 
-## Still to do
-1. **Images:** save the 7 images into `assets/img/` with the names listed there.
-2. **Placeholders:** search `main.js` for `[` – your role per project and the #SaveTheOcean texts.
-3. **Links:** check the Devpost / itch.io links in `PROJECTS`.
+- `assets/Serkan-Soenmez-CV-DE.pdf` – CV, linked via `CV_URL` at the top of `main.js`
+
+## Placeholders
+Texts in `[brackets]` in `main.js` are never shown on the page, and a project whose
+summary is still a placeholder is hidden entirely. Still open: the #SaveTheOcean texts.
 
 ## Publish free on GitHub Pages
 1. Create a repo (e.g. `portfolio`) on github.com and upload all files.

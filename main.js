@@ -7,6 +7,10 @@
 
 const IMG = "assets/img/";
 
+/* Put your CV into assets/ and set its path here, e.g. "assets/Serkan-Soenmez-CV.pdf".
+   All "Download CV" buttons stay hidden while this is empty. */
+const CV_URL = "assets/Serkan-Soenmez-CV-DE.pdf";
+
 const PROJECTS = [
   {
     id: "historia",
@@ -14,7 +18,11 @@ const PROJECTS = [
     img: IMG + "historia.jpg",
     video: "9Qa9gazr1qg",
     tags: ["Unity", "C#", "Meta XR SDK", "Hand Tracking", "Shared Spatial Anchors", "Meta Avatars"],
-    links: [{ key: "devpost", url: "https://devpost.com/software/hisotria-virtualis" }]
+    links: [
+      { key: "devpost", url: "https://devpost.com/software/hisotria-virtualis" },
+      { key: "award", url: "https://eudres.eu/news/the-winners-of-the-12th-edition-of-the-interactive-digital-media-student-contest-2026" },
+      { key: "vernissage", url: "https://projektevernissage.ustp.at/B/projekteinsicht/?id=1922" }
+    ]
   },
   {
     id: "sounds",
@@ -71,14 +79,18 @@ const I18N = {
     skip: "Skip to content",
     "nav.about": "About", "nav.explore": "Research", "nav.projects": "Projects",
     "nav.experience": "Experience", "nav.contact": "Contact",
-    roles: ["Interaction Designer", "XR Developer", "UX Researcher", "Unity & C# Developer", "Workshop Coach"],
+    roles: ["UX/UI Designer", "Unity & C# Developer", "UX Researcher", "Accessibility Advocate", "Workshop Coach"],
     "hero.hello": "Hi, I'm",
+    "hero.title": "Interaction Designer &amp; XR Developer",
+    "hero.also": "also",
+    "hero.status": "Available now · open to XR, UX/UI and Unity/C# roles",
+    cv: "Download CV (German)", "nav.cv": "CV ↓",
     "hero.sticker": "🏆 2× 1st place",
     "hero.lead": "I design and build interactive experiences — on screens, in space, and for all the senses.",
     "hero.cta1": "See my work", "hero.cta2": "Let's talk",
     "hero.scroll": "scroll down and get to know me",
     "about.title": "About me",
-    "about.p1": "I'm a Creative Technologist from St. Pölten, Austria, currently finishing my master's degree in Interactive Technologies (AR/VR), graduating as Dipl.-Ing.",
+    "about.p1": "I'm a Creative Technologist from St. Pölten, Austria, currently finishing my master's degree in Interactive Technologies (AR/VR). My lectures are done: I hand in my master's thesis in January 2027 and graduate as Dipl.-Ing. in February 2027.",
     "about.p2": "I spent two years as a UX/UI designer at EBCONT working on 15 projects — from public administration to enterprise software — and I've been building with Unity for six years.",
     "about.p3": "What drives me: understanding why people do what they do, and designing experiences that work for everyone.",
     "about.f1": "years of Unity", "about.f2": "client projects", "about.f3": "1st place awards",
@@ -139,16 +151,18 @@ const I18N = {
       duration: "Duration", role: "My role", team: "Team",
       challenge: "Challenge", approach: "What we built", result: "Result", learned: "What I learned",
       open: "View project", close: "Close",
-      devpost: "Devpost", ggj: "Global Game Jam page", itch: "Play on itch.io"
+      devpost: "Devpost", ggj: "Global Game Jam page", itch: "Play on itch.io",
+      award: "Contest winners", vernissage: "USTP Projektvernissage"
     },
     p: {
       historia: {
         title: "Historia Virtualis",
         kicker: "Co-located multiplayer VR",
+        highlight: "1st place at two competitions · shown at the European Researchers' Night",
         badge: "🏆 1st place ×2",
         summary: "Three players, one room, Roman St. Pölten: bake a festive bread in a 1st-century bakery — and only succeed together.",
         duration: "6 months",
-        role: "[Your role in the team]",
+        role: "Development, 3D modelling and testing – a bit of everything",
         challenge: "Make three people in the same physical room feel like they share one virtual world, and design puzzles that genuinely require collaboration.",
         approach: "Every player gets one tool — an axe, a peel or flint and steel — so nobody can solve the room alone. Hand tracking replaces controllers, Shared Spatial Anchors align everyone's world, and Meta Avatars give each player a body.",
         result: ["1st place — 12th Interactive Digital Media Student Contest 2026", "1st place — USTP Projektvernissage 2025", "Shown at the European Researchers' Night", "Coming up: Lange Nacht der Forschung"],
@@ -157,6 +171,7 @@ const I18N = {
       sounds: {
         title: "Sounds of Shadow",
         kicker: "University project · VR",
+        highlight: "Playable VR prototype built around an accessibility question",
         summary: "Navigate total darkness using echolocation. A sonar pulse reveals the room — find three hidden keys without ever seeing clearly.",
         duration: "Semester project",
         role: "Core VR mechanics, level design and puzzles",
@@ -168,9 +183,10 @@ const I18N = {
       grim: {
         title: "Grim Hollow",
         kicker: "Global Game Jam 2026 · VR + scent",
+        highlight: "Real scents synced to gameplay on Quest 3",
         summary: "Collect mushrooms in a dangerous forest — and actually smell it. Built for Meta Quest 3 with an olfactory device that releases real scents.",
         duration: "Game jam",
-        role: "[Your role in the team]",
+        role: "UI, development and 3D modelling",
         challenge: "Add a whole new sense to VR within the time limit of a game jam.",
         approach: "The game triggers scents from an olfactory device in sync with what happens in the forest, turning smell into part of the gameplay.",
         result: "Submitted to the Global Game Jam 2026.",
@@ -179,9 +195,10 @@ const I18N = {
       paper: {
         title: "Paper Therapy",
         kicker: "SensAI Hackathon Barcelona 2025 · MR + ML",
+        highlight: "Real-time fold recognition: a working prototype in 48 hours",
         summary: "A mixed reality origami coach: a YOLO model recognises your current fold in real time, and a 3D animation shows the next step right on your paper.",
         duration: "48 hours",
-        role: "[Your role in the team]",
+        role: "UI, plus the Roboflow pipeline: annotating the dataset and training the model",
         challenge: "Translating instructions from a screen onto the paper in front of you is frustrating. Could MR guide you step by step instead?",
         approach: "We built a dataset of folding steps for an origami heart, trained a YOLO model with Roboflow and connected its predictions to a Quest 3 app that shows animated 3D models of the next fold.",
         result: "A working prototype after 48 hours — with plans to support more origami designs.",
@@ -190,9 +207,10 @@ const I18N = {
       hue: {
         title: "Hue of Hope",
         kicker: "Deckbuilder · Bachelor project",
+        highlight: "Published and playable on itch.io",
         summary: "A turn-based deckbuilder inspired by Hollow Knight and Slay the Spire: build your deck, defeat bosses and free the characters who carry the story.",
         duration: "5 months",
-        role: "[Your role in the team]",
+        role: "Design, testing and some development",
         challenge: "Create a card game with enough variety to stay fresh across every battle.",
         approach: "Damage, defence and magic cards, shuffled decks for every fight, rewards after victories and chapter bosses that unlock story NPCs.",
         result: "A playable game published on itch.io.",
@@ -216,14 +234,18 @@ const I18N = {
     skip: "Zum Inhalt springen",
     "nav.about": "Über mich", "nav.explore": "Forschung", "nav.projects": "Projekte",
     "nav.experience": "Werdegang", "nav.contact": "Kontakt",
-    roles: ["Interaction Designer", "XR-Entwickler", "UX-Researcher", "Unity- & C#-Entwickler", "Workshop-Coach"],
+    roles: ["UX/UI Designer", "Unity- & C#-Entwickler", "UX-Researcher", "Accessibility-Verfechter", "Workshop-Coach"],
     "hero.hello": "Hi, ich bin",
+    "hero.title": "Interaction Designer &amp; XR-Entwickler",
+    "hero.also": "auch",
+    "hero.status": "Ab sofort verfügbar · offen für XR-, UX/UI- und Unity/C#-Stellen",
+    cv: "Lebenslauf herunterladen", "nav.cv": "CV ↓",
     "hero.sticker": "🏆 2× 1. Platz",
     "hero.lead": "Ich gestalte und entwickle interaktive Erlebnisse – auf Bildschirmen, im Raum und für alle Sinne.",
     "hero.cta1": "Meine Arbeiten", "hero.cta2": "Lass uns reden",
     "hero.scroll": "scroll runter und lern mich kennen",
     "about.title": "Über mich",
-    "about.p1": "Ich bin Creative Technologist aus St. Pölten und schließe gerade meinen Master in Interactive Technologies (AR/VR) als Dipl.-Ing. ab.",
+    "about.p1": "Ich bin Creative Technologist aus St. Pölten und schließe gerade meinen Master in Interactive Technologies (AR/VR) ab. Die Lehrveranstaltungen sind erledigt: Im Jänner 2027 gebe ich meine Masterarbeit ab, im Februar 2027 schließe ich als Dipl.-Ing. ab.",
     "about.p2": "Zwei Jahre lang habe ich als UX/UI-Designer bei EBCONT an 15 Projekten gearbeitet – von öffentlicher Verwaltung bis Enterprise Software – und entwickle seit sechs Jahren mit Unity.",
     "about.p3": "Was mich antreibt: verstehen, warum Menschen tun, was sie tun – und Erlebnisse gestalten, die für alle funktionieren.",
     "about.f1": "Jahre Unity", "about.f2": "Kundenprojekte", "about.f3": "1. Plätze",
@@ -284,16 +306,18 @@ const I18N = {
       duration: "Dauer", role: "Meine Rolle", team: "Team",
       challenge: "Herausforderung", approach: "Was wir gebaut haben", result: "Ergebnis", learned: "Was ich gelernt habe",
       open: "Projekt ansehen", close: "Schließen",
-      devpost: "Devpost", ggj: "Global-Game-Jam-Seite", itch: "Auf itch.io spielen"
+      devpost: "Devpost", ggj: "Global-Game-Jam-Seite", itch: "Auf itch.io spielen",
+      award: "Gewinner:innen des Wettbewerbs", vernissage: "USTP Projektvernissage"
     },
     p: {
       historia: {
         title: "Historia Virtualis",
         kicker: "Co-located Multiplayer-VR",
+        highlight: "1. Platz bei zwei Wettbewerben · gezeigt bei der European Researchers' Night",
         badge: "🏆 2× 1. Platz",
         summary: "Drei Spieler:innen, ein Raum, das römische St. Pölten: Backt in einer Bäckerei aus dem 1. Jahrhundert ein Festbrot – und schafft es nur gemeinsam.",
         duration: "6 Monate",
-        role: "[Deine Rolle im Team]",
+        role: "Entwicklung, 3D-Modellierung und Testing – ein bisschen von allem",
         challenge: "Drei Menschen im selben physischen Raum sollen das Gefühl haben, eine gemeinsame virtuelle Welt zu teilen – mit Rätseln, die echte Zusammenarbeit erfordern.",
         approach: "Jede Person bekommt ein Werkzeug – Axt, Brotschieber oder Feuerstein – niemand kann den Raum allein lösen. Hand Tracking ersetzt Controller, Shared Spatial Anchors richten die Welten aneinander aus, Meta Avatars geben allen einen Körper.",
         result: ["1. Platz – 12th Interactive Digital Media Student Contest 2026", "1. Platz – Projektvernissage der USTP 2025", "Präsentiert bei der European Researchers' Night", "Demnächst: Lange Nacht der Forschung"],
@@ -302,6 +326,7 @@ const I18N = {
       sounds: {
         title: "Sounds of Shadow",
         kicker: "Uniprojekt · VR",
+        highlight: "Spielbarer VR-Prototyp rund um eine Accessibility-Frage",
         summary: "Orientiere dich in völliger Dunkelheit per Echoortung. Ein Sonar-Impuls macht den Raum sichtbar – finde drei versteckte Schlüssel.",
         duration: "Semesterprojekt",
         role: "Zentrale VR-Mechaniken, Level Design und Rätsel",
@@ -313,9 +338,10 @@ const I18N = {
       grim: {
         title: "Grim Hollow",
         kicker: "Global Game Jam 2026 · VR + Geruch",
+        highlight: "Echte Gerüche, synchron zum Gameplay auf der Quest 3",
         summary: "Sammle Pilze in einem gefährlichen Wald – und rieche ihn wirklich. Für Meta Quest 3 mit einem Duftgerät, das echte Gerüche abgibt.",
         duration: "Game Jam",
-        role: "[Deine Rolle im Team]",
+        role: "UI, Entwicklung und 3D-Modellierung",
         challenge: "In der kurzen Zeit eines Game Jams einen ganz neuen Sinn in VR einbinden.",
         approach: "Das Spiel löst passend zum Geschehen im Wald Gerüche über ein Duftgerät aus – Geruch wird Teil des Gameplays.",
         result: "Eingereicht beim Global Game Jam 2026.",
@@ -324,9 +350,10 @@ const I18N = {
       paper: {
         title: "Paper Therapy",
         kicker: "SensAI Hackathon Barcelona 2025 · MR + ML",
+        highlight: "Faltschritt-Erkennung in Echtzeit: funktionierender Prototyp in 48 Stunden",
         summary: "Ein Mixed-Reality-Origami-Coach: Ein YOLO-Modell erkennt deinen aktuellen Faltschritt in Echtzeit, eine 3D-Animation zeigt den nächsten direkt auf deinem Papier.",
         duration: "48 Stunden",
-        role: "[Deine Rolle im Team]",
+        role: "UI sowie die Roboflow-Pipeline: Annotation des Datensatzes und Training des Modells",
         challenge: "Anleitungen vom Bildschirm aufs Papier zu übertragen ist mühsam. Kann MR stattdessen Schritt für Schritt führen?",
         approach: "Wir haben einen Datensatz mit Faltschritten für ein Origami-Herz erstellt, ein YOLO-Modell mit Roboflow trainiert und die Vorhersagen mit einer Quest-3-App verbunden, die den nächsten Schritt animiert zeigt.",
         result: "Ein funktionierender Prototyp nach 48 Stunden – mit Plänen für weitere Origami-Modelle.",
@@ -335,9 +362,10 @@ const I18N = {
       hue: {
         title: "Hue of Hope",
         kicker: "Deckbuilder · Bachelorprojekt",
+        highlight: "Veröffentlicht und spielbar auf itch.io",
         summary: "Ein rundenbasierter Deckbuilder, inspiriert von Hollow Knight und Slay the Spire: Deck aufbauen, Bosse besiegen und die Figuren befreien, die die Geschichte erzählen.",
         duration: "5 Monate",
-        role: "[Deine Rolle im Team]",
+        role: "Design, Testing und etwas Entwicklung",
         challenge: "Ein Kartenspiel mit genug Abwechslung, damit jeder Kampf frisch bleibt.",
         approach: "Schadens-, Verteidigungs- und Magiekarten, neu gemischte Decks in jedem Kampf, Belohnungen nach Siegen und Kapitel-Bosse, die Story-NPCs freischalten.",
         result: "Ein spielbares Spiel, veröffentlicht auf itch.io.",
@@ -367,11 +395,16 @@ if (!I18N[lang]) lang = "en";
 
 const t = (key) => I18N[lang][key] ?? I18N.en[key] ?? key;
 
+/* Texts in [brackets] are unfinished placeholders and are never shown.
+   A project whose summary is still a placeholder is left out entirely. */
+const filled = (v) => Array.isArray(v) ? v.length > 0 : Boolean(v) && !String(v).trim().startsWith("[");
+
 function applyLang() {
   document.documentElement.lang = lang;
   document.querySelectorAll("[data-i18n]").forEach((el) => {
     el.innerHTML = t(el.dataset.i18n);
   });
+  document.getElementById("heroStatus").hidden = !filled(t("hero.status"));
   document.getElementById("langToggle").setAttribute(
     "aria-label", lang === "en" ? "Auf Deutsch umschalten" : "Switch to English"
   );
@@ -379,6 +412,11 @@ function applyLang() {
   renderStack();
   renderSkills();
   restartRoles();
+}
+
+if (CV_URL) {
+  document.querySelectorAll(".js-cv").forEach((a) => { a.href = CV_URL; a.hidden = false; });
+  document.querySelectorAll(".js-cv-item").forEach((li) => { li.hidden = false; });
 }
 
 document.getElementById("langToggle").addEventListener("click", () => {
@@ -426,7 +464,7 @@ function esc(s) {
 function renderProjects() {
   const grid = document.getElementById("projectGrid");
   const P = I18N[lang].p;
-  grid.innerHTML = PROJECTS.map((pr) => {
+  grid.innerHTML = PROJECTS.filter((pr) => filled(P[pr.id].summary)).map((pr) => {
     const x = P[pr.id];
     return `
       <button type="button" class="p-card${pr.featured ? " p-card--featured" : ""}" data-id="${pr.id}"
@@ -438,8 +476,11 @@ function renderProjects() {
         <div class="p-card__body">
           <p class="p-card__kicker">${esc(x.kicker)}</p>
           <h3 class="p-card__title">${esc(x.title)}</h3>
+          ${filled(x.highlight) ? `<p class="p-card__highlight">${esc(x.highlight)}</p>` : ""}
           <p class="p-card__summary">${esc(x.summary)}</p>
+          ${filled(x.role) ? `<p class="p-card__role"><b>${esc(t("ui").role)}:</b> ${esc(x.role)}</p>` : ""}
           <ul class="tags">${pr.tags.map((tg) => `<li>${esc(tg)}</li>`).join("")}</ul>
+          <span class="p-card__more" aria-hidden="true">${esc(t("ui").open)} →</span>
         </div>
       </button>`;
   }).join("");
@@ -455,7 +496,7 @@ function openProject(id) {
   const media = pr.video
     ? `<iframe src="https://www.youtube-nocookie.com/embed/${pr.video}" title="${esc(x.title)}" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>`
     : `<img src="${pr.img}" alt="">`;
-  const block = (label, val) => val ? `
+  const block = (label, val) => filled(val) ? `
     <div class="modal__block"><h3>${esc(label)}</h3>${
       Array.isArray(val) ? `<ul>${val.map((v) => `<li>${esc(v)}</li>`).join("")}</ul>` : `<p>${esc(val)}</p>`
     }</div>` : "";
@@ -465,8 +506,8 @@ function openProject(id) {
       <p class="p-card__kicker">${esc(x.kicker)}</p>
       <h2 id="modalTitle">${esc(x.title)}</h2>
       <div class="modal__meta">
-        <span><b>${esc(ui.duration)}:</b> ${esc(x.duration)}</span>
-        <span><b>${esc(ui.role)}:</b> ${esc(x.role)}</span>
+        ${filled(x.duration) ? `<span><b>${esc(ui.duration)}:</b> ${esc(x.duration)}</span>` : ""}
+        ${filled(x.role) ? `<span><b>${esc(ui.role)}:</b> ${esc(x.role)}</span>` : ""}
       </div>
       ${block(ui.challenge, x.challenge)}
       ${block(ui.approach, x.approach)}
