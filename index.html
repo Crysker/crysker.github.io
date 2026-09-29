@@ -15,7 +15,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,700;1,9..144,600;1,9..144,700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=4">
+  <link rel="stylesheet" href="styles.css?v=5">
 </head>
 <body>
   <a class="skip" href="#main" data-i18n="skip">Skip to content</a>
@@ -209,9 +209,15 @@
   </main>
 
   <footer class="footer">
-    <p>© 2026 Serkan Sönmez · St. Pölten, Austria</p>
+    <div>
+      <p>© 2026 Serkan Sönmez · St. Pölten, Austria</p>
+      <p class="footer__fun" data-i18n="footer.fun">No game engine was harmed in the making of this site.</p>
+    </div>
+    <p class="footer__trophies" id="trophyCount"></p>
     <a href="#top" data-i18n="footer.top">Back to top ↑</a>
   </footer>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
   <a class="to-top" id="toTop" href="#top" data-i18n-label="toTop" aria-label="Back to top">
     <svg class="to-top__ring" viewBox="0 0 48 48" aria-hidden="true">
@@ -221,14 +227,16 @@
     <span class="to-top__arrow" aria-hidden="true">↑</span>
   </a>
 
-  <dialog class="modal" id="projectModal" aria-labelledby="modalTitle">
-    <div class="modal__inner">
-      <button class="modal__close" type="button" aria-label="Close">✕</button>
-      <div id="modalBody"></div>
+  <!-- Project case study: full-screen view with its own link (#project-<id>) -->
+  <dialog class="case" id="projectModal" aria-labelledby="modalTitle">
+    <div class="case__bar">
+      <button class="case__back" type="button"><span aria-hidden="true">←</span> <span data-i18n="case.back">All projects</span></button>
+      <button class="case__next" id="caseNext" type="button" hidden></button>
     </div>
+    <div id="modalBody"></div>
   </dialog>
 
   <script src="logos.js?v=2"></script>
-  <script src="main.js?v=5"></script>
+  <script src="main.js?v=6"></script>
 </body>
 </html>

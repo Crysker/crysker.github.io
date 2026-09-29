@@ -8,7 +8,7 @@ Plain HTML/CSS/JS, no build step. Open `index.html` in a browser to preview.
 - `main.js` – **all texts (EN + DE)**, project data, stack cards
 - `assets/thesis/` – thesis screenshots
 
-- `assets/Serkan-Soenmez-CV-DE.pdf` – CV, linked via `CV_URL` at the top of `main.js`
+- `assets/Serkan-Soenmez-CV-EN.pdf`, `…-DE.pdf` – CVs, linked per language via `CV` at the top of `main.js`
 
 ## Linking a single project
 Every project has its own link that opens it directly – handy in cover letters:

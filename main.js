@@ -7,9 +7,12 @@
 
 const IMG = "assets/img/";
 
-/* Put your CV into assets/ and set its path here, e.g. "assets/Serkan-Soenmez-CV.pdf".
+/* CV per page language. Bump ?v= when you replace a file so browsers fetch the new one.
    All "Download CV" buttons stay hidden while this is empty. */
-const CV_URL = "assets/Serkan-Soenmez-CV-DE.pdf?v=2"; // bump ?v= when you replace the file
+const CV = {
+  en: "assets/Serkan-Soenmez-CV-EN.pdf?v=1",
+  de: "assets/Serkan-Soenmez-CV-DE.pdf?v=2"
+};
 
 const PROJECTS = [
   {
@@ -56,6 +59,13 @@ const PROJECTS = [
     video: "yR7QZmcF6Uk",
     tags: ["Unity", "C#", "VR", "A* Pathfinding", "3D Modelling", "Animation"],
     links: []
+  },
+  {
+    id: "deepspace", // hidden until its summary is written
+    img: IMG + "deepspace.jpg",
+    video: "i_oERAmOcPI",
+    tags: ["Unity", "VR", "Game Jam"],
+    links: []
   }
 ];
 
@@ -87,7 +97,7 @@ const I18N = {
     "hero.title": "Interaction Designer &amp; XR Developer",
     "hero.also": "also",
     "hero.status": "Available now · open to XR, UX/UI and Unity/C# roles",
-    cv: "Download CV (German)", "nav.cv": "CV ↓",
+    cv: "Download CV", "nav.cv": "CV ↓",
     "hero.sticker": "🏆 2× 1st place",
     "hero.lead": "I design and build interactive experiences — on screens, in space, and for all the senses.",
     "hero.cta1": "See my work", "hero.cta2": "Let's talk",
@@ -150,12 +160,22 @@ const I18N = {
     "contact.title": "Let's build something<br><em>people remember.</em>",
     "contact.book": "Book a 30-min call",
     "contact.copy": "Copy", "contact.copied": "Email address copied",
-    toTop: "Back to top",
+    toTop: "Back to top", "case.back": "All projects",
+    "footer.fun": "No game engine was harmed in the making of this site.",
+    ach: {
+      unlocked: "Achievement unlocked", count: "{n}/{total} achievements found", hint: "Can you find them all?",
+      first: ["Curious mind", "Opened your first project"],
+      video: ["Popcorn time", "Watched a video"],
+      all: ["Completionist", "Opened every project"],
+      lang: ["Polyglot", "Switched the language"],
+      bottom: ["Deep diver", "Scrolled all the way down"],
+      secret: ["Cowabunga! 🐢", "Found the secret code"]
+    },
     "footer.top": "Back to top ↑",
     ui: {
       duration: "Duration", role: "My role", team: "Team",
       challenge: "Challenge", approach: "What we built", result: "Result", learned: "What I learned",
-      open: "View project", close: "Close", next: "Next project", watch: "Watch video", video: "Video",
+      open: "View project", close: "Close", next: "Next project", watch: "Watch video", video: "Video", tools: "Tools & tech",
       devpost: "Devpost", ggj: "Global Game Jam page", itch: "Play on itch.io",
       award: "Contest winners", vernissage: "USTP Projektvernissage"
     },
@@ -232,6 +252,18 @@ const I18N = {
         approach: "The trash finds its way along the river into the ocean using A* pathfinding. The more of it gets through, the closer the sea monster gets to spawning – so collecting turns into a race before it becomes a boss fight.",
         result: "A playable VR game, built in two weeks as team LSW-Studios.",
         learned: "[One takeaway.]"
+      },
+      deepspace: {
+        title: "Deep Space Cleaner Corp",
+        kicker: "XR Game Jam 2025 · VR",
+        highlight: "[One-line result]",
+        summary: "[One or two sentences about the game.]",
+        duration: "Game jam",
+        role: "[Your role]",
+        challenge: "[Idea / theme]",
+        approach: "[What you built]",
+        result: "[What came out of it]",
+        learned: "[One takeaway]"
       }
     }
   },
@@ -308,12 +340,22 @@ const I18N = {
     "contact.title": "Lass uns etwas bauen,<br><em>das in Erinnerung bleibt.</em>",
     "contact.book": "30-Min-Call buchen",
     "contact.copy": "Kopieren", "contact.copied": "E-Mail-Adresse kopiert",
-    toTop: "Nach oben",
+    toTop: "Nach oben", "case.back": "Alle Projekte",
+    "footer.fun": "Bei der Erstellung dieser Seite wurde keine Game Engine verletzt.",
+    ach: {
+      unlocked: "Erfolg freigeschaltet", count: "{n}/{total} Erfolge gefunden", hint: "Findest du alle?",
+      first: ["Neugierig", "Erstes Projekt geöffnet"],
+      video: ["Popcorn-Zeit", "Ein Video angesehen"],
+      all: ["Komplettist", "Alle Projekte geöffnet"],
+      lang: ["Polyglott", "Sprache gewechselt"],
+      bottom: ["Tiefseetaucher", "Ganz nach unten gescrollt"],
+      secret: ["Cowabunga! 🐢", "Den geheimen Code gefunden"]
+    },
     "footer.top": "Nach oben ↑",
     ui: {
       duration: "Dauer", role: "Meine Rolle", team: "Team",
       challenge: "Herausforderung", approach: "Was wir gebaut haben", result: "Ergebnis", learned: "Was ich gelernt habe",
-      open: "Projekt ansehen", close: "Schließen", next: "Nächstes Projekt", watch: "Video ansehen", video: "Video",
+      open: "Projekt ansehen", close: "Schließen", next: "Nächstes Projekt", watch: "Video ansehen", video: "Video", tools: "Tools & Technik",
       devpost: "Devpost", ggj: "Global-Game-Jam-Seite", itch: "Auf itch.io spielen",
       award: "Gewinner:innen des Wettbewerbs", vernissage: "USTP Projektvernissage"
     },
@@ -390,6 +432,18 @@ const I18N = {
         approach: "Der Müll findet per A*-Pathfinding seinen Weg den Fluss hinunter ins Meer. Je mehr durchkommt, desto näher rückt das Seemonster – aus dem Sammeln wird ein Wettlauf, bevor es zum Bosskampf kommt.",
         result: "Ein spielbares VR-Spiel, in zwei Wochen als Team LSW-Studios entwickelt.",
         learned: "[Eine Erkenntnis.]"
+      },
+      deepspace: {
+        title: "Deep Space Cleaner Corp",
+        kicker: "XR Game Jam 2025 · VR",
+        highlight: "[Ergebnis in einem Satz]",
+        summary: "[Ein, zwei Sätze zum Spiel.]",
+        duration: "Game Jam",
+        role: "[Deine Rolle]",
+        challenge: "[Idee / Thema]",
+        approach: "[Was ihr gebaut habt]",
+        result: "[Was daraus wurde]",
+        learned: "[Eine Erkenntnis]"
       }
     }
   }
@@ -418,6 +472,9 @@ function applyLang() {
     el.setAttribute("aria-label", t(el.dataset.i18nLabel));
   });
   document.getElementById("heroStatus").hidden = !filled(t("hero.status"));
+  const cv = CV[lang] || CV.en;
+  document.querySelectorAll(".js-cv").forEach((a) => { a.href = cv || "#"; a.hidden = !cv; });
+  document.querySelectorAll(".js-cv-item").forEach((li) => { li.hidden = !cv; });
   document.getElementById("langToggle").setAttribute(
     "aria-label", lang === "en" ? "Auf Deutsch umschalten" : "Switch to English"
   );
@@ -425,15 +482,12 @@ function applyLang() {
   renderStack();
   renderSkills();
   restartRoles();
-}
-
-if (CV_URL) {
-  document.querySelectorAll(".js-cv").forEach((a) => { a.href = CV_URL; a.hidden = false; });
-  document.querySelectorAll(".js-cv-item").forEach((li) => { li.hidden = false; });
+  renderTrophies();
 }
 
 document.getElementById("langToggle").addEventListener("click", () => {
   lang = lang === "en" ? "de" : "en";
+  unlock("lang");
   try { localStorage.setItem("lang", lang); } catch (e) {}
   applyLang();
 });
@@ -505,7 +559,13 @@ function renderProjects() {
 const modal = document.getElementById("projectModal");
 const modalBody = document.getElementById("modalBody");
 
-function openProject(id) {
+/* ============ Project view: a full-screen case study page ============
+   Every project has its own link, e.g. crysker.github.io/#project-historia (handy for cover letters),
+   and the browser's back button closes the view like a normal page. */
+const caseNext = document.getElementById("caseNext");
+let pushedHistory = false;
+
+function openProject(id, { push = true } = {}) {
   const pr = PROJECTS.find((p) => p.id === id);
   const x = I18N[lang].p[id];
   const ui = t("ui");
@@ -513,7 +573,7 @@ function openProject(id) {
   const next = list.length > 1 ? list[(list.findIndex((p) => p.id === id) + 1) % list.length] : null;
   // Video loads only on click: faster, and no YouTube request for people who don't watch
   const media = pr.video
-    ? `<button type="button" class="video__play modal__video" data-yt="${pr.video}" data-title="${esc(x.title)}"
+    ? `<button type="button" class="video__play case__video" data-yt="${pr.video}" data-title="${esc(x.title)}"
          aria-label="${esc(ui.watch)}: ${esc(x.title)}">
          <img src="${pr.img}" alt="">
          <span class="video__btn" aria-hidden="true">▶</span>
@@ -521,67 +581,142 @@ function openProject(id) {
        </button>`
     : `<img src="${pr.img}" alt="">`;
   const block = (label, val) => filled(val) ? `
-    <div class="modal__block"><h3>${esc(label)}</h3>${
+    <section class="case__block"><h3>${esc(label)}</h3>${
       Array.isArray(val) ? `<ul>${val.map((v) => `<li>${esc(v)}</li>`).join("")}</ul>` : `<p>${esc(val)}</p>`
-    }</div>` : "";
+    }</section>` : "";
+  const fact = (label, val) => filled(val) ? `<div><dt>${esc(label)}</dt><dd>${esc(val)}</dd></div>` : "";
   modalBody.innerHTML = `
-    <div class="modal__media">${media}</div>
-    <div class="modal__content">
-      <p class="p-card__kicker">${esc(x.kicker)}</p>
-      <h2 id="modalTitle">${esc(x.title)}</h2>
-      <div class="modal__meta">
-        ${filled(x.duration) ? `<span><b>${esc(ui.duration)}:</b> ${esc(x.duration)}</span>` : ""}
-        ${filled(x.role) ? `<span><b>${esc(ui.role)}:</b> ${esc(x.role)}</span>` : ""}
+    <article class="case__inner">
+      <header class="case__head">
+        <p class="p-card__kicker">${esc(x.kicker)}</p>
+        <h2 id="modalTitle">${esc(x.title)}</h2>
+        ${filled(x.summary) ? `<p class="case__lead">${esc(x.summary)}</p>` : ""}
+      </header>
+      <div class="case__media">${media}</div>
+      <div class="case__grid">
+        <aside class="case__facts">
+          <dl>${fact(ui.role, x.role)}${fact(ui.duration, x.duration)}</dl>
+          <h3>${esc(ui.tools)}</h3>
+          <ul class="tags">${pr.tags.map((tg) => `<li>${esc(tg)}</li>`).join("")}</ul>
+          ${pr.links.length ? `<div class="case__links">${pr.links.map((l) =>
+            `<a class="btn" href="${l.url}" target="_blank" rel="noopener">${esc(ui[l.key])} ↗</a>`).join("")}</div>` : ""}
+        </aside>
+        <div class="case__story">
+          ${block(ui.challenge, x.challenge)}
+          ${block(ui.approach, x.approach)}
+          ${block(ui.result, x.result)}
+          ${block(ui.learned, x.learned)}
+        </div>
       </div>
-      ${block(ui.challenge, x.challenge)}
-      ${block(ui.approach, x.approach)}
-      ${block(ui.result, x.result)}
-      ${block(ui.learned, x.learned)}
-      <ul class="tags">${pr.tags.map((tg) => `<li>${esc(tg)}</li>`).join("")}</ul>
-      ${pr.links.length ? `<div class="modal__links">${pr.links.map((l) =>
-        `<a class="btn" href="${l.url}" target="_blank" rel="noopener">${esc(ui[l.key])} ↗</a>`).join("")}</div>` : ""}
-      ${next ? `<button type="button" class="modal__next" data-id="${next.id}">
-        <span>${esc(ui.next)}</span><b>${esc(I18N[lang].p[next.id].title)} →</b>
+      ${next ? `<button type="button" class="case__nextcard" data-id="${next.id}">
+        <img src="${next.img}" alt="">
+        <span><small>${esc(ui.next)}</small><b>${esc(I18N[lang].p[next.id].title)} →</b></span>
       </button>` : ""}
-    </div>`;
-  modal.querySelector(".modal__close").setAttribute("aria-label", ui.close);
+    </article>`;
+  caseNext.hidden = !next;
+  if (next) {
+    caseNext.dataset.id = next.id;
+    caseNext.innerHTML = `<span class="case__next-label">${esc(ui.next)}</span> <span aria-hidden="true">→</span>`;
+    caseNext.setAttribute("aria-label", `${ui.next}: ${I18N[lang].p[next.id].title}`);
+  }
   if (!modal.open) modal.showModal();
   modal.scrollTop = 0;
-  // Every project has its own link, e.g. crysker.github.io/#project-historia – handy for cover letters
-  history.replaceState(null, "", "#project-" + id);
+  modal.querySelector(".case__back").focus({ preventScroll: true });
+
+  const hash = "#project-" + id;
+  if (location.hash !== hash) {
+    // First open adds a history entry (so "back" closes it); switching projects replaces it
+    if (push && !pushedHistory && !location.hash.startsWith("#project-")) {
+      history.pushState({ project: id }, "", hash);
+      pushedHistory = true;
+    } else {
+      history.replaceState(history.state, "", hash);
+    }
+  }
+  trackProjectOpened(id);
 }
 
 document.getElementById("projectGrid").addEventListener("click", (e) => {
   const card = e.target.closest(".p-card");
-  if (card) openProject(card.dataset.id);
+  if (!card) return;
+  stopPreview(card);
+  lastCardId = card.dataset.id;
+  openProject(card.dataset.id);
 });
-function onProjectClosed() {
+
+/* ============ Hover preview: muted video plays inside the card (mouse only) ============ */
+const canHover = matchMedia("(hover: hover) and (pointer: fine)");
+const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)");
+let previewTimer;
+function stopPreview(card) {
+  clearTimeout(previewTimer);
+  card.querySelector(".p-card__preview")?.remove();
+  card.classList.remove("is-previewing");
+}
+document.getElementById("projectGrid").addEventListener("mouseover", (e) => {
+  const card = e.target.closest(".p-card");
+  if (!card || card.contains(e.relatedTarget) || !canHover.matches || reduceMotion.matches) return;
+  const pr = PROJECTS.find((p) => p.id === card.dataset.id);
+  if (!pr?.video) return;
+  // short delay so just moving the mouse across the page doesn't start videos
+  previewTimer = setTimeout(() => {
+    const v = pr.video;
+    const frame = document.createElement("iframe");
+    frame.className = "p-card__preview";
+    frame.src = `https://www.youtube-nocookie.com/embed/${v}?autoplay=1&mute=1&controls=0&loop=1&playlist=${v}&playsinline=1&rel=0&disablekb=1&iv_load_policy=3&modestbranding=1`;
+    frame.title = "";
+    frame.tabIndex = -1;
+    frame.setAttribute("aria-hidden", "true");
+    frame.allow = "autoplay; encrypted-media";
+    frame.addEventListener("load", () => setTimeout(() => card.classList.add("is-previewing"), 600));
+    card.querySelector(".p-card__media").appendChild(frame);
+  }, 450);
+});
+document.getElementById("projectGrid").addEventListener("mouseout", (e) => {
+  const card = e.target.closest(".p-card");
+  if (card && !card.contains(e.relatedTarget)) stopPreview(card);
+});
+let lastCardId = null;
+function finishClose() {
+  if (modal.open) modal.close();
   modalBody.innerHTML = ""; // stops video
-  if (location.hash.startsWith("#project-")) history.replaceState(null, "", location.pathname + location.search);
+  pushedHistory = false;
+  // put keyboard focus back on the card the visitor came from
+  document.querySelector(`.p-card[data-id="${lastCardId}"]`)?.focus({ preventScroll: true });
 }
 function closeProject() {
-  modal.close();
-  onProjectClosed(); // don't wait for the async "close" event
+  if (pushedHistory) return history.back(); // popstate below finishes the close
+  finishClose();
+  if (location.hash.startsWith("#project-")) history.replaceState(null, "", location.pathname + location.search);
 }
-modal.querySelector(".modal__close").addEventListener("click", closeProject);
+modal.querySelector(".case__back").addEventListener("click", closeProject);
+caseNext.addEventListener("click", () => openProject(caseNext.dataset.id));
+modal.addEventListener("cancel", (e) => { e.preventDefault(); closeProject(); }); // Esc key
 modal.addEventListener("click", (e) => {
-  if (e.target === modal) return closeProject();
-  const play = e.target.closest(".modal__video");
+  const play = e.target.closest(".case__video");
   if (play) {
     play.outerHTML = `<iframe src="https://www.youtube-nocookie.com/embed/${play.dataset.yt}?autoplay=1" title="${esc(play.dataset.title)}" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>`;
+    unlock("video");
     return;
   }
-  const next = e.target.closest(".modal__next");
+  const next = e.target.closest(".case__nextcard");
   if (next) openProject(next.dataset.id);
 });
-// Esc key. The event arrives async – ignore it if another project was opened meanwhile.
-modal.addEventListener("close", () => { if (!modal.open) onProjectClosed(); });
 
-function openProjectFromHash() {
+function projectIdFromHash() {
   const id = location.hash.replace("#project-", "");
-  if (location.hash.startsWith("#project-") && visibleProjects().some((p) => p.id === id)) openProject(id);
+  return location.hash.startsWith("#project-") && visibleProjects().some((p) => p.id === id) ? id : null;
 }
-window.addEventListener("hashchange", openProjectFromHash);
+function openProjectFromHash() {
+  const id = projectIdFromHash();
+  if (id) openProject(id, { push: false });
+}
+// Browser back/forward, or a project link opened on this page
+addEventListener("popstate", () => {
+  const id = projectIdFromHash();
+  if (id) openProject(id, { push: false });
+  else if (modal.open) finishClose();
+});
 
 /* ============ Stack flip cards ============ */
 function renderStack() {
@@ -621,6 +756,7 @@ document.getElementById("stackGrid").addEventListener("click", (e) => {
 document.querySelectorAll(".video").forEach((v) => {
   v.querySelector(".video__play").addEventListener("click", () => {
     v.innerHTML = `<iframe src="https://www.youtube-nocookie.com/embed/${v.dataset.yt}?autoplay=1" title="Historia Virtualis making-of" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>`;
+    unlock("video");
   });
 });
 
@@ -642,6 +778,7 @@ function updateToTop() {
   const max = document.documentElement.scrollHeight - innerHeight;
   toTop.classList.toggle("is-visible", scrollY > innerHeight * 0.8);
   toTopProgress.style.strokeDashoffset = String(100 - (max > 0 ? (scrollY / max) * 100 : 0));
+  if (max > 0 && scrollY >= max - 40) unlock("bottom");
   scrollTick = false;
 }
 addEventListener("scroll", () => { if (!scrollTick) { scrollTick = true; requestAnimationFrame(updateToTop); } }, { passive: true });
@@ -690,6 +827,68 @@ copyBtn.addEventListener("click", async () => {
   clearTimeout(copyBtn.timer);
   copyBtn.timer = setTimeout(() => { copyBtn.classList.remove("is-done"); copyStatus.textContent = ""; }, 2500);
 });
+
+/* ============ Achievements – a small game for curious visitors ============ */
+const ACHIEVEMENTS = ["first", "video", "all", "lang", "bottom", "secret"];
+let achieved = [];
+try { achieved = JSON.parse(localStorage.getItem("achievements") || "[]"); } catch (e) {}
+const openedProjects = new Set();
+const toast = document.getElementById("toast");
+let toastTimer;
+
+function renderTrophies() {
+  const A = t("ach");
+  const count = A.count.replace("{n}", achieved.length).replace("{total}", ACHIEVEMENTS.length);
+  document.getElementById("trophyCount").textContent =
+    "🏆 " + count + (achieved.length < ACHIEVEMENTS.length ? " · " + A.hint : " 🎉");
+}
+function unlock(id) {
+  if (achieved.includes(id)) return;
+  achieved.push(id);
+  try { localStorage.setItem("achievements", JSON.stringify(achieved)); } catch (e) {}
+  const A = t("ach");
+  toast.innerHTML = `<span class="toast__icon" aria-hidden="true">🏆</span>
+    <span><small>${esc(A.unlocked)} · ${achieved.length}/${ACHIEVEMENTS.length}</small>
+    <b>${esc(A[id][0])}</b><span>${esc(A[id][1])}</span></span>`;
+  toast.classList.add("is-visible");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => toast.classList.remove("is-visible"), 3800);
+  renderTrophies();
+}
+function trackProjectOpened(id) {
+  unlock("first");
+  openedProjects.add(id);
+  if (visibleProjects().every((p) => openedProjects.has(p.id))) unlock("all");
+}
+
+/* Secret: ↑ ↑ ↓ ↓ ← → ← → B A */
+const KONAMI = ["ArrowUp", "ArrowUp", "ArrowDown", "ArrowDown", "ArrowLeft", "ArrowRight", "ArrowLeft", "ArrowRight", "b", "a"];
+let konamiPos = 0;
+addEventListener("keydown", (e) => {
+  const key = e.key.length === 1 ? e.key.toLowerCase() : e.key;
+  konamiPos = key === KONAMI[konamiPos] ? konamiPos + 1 : (key === KONAMI[0] ? 1 : 0);
+  if (konamiPos < KONAMI.length) return;
+  konamiPos = 0;
+  unlock("secret");
+  party();
+});
+function party() {
+  if (reduceMotion.matches) return;
+  const colors = ["#40e0d0", "#0fb8b0", "#ff7a3d", "#b5e03a", "#ffc93c"];
+  const layer = document.createElement("div");
+  layer.className = "confetti";
+  layer.setAttribute("aria-hidden", "true");
+  for (let i = 0; i < 90; i++) {
+    const p = document.createElement("i");
+    p.style.cssText = `left:${Math.random() * 100}%;background:${colors[i % colors.length]};` +
+      `animation-delay:${Math.random() * .6}s;animation-duration:${2.2 + Math.random() * 1.6}s;` +
+      `--drift:${(Math.random() - .5) * 240}px;--spin:${(Math.random() - .5) * 1440}deg`;
+    layer.appendChild(p);
+  }
+  document.body.appendChild(layer);
+  document.querySelector(".hero").classList.add("is-party");
+  setTimeout(() => { layer.remove(); document.querySelector(".hero").classList.remove("is-party"); }, 4500);
+}
 
 applyLang();
 updateToTop();
