@@ -253,7 +253,7 @@ html[lang="de"] .lang [data-lang="de"] { background: var(--ink); color: var(--bg
   .hero { padding-top: 40px; }
   .hero__status { margin-bottom: 4px; }
   .hero__portrait { order: 2; width: min(230px, 60vw); margin-top: 40px; }
-  .captcha { order: 3; margin-top: 32px; }
+  .captcha { order: 3; margin-top: 64px; } /* room for the ring under the photo and the sticker above the box */
   .hero__lead { margin: 18px 0 20px; font-size: 18px; }
   .hero__cta { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: 100%; max-width: 400px; }
   .hero__cta .btn { justify-content: center; text-align: center; padding: 12px 14px; }
@@ -497,44 +497,46 @@ html:has(.case[open]) { overflow: hidden; }
 }
 .case__gallery video { max-height: 520px; object-fit: contain; background: #111; }
 
-/* "Where I started" – early semesters as a timeline that ends with today */
-.early { margin-top: 64px; }
+/* "My journey" – a vertical timeline, one row per semester, ending with today */
+.early { margin-top: 72px; }
 .early__title { font: 700 clamp(28px, 4vw, 38px) var(--serif); letter-spacing: -.02em; margin-bottom: 6px; }
-.early__list {
-  list-style: none; margin: 0; padding: 0; position: relative;
-  display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px;
-}
-/* the line connecting the steps */
+.early__list { list-style: none; margin: 0; padding: 0 0 0 28px; position: relative; display: grid; gap: 14px; max-width: 860px; }
+/* the rail: fades from grey (past) to turquoise (today) */
 .early__list::before {
-  content: ""; position: absolute; left: 12px; right: 12px; top: 13px; height: 3px; border-radius: 3px;
-  background: linear-gradient(90deg, var(--line), var(--turq));
+  content: ""; position: absolute; left: 8px; top: 12px; bottom: 12px; width: 3px; border-radius: 3px;
+  background: linear-gradient(var(--line), var(--turq));
 }
+.journey__step { position: relative; }
+/* dot on the rail for every step */
+.journey__step::before {
+  content: ""; position: absolute; left: -26px; top: 50%; translate: 0 -50%; width: 14px; height: 14px; border-radius: 50%;
+  background: var(--bg); border: 3px solid var(--line);
+}
+.journey__step.is-today::before { background: var(--turq); border-color: var(--turq); box-shadow: 0 0 0 5px color-mix(in srgb, var(--turq) 30%, transparent); }
 .early-card {
-  position: relative; display: flex; flex-direction: column; align-items: flex-start; gap: 6px; width: 100%; height: 100%;
-  padding: 0; border: 0; background: none; color: var(--ink); font: inherit; text-align: left; cursor: pointer;
+  display: grid; grid-template-columns: 180px minmax(0, 1fr); align-items: center; gap: 18px; width: 100%;
+  padding: 10px; border-radius: 20px; border: 1px solid var(--line); background: var(--surface);
+  color: var(--ink); font: inherit; text-align: left; text-decoration: none; cursor: pointer;
+  transition: transform .2s, border-color .2s, box-shadow .2s;
 }
-.early-card__when {
-  position: relative; z-index: 1; padding: 4px 12px; border-radius: 999px; margin-bottom: 8px;
-  background: var(--surface-2); border: 1px solid var(--line); font: 800 12px var(--sans); letter-spacing: .04em; color: var(--ink-soft);
-}
-.early-card__media {
-  display: block; width: 100%; aspect-ratio: 16/10; overflow: hidden; border-radius: 16px;
-  border: 1px solid var(--line); background: var(--surface-2); transition: transform .25s, box-shadow .25s;
-}
+.early-card:hover { transform: translateX(4px); border-color: var(--turq); box-shadow: var(--shadow); }
+.early-card__media { display: block; aspect-ratio: 16/10; overflow: hidden; border-radius: 14px; background: var(--surface-2); }
 .early-card__media img { width: 100%; height: 100%; object-fit: cover; }
 /* earlier work looks a little faded, today is in full colour */
-.early-card:not(.early-card--today) .early-card__media img { filter: saturate(.6); }
-.early-card:hover .early-card__media { transform: translateY(-4px); box-shadow: var(--shadow); }
-.early-card__title { font: 700 21px/1.2 var(--serif); margin-top: 6px; }
+.early-card:not(.early-card--today) .early-card__media img { filter: saturate(.65); }
+.early-card__text { display: flex; flex-direction: column; align-items: flex-start; gap: 3px; min-width: 0; }
+.early-card__when { font: 800 12px var(--sans); letter-spacing: .05em; text-transform: uppercase; color: var(--ink-soft); }
+.early-card__title { font: 700 22px/1.2 var(--serif); }
 .early-card__kicker { font-size: 12px; font-weight: 700; color: var(--orange-text); text-transform: uppercase; letter-spacing: .05em; }
 .early-card__growth { font-size: 15px; color: var(--ink-soft); }
-.early-card--today .early-card__when { background: var(--turq); border-color: var(--turq); color: #062624; }
-.early-card--today .early-card__media { border: 2px solid var(--turq); }
-@media (max-width: 860px) {
-  .early__list { grid-template-columns: 1fr 1fr; gap: 28px 16px; }
-  .early__list::before { display: none; }
+.early-card--today { border: 2px solid var(--turq); background: color-mix(in srgb, var(--turq) 8%, var(--surface)); }
+.early-card--today .early-card__when { color: var(--turq-text); }
+.ph--icon svg { width: 36px; height: 36px; }
+@media (max-width: 520px) {
+  .early-card { grid-template-columns: 96px minmax(0, 1fr); gap: 12px; padding: 8px; }
+  .early-card__title { font-size: 18px; }
+  .early-card__growth { font-size: 14px; }
 }
-@media (max-width: 520px) { .early__list { grid-template-columns: 1fr; } }
 
 /* Timeline */
 .timeline { list-style: none; margin: 28px 0 0; padding: 0 0 0 28px; border-left: 3px dashed var(--line); }

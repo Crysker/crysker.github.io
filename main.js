@@ -37,6 +37,7 @@ const PROJECTS = [
   },
   {
     id: "grim",
+    jam: true, // game jams & hackathons filter
     themes: ["sight"],
     img: IMG + "grim.png",
     video: "7VHN2e4oFDc",
@@ -45,6 +46,7 @@ const PROJECTS = [
   },
   {
     id: "paper",
+    jam: true,
     themes: ["shared"],
     img: IMG + "paper.png",
     video: "7b2H0eAUaGw",
@@ -66,7 +68,15 @@ const PROJECTS = [
     links: []
   },
   {
+    id: "aroom", // Master project – hidden until its summary is written
+    img: IMG + "aroom.jpg",
+    video: "cy6opOVHqwc",
+    tags: ["AR", "Mobile"],
+    links: []
+  },
+  {
     id: "deepspace", // hidden until its summary is written
+    jam: true,
     img: IMG + "deepspace.jpg",
     video: "i_oERAmOcPI",
     tags: ["Unity", "VR", "Game Jam"],
@@ -165,9 +175,11 @@ const I18N = {
     "explore.c.p": "Co-located multiplayer and mixed reality that connects digital content with real objects and real people in the same room.",
     "projects.title": "Projects",
     "projects.intro": "Three questions connect my work – pick one, or click a project for the full story.",
-    "early.title": "Where I started", "early.intro": "My first semesters – and how I got better at UX/UI along the way.",
-    "early.now": "Today", "early.today": "2× 1st place – co-located VR, designed and tested with real players.",
-    themes: { all: "All", sight: "Beyond sight", abilities: "Diverse abilities", shared: "Shared realities" },
+    "early.title": "My journey", "early.intro": "From my first browser game to award-winning VR – semester by semester.",
+    "early.now": "Today", "early.intern.t": "UX/UI internship · EBCONT", "early.intern.p": "Design systems and prototypes in real product teams – see Experience.",
+    themes: { all: "All", sight: "Beyond sight", abilities: "Diverse abilities", shared: "Shared realities", jams: "Jams & hackathons" },
+    "jams.t": "Game jams & hackathons", "jams.p": "A weekend, a team, one idea – where I try the wild stuff fast.",
+    "tl.s5": "5th semester · 2023",
     "thesis.title": "Bachelor's thesis",
     "thesis.kicker": "BSc Creative Computing · USTP · 2024",
     "thesis.name": "Learning nature survival skills in a playful VR world",
@@ -247,6 +259,8 @@ const I18N = {
       historia: {
         title: "Historia Virtualis",
         kicker: "Co-located multiplayer VR",
+        semester: "Master · 2025",
+        growth: "2× 1st place – co-located VR, designed and tested with real players.",
         highlight: "1st place at two competitions · shown at the European Researchers' Night",
         badge: "🏆 1st place ×2",
         summary: "Three players, one room, Roman St. Pölten: bake a festive bread in a 1st-century bakery — and only succeed together.",
@@ -296,6 +310,8 @@ const I18N = {
       hue: {
         title: "Hue of Hope",
         kicker: "Deckbuilder · Bachelor project",
+        semester: "6th semester · 2024",
+        growth: "Design and playtesting for a complete game – published on itch.io.",
         highlight: "Published and playable on itch.io",
         summary: "A turn-based deckbuilder inspired by Hollow Knight and Slay the Spire: build your deck, defeat bosses and free the characters who carry the story.",
         duration: "5 months",
@@ -308,6 +324,8 @@ const I18N = {
       ocean: {
         title: "#SaveTheOcean",
         kicker: "VR game · Creative Code Lab 4",
+        semester: "4th semester · 2023",
+        growth: "My first VR game in a team – 3D modelling, animation and world design.",
         highlight: "A* pathfinding sends the trash downriver – until a sea monster appears",
         summary: "Goblin villagers keep throwing trash into the river. Collect it in VR before it reaches the ocean – let too much through and a sea monster rises that you have to fight.",
         duration: "2 weeks",
@@ -325,6 +343,20 @@ const I18N = {
         duration: "Game jam",
         role: "[Your role]",
         challenge: "[Idea / theme]",
+        approach: "[What you built]",
+        result: "[What came out of it]",
+        learned: "[One takeaway]"
+      },
+      aroom: {
+        title: "ARoom",
+        kicker: "Master project · Mobile AR",
+        semester: "Master",
+        growth: "[One line: what this project added]",
+        highlight: "[One-line result]",
+        summary: "[One or two sentences about the app.]",
+        duration: "[Duration]",
+        role: "[Your role]",
+        challenge: "[Idea / problem]",
         approach: "[What you built]",
         result: "[What came out of it]",
         learned: "[One takeaway]"
@@ -415,9 +447,11 @@ const I18N = {
     "explore.c.p": "Co-located Multiplayer und Mixed Reality, die digitale Inhalte mit echten Objekten und echten Menschen im selben Raum verbinden.",
     "projects.title": "Projekte",
     "projects.intro": "Drei Fragen verbinden meine Arbeit – wähl eine aus oder klick auf ein Projekt für die ganze Geschichte.",
-    "early.title": "Wie alles anfing", "early.intro": "Meine ersten Semester – und wie ich dabei in UX/UI besser geworden bin.",
-    "early.now": "Heute", "early.today": "2× 1. Platz – Co-located VR, gestaltet und getestet mit echten Spieler:innen.",
-    themes: { all: "Alle", sight: "Mehr als Sehen", abilities: "Diverse Fähigkeiten", shared: "Geteilte Realitäten" },
+    "early.title": "Mein Weg", "early.intro": "Vom ersten Browserspiel bis zur preisgekrönten VR – Semester für Semester.",
+    "early.now": "Heute", "early.intern.t": "UX/UI-Praktikum · EBCONT", "early.intern.p": "Design-Systeme und Prototypen in echten Produktteams – siehe Werdegang.",
+    themes: { all: "Alle", sight: "Mehr als Sehen", abilities: "Diverse Fähigkeiten", shared: "Geteilte Realitäten", jams: "Jams & Hackathons" },
+    "jams.t": "Game Jams & Hackathons", "jams.p": "Ein Wochenende, ein Team, eine Idee – hier probiere ich die verrückten Sachen schnell aus.",
+    "tl.s5": "5. Semester · 2023",
     "thesis.title": "Bachelorarbeit",
     "thesis.kicker": "BSc Creative Computing · USTP · 2024",
     "thesis.name": "Überlebenstechniken in der Natur spielerisch in VR lernen",
@@ -497,6 +531,8 @@ const I18N = {
       historia: {
         title: "Historia Virtualis",
         kicker: "Co-located Multiplayer-VR",
+        semester: "Master · 2025",
+        growth: "2× 1. Platz – Co-located VR, gestaltet und getestet mit echten Spieler:innen.",
         highlight: "1. Platz bei zwei Wettbewerben · gezeigt bei der European Researchers' Night",
         badge: "🏆 2× 1. Platz",
         summary: "Drei Spieler:innen, ein Raum, das römische St. Pölten: Backt in einer Bäckerei aus dem 1. Jahrhundert ein Festbrot – und schafft es nur gemeinsam.",
@@ -546,6 +582,8 @@ const I18N = {
       hue: {
         title: "Hue of Hope",
         kicker: "Deckbuilder · Bachelorprojekt",
+        semester: "6. Semester · 2024",
+        growth: "Design und Playtesting für ein komplettes Spiel – veröffentlicht auf itch.io.",
         highlight: "Veröffentlicht und spielbar auf itch.io",
         summary: "Ein rundenbasierter Deckbuilder, inspiriert von Hollow Knight und Slay the Spire: Deck aufbauen, Bosse besiegen und die Figuren befreien, die die Geschichte erzählen.",
         duration: "5 Monate",
@@ -558,6 +596,8 @@ const I18N = {
       ocean: {
         title: "#SaveTheOcean",
         kicker: "VR-Spiel · Creative Code Lab 4",
+        semester: "4. Semester · 2023",
+        growth: "Mein erstes VR-Spiel im Team – 3D-Modellierung, Animation und World Design.",
         highlight: "A*-Pathfinding treibt den Müll flussabwärts – bis ein Seemonster auftaucht",
         summary: "Goblin-Dorfbewohner werfen ständig Müll in den Fluss. Sammle ihn in VR ein, bevor er das Meer erreicht – kommt zu viel durch, taucht ein Seemonster auf, gegen das du kämpfen musst.",
         duration: "2 Wochen",
@@ -576,6 +616,20 @@ const I18N = {
         role: "[Deine Rolle]",
         challenge: "[Idee / Thema]",
         approach: "[Was ihr gebaut habt]",
+        result: "[Was daraus wurde]",
+        learned: "[Eine Erkenntnis]"
+      },
+      aroom: {
+        title: "ARoom",
+        kicker: "Masterprojekt · Mobile AR",
+        semester: "Master",
+        growth: "[Eine Zeile: was dieses Projekt dazugebracht hat]",
+        highlight: "[Ergebnis in einem Satz]",
+        summary: "[Ein, zwei Sätze zur App.]",
+        duration: "[Dauer]",
+        role: "[Deine Rolle]",
+        challenge: "[Idee / Problem]",
+        approach: "[Was du gebaut hast]",
         result: "[Was daraus wurde]",
         learned: "[Eine Erkenntnis]"
       },
@@ -732,12 +786,16 @@ const ICONS = {
   all: svg('<rect x="4" y="4" width="6.5" height="6.5" rx="1.5"/><rect x="13.5" y="4" width="6.5" height="6.5" rx="1.5"/><rect x="4" y="13.5" width="6.5" height="6.5" rx="1.5"/><rect x="13.5" y="13.5" width="6.5" height="6.5" rx="1.5"/>'),
   sight: svg('<path d="M3 10v4M7.5 6.5v11M12 3.5v17M16.5 7.5v9M21 10.5v3"/>'), // sound waves
   abilities: svg('<circle cx="12" cy="4.5" r="1.8"/><path d="M5 8.5l7 1.6 7-1.6M12 10.1v5M12 15.1l-3.5 5.9M12 15.1l3.5 5.9"/>'), // accessibility
-  shared: svg('<circle cx="9" cy="12" r="5.5"/><circle cx="15" cy="12" r="5.5"/>') // overlapping realities
+  shared: svg('<circle cx="9" cy="12" r="5.5"/><circle cx="15" cy="12" r="5.5"/>'), // overlapping realities
+  jams: svg('<path d="M13 2 4 14h7l-1 8 9-12h-7l1-8z"/>'), // lightning – made fast
+  work: svg('<rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8.5 7V5a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v2M3 13h18"/>') // briefcase
 };
+// The three research questions + game jams/hackathons as a category
 const THEMES = [
-  { id: "sight", text: "explore.a" },
-  { id: "abilities", text: "explore.b" },
-  { id: "shared", text: "explore.c" }
+  { id: "sight", text: "explore.a", match: (pr) => (pr.themes || []).includes("sight") },
+  { id: "abilities", text: "explore.b", match: (pr) => (pr.themes || []).includes("abilities") },
+  { id: "shared", text: "explore.c", match: (pr) => (pr.themes || []).includes("shared") },
+  { id: "jams", text: "jams", match: (pr) => pr.jam }
 ];
 let theme = "all";
 function renderThemes() {
@@ -762,7 +820,8 @@ document.getElementById("themes").addEventListener("click", (e) => {
 function renderProjects() {
   const grid = document.getElementById("projectGrid");
   const P = I18N[lang].p;
-  const shown = visibleProjects().filter((pr) => !pr.early && (theme === "all" || (pr.themes || []).includes(theme)));
+  const active = THEMES.find((th) => th.id === theme);
+  const shown = visibleProjects().filter((pr) => !pr.early && (!active || active.match(pr)));
   grid.classList.toggle("is-filtered", theme !== "all"); // filtered: equal cards, no featured layout
   grid.innerHTML = shown.map((pr) => {
     const x = P[pr.id];
@@ -788,32 +847,49 @@ function renderProjects() {
   renderEarly();
 }
 
-/* "Where I started" – early semester projects as a timeline, ending with today's best work */
+/* "My journey" – one step per semester, from the first browser game to the master's.
+   Steps point at projects (semester + growth line come from their texts); hidden projects are skipped. */
+const JOURNEY = [
+  { id: "nott" }, { id: "nftrade" }, { id: "memeit" }, { id: "ocean" },
+  { intern: true, when: "tl.s5" },
+  { id: "hue" },
+  { id: "historia", today: true }, { id: "aroom" }
+];
 function renderEarly() {
   const P = I18N[lang].p;
-  const early = visibleProjects().filter((pr) => pr.early);
-  document.getElementById("early").hidden = !early.length;
-  document.getElementById("earlyList").innerHTML = early.map((pr) => `
-    <li>
-      <button type="button" class="early-card" data-id="${pr.id}" aria-label="${esc(t("ui").open)}: ${esc(P[pr.id].title)}">
-        <span class="early-card__when">${esc(P[pr.id].semester)}</span>
+  const visible = visibleProjects();
+  const steps = JOURNEY.filter((s) => s.intern || visible.some((p) => p.id === s.id));
+  document.getElementById("early").hidden = !steps.length;
+  document.getElementById("earlyList").innerHTML = steps.map((s) => {
+    if (s.intern) return `
+    <li class="journey__step">
+      <a class="early-card early-card--intern" href="#experience">
+        <span class="early-card__media"><span class="ph ph--icon">${ICONS.work}</span></span>
+        <span class="early-card__text">
+          <span class="early-card__when">${esc(t(s.when))}</span>
+          <b class="early-card__title">${esc(t("early.intern.t"))}</b>
+          <span class="early-card__growth">${esc(t("early.intern.p"))}</span>
+        </span>
+      </a>
+    </li>`;
+    const pr = PROJECTS.find((p) => p.id === s.id), x = P[s.id];
+    return `
+    <li class="journey__step${s.today ? " is-today" : ""}">
+      <button type="button" class="early-card${s.today ? " early-card--today" : ""}" data-id="${s.id}"
+              aria-label="${esc(t("ui").open)}: ${esc(x.title)}">
         <span class="early-card__media">${pic(pr)}</span>
-        <b class="early-card__title">${esc(P[pr.id].title)}</b>
-        <span class="early-card__kicker">${esc(P[pr.id].kicker)}</span>
-        <span class="early-card__growth">${esc(P[pr.id].growth)}</span>
-      </button>
-    </li>`).join("") + `
-    <li>
-      <button type="button" class="early-card early-card--today" data-id="historia">
-        <span class="early-card__when">${esc(t("early.now"))}</span>
-        <span class="early-card__media"><img src="${PROJECTS[0].img}" alt="" loading="lazy"></span>
-        <b class="early-card__title">${esc(P.historia.title)}</b>
-        <span class="early-card__growth">${esc(t("early.today"))}</span>
+        <span class="early-card__text">
+          <span class="early-card__when">${esc(s.today ? t("early.now") + " · " + x.semester : x.semester)}</span>
+          <b class="early-card__title">${esc(x.title)}</b>
+          <span class="early-card__kicker">${esc(x.kicker)}</span>
+          ${filled(x.growth) ? `<span class="early-card__growth">${esc(x.growth)}</span>` : ""}
+        </span>
       </button>
     </li>`;
+  }).join("");
 }
 document.getElementById("earlyList").addEventListener("click", (e) => {
-  const card = e.target.closest(".early-card");
+  const card = e.target.closest("button.early-card");
   if (!card) return;
   lastCardId = card.dataset.id;
   openProject(card.dataset.id);
@@ -839,7 +915,7 @@ function openProject(id, { push = true } = {}) {
     ? `<button type="button" class="video__play case__video" data-yt="${pr.video}" data-title="${esc(x.title)}"
          aria-label="${esc(ui.watch)}: ${esc(x.title)}">
          <img src="${pr.img}" alt="">
-         <span class="video__btn" aria-hidden="true">▶</span>
+         <span class="video__btn" aria-hidden="true"></span>
          <span class="video__label">${esc(ui.watch)}</span>
        </button>`
     : pic(pr, false);
@@ -1039,7 +1115,9 @@ document.querySelectorAll(".video").forEach((v) => {
 /* ============ Reveal on scroll ============ */
 const io = "IntersectionObserver" in window ? new IntersectionObserver((entries) => {
   entries.forEach((en) => { if (en.isIntersecting) { en.target.classList.add("is-in"); io.unobserve(en.target); } });
-}, { threshold: 0.12 }) : null;
+// Trigger when the section's top reaches the lower 15% of the screen. (A percentage threshold broke on
+// phones: the projects section is so tall that 12% of it never fits on screen, so it stayed invisible.)
+}, { threshold: 0, rootMargin: "0px 0px -15% 0px" }) : null;
 document.querySelectorAll(".section").forEach((s) => {
   if (!io) return;
   s.classList.add("reveal");
@@ -1055,6 +1133,10 @@ function updateToTop() {
   toTop.classList.toggle("is-visible", scrollY > innerHeight * 0.8);
   toTopProgress.style.strokeDashoffset = String(100 - (max > 0 ? (scrollY / max) * 100 : 0));
   if (max > 0 && scrollY >= max - 40) unlock("bottom");
+  // Safety net for the fade-in: any section whose top is on screen gets shown, however tall it is
+  document.querySelectorAll(".section.reveal:not(.is-in)").forEach((sec) => {
+    if (sec.getBoundingClientRect().top < innerHeight * 0.9) sec.classList.add("is-in");
+  });
   scrollTick = false;
 }
 addEventListener("scroll", () => { if (!scrollTick) { scrollTick = true; requestAnimationFrame(updateToTop); } }, { passive: true });
