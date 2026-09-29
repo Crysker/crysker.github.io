@@ -15,7 +15,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,700;1,9..144,600;1,9..144,700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=6">
+  <link rel="stylesheet" href="styles.css?v=7">
 </head>
 <body>
   <a class="skip" href="#main" data-i18n="skip">Skip to content</a>
@@ -63,7 +63,12 @@
         <a class="btn js-cv" href="#" target="_blank" rel="noopener" hidden data-i18n="cv">Download CV</a>
         <a class="btn" href="#contact" data-i18n="hero.cta2">Let's talk</a>
       </div>
-      <p class="hero__scroll" aria-hidden="true">✦ <span data-i18n="hero.scroll">scroll down and get to know me</span> ✦</p>
+      <!-- A reCAPTCHA parody: opens the shape-slotting minigame -->
+      <button class="captcha" id="captchaOpen" type="button">
+        <span class="captcha__box" aria-hidden="true"></span>
+        <span class="captcha__label" data-i18n="captcha.check">I'm not a robot</span>
+        <span class="captcha__brand" aria-hidden="true"><span class="captcha__logo">↻</span>reSHAPTCHA</span>
+      </button>
     </section>
 
     <!-- PROJECTS (first: it's what recruiters came for) -->
@@ -203,6 +208,34 @@
     <span class="to-top__arrow" aria-hidden="true">↑</span>
   </a>
 
+  <!-- reSHAPTCHA minigame: slot the hero shapes, get a meme -->
+  <dialog class="game" id="game" aria-labelledby="gameTitle">
+    <div class="game__head">
+      <p class="game__kicker" data-i18n="captcha.kicker">Security check</p>
+      <h2 id="gameTitle" data-i18n="captcha.title">Put every shape into its slot</h2>
+      <p class="game__hint" data-i18n="captcha.hint">Drag them – or tap a shape, then its slot.</p>
+    </div>
+    <div class="game__play" id="gamePlay">
+      <div class="game__slots" id="gameSlots"></div>
+      <div class="game__tray" id="gameTray"></div>
+    </div>
+    <p class="game__msg" id="gameMsg" role="status"></p>
+    <div class="game__win" id="gameWin" hidden>
+      <figure class="meme">
+        <img src="assets/img/portrait.jpg" alt="" width="260" height="325">
+        <figcaption>
+          <span class="meme__top" data-i18n="captcha.memeTop">Congrats, you're human</span>
+          <span class="meme__bottom" data-i18n="captcha.memeBottom">Now hire one</span>
+        </figcaption>
+      </figure>
+      <a class="btn btn--primary" href="#contact" id="gameHire" data-i18n="captcha.hire">Okay, let's talk →</a>
+    </div>
+    <div class="game__foot">
+      <span class="captcha__brand"><span class="captcha__logo" aria-hidden="true">↻</span>reSHAPTCHA</span>
+      <button class="game__close" id="gameClose" type="button" data-i18n="captcha.close">Close</button>
+    </div>
+  </dialog>
+
   <!-- Project case study: full-screen view with its own link (#project-<id>) -->
   <dialog class="case" id="projectModal" aria-labelledby="modalTitle">
     <div class="case__bar">
@@ -213,6 +246,6 @@
   </dialog>
 
   <script src="logos.js?v=2"></script>
-  <script src="main.js?v=7"></script>
+  <script src="main.js?v=8"></script>
 </body>
 </html>

@@ -167,6 +167,13 @@ const I18N = {
     "contact.book": "Book a 30-min call",
     "contact.copy": "Copy", "contact.copied": "Email address copied",
     toTop: "Back to top", "case.back": "All projects",
+    "captcha.check": "I'm not a robot", "captcha.kicker": "Security check",
+    "captcha.title": "Put every shape into its slot", "captcha.hint": "Drag them – or tap a shape, then its slot.",
+    "captcha.memeTop": "Congrats, you're human", "captcha.memeBottom": "Now hire one",
+    "captcha.hire": "Okay, let's talk →", "captcha.close": "Close", "captcha.done": "Verified. Preparing your reward…",
+    "captcha.wrong": ["Hmm… suspiciously robotic.", "Beep boop? Try again.", "That's not where that goes, human.", "Are you a toaster?"],
+    "captcha.picked": "Picked up – now choose its slot.", "captcha.slot": "Slot for the {s}", "captcha.won": "Verification complete ✓",
+    shapeNames: { sphere: "sphere", cube: "cube", ring: "ring", tri: "triangle", pill: "pill" },
     "footer.fun": "No game engine was harmed in the making of this site.",
     ach: {
       unlocked: "Achievement unlocked", count: "{n}/{total} achievements found", hint: "Can you find them all?",
@@ -175,7 +182,8 @@ const I18N = {
       all: ["Completionist", "Opened every project"],
       lang: ["Polyglot", "Switched the language"],
       bottom: ["Deep diver", "Scrolled all the way down"],
-      secret: ["Cowabunga! 🐢", "Found the secret code"]
+      secret: ["Cowabunga! 🐢", "Found the secret code"],
+      human: ["Certified human", "Passed the reSHAPTCHA"]
     },
     "footer.top": "Back to top ↑",
     ui: {
@@ -348,6 +356,13 @@ const I18N = {
     "contact.book": "30-Min-Call buchen",
     "contact.copy": "Kopieren", "contact.copied": "E-Mail-Adresse kopiert",
     toTop: "Nach oben", "case.back": "Alle Projekte",
+    "captcha.check": "Ich bin kein Roboter", "captcha.kicker": "Sicherheitsprüfung",
+    "captcha.title": "Bring jede Form an ihren Platz", "captcha.hint": "Ziehen – oder Form antippen, dann ihren Platz.",
+    "captcha.memeTop": "Glückwunsch, du bist ein Mensch", "captcha.memeBottom": "Jetzt stell einen ein",
+    "captcha.hire": "Okay, lass uns reden →", "captcha.close": "Schließen", "captcha.done": "Verifiziert. Belohnung wird geladen…",
+    "captcha.wrong": ["Hmm… verdächtig robotisch.", "Beep boop? Nochmal.", "Da gehört das nicht hin, Mensch.", "Bist du ein Toaster?"],
+    "captcha.picked": "Aufgehoben – jetzt den Platz wählen.", "captcha.slot": "Platz für: {s}", "captcha.won": "Verifizierung abgeschlossen ✓",
+    shapeNames: { sphere: "Kugel", cube: "Würfel", ring: "Ring", tri: "Dreieck", pill: "Pille" },
     "footer.fun": "Bei der Erstellung dieser Seite wurde keine Game Engine verletzt.",
     ach: {
       unlocked: "Erfolg freigeschaltet", count: "{n}/{total} Erfolge gefunden", hint: "Findest du alle?",
@@ -356,7 +371,8 @@ const I18N = {
       all: ["Komplettist", "Alle Projekte geöffnet"],
       lang: ["Polyglott", "Sprache gewechselt"],
       bottom: ["Tiefseetaucher", "Ganz nach unten gescrollt"],
-      secret: ["Cowabunga! 🐢", "Den geheimen Code gefunden"]
+      secret: ["Cowabunga! 🐢", "Den geheimen Code gefunden"],
+      human: ["Zertifizierter Mensch", "Das reSHAPTCHA bestanden"]
     },
     "footer.top": "Nach oben ↑",
     ui: {
@@ -539,18 +555,26 @@ function esc(s) {
 const visibleProjects = () => PROJECTS.filter((pr) => filled(I18N[lang].p[pr.id].summary));
 
 /* Theme filter – the three research questions, shown right above the projects */
+// Drawn icons (stroke = currentColor) – font symbols looked different in every font
+const svg = (d) => `<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
+const ICONS = {
+  all: svg('<rect x="4" y="4" width="6.5" height="6.5" rx="1.5"/><rect x="13.5" y="4" width="6.5" height="6.5" rx="1.5"/><rect x="4" y="13.5" width="6.5" height="6.5" rx="1.5"/><rect x="13.5" y="13.5" width="6.5" height="6.5" rx="1.5"/>'),
+  sight: svg('<path d="M3 10v4M7.5 6.5v11M12 3.5v17M16.5 7.5v9M21 10.5v3"/>'), // sound waves
+  abilities: svg('<circle cx="12" cy="4.5" r="1.8"/><path d="M5 8.5l7 1.6 7-1.6M12 10.1v5M12 15.1l-3.5 5.9M12 15.1l3.5 5.9"/>'), // accessibility
+  shared: svg('<circle cx="9" cy="12" r="5.5"/><circle cx="15" cy="12" r="5.5"/>') // overlapping realities
+};
 const THEMES = [
-  { id: "sight", icon: "◉", text: "explore.a" },
-  { id: "abilities", icon: "✦", text: "explore.b" },
-  { id: "shared", icon: "⬡", text: "explore.c" }
+  { id: "sight", text: "explore.a" },
+  { id: "abilities", text: "explore.b" },
+  { id: "shared", text: "explore.c" }
 ];
 let theme = "all";
 function renderThemes() {
   const L = t("themes");
-  const chip = (id, icon, label) => `<button type="button" class="theme" data-theme="${id}" aria-pressed="${theme === id}">
-      ${icon ? `<span aria-hidden="true">${icon}</span>` : ""}${esc(label)}</button>`;
+  const chip = (id, label) => `<button type="button" class="theme" data-theme="${id}" aria-pressed="${theme === id}">
+      ${ICONS[id]}${esc(label)}</button>`;
   document.getElementById("themes").innerHTML =
-    chip("all", "", L.all) + THEMES.map((th) => chip(th.id, th.icon, L[th.id])).join("");
+    chip("all", L.all) + THEMES.map((th) => chip(th.id, L[th.id])).join("");
   const desc = document.getElementById("themeDesc");
   const th = THEMES.find((x) => x.id === theme);
   desc.hidden = !th;
@@ -568,6 +592,7 @@ function renderProjects() {
   const grid = document.getElementById("projectGrid");
   const P = I18N[lang].p;
   const shown = visibleProjects().filter((pr) => theme === "all" || (pr.themes || []).includes(theme));
+  grid.classList.toggle("is-filtered", theme !== "all"); // filtered: equal cards, no featured layout
   grid.innerHTML = shown.map((pr) => {
     const x = P[pr.id];
     return `
@@ -874,7 +899,7 @@ copyBtn.addEventListener("click", async () => {
 });
 
 /* ============ Achievements – a small game for curious visitors ============ */
-const ACHIEVEMENTS = ["first", "video", "all", "lang", "bottom", "secret"];
+const ACHIEVEMENTS = ["first", "video", "all", "lang", "bottom", "secret", "human"];
 let achieved = [];
 try { achieved = JSON.parse(localStorage.getItem("achievements") || "[]"); } catch (e) {}
 const openedProjects = new Set();
@@ -934,6 +959,119 @@ function party() {
   document.querySelector(".hero").classList.add("is-party");
   setTimeout(() => { layer.remove(); document.querySelector(".hero").classList.remove("is-party"); }, 4500);
 }
+
+/* ============ reSHAPTCHA – a reCAPTCHA parody with the hero shapes ============ */
+const SHAPES = ["sphere", "cube", "ring", "tri", "pill"];
+const game = document.getElementById("game");
+const gameSlots = document.getElementById("gameSlots");
+const gameTray = document.getElementById("gameTray");
+const gameMsg = document.getElementById("gameMsg");
+const captchaBtn = document.getElementById("captchaOpen");
+let picked = null, placedCount = 0, wrongCount = 0;
+
+const say = (text) => { gameMsg.textContent = text; };
+const shapeName = (s) => t("shapeNames")[s];
+
+function startGame() {
+  placedCount = 0; wrongCount = 0; picked = null; say("");
+  document.getElementById("gameTitle").textContent = t("captcha.title");
+  document.getElementById("gameWin").hidden = true;
+  document.getElementById("gamePlay").hidden = false;
+  gameSlots.innerHTML = SHAPES.map((s) =>
+    `<button type="button" class="slot" data-shape="${s}" aria-label="${esc(t("captcha.slot").replace("{s}", shapeName(s)))}">
+       <span class="piece piece--${s} is-ghost" aria-hidden="true"></span></button>`).join("");
+  // Fisher–Yates, re-rolled until no shape sits right under its own slot
+  let shuffled;
+  do {
+    shuffled = [...SHAPES];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+  } while (shuffled.some((s, i) => s === SHAPES[i]));
+  gameTray.innerHTML = shuffled.map((s) =>
+    `<button type="button" class="piece-btn" data-shape="${s}" aria-pressed="false" aria-label="${esc(shapeName(s))}">
+       <span class="piece piece--${s}" aria-hidden="true"></span></button>`).join("");
+  if (!game.open) game.showModal();
+}
+
+function pick(btn) {
+  gameTray.querySelectorAll(".piece-btn").forEach((b) => b.setAttribute("aria-pressed", String(b === btn)));
+  picked = btn;
+  say(t("captcha.picked"));
+}
+
+function tryPlace(btn, slot) {
+  btn.style.transform = "";
+  if (!slot || slot.classList.contains("is-filled")) return;
+  if (btn.dataset.shape !== slot.dataset.shape) {
+    const lines = t("captcha.wrong");
+    say(lines[wrongCount++ % lines.length]);
+    btn.classList.remove("is-wrong"); void btn.offsetWidth; btn.classList.add("is-wrong"); // restart shake
+    return;
+  }
+  slot.classList.add("is-filled");
+  slot.innerHTML = btn.innerHTML;
+  btn.remove();
+  picked = null;
+  say("");
+  if (++placedCount === SHAPES.length) {
+    say(t("captcha.done"));
+    setTimeout(() => {
+      document.getElementById("gamePlay").hidden = true;
+      document.getElementById("gameWin").hidden = false;
+      document.getElementById("gameTitle").textContent = t("captcha.won");
+      say("");
+      captchaBtn.classList.add("is-verified");
+      unlock("human");
+    }, 800);
+  }
+}
+
+// Drag with pointer events (mouse + touch); a press without movement counts as a tap
+let drag = null;
+gameTray.addEventListener("pointerdown", (e) => {
+  const btn = e.target.closest(".piece-btn");
+  if (!btn) return;
+  drag = { btn, x: e.clientX, y: e.clientY, moved: false };
+  try { btn.setPointerCapture(e.pointerId); } catch (err) {}
+});
+gameTray.addEventListener("pointermove", (e) => {
+  if (!drag) return;
+  const dx = e.clientX - drag.x, dy = e.clientY - drag.y;
+  if (!drag.moved && Math.hypot(dx, dy) < 6) return;
+  drag.moved = true;
+  drag.btn.classList.add("is-dragging");
+  drag.btn.style.transform = `translate(${dx}px, ${dy}px)`;
+});
+gameTray.addEventListener("pointerup", (e) => {
+  if (!drag) return;
+  const { btn, moved } = drag;
+  drag = null;
+  btn.classList.remove("is-dragging");
+  if (!moved) return pick(btn);
+  btn.style.visibility = "hidden"; // look underneath the dragged piece
+  const slot = document.elementsFromPoint(e.clientX, e.clientY).find((el) => el.classList?.contains("slot"));
+  btn.style.visibility = "";
+  tryPlace(btn, slot);
+});
+gameTray.addEventListener("pointercancel", () => {
+  if (drag) { drag.btn.style.transform = ""; drag.btn.classList.remove("is-dragging"); drag = null; }
+});
+// Keyboard: Enter/Space on a shape picks it (pointer taps are handled above)
+gameTray.addEventListener("click", (e) => {
+  const btn = e.target.closest(".piece-btn");
+  if (btn && e.detail === 0) pick(btn);
+});
+gameSlots.addEventListener("click", (e) => {
+  const slot = e.target.closest(".slot");
+  if (slot && picked) tryPlace(picked, slot);
+});
+
+captchaBtn.addEventListener("click", startGame);
+document.querySelectorAll(".hero .shape").forEach((s) => s.addEventListener("click", startGame)); // the shapes themselves
+document.getElementById("gameClose").addEventListener("click", () => game.close());
+document.getElementById("gameHire").addEventListener("click", () => game.close()); // link then scrolls to #contact
 
 applyLang();
 updateToTop();
