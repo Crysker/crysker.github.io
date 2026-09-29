@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Serkan Sönmez – Interaction Designer & XR Developer</title>
+  <meta name="description" content="Portfolio of Serkan Sönmez – Interaction & UX/UI Designer and XR Developer from St. Pölten, Austria.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,700;1,9..144,600;1,9..144,700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="skip" href="#main" data-i18n="skip">Skip to content</a>
+
+  <header class="nav" id="top">
+    <a class="nav__logo" href="#top" aria-label="Serkan Sönmez – home">S<span>·</span>S</a>
+    <nav aria-label="Main">
+      <ul class="nav__links">
+        <li><a href="#about" data-i18n="nav.about">About</a></li>
+        <li><a href="#explore" data-i18n="nav.explore">Research</a></li>
+        <li><a href="#projects" data-i18n="nav.projects">Projects</a></li>
+        <li><a href="#experience" data-i18n="nav.experience">Experience</a></li>
+        <li><a href="#contact" data-i18n="nav.contact">Contact</a></li>
+      </ul>
+    </nav>
+    <button class="lang" id="langToggle" type="button" aria-label="Switch language">
+      <span data-lang="en">EN</span><span data-lang="de">DE</span>
+    </button>
+  </header>
+
+  <main id="main">
+    <!-- HERO -->
+    <section class="hero">
+      <div class="shape shape--sphere" aria-hidden="true"></div>
+      <div class="shape shape--cube" aria-hidden="true"></div>
+      <div class="shape shape--ring" aria-hidden="true"></div>
+      <div class="shape shape--pill" aria-hidden="true"></div>
+      <div class="shape shape--tri" aria-hidden="true"></div>
+
+      <p class="hero__hello" data-i18n="hero.hello">Hi, I'm</p>
+      <h1 class="hero__name"><em>Serkan</em>!</h1>
+      <p class="hero__roles" aria-live="polite"><span id="role">Interaction Designer</span></p>
+      <div class="hero__portrait">
+        <img src="assets/img/portrait.jpg" alt="Portrait of Serkan Sönmez" width="308" height="462">
+        <span class="sticker" data-i18n="hero.sticker">🏆 2× 1st place</span>
+      </div>
+      <p class="hero__lead" data-i18n="hero.lead">I design and build interactive experiences — on screens, in space, and for all the senses.</p>
+      <div class="hero__cta">
+        <a class="btn btn--primary" href="#projects" data-i18n="hero.cta1">See my work</a>
+        <a class="btn" href="#contact" data-i18n="hero.cta2">Let's talk</a>
+      </div>
+      <p class="hero__scroll" aria-hidden="true">✦ <span data-i18n="hero.scroll">scroll down and get to know me</span> ✦</p>
+    </section>
+
+    <!-- ABOUT -->
+    <section class="section about" id="about">
+      <h2 class="section__title" data-i18n="about.title">About me</h2>
+      <div class="about__grid">
+        <div class="about__text">
+          <p data-i18n="about.p1">I'm a Creative Technologist from St. Pölten, Austria, currently finishing my MSc in Interactive Technologies (AR/VR).</p>
+          <p data-i18n="about.p2">I spent two years as a UX/UI designer at EBCONT working on 15 projects — from public administration to enterprise software — and I've been building with Unity for six years.</p>
+          <p data-i18n="about.p3">What drives me: understanding why people do what they do, and designing experiences that work for everyone.</p>
+          <ul class="facts">
+            <li><strong>6</strong><span data-i18n="about.f1">years of Unity</span></li>
+            <li><strong>15</strong><span data-i18n="about.f2">client projects</span></li>
+            <li><strong>2×</strong><span data-i18n="about.f3">1st place awards</span></li>
+          </ul>
+        </div>
+        <div class="video" data-yt="9Qa9gazr1qg">
+          <button type="button" class="video__play" aria-label="Play video: Historia Virtualis making-of">
+            <img src="https://img.youtube.com/vi/9Qa9gazr1qg/hqdefault.jpg" alt="" loading="lazy">
+            <span class="video__btn" aria-hidden="true">▶</span>
+            <span class="video__label" data-i18n="about.video">Making-of: Historia Virtualis</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- EXPLORE -->
+    <section class="section explore" id="explore">
+      <h2 class="section__title" data-i18n="explore.title">What I explore</h2>
+      <p class="section__intro" data-i18n="explore.intro">The questions that connect my projects.</p>
+      <div class="explore__grid">
+        <article class="ex-card ex-card--a">
+          <span class="ex-card__icon" aria-hidden="true">◉</span>
+          <h3 data-i18n="explore.a.t">Beyond sight</h3>
+          <p data-i18n="explore.a.p">How can we experience space through sound, smell and touch? Multisensory XR that doesn't rely on the eyes alone.</p>
+          <p class="ex-card__refs">Sounds of Shadow · Grim Hollow</p>
+        </article>
+        <article class="ex-card ex-card--b">
+          <span class="ex-card__icon" aria-hidden="true">✦</span>
+          <h3 data-i18n="explore.b.t">Designing for diverse abilities</h3>
+          <p data-i18n="explore.b.p">Accessibility isn't a checklist, it's a mindset — from accessibility audits in enterprise software to XR for different bodies and senses.</p>
+          <p class="ex-card__refs" data-i18n="explore.b.r">EBCONT · Sounds of Shadow</p>
+        </article>
+        <article class="ex-card ex-card--c">
+          <span class="ex-card__icon" aria-hidden="true">⬡</span>
+          <h3 data-i18n="explore.c.t">Shared & physical realities</h3>
+          <p data-i18n="explore.c.p">Co-located multiplayer and mixed reality that connects digital content with real objects and real people in the same room.</p>
+          <p class="ex-card__refs">Historia Virtualis · Paper Therapy</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- PROJECTS -->
+    <section class="section projects" id="projects">
+      <h2 class="section__title" data-i18n="projects.title">Projects</h2>
+      <p class="section__intro" data-i18n="projects.intro">Click a project for the full story.</p>
+      <div class="projects__grid" id="projectGrid"></div>
+    </section>
+
+    <!-- THESIS -->
+    <section class="section thesis" id="thesis">
+      <h2 class="section__title" data-i18n="thesis.title">Bachelor's thesis</h2>
+      <article class="thesis__card">
+        <div class="thesis__media">
+          <img src="assets/thesis/forest.jpg" alt="Low-poly VR forest with a tent, campfire and river" loading="lazy">
+          <img src="assets/thesis/fire.jpg" alt="VR fire-making station with a campfire, bucket and info button" loading="lazy">
+          <img src="assets/thesis/tracks.jpg" alt="VR station where players match animal tracks to a bear, deer and wolf" loading="lazy">
+        </div>
+        <div class="thesis__body">
+          <p class="thesis__kicker" data-i18n="thesis.kicker">BSc Creative Computing · USTP · 2024</p>
+          <h3 class="thesis__name" data-i18n="thesis.name">Learning nature survival skills in a playful VR world</h3>
+          <dl class="thesis__facts">
+            <div><dt data-i18n="thesis.q.t">Question</dt><dd data-i18n="thesis.q">How can gamified VR teach basic survival skills while keeping learners engaged and safe?</dd></div>
+            <div><dt data-i18n="thesis.b.t">Built</dt><dd data-i18n="thesis.b">A Unity VR forest for Meta Quest with stations for shelter building, fire making, water purification, animal tracks and edible vs. poisonous plants. Spatial audio with Wwise.</dd></div>
+            <div><dt data-i18n="thesis.s.t">Study</dt><dd data-i18n="thesis.s">Participants aged 9 to 70, split into a VR group and a printed-guide group. Pre/post tests, surveys, interviews and observation.</dd></div>
+            <div><dt data-i18n="thesis.f.t">Found</dt><dd data-i18n="thesis.f">Both groups learned. VR was described as “very fun” and “interactive” and worked well for spatial, situational knowledge like tracks and animal encounters, while the guide did better on fine visual details like telling berries apart. Lesson: in VR, the details that matter need to be designed to stand out.</dd></div>
+          </dl>
+        </div>
+      </article>
+    </section>
+
+    <!-- EXPERIENCE -->
+    <section class="section experience" id="experience">
+      <h2 class="section__title" data-i18n="exp.title">Experience & education</h2>
+      <ol class="timeline">
+        <li>
+          <span class="timeline__date">2026</span>
+          <h3 data-i18n="exp.coach.t">Game Development Workshop Coach · USTP Young Campus</h3>
+          <p data-i18n="exp.coach.p">Teaching Unity and C# to young people through hands-on workshops.</p>
+        </li>
+        <li>
+          <span class="timeline__date">2024 – 2026</span>
+          <h3 data-i18n="exp.ebcont.t">UX/UI Designer · EBCONT</h3>
+          <p data-i18n="exp.ebcont.p">15 projects across public administration, publishing, industrial tech and enterprise software. Design systems, high-fidelity prototypes in Figma, UX research, user testing and accessibility analyses. Design lead on selected projects in teams of 4–10 developers.</p>
+        </li>
+        <li>
+          <span class="timeline__date">2023</span>
+          <h3 data-i18n="exp.intern.t">UX/UI Designer Internship · EBCONT</h3>
+          <p data-i18n="exp.intern.p">Prototyping, interaction flows and design system work in interdisciplinary product teams.</p>
+        </li>
+        <li class="timeline__edu">
+          <span class="timeline__date">2024 – 2027</span>
+          <h3 data-i18n="exp.msc.t">MSc Interactive Technologies – AR & VR · USTP</h3>
+          <p data-i18n="exp.msc.p">AR/VR, prototyping, empirical research methods, AI, computer vision.</p>
+        </li>
+        <li class="timeline__edu">
+          <span class="timeline__date">2021 – 2024</span>
+          <h3 data-i18n="exp.bsc.t">BSc Creative Computing · USTP</h3>
+          <p data-i18n="exp.bsc.p">Programming, UX/UI, web & mobile, game development and XR.</p>
+        </li>
+      </ol>
+    </section>
+
+    <!-- STACK -->
+    <section class="section stack" id="stack">
+      <h2 class="section__title" data-i18n="stack.title">My stack</h2>
+      <p class="section__intro" data-i18n="stack.intro">Tap a card to flip it.</p>
+      <div class="stack__grid" id="stackGrid"></div>
+    </section>
+
+    <!-- CONTACT -->
+    <section class="section contact" id="contact">
+      <h2 class="contact__title" data-i18n="contact.title">Let's build something<br><em>people remember.</em></h2>
+      <div class="contact__actions">
+        <a class="btn btn--primary" href="mailto:serkan.soenmez@gmx.at">serkan.soenmez@gmx.at</a>
+        <a class="btn" href="https://calendly.com/serkan5768/30min" target="_blank" rel="noopener" data-i18n="contact.book">Book a 30-min call</a>
+      </div>
+      <ul class="socials">
+        <li><a href="https://www.linkedin.com/in/serkan-s%C3%B6nmez-69a825295" target="_blank" rel="noopener">LinkedIn</a></li>
+        <li><a href="https://www.youtube.com/@crysker5361" target="_blank" rel="noopener">YouTube</a></li>
+        <li><a href="https://www.instagram.com/_serkan_s57/" target="_blank" rel="noopener">Instagram</a></li>
+      </ul>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>© 2026 Serkan Sönmez · St. Pölten, Austria</p>
+    <a href="#top" data-i18n="footer.top">Back to top ↑</a>
+  </footer>
+
+  <dialog class="modal" id="projectModal" aria-labelledby="modalTitle">
+    <div class="modal__inner">
+      <button class="modal__close" type="button" aria-label="Close">✕</button>
+      <div id="modalBody"></div>
+    </div>
+  </dialog>
+
+  <script src="main.js"></script>
+</body>
+</html>
