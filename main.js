@@ -89,6 +89,7 @@ const PROJECTS = [
   {
     id: "aroom",
     solo: true, // solo projects say "What I built" instead of "What we built"
+    themes: ["shared"], // AR: digital layer in the real room
     img: IMG + "aroom.jpg",
     video: "cy6opOVHqwc",
     tags: ["Unity", "AR Foundation", "Android", "C#", "Mobile AR"],
