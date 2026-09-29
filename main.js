@@ -49,12 +49,21 @@ const PROJECTS = [
 ];
 
 const STACK = [
-  { id: "figma", mono: "F", color: "var(--pink)" },
-  { id: "unity", mono: "U", color: "var(--yellow)" },
-  { id: "csharp", mono: "C#", color: "var(--purple)" },
-  { id: "metaxr", mono: "XR", color: "var(--lime)" },
-  { id: "blender", mono: "B", color: "var(--orange)" },
-  { id: "research", mono: "UX", color: "var(--blue)" }
+  { id: "figma", logo: "figma" },
+  { id: "unity", logo: "unity" },
+  { id: "csharp", logo: "csharp" },
+  { id: "metaxr", logo: "meta" },
+  { id: "blender", logo: "blender" },
+  { id: "research", glyph: "UX" }
+];
+
+/* Skills from the CV. Items: [label, logoKey?] – labels starting with "@" are translated via I18N.skill */
+const SKILLS = [
+  { id: "design", items: [["@webui"], ["@ds"], ["@proto"], ["@research"], ["@a11y"]] },
+  { id: "xr", items: [["VR / MR"], ["Hand Tracking"], ["Meta Quest & Meta XR SDK", "meta"], ["Shared Spatial Anchors"], ["Netcode for GameObjects"], ["@3d"]] },
+  { id: "code", items: [["C#", "csharp"], ["JavaScript", "javascript"], ["HTML", "html5"], ["CSS", "css3"], ["Java", "java"]] },
+  { id: "tools", items: [["Figma", "figma"], ["Unity", "unity"], ["Blender", "blender"], ["Framer", "framer"], ["Miro", "miro"], ["Git", "git"], ["Jira", "jira"], ["Slack", "slack"], ["Photoshop", "photoshop"], ["Illustrator", "illustrator"], ["MS Teams"], ["MS Office"]] },
+  { id: "lang", wide: true, items: [["@tr"], ["@de"], ["@en"], ["@fr"]] }
 ];
 
 const I18N = {
@@ -69,7 +78,7 @@ const I18N = {
     "hero.cta1": "See my work", "hero.cta2": "Let's talk",
     "hero.scroll": "scroll down and get to know me",
     "about.title": "About me",
-    "about.p1": "I'm a Creative Technologist from St. Pölten, Austria, currently finishing my MSc in Interactive Technologies (AR/VR).",
+    "about.p1": "I'm a Creative Technologist from St. Pölten, Austria, currently finishing my master's degree in Interactive Technologies (AR/VR), graduating as Dipl.-Ing.",
     "about.p2": "I spent two years as a UX/UI designer at EBCONT working on 15 projects — from public administration to enterprise software — and I've been building with Unity for six years.",
     "about.p3": "What drives me: understanding why people do what they do, and designing experiences that work for everyone.",
     "about.f1": "years of Unity", "about.f2": "client projects", "about.f3": "1st place awards",
@@ -101,13 +110,20 @@ const I18N = {
     "exp.ebcont.p": "15 projects across public administration, publishing, industrial tech and enterprise software. Design systems, high-fidelity prototypes in Figma, UX research, user testing and accessibility analyses. Design lead on selected projects in teams of 4–10 developers.",
     "exp.intern.t": "UX/UI Designer Internship · EBCONT",
     "exp.intern.p": "Prototyping, interaction flows and design system work in interdisciplinary product teams.",
-    "exp.msc.t": "MSc Interactive Technologies – AR & VR · USTP",
+    "exp.msc.t": "Master Interactive Technologies – AR & VR (Dipl.-Ing.) · USTP",
     "exp.msc.p": "AR/VR, prototyping, empirical research methods, AI, computer vision.",
     "exp.bsc.t": "BSc Creative Computing · USTP",
     "exp.bsc.p": "Programming, UX/UI, web & mobile, game development and XR.",
-    "stack.title": "My stack",
+    "stack.title": "Stack & skills",
     "stack.intro": "Tap a card to flip it.",
     "stack.hint": "Tap to flip",
+    "nav.menu": "Menu",
+    skillGroups: { design: "Design & UX", xr: "XR", code: "Code", tools: "Tools", lang: "Languages" },
+    skill: {
+      webui: "Web & UI Design", ds: "Design Systems", proto: "Prototyping & Wireframing (low → high fidelity)",
+      research: "UX Research & User Testing", a11y: "Accessibility", "3d": "3D Modelling & 3D Printing",
+      tr: "Turkish <small>native</small>", de: "German <small>native</small>", en: "English <small>C1</small>", fr: "French <small>B2</small>"
+    },
     stack: {
       figma: ["Figma", "My daily driver for design systems, prototypes and handoff. I once pushed its variables feature so far that Figma support confirmed I'd found a bug."],
       unity: ["Unity", "Six years — from my first games in high school to co-located VR multiplayer with hand tracking and spatial anchors."],
@@ -207,7 +223,7 @@ const I18N = {
     "hero.cta1": "Meine Arbeiten", "hero.cta2": "Lass uns reden",
     "hero.scroll": "scroll runter und lern mich kennen",
     "about.title": "Über mich",
-    "about.p1": "Ich bin Creative Technologist aus St. Pölten und schließe gerade meinen Master in Interactive Technologies (AR/VR) ab.",
+    "about.p1": "Ich bin Creative Technologist aus St. Pölten und schließe gerade meinen Master in Interactive Technologies (AR/VR) als Dipl.-Ing. ab.",
     "about.p2": "Zwei Jahre lang habe ich als UX/UI-Designer bei EBCONT an 15 Projekten gearbeitet – von öffentlicher Verwaltung bis Enterprise Software – und entwickle seit sechs Jahren mit Unity.",
     "about.p3": "Was mich antreibt: verstehen, warum Menschen tun, was sie tun – und Erlebnisse gestalten, die für alle funktionieren.",
     "about.f1": "Jahre Unity", "about.f2": "Kundenprojekte", "about.f3": "1. Plätze",
@@ -239,13 +255,20 @@ const I18N = {
     "exp.ebcont.p": "15 Projekte in öffentlicher Verwaltung, Verlagswesen, Industrie und Enterprise Software. Design-Systeme, High-Fidelity-Prototypen in Figma, UX Research, User Testing und Accessibility-Analysen. Designverantwortung für ausgewählte Projekte in Teams mit 4–10 Entwickler:innen.",
     "exp.intern.t": "UX/UI Designer Praktikum · EBCONT",
     "exp.intern.p": "Prototyping, Interaktionsabläufe und Design-Systeme in interdisziplinären Produktteams.",
-    "exp.msc.t": "MSc Interactive Technologies – AR & VR · USTP",
+    "exp.msc.t": "Master Interactive Technologies – AR & VR (Dipl.-Ing.) · USTP",
     "exp.msc.p": "AR/VR, Prototyping, empirische Forschungsmethoden, KI, Computer Vision.",
     "exp.bsc.t": "BSc Creative Computing · USTP",
     "exp.bsc.p": "Programmierung, UX/UI, Web & Mobile, Game Development und XR.",
-    "stack.title": "Mein Stack",
+    "stack.title": "Stack & Skills",
     "stack.intro": "Tipp auf eine Karte, um sie umzudrehen.",
     "stack.hint": "Zum Umdrehen tippen",
+    "nav.menu": "Menü",
+    skillGroups: { design: "Design & UX", xr: "XR", code: "Code", tools: "Tools", lang: "Sprachen" },
+    skill: {
+      webui: "Web & UI Design", ds: "Design-Systeme", proto: "Prototyping & Wireframing (Low → High Fidelity)",
+      research: "UX Research & User Testing", a11y: "Barrierefreiheit", "3d": "3D-Modellierung & 3D-Druck",
+      tr: "Türkisch <small>Muttersprache</small>", de: "Deutsch <small>Muttersprache</small>", en: "Englisch <small>C1</small>", fr: "Französisch <small>B2</small>"
+    },
     stack: {
       figma: ["Figma", "Mein tägliches Werkzeug für Design-Systeme, Prototypen und Übergaben. Mit dem Variables-Feature habe ich Figma einmal so ausgereizt, dass der Support einen Bug bestätigt hat."],
       unity: ["Unity", "Sechs Jahre – von meinen ersten Spielen in der Schule bis zu Co-located-VR-Multiplayer mit Hand Tracking und Spatial Anchors."],
@@ -354,6 +377,7 @@ function applyLang() {
   );
   renderProjects();
   renderStack();
+  renderSkills();
   restartRoles();
 }
 
@@ -362,6 +386,18 @@ document.getElementById("langToggle").addEventListener("click", () => {
   try { localStorage.setItem("lang", lang); } catch (e) {}
   applyLang();
 });
+
+/* ============ Mobile menu ============ */
+const nav = document.querySelector(".nav");
+const menuBtn = document.getElementById("menuToggle");
+function setMenu(open) {
+  nav.classList.toggle("is-open", open);
+  menuBtn.setAttribute("aria-expanded", String(open));
+}
+menuBtn.addEventListener("click", () => setMenu(!nav.classList.contains("is-open")));
+document.getElementById("navLinks").addEventListener("click", (e) => { if (e.target.closest("a")) setMenu(false); });
+document.addEventListener("keydown", (e) => { if (e.key === "Escape") setMenu(false); });
+document.addEventListener("click", (e) => { if (!nav.contains(e.target)) setMenu(false); });
 
 /* ============ Rotating roles ============ */
 let roleTimer;
@@ -459,7 +495,7 @@ function renderStack() {
     <button type="button" class="flip" aria-pressed="false">
       <span class="flip__inner">
         <span class="flip__face flip__front">
-          <span class="flip__mono" style="background:${s.color}">${s.mono}</span>
+          <span class="flip__mono${s.glyph ? " flip__mono--glyph" : ""}">${s.logo ? `<img src="${LOGOS[s.logo]}" alt="">` : s.glyph}</span>
           <span>
             <span class="flip__name">${esc(S[s.id][0])}</span><br>
             <span class="flip__hint">${esc(t("stack.hint"))}</span>
@@ -469,6 +505,18 @@ function renderStack() {
       </span>
     </button>`).join("");
 }
+function renderSkills() {
+  const G = t("skillGroups"), K = t("skill");
+  document.getElementById("skills").innerHTML = SKILLS.map((g) => `
+    <div class="skill-group">
+      <h3>${esc(G[g.id])}</h3>
+      <ul class="chips">${g.items.map(([label, logo]) => {
+        const text = label.startsWith("@") ? K[label.slice(1)] : esc(label); // K values are trusted and may contain <small>
+        return `<li class="${logo ? "" : "no-logo"}">${logo ? `<img src="${LOGOS[logo]}" alt="">` : ""}${text}</li>`;
+      }).join("")}</ul>
+    </div>`).join("");
+}
+
 document.getElementById("stackGrid").addEventListener("click", (e) => {
   const card = e.target.closest(".flip");
   if (card) card.setAttribute("aria-pressed", card.getAttribute("aria-pressed") === "true" ? "false" : "true");

@@ -15,8 +15,11 @@
 
   <header class="nav" id="top">
     <a class="nav__logo" href="#top" aria-label="Serkan Sönmez – home">S<span>·</span>S</a>
+    <button class="nav__menu" id="menuToggle" type="button" aria-expanded="false" aria-controls="navLinks">
+      <span class="nav__burger" aria-hidden="true"></span><span class="sr-only" data-i18n="nav.menu">Menu</span>
+    </button>
     <nav aria-label="Main">
-      <ul class="nav__links">
+      <ul class="nav__links" id="navLinks">
         <li><a href="#about" data-i18n="nav.about">About</a></li>
         <li><a href="#explore" data-i18n="nav.explore">Research</a></li>
         <li><a href="#projects" data-i18n="nav.projects">Projects</a></li>
@@ -153,7 +156,7 @@
         </li>
         <li class="timeline__edu">
           <span class="timeline__date">2024 – 2027</span>
-          <h3 data-i18n="exp.msc.t">MSc Interactive Technologies – AR & VR · USTP</h3>
+          <h3 data-i18n="exp.msc.t">Master Interactive Technologies – AR & VR (Dipl.-Ing.) · USTP</h3>
           <p data-i18n="exp.msc.p">AR/VR, prototyping, empirical research methods, AI, computer vision.</p>
         </li>
         <li class="timeline__edu">
@@ -169,6 +172,7 @@
       <h2 class="section__title" data-i18n="stack.title">My stack</h2>
       <p class="section__intro" data-i18n="stack.intro">Tap a card to flip it.</p>
       <div class="stack__grid" id="stackGrid"></div>
+      <div class="skills" id="skills"></div>
     </section>
 
     <!-- CONTACT -->
@@ -198,6 +202,7 @@
     </div>
   </dialog>
 
+  <script src="logos.js"></script>
   <script src="main.js"></script>
 </body>
 </html>
