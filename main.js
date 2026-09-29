@@ -169,7 +169,7 @@ const STACK = [
 /* Skills from the CV. Items: [label, logoKey?] – labels starting with "@" are translated via I18N.skill */
 /* Character sheet: self-assessed skill points (1–5), [label, logoKey | null, points] */
 const STATS = [
-  { id: "build", items: [["Unity", "unity", 4], ["C#", "csharp", 4], ["Meta XR SDK & Quest", "meta", 3], ["JavaScript · HTML · CSS", "javascript", 3]] },
+  { id: "build", items: [["Unity", "unity", 4], ["C#", "csharp", 4], ["Meta XR SDK & Quest", "meta", 3], ["JS · HTML · CSS", "javascript", 3]] },
   { id: "design", items: [["Figma", "figma", 5], ["Photoshop", "photoshop", 4], ["Blender", "blender", 3], ["Illustrator", "illustrator", 3]] },
   { id: "team", items: [["Miro", "miro", 5], ["Git", "git", 4], ["Jira", "jira", 3], ["Wwise", null, 2]] }
 ];
@@ -1299,13 +1299,15 @@ function renderStack() {
 }
 function renderSkills() {
   const G = t("skillGroups"), K = t("skill"), S = t("sheet");
-  // RPG-style character sheet: 5 pips per skill, they light up one by one when the section scrolls in
+  // RPG-style character sheet: Minecraft-like XP bar per skill (5 segments), fills up when the section scrolls in
   const stat = ([label, logo, pts]) => `
     <li class="stat" aria-label="${esc(label)}: ${pts} ${esc(S.of)} 5, ${esc(S.levels[pts - 1])}">
       <span class="stat__icon" aria-hidden="true">${logo ? `<img src="${LOGOS[logo]}" alt="">` : esc(label.slice(0, 2))}</span>
       <span class="stat__name" aria-hidden="true">${esc(label)}<small>${esc(S.levels[pts - 1])}</small></span>
-      <span class="pips" aria-hidden="true">${[1, 2, 3, 4, 5].map((n) =>
-        `<i class="pip${n <= pts ? " is-on" : ""}" style="--i:${n}"></i>`).join("")}</span>
+      <span class="xp" aria-hidden="true">
+        <b class="xp__lvl">${pts}</b>
+        <span class="xp__bar"><span class="xp__fill" style="--p:${pts / 5}"></span></span>
+      </span>
     </li>`;
   const sheet = `
     <section class="sheet" aria-labelledby="sheetTitle">
