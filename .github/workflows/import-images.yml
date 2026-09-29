@@ -1,0 +1,34 @@
+name: Import portfolio images
+on:
+  push:
+    paths:
+      - '.github/workflows/import-images.yml'
+permissions:
+  contents: write
+jobs:
+  import:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download images from Framer
+        run: |
+          mkdir -p assets/img
+          cd assets/img
+          base=https://framerusercontent.com/images
+          curl -fsSL -o portrait.jpg $base/YN7Jw5tY03yRYQijX7eLW2csXyY.jpg
+          curl -fsSL -o historia.jpg $base/d29amOTXKF6clRbBfel671yJJtw.jpg
+          curl -fsSL -o sounds.png $base/hI9WFgZHYgRyLWhMliYeH3NCcE.png
+          curl -fsSL -o grim.png $base/KswFGoAOjZ4qn7xWMNz93q9kqs.png
+          curl -fsSL -o paper.png $base/X4WAIOvqnPbmz1MPN91WbgMv4.png
+          curl -fsSL -o hue.png $base/pumxcYqCHAs0Ou7ebiztjUsGr1Y.png
+          curl -fsSL -o ocean.jpg $base/6iYFeez3ZvdSfOTFusARnPhLZw.jpg
+          mogrify -resize '1600x1600>' *.jpg *.png
+          rm -f PUT-IMAGES-HERE.txt
+          ls -la
+      - name: Commit images
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898283+github-actions[bot]@users.noreply.github.com"
+          git add -A assets/img
+          git commit -m "Add project images from Framer"
+          git push
