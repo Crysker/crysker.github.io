@@ -20,7 +20,8 @@ const PROJECTS = [
     themes: ["shared"],
     featured: true,
     img: IMG + "historia.jpg",
-    video: "JfwlEoEAzEo", // Gameplay Trailer (the making-of is in About)
+    video: "JfwlEoEAzEo", // Gameplay Trailer
+    preview: IMG + "historia/preview.mp4", // short silent hover clip
     gallery: [
       { video: IMG + "historia/ingame.mp4", poster: IMG + "historia/ingame.jpg" },
       IMG + "historia/village.webp", IMG + "historia/well.webp", IMG + "historia/street.webp",
@@ -76,6 +77,7 @@ const PROJECTS = [
     id: "ocean",
     img: IMG + "ocean.jpg",
     video: "yR7QZmcF6Uk",
+    preview: IMG + "ocean/goblin-walk.mp4",
     // own models first (goblins, huts, straw, bottle, nuclear barrel), then the rest of the cast
     gallery: [
       { video: IMG + "ocean/goblin-walk.mp4", poster: IMG + "ocean/goblin-walk.jpg", loop: true },
@@ -1110,12 +1112,20 @@ document.getElementById("projectGrid").addEventListener("click", (e) => {
 });
 
 /* ============ Hover preview (mouse only) ============
-   YouTube can't be embedded without its own interface (title, buttons), so cards never load YouTube.
-   A project can get its own short silent clip instead: preview: IMG + "…/clip.mp4" (5–10 s, landscape).
-   Without a clip, the card just zooms and shows a play button (CSS). */
+   Own short silent clip if the project has one (preview: IMG + "…/clip.mp4", 5–10 s, landscape),
+   otherwise the YouTube video, muted, fitted into the card (not zoomed, so nothing is cut off). */
 const canHover = matchMedia("(hover: hover) and (pointer: fine)");
 const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)");
 let previewTimer;
+// Open the connection to YouTube once the mouse is near the projects, so previews start faster
+let warmedUp = false;
+document.getElementById("projects").addEventListener("pointerenter", () => {
+  if (warmedUp || !canHover.matches) return;
+  warmedUp = true;
+  ["https://www.youtube-nocookie.com", "https://i.ytimg.com"].forEach((href) => {
+    document.head.appendChild(Object.assign(document.createElement("link"), { rel: "preconnect", href, crossOrigin: "" }));
+  });
+});
 function stopPreview(card) {
   clearTimeout(previewTimer);
   card.querySelector(".p-card__preview")?.remove();
@@ -1125,14 +1135,25 @@ document.getElementById("projectGrid").addEventListener("mouseover", (e) => {
   const card = e.target.closest(".p-card");
   if (!card || card.contains(e.relatedTarget) || !canHover.matches || reduceMotion.matches) return;
   const pr = PROJECTS.find((p) => p.id === card.dataset.id);
-  if (!pr?.preview) return;
-  previewTimer = setTimeout(() => { // short delay so just moving the mouse across the page doesn't start clips
-    const clip = Object.assign(document.createElement("video"), {
-      className: "p-card__preview", src: pr.preview, muted: true, loop: true, playsInline: true, autoplay: true
-    });
-    clip.setAttribute("aria-hidden", "true");
-    clip.addEventListener("playing", () => card.classList.add("is-previewing"), { once: true });
-    card.querySelector(".p-card__media").appendChild(clip);
+  if (!pr?.preview && !pr?.video) return;
+  previewTimer = setTimeout(() => { // short delay so just moving the mouse across the page doesn't start videos
+    let el;
+    if (pr.preview) {
+      el = Object.assign(document.createElement("video"), {
+        className: "p-card__preview", src: pr.preview, muted: true, loop: true, playsInline: true, autoplay: true
+      });
+      el.addEventListener("playing", () => card.classList.add("is-previewing"), { once: true });
+    } else {
+      const v = pr.video;
+      el = Object.assign(document.createElement("iframe"), {
+        className: "p-card__preview p-card__preview--yt", title: "", tabIndex: -1, allow: "autoplay; encrypted-media",
+        src: `https://www.youtube-nocookie.com/embed/${v}?autoplay=1&mute=1&controls=0&loop=1&playlist=${v}&playsinline=1&rel=0&disablekb=1&iv_load_policy=3`
+      });
+      // brief wait after load hides YouTube's black start frame
+      el.addEventListener("load", () => setTimeout(() => card.classList.add("is-previewing"), 400));
+    }
+    el.setAttribute("aria-hidden", "true");
+    card.querySelector(".p-card__media").appendChild(el);
   }, 120);
 });
 document.getElementById("projectGrid").addEventListener("mouseout", (e) => {

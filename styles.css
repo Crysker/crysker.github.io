@@ -402,11 +402,12 @@ html[lang="de"] .lang [data-lang="de"] { background: var(--ink); color: var(--bg
   position: absolute; top: 12px; left: 12px; padding: 6px 12px; border-radius: 999px;
   background: var(--yellow); color: #1d1b2e; font: 800 13px var(--sans); box-shadow: var(--shadow);
 }
-/* Hover preview: own short clip, fills the card exactly (no YouTube interface) */
+/* Hover preview: own clip fills the card; YouTube is fitted in full (no zoom) on a dark backdrop */
 .p-card__preview {
-  position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
+  position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; border: 0;
   opacity: 0; pointer-events: none; transition: opacity .35s;
 }
+.p-card__preview--yt { background: #0d0d12; }
 .p-card.is-previewing .p-card__preview { opacity: 1; }
 .p-card.is-previewing .p-card__video, .p-card.is-previewing .p-card__play { opacity: 0; }
 /* cards with a video: play button fades in on hover */
