@@ -15,7 +15,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,700;1,9..144,600;1,9..144,700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=8">
+  <link rel="stylesheet" href="styles.css?v=9">
 </head>
 <body>
   <a class="skip" href="#main" data-i18n="skip">Skip to content</a>
@@ -79,6 +79,13 @@
       <div class="themes" id="themes" role="group" aria-label="Filter projects by theme"></div>
       <p class="themes__desc" id="themeDesc" aria-live="polite" hidden></p>
       <div class="projects__grid" id="projectGrid"></div>
+
+      <!-- Early semester projects: shows the growth, without diluting the main projects -->
+      <div class="early" id="early" hidden>
+        <h3 class="early__title" data-i18n="early.title">Where I started</h3>
+        <p class="section__intro" data-i18n="early.intro">My first semesters – and how I got better at UX/UI along the way.</p>
+        <ol class="early__list" id="earlyList"></ol>
+      </div>
     </section>
 
     <!-- ABOUT -->
@@ -103,28 +110,6 @@
           </button>
         </div>
       </div>
-    </section>
-
-    <!-- THESIS -->
-    <section class="section thesis" id="thesis">
-      <h2 class="section__title" data-i18n="thesis.title">Bachelor's thesis</h2>
-      <article class="thesis__card">
-        <div class="thesis__media">
-          <img src="assets/thesis/forest.jpg" alt="Low-poly VR forest with a tent, campfire and river" loading="lazy">
-          <img src="assets/thesis/fire.jpg" alt="VR fire-making station with a campfire, bucket and info button" loading="lazy">
-          <img src="assets/thesis/tracks.jpg" alt="VR station where players match animal tracks to a bear, deer and wolf" loading="lazy">
-        </div>
-        <div class="thesis__body">
-          <p class="thesis__kicker" data-i18n="thesis.kicker">BSc Creative Computing · USTP · 2024</p>
-          <h3 class="thesis__name" data-i18n="thesis.name">Learning nature survival skills in a playful VR world</h3>
-          <dl class="thesis__facts">
-            <div><dt data-i18n="thesis.q.t">Question</dt><dd data-i18n="thesis.q">How can gamified VR teach basic survival skills while keeping learners engaged and safe?</dd></div>
-            <div><dt data-i18n="thesis.b.t">Built</dt><dd data-i18n="thesis.b">A Unity VR forest for Meta Quest with stations for shelter building, fire making, water purification, animal tracks and edible vs. poisonous plants. Spatial audio with Wwise.</dd></div>
-            <div><dt data-i18n="thesis.s.t">Study</dt><dd data-i18n="thesis.s">Participants aged 9 to 70, split into a VR group and a printed-guide group. Pre/post tests, surveys, interviews and observation.</dd></div>
-            <div><dt data-i18n="thesis.f.t">Found</dt><dd data-i18n="thesis.f">Both groups learned. VR was described as “very fun” and “interactive” and worked well for spatial, situational knowledge like tracks and animal encounters, while the guide did better on fine visual details like telling berries apart. Lesson: in VR, the details that matter need to be designed to stand out.</dd></div>
-          </dl>
-        </div>
-      </article>
     </section>
 
     <!-- EXPERIENCE -->
@@ -262,6 +247,6 @@
   </dialog>
 
   <script src="logos.js?v=2"></script>
-  <script src="main.js?v=9"></script>
+  <script src="main.js?v=10"></script>
 </body>
 </html>

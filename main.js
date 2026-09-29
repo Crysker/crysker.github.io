@@ -71,6 +71,37 @@ const PROJECTS = [
     video: "i_oERAmOcPI",
     tags: ["Unity", "VR", "Game Jam"],
     links: []
+  },
+  {
+    id: "thesis",
+    themes: ["abilities"],
+    img: "assets/thesis/forest.jpg",
+    gallery: ["assets/thesis/fire.jpg", "assets/thesis/tracks.jpg"],
+    tags: ["Unity", "Meta Quest", "Wwise", "User Study", "Pre/Post Tests"],
+    links: []
+  },
+
+  /* Early work (early: true) – shown in "Where I started" as a timeline, not in the main grid.
+     Images: "img" can be left out until there is one – the card then shows a placeholder. */
+  {
+    id: "nott",
+    early: true,
+    tags: ["JavaScript", "HTML Canvas", "Photoshop", "Pixel Art"],
+    links: []
+  },
+  {
+    id: "nftrade",
+    early: true,
+    img: IMG + "nftrade.jpg",
+    video: "xd62Et5KgWA",
+    tags: ["Figma", "Node.js", "Express", "EJS", "MySQL", "Azure"],
+    links: []
+  },
+  {
+    id: "memeit",
+    early: true,
+    tags: ["Figma", "Android Studio", "Heuristic Evaluation", "User Testing", "SUS"],
+    links: []
   }
 ];
 
@@ -124,6 +155,8 @@ const I18N = {
     "explore.c.p": "Co-located multiplayer and mixed reality that connects digital content with real objects and real people in the same room.",
     "projects.title": "Projects",
     "projects.intro": "Three questions connect my work – pick one, or click a project for the full story.",
+    "early.title": "Where I started", "early.intro": "My first semesters – and how I got better at UX/UI along the way.",
+    "early.now": "Today", "early.today": "2× 1st place – co-located VR, designed and tested with real players.",
     themes: { all: "All", sight: "Beyond sight", abilities: "Diverse abilities", shared: "Shared realities" },
     "thesis.title": "Bachelor's thesis",
     "thesis.kicker": "BSc Creative Computing · USTP · 2024",
@@ -196,7 +229,7 @@ const I18N = {
     ui: {
       duration: "Duration", role: "My role", team: "Team",
       challenge: "Challenge", approach: "What we built", result: "Result", learned: "What I learned",
-      open: "View project", close: "Close", next: "Next project", watch: "Watch video", video: "Video", tools: "Tools & tech",
+      open: "View project", close: "Close", next: "Next project", watch: "Watch video", video: "Video", tools: "Tools & tech", when: "When",
       devpost: "Devpost", ggj: "Global Game Jam page", itch: "Play on itch.io",
       award: "Contest winners", vernissage: "USTP Projektvernissage"
     },
@@ -285,6 +318,58 @@ const I18N = {
         approach: "[What you built]",
         result: "[What came out of it]",
         learned: "[One takeaway]"
+      },
+      thesis: {
+        title: "Survival skills in VR",
+        kicker: "Bachelor's thesis · USTP · 2024",
+        highlight: "User study with participants aged 9 to 70",
+        summary: "Can a playful VR forest teach basic survival skills – and teach them as well as a printed guide? A Unity VR game for Meta Quest, tested against a paper guide.",
+        duration: "Bachelor's thesis",
+        role: "Concept, Unity development, study design and evaluation",
+        challenge: "How can gamified VR teach basic survival skills while keeping learners engaged and safe – across very different ages?",
+        approach: "A Unity VR forest for Meta Quest with stations for shelter building, fire making, water purification, animal tracks and edible vs. poisonous plants, with spatial audio in Wwise. Participants aged 9 to 70 were split into a VR group and a printed-guide group: pre/post tests, surveys, interviews and observation.",
+        result: "Both groups learned. VR was described as “very fun” and “interactive” and worked well for spatial, situational knowledge like tracks and animal encounters, while the guide did better on fine visual details like telling berries apart.",
+        learned: "In VR, the details that matter need to be designed to stand out."
+      },
+      nott: {
+        title: "No Time To Stay",
+        kicker: "Browser game · CCL 1",
+        semester: "1st semester · 2021",
+        growth: "Code first, design by gut feeling – but a complete game with my own art.",
+        summary: "Sithis, an assassin who fell into a trap, has to survive 60 seconds per level – dodging fireballs until two dragons wait in the boss level.",
+        duration: "Project week",
+        role: "Solo: game design, coding from scratch in JavaScript, all pixel art and backgrounds",
+        challenge: "My first game without an engine: movement, collision, gravity and levels, all from scratch in one project week.",
+        approach: "An object-oriented JavaScript setup – a GameObject base class that the player, hearts and boss inherit from – rendered on canvas. Two top-down levels, then a side-scrolling boss level with gravity. Every sprite and background hand-drawn in Photoshop.",
+        result: "A complete, playable browser game with a story, three levels and an end screen – nearly finished after four days.",
+        learned: "Plan the art as carefully as the code: drawing took me longer than programming."
+      },
+      nftrade: {
+        title: "NFTrade",
+        kicker: "Full-stack web app · CCL 2",
+        semester: "2nd semester · 2022",
+        growth: "My first designs in Figma – and my first time designing for mobile.",
+        summary: "A trading platform: sign up, list trade offers, browse other people's inventories and chat – inspired by trading sites for game skins.",
+        duration: "10 days",
+        role: "Solo: concept, Figma design for desktop and mobile, frontend and backend",
+        challenge: "Build a complete web platform – accounts, database relations, offers and a chat – in about ten days.",
+        approach: "Designed desktop and mobile views in Figma first, got tutor feedback, then built it with Express, EJS and MySQL: register and login with hashed passwords and tokens, inventories, trade offers, profile editing and a chat, hosted on Azure.",
+        result: "Everything I planned except the actual item swap: accounts, offers, chat, profiles and a responsive layout.",
+        learned: "Something not working tonight doesn't mean it won't work tomorrow – and pacing beats all-nighters."
+      },
+      memeit: {
+        title: "Meme-It",
+        kicker: "Android app · UX research · CCL 3",
+        semester: "3rd semester · 2023",
+        growth: "A real UX process: heuristic evaluation, hypotheses and user tests.",
+        highlight: "SUS scores mostly above 90 in our user test",
+        summary: "A party game for one phone: each player gets a random meme image and writes the funniest caption, the group rates it – and the best one is crowned meme-master.",
+        duration: "2 weeks",
+        role: "App development (~70%) and design (~30%), user tests together with my teammate Wolfgang",
+        challenge: "Design a party game anyone can pick up instantly – and prove it with real users, not just our own opinion.",
+        approach: "Mockups and a user flow in Figma, then a heuristic evaluation that led to fixes like an exit button and confirmation steps. We wrote hypotheses, a test plan with five tasks, informed consent and a SUS questionnaire – and built the Android app.",
+        result: "Five participants aged 19–50; SUS scores mostly above 90, the lowest 87.5. Their feedback led to clearer texts, a turn indicator and an app icon.",
+        learned: "Five testers aren't statistics – but they find the problems you're blind to."
       }
     }
   },
@@ -320,6 +405,8 @@ const I18N = {
     "explore.c.p": "Co-located Multiplayer und Mixed Reality, die digitale Inhalte mit echten Objekten und echten Menschen im selben Raum verbinden.",
     "projects.title": "Projekte",
     "projects.intro": "Drei Fragen verbinden meine Arbeit – wähl eine aus oder klick auf ein Projekt für die ganze Geschichte.",
+    "early.title": "Wie alles anfing", "early.intro": "Meine ersten Semester – und wie ich dabei in UX/UI besser geworden bin.",
+    "early.now": "Heute", "early.today": "2× 1. Platz – Co-located VR, gestaltet und getestet mit echten Spieler:innen.",
     themes: { all: "Alle", sight: "Mehr als Sehen", abilities: "Diverse Fähigkeiten", shared: "Geteilte Realitäten" },
     "thesis.title": "Bachelorarbeit",
     "thesis.kicker": "BSc Creative Computing · USTP · 2024",
@@ -392,7 +479,7 @@ const I18N = {
     ui: {
       duration: "Dauer", role: "Meine Rolle", team: "Team",
       challenge: "Herausforderung", approach: "Was wir gebaut haben", result: "Ergebnis", learned: "Was ich gelernt habe",
-      open: "Projekt ansehen", close: "Schließen", next: "Nächstes Projekt", watch: "Video ansehen", video: "Video", tools: "Tools & Technik",
+      open: "Projekt ansehen", close: "Schließen", next: "Nächstes Projekt", watch: "Video ansehen", video: "Video", tools: "Tools & Technik", when: "Wann",
       devpost: "Devpost", ggj: "Global-Game-Jam-Seite", itch: "Auf itch.io spielen",
       award: "Gewinner:innen des Wettbewerbs", vernissage: "USTP Projektvernissage"
     },
@@ -481,6 +568,58 @@ const I18N = {
         approach: "[Was ihr gebaut habt]",
         result: "[Was daraus wurde]",
         learned: "[Eine Erkenntnis]"
+      },
+      thesis: {
+        title: "Überleben lernen in VR",
+        kicker: "Bachelorarbeit · USTP · 2024",
+        highlight: "Nutzerstudie mit Teilnehmenden von 9 bis 70",
+        summary: "Kann ein spielerischer VR-Wald grundlegende Survival-Skills vermitteln – und zwar so gut wie ein gedruckter Leitfaden? Ein Unity-VR-Spiel für die Meta Quest im Vergleich mit einem Papier-Guide.",
+        duration: "Bachelorarbeit",
+        role: "Konzept, Unity-Entwicklung, Studiendesign und Auswertung",
+        challenge: "Wie kann gamifizierte VR grundlegende Survival-Skills vermitteln und Lernende dabei motiviert und sicher halten – über sehr unterschiedliche Altersgruppen hinweg?",
+        approach: "Ein VR-Wald in Unity für die Meta Quest mit Stationen zu Unterschlupfbau, Feuermachen, Wasseraufbereitung, Tierspuren sowie essbaren und giftigen Pflanzen, mit Spatial Audio in Wwise. Teilnehmende zwischen 9 und 70 Jahren, aufgeteilt in eine VR-Gruppe und eine Gruppe mit gedrucktem Leitfaden: Pre-/Post-Tests, Fragebögen, Interviews und Beobachtung.",
+        result: "Beide Gruppen haben gelernt. VR wurde als „sehr lustig“ und „interaktiv“ beschrieben und funktionierte gut für räumliches, situatives Wissen wie Tierspuren und Begegnungen mit Wildtieren – der Leitfaden war besser bei feinen visuellen Details wie dem Unterscheiden von Beeren.",
+        learned: "In VR müssen die entscheidenden Details bewusst hervorgehoben werden."
+      },
+      nott: {
+        title: "No Time To Stay",
+        kicker: "Browserspiel · CCL 1",
+        semester: "1. Semester · 2021",
+        growth: "Code zuerst, Design aus dem Bauch – aber ein komplettes Spiel mit eigener Grafik.",
+        summary: "Sithis, ein Assassine, der in eine Falle geraten ist, muss pro Level 60 Sekunden überleben – Feuerbällen ausweichen, bis im Boss-Level zwei Drachen warten.",
+        duration: "Projektwoche",
+        role: "Allein: Game Design, Programmierung von Grund auf in JavaScript, sämtliche Pixel Art und Hintergründe",
+        challenge: "Mein erstes Spiel ohne Engine: Bewegung, Kollision, Schwerkraft und Levels – alles selbst gebaut, in einer Projektwoche.",
+        approach: "Ein objektorientiertes JavaScript-Setup – eine GameObject-Basisklasse, von der Spieler, Herzen und Boss erben – auf dem Canvas gerendert. Zwei Top-Down-Levels, dann ein Side-Scroller-Bosslevel mit Schwerkraft. Jedes Sprite und jeder Hintergrund in Photoshop von Hand gezeichnet.",
+        result: "Ein komplettes, spielbares Browserspiel mit Story, drei Levels und Endscreen – nach vier Tagen fast fertig.",
+        learned: "Die Grafik genauso sorgfältig planen wie den Code: Zeichnen hat länger gedauert als Programmieren."
+      },
+      nftrade: {
+        title: "NFTrade",
+        kicker: "Full-Stack-Web-App · CCL 2",
+        semester: "2. Semester · 2022",
+        growth: "Meine ersten Designs in Figma – und das erste Mal Design für Mobile.",
+        summary: "Eine Tauschplattform: registrieren, Tauschangebote erstellen, Inventare anderer ansehen und chatten – inspiriert von Tauschseiten für Game-Skins.",
+        duration: "10 Tage",
+        role: "Allein: Konzept, Figma-Design für Desktop und Mobile, Frontend und Backend",
+        challenge: "Eine komplette Webplattform – Accounts, Datenbank-Relationen, Angebote und ein Chat – in etwa zehn Tagen.",
+        approach: "Zuerst Desktop- und Mobile-Ansichten in Figma, Feedback vom Tutor, dann umgesetzt mit Express, EJS und MySQL: Registrierung und Login mit gehashten Passwörtern und Tokens, Inventare, Tauschangebote, Profilbearbeitung und ein Chat, gehostet auf Azure.",
+        result: "Alles Geplante außer dem eigentlichen Tausch: Accounts, Angebote, Chat, Profile und ein responsives Layout.",
+        learned: "Was heute Nacht nicht funktioniert, kann morgen funktionieren – und ein gutes Tempo schlägt jede Nachtschicht."
+      },
+      memeit: {
+        title: "Meme-It",
+        kicker: "Android-App · UX Research · CCL 3",
+        semester: "3. Semester · 2023",
+        growth: "Ein echter UX-Prozess: heuristische Evaluierung, Hypothesen und User Tests.",
+        highlight: "SUS-Werte im User Test meist über 90",
+        summary: "Ein Partyspiel für ein Handy: Jede Person bekommt ein zufälliges Meme-Bild und schreibt die lustigste Caption, die Gruppe bewertet – und die beste Person wird zum Meme-Master gekrönt.",
+        duration: "2 Wochen",
+        role: "App-Entwicklung (~70 %) und Design (~30 %), User Tests gemeinsam mit meinem Teamkollegen Wolfgang",
+        challenge: "Ein Partyspiel gestalten, das jede Person sofort versteht – und das mit echten Nutzer:innen beweisen, nicht nur mit unserer Meinung.",
+        approach: "Mockups und User Flow in Figma, dann eine heuristische Evaluierung, die zu Verbesserungen wie einem Exit-Button und Bestätigungsschritten führte. Wir haben Hypothesen, einen Testplan mit fünf Aufgaben, eine Einverständniserklärung und einen SUS-Fragebogen erstellt – und die Android-App gebaut.",
+        result: "Fünf Teilnehmende zwischen 19 und 50; SUS-Werte meist über 90, der niedrigste 87,5. Ihr Feedback führte zu klareren Texten, einer Anzeige, wer dran ist, und einem App-Icon.",
+        learned: "Fünf Testpersonen sind keine Statistik – aber sie finden die Probleme, für die man selbst blind ist."
       }
     }
   }
@@ -568,6 +707,14 @@ function esc(s) {
 
 const visibleProjects = () => PROJECTS.filter((pr) => filled(I18N[lang].p[pr.id].summary));
 
+// Project image, or a placeholder with the initials while there's no image yet
+function pic(pr, lazy = true) {
+  if (pr.img) return `<img src="${pr.img}" alt=""${lazy ? ' loading="lazy"' : ""}>`;
+  const title = I18N[lang].p[pr.id].title;
+  const initials = title.split(/\s+/).map((w) => w[0]).join("").slice(0, 3);
+  return `<span class="ph" aria-hidden="true">${esc(initials)}</span>`;
+}
+
 /* Theme filter – the three research questions, shown right above the projects */
 // Drawn icons (stroke = currentColor) – font symbols looked different in every font
 const svg = (d) => `<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
@@ -605,7 +752,7 @@ document.getElementById("themes").addEventListener("click", (e) => {
 function renderProjects() {
   const grid = document.getElementById("projectGrid");
   const P = I18N[lang].p;
-  const shown = visibleProjects().filter((pr) => theme === "all" || (pr.themes || []).includes(theme));
+  const shown = visibleProjects().filter((pr) => !pr.early && (theme === "all" || (pr.themes || []).includes(theme)));
   grid.classList.toggle("is-filtered", theme !== "all"); // filtered: equal cards, no featured layout
   grid.innerHTML = shown.map((pr) => {
     const x = P[pr.id];
@@ -613,7 +760,7 @@ function renderProjects() {
       <button type="button" class="p-card${pr.featured ? " p-card--featured" : ""}" data-id="${pr.id}"
               aria-label="${esc(t("ui").open)}: ${esc(x.title)}">
         <div class="p-card__media">
-          <img src="${pr.img}" alt="" loading="lazy">
+          ${pic(pr)}
           ${x.badge ? `<span class="p-card__badge">${esc(x.badge)}</span>` : ""}
           ${pr.video ? `<span class="p-card__video">▶ ${esc(t("ui").video)}</span>` : ""}
         </div>
@@ -628,7 +775,39 @@ function renderProjects() {
         </div>
       </button>`;
   }).join("");
+  renderEarly();
 }
+
+/* "Where I started" – early semester projects as a timeline, ending with today's best work */
+function renderEarly() {
+  const P = I18N[lang].p;
+  const early = visibleProjects().filter((pr) => pr.early);
+  document.getElementById("early").hidden = !early.length;
+  document.getElementById("earlyList").innerHTML = early.map((pr) => `
+    <li>
+      <button type="button" class="early-card" data-id="${pr.id}" aria-label="${esc(t("ui").open)}: ${esc(P[pr.id].title)}">
+        <span class="early-card__when">${esc(P[pr.id].semester)}</span>
+        <span class="early-card__media">${pic(pr)}</span>
+        <b class="early-card__title">${esc(P[pr.id].title)}</b>
+        <span class="early-card__kicker">${esc(P[pr.id].kicker)}</span>
+        <span class="early-card__growth">${esc(P[pr.id].growth)}</span>
+      </button>
+    </li>`).join("") + `
+    <li>
+      <button type="button" class="early-card early-card--today" data-id="historia">
+        <span class="early-card__when">${esc(t("early.now"))}</span>
+        <span class="early-card__media"><img src="${PROJECTS[0].img}" alt="" loading="lazy"></span>
+        <b class="early-card__title">${esc(P.historia.title)}</b>
+        <span class="early-card__growth">${esc(t("early.today"))}</span>
+      </button>
+    </li>`;
+}
+document.getElementById("earlyList").addEventListener("click", (e) => {
+  const card = e.target.closest(".early-card");
+  if (!card) return;
+  lastCardId = card.dataset.id;
+  openProject(card.dataset.id);
+});
 
 const modal = document.getElementById("projectModal");
 const modalBody = document.getElementById("modalBody");
@@ -653,7 +832,7 @@ function openProject(id, { push = true } = {}) {
          <span class="video__btn" aria-hidden="true">▶</span>
          <span class="video__label">${esc(ui.watch)}</span>
        </button>`
-    : `<img src="${pr.img}" alt="">`;
+    : pic(pr, false);
   const block = (label, val) => filled(val) ? `
     <section class="case__block"><h3>${esc(label)}</h3>${
       Array.isArray(val) ? `<ul>${val.map((v) => `<li>${esc(v)}</li>`).join("")}</ul>` : `<p>${esc(val)}</p>`
@@ -669,7 +848,7 @@ function openProject(id, { push = true } = {}) {
       <div class="case__media">${media}</div>
       <div class="case__grid">
         <aside class="case__facts">
-          <dl>${fact(ui.role, x.role)}${fact(ui.duration, x.duration)}</dl>
+          <dl>${fact(ui.role, x.role)}${fact(ui.when, x.semester)}${fact(ui.duration, x.duration)}</dl>
           <h3>${esc(ui.tools)}</h3>
           <ul class="tags">${pr.tags.map((tg) => `<li>${esc(tg)}</li>`).join("")}</ul>
           ${pr.links.length ? `<div class="case__links">${pr.links.map((l) =>
@@ -680,10 +859,11 @@ function openProject(id, { push = true } = {}) {
           ${block(ui.approach, x.approach)}
           ${block(ui.result, x.result)}
           ${block(ui.learned, x.learned)}
+          ${pr.gallery ? `<div class="case__gallery">${pr.gallery.map((src) => `<img src="${src}" alt="" loading="lazy">`).join("")}</div>` : ""}
         </div>
       </div>
       ${next ? `<button type="button" class="case__nextcard" data-id="${next.id}">
-        <img src="${next.img}" alt="">
+        ${pic(next)}
         <span><small>${esc(ui.next)}</small><b>${esc(I18N[lang].p[next.id].title)} →</b></span>
       </button>` : ""}
     </article>`;
@@ -876,7 +1056,7 @@ toTop.addEventListener("click", (e) => {
 
 /* ============ Highlight the menu item of the section in view ============ */
 // Sections without their own menu item count towards the closest related one
-const NAV_FOR = { projects: "projects", thesis: "projects", about: "about", experience: "experience", stack: "experience", contact: "contact" };
+const NAV_FOR = { projects: "projects", about: "about", experience: "experience", stack: "experience", contact: "contact" };
 const navLinks = [...document.querySelectorAll('.nav__links a[href^="#"]')];
 const spy = "IntersectionObserver" in window ? new IntersectionObserver((entries) => {
   entries.forEach((en) => {

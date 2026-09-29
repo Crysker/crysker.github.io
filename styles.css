@@ -478,25 +478,56 @@ html:has(.case[open]) { overflow: hidden; }
   .case__next { padding: 10px 16px; }
 }
 
-/* Thesis */
-.thesis__card {
-  display: grid; grid-template-columns: 1fr 1.15fr; gap: 28px;
-  padding: 16px; border-radius: 28px; background: var(--surface); border: 1px solid var(--line);
+/* Image placeholder (project without an image yet) */
+.ph {
+  display: grid; place-items: center; width: 100%; height: 100%; min-height: 80px;
+  background: linear-gradient(135deg, var(--turq-soft), var(--surface-2));
+  font: 700 clamp(28px, 5vw, 48px) var(--serif); color: var(--turq-text); letter-spacing: -.02em;
 }
-.thesis__media { display: grid; gap: 12px; align-content: start; }
-.thesis__media img { border-radius: 18px; width: 100%; aspect-ratio: 16/10; object-fit: cover; }
-.thesis__body { padding: 12px 12px 12px 0; }
-.thesis__kicker { font-size: 13px; font-weight: 700; color: var(--orange-text); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 6px; }
-.thesis__name { font: 700 clamp(26px, 3.4vw, 34px) var(--serif); margin-bottom: 18px; }
-.thesis__facts { margin: 0 0 22px; display: grid; gap: 14px; }
-.thesis__facts div { display: grid; grid-template-columns: 84px 1fr; gap: 12px; }
-.thesis__facts dt { font: 800 13px var(--sans); text-transform: uppercase; letter-spacing: .06em; color: var(--turq-ink); padding-top: 3px; }
-.thesis__facts dd { margin: 0; color: var(--ink-soft); }
+.case__media .ph { aspect-ratio: 16/9; }
+
+/* Extra images in a case study */
+.case__gallery { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin-top: 8px; }
+.case__gallery img { width: 100%; aspect-ratio: 16/10; object-fit: cover; border-radius: 16px; }
+
+/* "Where I started" – early semesters as a timeline that ends with today */
+.early { margin-top: 64px; }
+.early__title { font: 700 clamp(28px, 4vw, 38px) var(--serif); letter-spacing: -.02em; margin-bottom: 6px; }
+.early__list {
+  list-style: none; margin: 0; padding: 0; position: relative;
+  display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px;
+}
+/* the line connecting the steps */
+.early__list::before {
+  content: ""; position: absolute; left: 12px; right: 12px; top: 13px; height: 3px; border-radius: 3px;
+  background: linear-gradient(90deg, var(--line), var(--turq));
+}
+.early-card {
+  position: relative; display: flex; flex-direction: column; align-items: flex-start; gap: 6px; width: 100%; height: 100%;
+  padding: 0; border: 0; background: none; color: var(--ink); font: inherit; text-align: left; cursor: pointer;
+}
+.early-card__when {
+  position: relative; z-index: 1; padding: 4px 12px; border-radius: 999px; margin-bottom: 8px;
+  background: var(--surface-2); border: 1px solid var(--line); font: 800 12px var(--sans); letter-spacing: .04em; color: var(--ink-soft);
+}
+.early-card__media {
+  display: block; width: 100%; aspect-ratio: 16/10; overflow: hidden; border-radius: 16px;
+  border: 1px solid var(--line); background: var(--surface-2); transition: transform .25s, box-shadow .25s;
+}
+.early-card__media img { width: 100%; height: 100%; object-fit: cover; }
+/* earlier work looks a little faded, today is in full colour */
+.early-card:not(.early-card--today) .early-card__media img { filter: saturate(.6); }
+.early-card:hover .early-card__media { transform: translateY(-4px); box-shadow: var(--shadow); }
+.early-card__title { font: 700 21px/1.2 var(--serif); margin-top: 6px; }
+.early-card__kicker { font-size: 12px; font-weight: 700; color: var(--orange-text); text-transform: uppercase; letter-spacing: .05em; }
+.early-card__growth { font-size: 15px; color: var(--ink-soft); }
+.early-card--today .early-card__when { background: var(--turq); border-color: var(--turq); color: #062624; }
+.early-card--today .early-card__media { border: 2px solid var(--turq); }
 @media (max-width: 860px) {
-  .thesis__card { grid-template-columns: 1fr; }
-  .thesis__body { padding: 0 8px 8px; }
-  .thesis__facts div { grid-template-columns: 1fr; gap: 2px; }
+  .early__list { grid-template-columns: 1fr 1fr; gap: 28px 16px; }
+  .early__list::before { display: none; }
 }
+@media (max-width: 520px) { .early__list { grid-template-columns: 1fr; } }
 
 /* Timeline */
 .timeline { list-style: none; margin: 28px 0 0; padding: 0 0 0 28px; border-left: 3px dashed var(--line); }
