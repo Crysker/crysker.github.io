@@ -10,6 +10,14 @@ Plain HTML/CSS/JS, no build step. Open `index.html` in a browser to preview.
 
 - `assets/Serkan-Soenmez-CV-DE.pdf` – CV, linked via `CV_URL` at the top of `main.js`
 
+## Linking a single project
+Every project has its own link that opens it directly – handy in cover letters:
+`https://crysker.github.io/#project-historia` (also `sounds`, `grim`, `paper`, `hue`).
+
+## After changing styles.css or main.js
+Bump the `?v=` number where the file is linked at the bottom/top of `index.html`,
+otherwise returning visitors may get a mix of old and new files for up to 10 minutes.
+
 ## Placeholders
 Texts in `[brackets]` in `main.js` are never shown on the page, and a project whose
 summary is still a placeholder is hidden entirely. Still open: the #SaveTheOcean texts.

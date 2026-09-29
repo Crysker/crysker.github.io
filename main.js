@@ -127,8 +127,8 @@ const I18N = {
     "exp.bsc.t": "BSc Creative Computing · USTP",
     "exp.bsc.p": "Programming, UX/UI, web & mobile, game development and XR.",
     "stack.title": "Stack & skills",
-    "stack.intro": "Tap a card to flip it.",
-    "stack.hint": "Tap to flip",
+    "stack.intro": "Hover over or tap a card to flip it.",
+    "stack.hint": "Hover or tap",
     "nav.menu": "Menu",
     skillGroups: { design: "Design & UX", xr: "XR", code: "Code", tools: "Tools", lang: "Languages" },
     skill: {
@@ -146,11 +146,13 @@ const I18N = {
     },
     "contact.title": "Let's build something<br><em>people remember.</em>",
     "contact.book": "Book a 30-min call",
+    "contact.copy": "Copy", "contact.copied": "Email address copied",
+    toTop: "Back to top",
     "footer.top": "Back to top ↑",
     ui: {
       duration: "Duration", role: "My role", team: "Team",
       challenge: "Challenge", approach: "What we built", result: "Result", learned: "What I learned",
-      open: "View project", close: "Close",
+      open: "View project", close: "Close", next: "Next project",
       devpost: "Devpost", ggj: "Global Game Jam page", itch: "Play on itch.io",
       award: "Contest winners", vernissage: "USTP Projektvernissage"
     },
@@ -282,8 +284,8 @@ const I18N = {
     "exp.bsc.t": "BSc Creative Computing · USTP",
     "exp.bsc.p": "Programmierung, UX/UI, Web & Mobile, Game Development und XR.",
     "stack.title": "Stack & Skills",
-    "stack.intro": "Tipp auf eine Karte, um sie umzudrehen.",
-    "stack.hint": "Zum Umdrehen tippen",
+    "stack.intro": "Fahr mit der Maus über eine Karte oder tipp darauf, um sie umzudrehen.",
+    "stack.hint": "Hovern oder tippen",
     "nav.menu": "Menü",
     skillGroups: { design: "Design & UX", xr: "XR", code: "Code", tools: "Tools", lang: "Sprachen" },
     skill: {
@@ -301,11 +303,13 @@ const I18N = {
     },
     "contact.title": "Lass uns etwas bauen,<br><em>das in Erinnerung bleibt.</em>",
     "contact.book": "30-Min-Call buchen",
+    "contact.copy": "Kopieren", "contact.copied": "E-Mail-Adresse kopiert",
+    toTop: "Nach oben",
     "footer.top": "Nach oben ↑",
     ui: {
       duration: "Dauer", role: "Meine Rolle", team: "Team",
       challenge: "Herausforderung", approach: "Was wir gebaut haben", result: "Ergebnis", learned: "Was ich gelernt habe",
-      open: "Projekt ansehen", close: "Schließen",
+      open: "Projekt ansehen", close: "Schließen", next: "Nächstes Projekt",
       devpost: "Devpost", ggj: "Global-Game-Jam-Seite", itch: "Auf itch.io spielen",
       award: "Gewinner:innen des Wettbewerbs", vernissage: "USTP Projektvernissage"
     },
@@ -405,6 +409,9 @@ function applyLang() {
     const text = I18N[lang][el.dataset.i18n] ?? I18N.en[el.dataset.i18n];
     if (text != null) el.innerHTML = text; // keep the HTML text rather than showing a raw key
   });
+  document.querySelectorAll("[data-i18n-label]").forEach((el) => {
+    el.setAttribute("aria-label", t(el.dataset.i18nLabel));
+  });
   document.getElementById("heroStatus").hidden = !filled(t("hero.status"));
   document.getElementById("langToggle").setAttribute(
     "aria-label", lang === "en" ? "Auf Deutsch umschalten" : "Switch to English"
@@ -462,10 +469,12 @@ function esc(s) {
   return String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 }
 
+const visibleProjects = () => PROJECTS.filter((pr) => filled(I18N[lang].p[pr.id].summary));
+
 function renderProjects() {
   const grid = document.getElementById("projectGrid");
   const P = I18N[lang].p;
-  grid.innerHTML = PROJECTS.filter((pr) => filled(P[pr.id].summary)).map((pr) => {
+  grid.innerHTML = visibleProjects().map((pr) => {
     const x = P[pr.id];
     return `
       <button type="button" class="p-card${pr.featured ? " p-card--featured" : ""}" data-id="${pr.id}"
@@ -494,6 +503,8 @@ function openProject(id) {
   const pr = PROJECTS.find((p) => p.id === id);
   const x = I18N[lang].p[id];
   const ui = t("ui");
+  const list = visibleProjects();
+  const next = list.length > 1 ? list[(list.findIndex((p) => p.id === id) + 1) % list.length] : null;
   const media = pr.video
     ? `<iframe src="https://www.youtube-nocookie.com/embed/${pr.video}" title="${esc(x.title)}" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>`
     : `<img src="${pr.img}" alt="">`;
@@ -517,18 +528,42 @@ function openProject(id) {
       <ul class="tags">${pr.tags.map((tg) => `<li>${esc(tg)}</li>`).join("")}</ul>
       ${pr.links.length ? `<div class="modal__links">${pr.links.map((l) =>
         `<a class="btn" href="${l.url}" target="_blank" rel="noopener">${esc(ui[l.key])} ↗</a>`).join("")}</div>` : ""}
+      ${next ? `<button type="button" class="modal__next" data-id="${next.id}">
+        <span>${esc(ui.next)}</span><b>${esc(I18N[lang].p[next.id].title)} →</b>
+      </button>` : ""}
     </div>`;
   modal.querySelector(".modal__close").setAttribute("aria-label", ui.close);
-  modal.showModal();
+  if (!modal.open) modal.showModal();
+  modal.scrollTop = 0;
+  // Every project has its own link, e.g. crysker.github.io/#project-historia – handy for cover letters
+  history.replaceState(null, "", "#project-" + id);
 }
 
 document.getElementById("projectGrid").addEventListener("click", (e) => {
   const card = e.target.closest(".p-card");
   if (card) openProject(card.dataset.id);
 });
-modal.querySelector(".modal__close").addEventListener("click", () => modal.close());
-modal.addEventListener("click", (e) => { if (e.target === modal) modal.close(); });
-modal.addEventListener("close", () => { modalBody.innerHTML = ""; }); // stops video
+function onProjectClosed() {
+  modalBody.innerHTML = ""; // stops video
+  if (location.hash.startsWith("#project-")) history.replaceState(null, "", location.pathname + location.search);
+}
+function closeProject() {
+  modal.close();
+  onProjectClosed(); // don't wait for the async "close" event
+}
+modal.querySelector(".modal__close").addEventListener("click", closeProject);
+modal.addEventListener("click", (e) => {
+  if (e.target === modal) return closeProject();
+  const next = e.target.closest(".modal__next");
+  if (next) openProject(next.dataset.id);
+});
+modal.addEventListener("close", onProjectClosed); // Esc key
+
+function openProjectFromHash() {
+  const id = location.hash.replace("#project-", "");
+  if (location.hash.startsWith("#project-") && visibleProjects().some((p) => p.id === id)) openProject(id);
+}
+window.addEventListener("hashchange", openProjectFromHash);
 
 /* ============ Stack flip cards ============ */
 function renderStack() {
@@ -581,4 +616,63 @@ document.querySelectorAll(".section").forEach((s) => {
   io.observe(s);
 });
 
+/* ============ Back to top (with scroll progress ring) ============ */
+const toTop = document.getElementById("toTop");
+const toTopProgress = toTop.querySelector(".to-top__progress");
+let scrollTick = false;
+function updateToTop() {
+  const max = document.documentElement.scrollHeight - innerHeight;
+  toTop.classList.toggle("is-visible", scrollY > innerHeight * 0.8);
+  toTopProgress.style.strokeDashoffset = String(100 - (max > 0 ? (scrollY / max) * 100 : 0));
+  scrollTick = false;
+}
+addEventListener("scroll", () => { if (!scrollTick) { scrollTick = true; requestAnimationFrame(updateToTop); } }, { passive: true });
+addEventListener("resize", updateToTop);
+toTop.addEventListener("click", (e) => {
+  e.preventDefault();
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  scrollTo({ top: 0, behavior: reduce ? "auto" : "smooth" });
+  document.querySelector(".nav__logo").focus({ preventScroll: true }); // keep keyboard users at the top too
+});
+
+/* ============ Highlight the menu item of the section in view ============ */
+// Sections without their own menu item count towards the closest related one
+const NAV_FOR = { projects: "projects", about: "about", explore: "explore", thesis: "explore", experience: "experience", stack: "experience", contact: "contact" };
+const navLinks = [...document.querySelectorAll('.nav__links a[href^="#"]')];
+const spy = "IntersectionObserver" in window ? new IntersectionObserver((entries) => {
+  entries.forEach((en) => {
+    if (!en.isIntersecting) return;
+    const target = "#" + NAV_FOR[en.target.id];
+    navLinks.forEach((a) => {
+      if (a.getAttribute("href") === target) a.setAttribute("aria-current", "true");
+      else a.removeAttribute("aria-current");
+    });
+  });
+}, { rootMargin: "-45% 0px -50% 0px" }) : null;
+document.querySelectorAll("main section[id]").forEach((s) => spy && s.id in NAV_FOR && spy.observe(s));
+// Back in the hero: nothing is active
+const heroSpy = "IntersectionObserver" in window ? new IntersectionObserver(([en]) => {
+  if (en.isIntersecting) navLinks.forEach((a) => a.removeAttribute("aria-current"));
+}, { rootMargin: "-45% 0px -50% 0px" }) : null;
+if (heroSpy) heroSpy.observe(document.querySelector(".hero"));
+
+/* ============ Copy email (mailto links do nothing without a mail app) ============ */
+const copyBtn = document.getElementById("copyEmail");
+const copyStatus = document.getElementById("copyStatus");
+copyBtn.addEventListener("click", async () => {
+  const email = copyBtn.dataset.email;
+  try {
+    await navigator.clipboard.writeText(email);
+  } catch (e) {
+    const tmp = Object.assign(document.createElement("textarea"), { value: email });
+    document.body.appendChild(tmp); tmp.select(); document.execCommand("copy"); tmp.remove();
+  }
+  copyBtn.classList.add("is-done");
+  copyStatus.textContent = t("contact.copied");
+  clearTimeout(copyBtn.timer);
+  copyBtn.timer = setTimeout(() => { copyBtn.classList.remove("is-done"); copyStatus.textContent = ""; }, 2500);
+});
+
 applyLang();
+updateToTop();
+openProjectFromHash();
