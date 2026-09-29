@@ -233,6 +233,13 @@ html[lang="de"] .lang [data-lang="de"] { background: var(--ink); color: var(--bg
   border-left: 34px solid transparent; border-right: 34px solid transparent;
   border-bottom: 58px solid var(--orange); animation-delay: -3s;
 }
+/* ring + pill live inside .hero__portrait: positions are relative to the photo, at every width */
+.hero__portrait .shape--ring { top: auto; right: auto; bottom: -24px; left: -64px; width: 96px; height: 96px; border-width: 18px; }
+.hero__portrait .shape--pill { top: 16%; bottom: auto; left: auto; right: -84px; width: 120px; height: 46px; }
+@media (max-width: 700px) {
+  .hero__portrait .shape--ring { left: -34px; bottom: -18px; width: 64px; height: 64px; border-width: 13px; }
+  .hero__portrait .shape--pill { right: -40px; width: 80px; height: 32px; }
+}
 @keyframes float {
   0%, 100% { translate: 0 0; }
   50% { translate: 0 -18px; }
@@ -240,8 +247,6 @@ html[lang="de"] .lang [data-lang="de"] { background: var(--ink); color: var(--bg
 @media (max-width: 700px) {
   .shape--sphere { width: 56px; height: 56px; left: 3%; top: 10px; }
   .shape--cube { width: 46px; height: 46px; right: 5%; top: 18px; }
-  .shape--ring { width: 70px; height: 70px; border-width: 14px; left: -10px; }
-  .shape--pill { width: 90px; height: 36px; right: -10px; }
   .shape--tri { display: none; }
   .sticker { right: -12px; }
   /* Phones: get the buttons onto the first screen – photo moves below them */
@@ -286,8 +291,6 @@ html[lang="de"] .lang [data-lang="de"] { background: var(--ink); color: var(--bg
   /* keep the shapes around the edges so they never sit behind the text */
   .shape--sphere { top: -4%; left: -9%; width: 90px; height: 90px; }
   .shape--cube { top: 4%; right: -2%; }
-  .shape--ring { bottom: 2%; left: 50%; width: 80px; height: 80px; border-width: 16px; }
-  .shape--pill { bottom: 14%; right: -4%; }
   .shape--tri { top: 58%; left: 58%; }
 }
 

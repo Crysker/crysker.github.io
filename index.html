@@ -15,7 +15,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,700;1,9..144,600;1,9..144,700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=11">
+  <link rel="stylesheet" href="styles.css?v=12">
 </head>
 <body>
   <a class="skip" href="#main" data-i18n="skip">Skip to content</a>
@@ -44,8 +44,6 @@
     <section class="hero">
       <div class="shape shape--sphere" aria-hidden="true"></div>
       <div class="shape shape--cube" aria-hidden="true"></div>
-      <div class="shape shape--ring" aria-hidden="true"></div>
-      <div class="shape shape--pill" aria-hidden="true"></div>
       <div class="shape shape--tri" aria-hidden="true"></div>
 
       <p class="hero__hello" data-i18n="hero.hello">Hi, I'm</p>
@@ -54,6 +52,9 @@
       <p class="hero__roles" aria-live="polite"><span class="hero__also" data-i18n="hero.also">also</span> <span id="role">UX Researcher</span></p>
       <p class="hero__status" id="heroStatus" hidden><span class="hero__dot" aria-hidden="true"></span><span data-i18n="hero.status"></span></p>
       <div class="hero__portrait">
+        <!-- anchored to the photo so they can never land on text or buttons -->
+        <div class="shape shape--ring" aria-hidden="true"></div>
+        <div class="shape shape--pill" aria-hidden="true"></div>
         <span class="hero__photo"><img src="assets/img/portrait.jpg" alt="Portrait of Serkan Sönmez" width="260" height="325"></span>
         <span class="sticker" data-i18n="hero.sticker">🏆 2× 1st place</span>
       </div>
