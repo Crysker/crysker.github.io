@@ -17,6 +17,7 @@ const CV = {
 const PROJECTS = [
   {
     id: "historia",
+    themes: ["shared"],
     featured: true,
     img: IMG + "historia.jpg",
     video: "JfwlEoEAzEo", // Gameplay Trailer (the making-of is in About)
@@ -29,12 +30,14 @@ const PROJECTS = [
   },
   {
     id: "sounds",
+    themes: ["sight", "abilities"],
     img: IMG + "sounds.png",
     tags: ["Unity", "C#", "VR", "Spatial Audio"],
     links: []
   },
   {
     id: "grim",
+    themes: ["sight"],
     img: IMG + "grim.png",
     video: "7VHN2e4oFDc",
     tags: ["Unity", "Meta Quest 3", "Olfactory Display", "Game Jam"],
@@ -42,6 +45,7 @@ const PROJECTS = [
   },
   {
     id: "paper",
+    themes: ["shared"],
     img: IMG + "paper.png",
     video: "7b2H0eAUaGw",
     tags: ["Unity", "Python", "YOLO", "Roboflow", "Blender", "Mixed Reality"],
@@ -50,6 +54,7 @@ const PROJECTS = [
   {
     id: "hue",
     img: IMG + "hue.png",
+    video: "aEI-z94dT4A", // trailer from the itch.io page
     tags: ["Unity", "C#", "Game Design"],
     links: [{ key: "itch", url: "https://inki-gamer.itch.io/hue-of-hope" }]
   },
@@ -118,7 +123,8 @@ const I18N = {
     "explore.c.t": "Shared & physical realities",
     "explore.c.p": "Co-located multiplayer and mixed reality that connects digital content with real objects and real people in the same room.",
     "projects.title": "Projects",
-    "projects.intro": "Click a project for the full story.",
+    "projects.intro": "Three questions connect my work – pick one, or click a project for the full story.",
+    themes: { all: "All", sight: "Beyond sight", abilities: "Diverse abilities", shared: "Shared realities" },
     "thesis.title": "Bachelor's thesis",
     "thesis.kicker": "BSc Creative Computing · USTP · 2024",
     "thesis.name": "Learning nature survival skills in a playful VR world",
@@ -298,7 +304,8 @@ const I18N = {
     "explore.c.t": "Geteilte & physische Realitäten",
     "explore.c.p": "Co-located Multiplayer und Mixed Reality, die digitale Inhalte mit echten Objekten und echten Menschen im selben Raum verbinden.",
     "projects.title": "Projekte",
-    "projects.intro": "Klick auf ein Projekt für die ganze Geschichte.",
+    "projects.intro": "Drei Fragen verbinden meine Arbeit – wähl eine aus oder klick auf ein Projekt für die ganze Geschichte.",
+    themes: { all: "Alle", sight: "Mehr als Sehen", abilities: "Diverse Fähigkeiten", shared: "Geteilte Realitäten" },
     "thesis.title": "Bachelorarbeit",
     "thesis.kicker": "BSc Creative Computing · USTP · 2024",
     "thesis.name": "Überlebenstechniken in der Natur spielerisch in VR lernen",
@@ -478,6 +485,7 @@ function applyLang() {
   document.getElementById("langToggle").setAttribute(
     "aria-label", lang === "en" ? "Auf Deutsch umschalten" : "Switch to English"
   );
+  renderThemes();
   renderProjects();
   renderStack();
   renderSkills();
@@ -530,10 +538,37 @@ function esc(s) {
 
 const visibleProjects = () => PROJECTS.filter((pr) => filled(I18N[lang].p[pr.id].summary));
 
+/* Theme filter – the three research questions, shown right above the projects */
+const THEMES = [
+  { id: "sight", icon: "◉", text: "explore.a" },
+  { id: "abilities", icon: "✦", text: "explore.b" },
+  { id: "shared", icon: "⬡", text: "explore.c" }
+];
+let theme = "all";
+function renderThemes() {
+  const L = t("themes");
+  const chip = (id, icon, label) => `<button type="button" class="theme" data-theme="${id}" aria-pressed="${theme === id}">
+      ${icon ? `<span aria-hidden="true">${icon}</span>` : ""}${esc(label)}</button>`;
+  document.getElementById("themes").innerHTML =
+    chip("all", "", L.all) + THEMES.map((th) => chip(th.id, th.icon, L[th.id])).join("");
+  const desc = document.getElementById("themeDesc");
+  const th = THEMES.find((x) => x.id === theme);
+  desc.hidden = !th;
+  if (th) desc.innerHTML = `<b>${esc(t(th.text + ".t"))}</b> ${esc(t(th.text + ".p"))}`;
+}
+document.getElementById("themes").addEventListener("click", (e) => {
+  const btn = e.target.closest(".theme");
+  if (!btn) return;
+  theme = btn.dataset.theme;
+  renderThemes();
+  renderProjects();
+});
+
 function renderProjects() {
   const grid = document.getElementById("projectGrid");
   const P = I18N[lang].p;
-  grid.innerHTML = visibleProjects().map((pr) => {
+  const shown = visibleProjects().filter((pr) => theme === "all" || (pr.themes || []).includes(theme));
+  grid.innerHTML = shown.map((pr) => {
     const x = P[pr.id];
     return `
       <button type="button" class="p-card${pr.featured ? " p-card--featured" : ""}" data-id="${pr.id}"
@@ -648,6 +683,15 @@ document.getElementById("projectGrid").addEventListener("click", (e) => {
 const canHover = matchMedia("(hover: hover) and (pointer: fine)");
 const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)");
 let previewTimer;
+// Open the connection to YouTube as soon as the mouse is near the projects, so previews start faster
+let warmedUp = false;
+document.getElementById("projects").addEventListener("pointerenter", () => {
+  if (warmedUp || !canHover.matches) return;
+  warmedUp = true;
+  ["https://www.youtube-nocookie.com", "https://i.ytimg.com", "https://www.google.com"].forEach((href) => {
+    document.head.appendChild(Object.assign(document.createElement("link"), { rel: "preconnect", href, crossOrigin: "" }));
+  });
+});
 function stopPreview(card) {
   clearTimeout(previewTimer);
   card.querySelector(".p-card__preview")?.remove();
@@ -668,9 +712,10 @@ document.getElementById("projectGrid").addEventListener("mouseover", (e) => {
     frame.tabIndex = -1;
     frame.setAttribute("aria-hidden", "true");
     frame.allow = "autoplay; encrypted-media";
-    frame.addEventListener("load", () => setTimeout(() => card.classList.add("is-previewing"), 600));
+    // brief wait after load hides YouTube's black start frame
+    frame.addEventListener("load", () => setTimeout(() => card.classList.add("is-previewing"), 300));
     card.querySelector(".p-card__media").appendChild(frame);
-  }, 450);
+  }, 120);
 });
 document.getElementById("projectGrid").addEventListener("mouseout", (e) => {
   const card = e.target.closest(".p-card");
@@ -792,7 +837,7 @@ toTop.addEventListener("click", (e) => {
 
 /* ============ Highlight the menu item of the section in view ============ */
 // Sections without their own menu item count towards the closest related one
-const NAV_FOR = { projects: "projects", about: "about", explore: "explore", thesis: "explore", experience: "experience", stack: "experience", contact: "contact" };
+const NAV_FOR = { projects: "projects", thesis: "projects", about: "about", experience: "experience", stack: "experience", contact: "contact" };
 const navLinks = [...document.querySelectorAll('.nav__links a[href^="#"]')];
 const spy = "IntersectionObserver" in window ? new IntersectionObserver((entries) => {
   entries.forEach((en) => {

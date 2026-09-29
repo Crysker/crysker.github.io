@@ -15,7 +15,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,700;1,9..144,600;1,9..144,700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=5">
+  <link rel="stylesheet" href="styles.css?v=6">
 </head>
 <body>
   <a class="skip" href="#main" data-i18n="skip">Skip to content</a>
@@ -29,7 +29,6 @@
       <ul class="nav__links" id="navLinks">
         <li><a href="#projects" data-i18n="nav.projects">Projects</a></li>
         <li><a href="#about" data-i18n="nav.about">About</a></li>
-        <li><a href="#explore" data-i18n="nav.explore">Research</a></li>
         <li><a href="#experience" data-i18n="nav.experience">Experience</a></li>
         <li><a href="#contact" data-i18n="nav.contact">Contact</a></li>
         <li class="js-cv-item" hidden><a class="nav__cv js-cv" href="#" target="_blank" rel="noopener" data-i18n="nav.cv">CV ↓</a></li>
@@ -70,7 +69,10 @@
     <!-- PROJECTS (first: it's what recruiters came for) -->
     <section class="section projects" id="projects">
       <h2 class="section__title" data-i18n="projects.title">Projects</h2>
-      <p class="section__intro" data-i18n="projects.intro">Click a project for the full story.</p>
+      <p class="section__intro" data-i18n="projects.intro">Three questions connect my work – pick one, or click a project for the full story.</p>
+      <!-- The research themes, now as filters right where the projects are -->
+      <div class="themes" id="themes" role="group" aria-label="Filter projects by theme"></div>
+      <p class="themes__desc" id="themeDesc" aria-live="polite" hidden></p>
       <div class="projects__grid" id="projectGrid"></div>
     </section>
 
@@ -95,32 +97,6 @@
             <span class="video__label" data-i18n="about.video">Making-of: Historia Virtualis</span>
           </button>
         </div>
-      </div>
-    </section>
-
-    <!-- EXPLORE -->
-    <section class="section explore" id="explore">
-      <h2 class="section__title" data-i18n="explore.title">What I explore</h2>
-      <p class="section__intro" data-i18n="explore.intro">The questions that connect my projects.</p>
-      <div class="explore__grid">
-        <article class="ex-card ex-card--a">
-          <span class="ex-card__icon" aria-hidden="true">◉</span>
-          <h3 data-i18n="explore.a.t">Beyond sight</h3>
-          <p data-i18n="explore.a.p">How can we experience space through sound, smell and touch? Multisensory XR that doesn't rely on the eyes alone.</p>
-          <p class="ex-card__refs">Sounds of Shadow · Grim Hollow</p>
-        </article>
-        <article class="ex-card ex-card--b">
-          <span class="ex-card__icon" aria-hidden="true">✦</span>
-          <h3 data-i18n="explore.b.t">Designing for diverse abilities</h3>
-          <p data-i18n="explore.b.p">Accessibility isn't a checklist, it's a mindset — from accessibility audits in enterprise software to XR for different bodies and senses.</p>
-          <p class="ex-card__refs" data-i18n="explore.b.r">EBCONT · Sounds of Shadow</p>
-        </article>
-        <article class="ex-card ex-card--c">
-          <span class="ex-card__icon" aria-hidden="true">⬡</span>
-          <h3 data-i18n="explore.c.t">Shared & physical realities</h3>
-          <p data-i18n="explore.c.p">Co-located multiplayer and mixed reality that connects digital content with real objects and real people in the same room.</p>
-          <p class="ex-card__refs">Historia Virtualis · Paper Therapy</p>
-        </article>
       </div>
     </section>
 
@@ -237,6 +213,6 @@
   </dialog>
 
   <script src="logos.js?v=2"></script>
-  <script src="main.js?v=6"></script>
+  <script src="main.js?v=7"></script>
 </body>
 </html>
