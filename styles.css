@@ -599,6 +599,10 @@ html:has(.case[open]) { overflow: hidden; }
 .timeline__date { font-size: 13px; font-weight: 800; color: var(--ink-soft); letter-spacing: .04em; }
 .timeline h3 { font: 700 22px var(--serif); margin: 2px 0 6px; }
 .timeline p { color: var(--ink-soft); max-width: 70ch; margin: 0; }
+.timeline__link {
+  display: inline-block; margin-top: 8px; font-size: 14px; font-weight: 700; color: var(--turq-text);
+  text-decoration: underline; text-underline-offset: 3px;
+}
 
 /* Stack flip cards */
 .stack__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }

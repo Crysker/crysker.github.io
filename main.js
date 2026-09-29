@@ -31,6 +31,7 @@ const PROJECTS = [
       { key: "devpost", url: "https://devpost.com/software/hisotria-virtualis" },
       { key: "award", url: "https://eudres.eu/news/the-winners-of-the-12th-edition-of-the-interactive-digital-media-student-contest-2026" },
       { key: "vernissage", url: "https://projektevernissage.ustp.at/B/projekteinsicht/?id=1922" },
+      { key: "linkedin", url: "https://www.linkedin.com/posts/serkan-soenmez57_to-start-the-year-on-a-positive-note-my-ugcPost-7416919765048291328-0S2U/" },
       { key: "instagram", url: "https://www.instagram.com/historia_virtualis/" },
       { key: "tiktok", url: "https://www.tiktok.com/@historia_virtualis" }
     ]
@@ -49,7 +50,10 @@ const PROJECTS = [
     img: IMG + "grim.png",
     video: "7VHN2e4oFDc",
     tags: ["Unity", "Meta Quest 3", "Olfactory Display", "Game Jam"],
-    links: [{ key: "ggj", url: "https://globalgamejam.org/games/2026/grim-hollow-7" }]
+    links: [
+      { key: "ggj", url: "https://globalgamejam.org/games/2026/grim-hollow-7" },
+      { key: "linkedin", url: "https://www.linkedin.com/feed/update/urn:li:activity:7425648539403309057/" }
+    ]
   },
   {
     id: "paper",
@@ -212,6 +216,7 @@ const I18N = {
     "exp.title": "Experience & education",
     "exp.coach.t": "Game Development Workshop Coach · USTP Young Campus",
     "exp.coach.p": "Teaching Unity and C# to young people through hands-on workshops.",
+    "exp.post": "LinkedIn post",
     "exp.ebcont.t": "UX/UI Designer · EBCONT",
     "exp.ebcont.p": "15 projects across public administration, publishing, industrial tech and enterprise software. Design systems, high-fidelity prototypes in Figma, UX research, user testing and accessibility analyses. Design lead on selected projects in teams of 4–10 developers.",
     "exp.intern.t": "UX/UI Designer Internship · EBCONT",
@@ -274,7 +279,7 @@ const I18N = {
       challenge: "Challenge", approach: "What we built", approachSolo: "What I built", result: "Result", learned: "What I learned",
       open: "View project", close: "Close", next: "Next project", watch: "Watch video", video: "Video", tools: "Tools & tech", when: "When",
       devpost: "Devpost", ggj: "Global Game Jam page", itch: "Play on itch.io",
-      award: "Contest winners", vernissage: "USTP Projektvernissage", instagram: "Instagram", tiktok: "TikTok"
+      award: "Contest winners", vernissage: "USTP Projektvernissage", instagram: "Instagram", tiktok: "TikTok", linkedin: "LinkedIn post"
     },
     p: {
       historia: {
@@ -488,6 +493,7 @@ const I18N = {
     "exp.title": "Werdegang & Ausbildung",
     "exp.coach.t": "Game Development Workshop Coach · USTP Young Campus",
     "exp.coach.p": "Praxisnahe Unity- und C#-Workshops für Jugendliche.",
+    "exp.post": "LinkedIn-Beitrag",
     "exp.ebcont.t": "UX/UI Designer · EBCONT",
     "exp.ebcont.p": "15 Projekte in öffentlicher Verwaltung, Verlagswesen, Industrie und Enterprise Software. Design-Systeme, High-Fidelity-Prototypen in Figma, UX Research, User Testing und Accessibility-Analysen. Designverantwortung für ausgewählte Projekte in Teams mit 4–10 Entwickler:innen.",
     "exp.intern.t": "UX/UI Designer Praktikum · EBCONT",
@@ -550,7 +556,7 @@ const I18N = {
       challenge: "Herausforderung", approach: "Was wir gebaut haben", approachSolo: "Was ich gebaut habe", result: "Ergebnis", learned: "Was ich gelernt habe",
       open: "Projekt ansehen", close: "Schließen", next: "Nächstes Projekt", watch: "Video ansehen", video: "Video", tools: "Tools & Technik", when: "Wann",
       devpost: "Devpost", ggj: "Global-Game-Jam-Seite", itch: "Auf itch.io spielen",
-      award: "Gewinner:innen des Wettbewerbs", vernissage: "USTP Projektvernissage", instagram: "Instagram", tiktok: "TikTok"
+      award: "Gewinner:innen des Wettbewerbs", vernissage: "USTP Projektvernissage", instagram: "Instagram", tiktok: "TikTok", linkedin: "LinkedIn-Beitrag"
     },
     p: {
       historia: {
