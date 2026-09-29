@@ -94,6 +94,14 @@ const PROJECTS = [
     links: []
   },
   {
+    id: "cthulhu",
+    themes: ["sight"], // sound is the main character
+    img: IMG + "cthulhu.jpg",
+    video: "muGQH67wJ0A",
+    tags: ["Unity", "VR", "Hand Tracking", "Wwise", "Ambisonics", "Level Design", "3D Modelling", "Animation"],
+    links: []
+  },
+  {
     id: "deepspace",
     jam: true,
     img: IMG + "deepspace.jpg",
@@ -389,6 +397,20 @@ const I18N = {
         result: "[What came out of it]",
         learned: "[One takeaway]"
       },
+      cthulhu: {
+        title: "Call of Cthulhu",
+        kicker: "360° Audio & Video · VR",
+        semester: "Master · 3rd semester · 2025",
+        growth: "Sound first: an underwater organ you play with your bare hands.",
+        highlight: "Play a church organ at the bottom of the sea, while Cthulhu listens",
+        summary: "An underwater VR level: you play a piano with your bare hands, and every key is mapped to a recorded church organ. Sea creatures gather to listen, and in the background Cthulhu manipulates you into playing the notes that set him free.",
+        duration: "Semester project",
+        role: "Mostly level design, plus some coding, 3D modelling and animation (team of four)",
+        challenge: "For the 360° Audio & Video course: build an experience where sound is the main character, not just the background.",
+        approach: "A piano in front of you, played with hand tracking; each key triggers an original church organ sound. The whole soundscape is ambisonic and built in Wwise, so the organ, the sea creatures and Cthulhu come from where they are around you. I designed the underwater level and helped with scripting, models and animations.",
+        result: "A playable VR level and a 360° video of it. The full credits are at the end of the video.",
+        learned: ""
+      },
       thesis: {
         title: "Survival skills in VR",
         kicker: "Bachelor's thesis · USTP · 2024",
@@ -666,6 +688,20 @@ const I18N = {
         result: "[Was daraus wurde]",
         learned: "[Eine Erkenntnis]"
       },
+      cthulhu: {
+        title: "Call of Cthulhu",
+        kicker: "360° Audio & Video · VR",
+        semester: "Master · 3. Semester · 2025",
+        growth: "Klang zuerst: eine Unterwasser-Orgel, die man mit bloßen Händen spielt.",
+        highlight: "Spiel eine Kirchenorgel am Meeresgrund, während Cthulhu zuhört",
+        summary: "Ein Unterwasser-Level in VR: Du spielst ein Klavier mit bloßen Händen, jede Taste ist mit einer aufgenommenen Kirchenorgel belegt. Meerestiere versammeln sich und hören zu, und im Hintergrund manipuliert dich Cthulhu, damit du die Töne spielst, die ihn befreien.",
+        duration: "Semesterprojekt",
+        role: "Hauptsächlich Level Design, dazu etwas Programmierung, 3D-Modellierung und Animation (Viererteam)",
+        challenge: "Für die Lehrveranstaltung 360° Audio & Video: ein Erlebnis bauen, in dem Klang die Hauptrolle spielt und nicht nur Hintergrund ist.",
+        approach: "Vor dir steht ein Klavier, gespielt mit Hand Tracking; jede Taste löst einen originalen Kirchenorgel-Klang aus. Die gesamte Klangwelt ist Ambisonics und in Wwise gebaut, sodass Orgel, Meerestiere und Cthulhu von dort kommen, wo sie um dich herum sind. Ich habe das Unterwasser-Level gestaltet und bei Scripts, Modellen und Animationen mitgeholfen.",
+        result: "Ein spielbares VR-Level und ein 360°-Video davon. Die vollständigen Credits stehen am Ende des Videos.",
+        learned: ""
+      },
       thesis: {
         title: "Überleben lernen in VR",
         kicker: "Bachelorarbeit · USTP · 2024",
@@ -888,7 +924,7 @@ const JOURNEY = [
   { intern: true, when: "tl.s5" },
   { id: "hue" },
   { divider: "tl.master" },
-  { id: "sounds" }, { id: "aroom" }, { id: "historia", today: true }
+  { id: "sounds" }, { id: "aroom" }, { id: "cthulhu" }, { id: "historia", today: true }
 ];
 function renderEarly() {
   const P = I18N[lang].p;
