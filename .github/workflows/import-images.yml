@@ -22,7 +22,7 @@ jobs:
           curl -fsSL -o paper.png $base/X4WAIOvqnPbmz1MPN91WbgMv4.png
           curl -fsSL -o hue.png $base/pumxcYqCHAs0Ou7ebiztjUsGr1Y.png
           curl -fsSL -o ocean.jpg $base/6iYFeez3ZvdSfOTFusARnPhLZw.jpg
-          mogrify -resize '1600x1600>' *.jpg *.png
+          echo images downloaded
           rm -f PUT-IMAGES-HERE.txt
           ls -la
       - name: Commit images
