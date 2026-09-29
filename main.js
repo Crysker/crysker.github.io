@@ -167,12 +167,17 @@ const STACK = [
 ];
 
 /* Skills from the CV. Items: [label, logoKey?] – labels starting with "@" are translated via I18N.skill */
+/* Character sheet: self-assessed skill points (1–5), [label, logoKey | null, points] */
+const STATS = [
+  { id: "build", items: [["Unity", "unity", 4], ["C#", "csharp", 4], ["Meta XR SDK & Quest", "meta", 3], ["JavaScript · HTML · CSS", "javascript", 3]] },
+  { id: "design", items: [["Figma", "figma", 5], ["Photoshop", "photoshop", 4], ["Blender", "blender", 3], ["Illustrator", "illustrator", 3]] },
+  { id: "team", items: [["Miro", "miro", 5], ["Git", "git", 4], ["Jira", "jira", 3], ["Wwise", null, 2]] }
+];
+/* Unrated skills as chips. Items: [label, logoKey?] – labels starting with "@" are translated via I18N.skill */
 const SKILLS = [
-  { id: "design", items: [["@webui"], ["@ds"], ["@proto"], ["@research"], ["@a11y"]] },
-  { id: "xr", items: [["VR / MR"], ["Hand Tracking"], ["Meta Quest & Meta XR SDK", "meta"], ["Shared Spatial Anchors"], ["Netcode for GameObjects"], ["@3d"]] },
-  { id: "code", items: [["C#", "csharp"], ["JavaScript", "javascript"], ["HTML", "html5"], ["CSS", "css3"], ["Java", "java"]] },
-  { id: "tools", items: [["Figma", "figma"], ["Unity", "unity"], ["Blender", "blender"], ["Framer", "framer"], ["Miro", "miro"], ["Git", "git"], ["Jira", "jira"], ["Slack", "slack"], ["Photoshop", "photoshop"], ["Illustrator", "illustrator"], ["MS Teams"], ["MS Office"]] },
-  { id: "lang", wide: true, items: [["@tr"], ["@de"], ["@en"], ["@fr"]] }
+  { id: "perks", items: [["@research"], ["@a11y"], ["@ds"], ["@proto"], ["@webui"], ["VR / MR"], ["Hand Tracking"], ["Shared Spatial Anchors"], ["Netcode for GameObjects"], ["@3d"]] },
+  { id: "inventory", items: [["Framer", "framer"], ["Java", "java"], ["Slack", "slack"], ["MS Teams"], ["MS Office"]] },
+  { id: "lang", items: [["@tr"], ["@de"], ["@en"], ["@fr"]] }
 ];
 
 const I18N = {
@@ -237,7 +242,12 @@ const I18N = {
     "stack.intro": "Hover over or tap a card to flip it.",
     "stack.hint": "Hover or tap",
     "nav.menu": "Menu",
-    skillGroups: { design: "Design & UX", xr: "XR", code: "Code", tools: "Tools", lang: "Languages" },
+    skillGroups: { perks: "Perks", inventory: "Also in the inventory", lang: "Languages" },
+    sheet: {
+      title: "Character sheet", cls: "Class: Creative Technologist", note: "Self-assessed. No stat boosts were used.",
+      groups: { build: "Build", design: "Design", team: "Team & Sound" },
+      levels: ["Novice", "Apprentice", "Adept", "Expert", "Master"], of: "of"
+    },
     skill: {
       webui: "Web & UI Design", ds: "Design Systems", proto: "Prototyping & Wireframing (low → high fidelity)",
       research: "UX Research & User Testing", a11y: "Accessibility", "3d": "3D Modelling & 3D Printing",
@@ -528,7 +538,12 @@ const I18N = {
     "stack.intro": "Fahr mit der Maus über eine Karte oder tipp darauf, um sie umzudrehen.",
     "stack.hint": "Hovern oder tippen",
     "nav.menu": "Menü",
-    skillGroups: { design: "Design & UX", xr: "XR", code: "Code", tools: "Tools", lang: "Sprachen" },
+    skillGroups: { perks: "Perks", inventory: "Außerdem im Inventar", lang: "Sprachen" },
+    sheet: {
+      title: "Charakterbogen", cls: "Klasse: Creative Technologist", note: "Selbst eingeschätzt. Es wurden keine Stat-Boosts verwendet.",
+      groups: { build: "Bauen", design: "Design", team: "Team & Sound" },
+      levels: ["Anfänger", "Lehrling", "Geübt", "Experte", "Meister"], of: "von"
+    },
     skill: {
       webui: "Web & UI Design", ds: "Design-Systeme", proto: "Prototyping & Wireframing (Low → High Fidelity)",
       research: "UX Research & User Testing", a11y: "Barrierefreiheit", "3d": "3D-Modellierung & 3D-Druck",
@@ -1283,8 +1298,34 @@ function renderStack() {
     </button>`).join("");
 }
 function renderSkills() {
-  const G = t("skillGroups"), K = t("skill");
-  document.getElementById("skills").innerHTML = SKILLS.map((g) => `
+  const G = t("skillGroups"), K = t("skill"), S = t("sheet");
+  // RPG-style character sheet: 5 pips per skill, they light up one by one when the section scrolls in
+  const stat = ([label, logo, pts]) => `
+    <li class="stat" aria-label="${esc(label)}: ${pts} ${esc(S.of)} 5, ${esc(S.levels[pts - 1])}">
+      <span class="stat__icon" aria-hidden="true">${logo ? `<img src="${LOGOS[logo]}" alt="">` : esc(label.slice(0, 2))}</span>
+      <span class="stat__name" aria-hidden="true">${esc(label)}<small>${esc(S.levels[pts - 1])}</small></span>
+      <span class="pips" aria-hidden="true">${[1, 2, 3, 4, 5].map((n) =>
+        `<i class="pip${n <= pts ? " is-on" : ""}" style="--i:${n}"></i>`).join("")}</span>
+    </li>`;
+  const sheet = `
+    <section class="sheet" aria-labelledby="sheetTitle">
+      <header class="sheet__head">
+        <span class="sheet__avatar"><img src="assets/img/portrait.jpg" alt=""></span>
+        <span>
+          <small class="sheet__kicker" id="sheetTitle">${esc(S.title)}</small>
+          <b class="sheet__name">Serkan Sönmez</b>
+          <span class="sheet__class">${esc(S.cls)}</span>
+        </span>
+        <span class="sheet__note">${esc(S.note)}</span>
+      </header>
+      <div class="sheet__cols">${STATS.map((g) => `
+        <div class="sheet__col">
+          <h3>${esc(S.groups[g.id])}</h3>
+          <ul>${g.items.map(stat).join("")}</ul>
+        </div>`).join("")}
+      </div>
+    </section>`;
+  const chips = SKILLS.map((g) => `
     <div class="skill-group">
       <h3>${esc(G[g.id])}</h3>
       <ul class="chips">${g.items.map(([label, logo]) => {
@@ -1292,6 +1333,7 @@ function renderSkills() {
         return `<li class="${logo ? "" : "no-logo"}">${logo ? `<img src="${LOGOS[logo]}" alt="">` : ""}${text}</li>`;
       }).join("")}</ul>
     </div>`).join("");
+  document.getElementById("skills").innerHTML = sheet + chips;
 }
 
 document.getElementById("stackGrid").addEventListener("click", (e) => {

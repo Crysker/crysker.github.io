@@ -651,6 +651,38 @@ html:has(.case[open]) { overflow: hidden; }
 .chips img { width: 22px; height: 22px; padding: 3px; border-radius: 7px; background: #fff; box-sizing: content-box; }
 .chips small { color: var(--ink-soft); font-weight: 700; }
 @media (max-width: 760px) { .skills { grid-template-columns: 1fr; } }
+.skills > .skill-group:nth-child(2) { grid-column: 1 / -1; } /* perks: full row */
+
+/* Character sheet – RPG stats screen with skill points */
+.sheet {
+  grid-column: 1 / -1; padding: 24px; border-radius: var(--radius);
+  background: var(--surface); border: 2px solid var(--turq); box-shadow: 5px 5px 0 var(--orange);
+}
+.sheet__head { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; padding-bottom: 18px; margin-bottom: 18px; border-bottom: 1px dashed var(--line); }
+.sheet__avatar { flex: none; width: 60px; height: 60px; border-radius: 16px; overflow: hidden; border: 2px solid var(--turq); background: var(--surface-2); }
+.sheet__avatar img { width: 100%; height: 100%; object-fit: cover; transform: scale(1.65); transform-origin: 62% 46%; }
+.sheet__kicker { display: block; font: 800 11px var(--sans); text-transform: uppercase; letter-spacing: .1em; color: var(--turq-text); }
+.sheet__name { display: block; font: 700 24px/1.15 var(--serif); }
+.sheet__class { font-size: 14px; font-weight: 700; color: var(--orange-text); }
+.sheet__note { margin-left: auto; font-size: 13px; font-style: italic; color: var(--ink-soft); }
+.sheet__cols { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px 32px; }
+.sheet__col h3 { font: 800 12px var(--sans); text-transform: uppercase; letter-spacing: .08em; color: var(--turq-text); margin-bottom: 6px; }
+.sheet__col ul { list-style: none; margin: 0; padding: 0; }
+.stat { display: grid; grid-template-columns: 30px minmax(0, 1fr) auto; align-items: center; gap: 10px; padding: 7px 0; }
+.stat__icon {
+  display: grid; place-items: center; width: 30px; height: 30px; border-radius: 8px; background: #fff;
+  font: 800 11px var(--sans); color: #062624; overflow: hidden;
+}
+.stat__icon img { width: 20px; height: 20px; }
+.stat__name { font-weight: 700; font-size: 15px; line-height: 1.2; min-width: 0; }
+.stat__name small { display: block; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: .06em; color: var(--ink-soft); }
+/* diamond pips, filled ones glow turquoise */
+.pips { display: flex; gap: 7px; }
+.pip { width: 11px; height: 11px; rotate: 45deg; border-radius: 2px; border: 2px solid var(--line); }
+.pip.is-on { background: var(--turq); border-color: var(--turq); box-shadow: 0 0 8px color-mix(in srgb, var(--turq) 55%, transparent); }
+.stack.is-in .pip.is-on { animation: pip-in .35s cubic-bezier(.3, 1.6, .5, 1) backwards; animation-delay: calc(var(--i) * 90ms + .2s); }
+@keyframes pip-in { from { scale: 0; } }
+@media (max-width: 860px) { .sheet__cols { grid-template-columns: 1fr; } .sheet__note { margin-left: 0; width: 100%; } }
 .flip__name { font: 700 28px var(--serif); }
 .flip__hint { font-size: 12px; font-weight: 700; color: var(--ink-soft); text-transform: uppercase; letter-spacing: .08em; }
 @media (max-width: 860px) { .stack__grid { grid-template-columns: repeat(2, 1fr); } }
