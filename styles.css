@@ -402,13 +402,24 @@ html[lang="de"] .lang [data-lang="de"] { background: var(--ink); color: var(--bg
   position: absolute; top: 12px; left: 12px; padding: 6px 12px; border-radius: 999px;
   background: var(--yellow); color: #1d1b2e; font: 800 13px var(--sans); box-shadow: var(--shadow);
 }
-/* Hover preview – scaled up a bit so YouTube's title bar is cropped away */
+/* Hover preview: own short clip, fills the card exactly (no YouTube interface) */
 .p-card__preview {
-  position: absolute; inset: 0; width: 100%; height: 100%; border: 0;
-  transform: scale(1.35); opacity: 0; pointer-events: none; transition: opacity .4s;
+  position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
+  opacity: 0; pointer-events: none; transition: opacity .35s;
 }
 .p-card.is-previewing .p-card__preview { opacity: 1; }
-.p-card.is-previewing .p-card__video { opacity: 0; }
+.p-card.is-previewing .p-card__video, .p-card.is-previewing .p-card__play { opacity: 0; }
+/* cards with a video: play button fades in on hover */
+.p-card__play {
+  position: absolute; inset: 0; margin: auto; width: 60px; height: 60px; border-radius: 50%;
+  display: grid; place-items: center; background: var(--turq); color: #062624;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, .35); opacity: 0; scale: .8; transition: opacity .25s, scale .25s;
+}
+.p-card__play::before {
+  content: ""; width: 20px; height: 23px; margin-left: 4px; background: currentColor;
+  clip-path: polygon(0 0, 100% 50%, 0 100%);
+}
+.p-card:hover .p-card__play, .p-card:focus-visible .p-card__play { opacity: 1; scale: 1; }
 .p-card__video {
   position: absolute; right: 12px; bottom: 12px; padding: 6px 12px; border-radius: 999px;
   background: rgba(0, 0, 0, .65); color: #fff; font: 700 13px var(--sans); backdrop-filter: blur(6px);
@@ -480,6 +491,14 @@ html:has(.case[open]) { overflow: hidden; }
 .case__facts dd { margin: 0; font-weight: 600; }
 .case__links { display: flex; flex-direction: column; gap: 10px; margin-top: 22px; }
 .case__links .btn { justify-content: center; }
+/* QR code to the video – for watching on a phone or VR headset (hidden on touch devices) */
+.case__qr {
+  display: flex; align-items: center; gap: 14px; margin-top: 20px; padding: 10px; border-radius: 16px;
+  border: 1px dashed var(--line); color: var(--ink-soft); text-decoration: none; font-size: 13px; font-weight: 700;
+}
+.case__qr img { flex: none; width: 96px; height: 96px; border-radius: 8px; background: #fff; padding: 4px; }
+.case__qr:hover { border-color: var(--turq); color: var(--ink); }
+@media (hover: none) and (pointer: coarse) { .case__qr { display: none; } }
 .case__story { max-width: 66ch; }
 .case__block { margin-bottom: 32px; }
 .case__block h3 { margin-bottom: 8px; }

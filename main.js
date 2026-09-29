@@ -296,7 +296,7 @@ const I18N = {
     "footer.top": "Back to top ↑",
     ui: {
       duration: "Duration", role: "My role", team: "Team",
-      challenge: "Challenge", approach: "What we built", approachSolo: "What I built", result: "Result", learned: "What I learned",
+      challenge: "Challenge", approach: "What we built", approachSolo: "What I built", scan: "Scan to watch it on your phone or in VR", result: "Result", learned: "What I learned",
       open: "View project", close: "Close", next: "Next project", watch: "Watch video", video: "Video", tools: "Tools & tech", when: "When",
       devpost: "Devpost", ggj: "Global Game Jam page", itch: "Play on itch.io",
       award: "Contest winners", vernissage: "USTP Projektvernissage", instagram: "Instagram", tiktok: "TikTok", linkedin: "LinkedIn post", makingof: "Making-of video"
@@ -595,7 +595,7 @@ const I18N = {
     "footer.top": "Nach oben ↑",
     ui: {
       duration: "Dauer", role: "Meine Rolle", team: "Team",
-      challenge: "Herausforderung", approach: "Was wir gebaut haben", approachSolo: "Was ich gebaut habe", result: "Ergebnis", learned: "Was ich gelernt habe",
+      challenge: "Herausforderung", approach: "Was wir gebaut haben", approachSolo: "Was ich gebaut habe", scan: "Scannen und am Handy oder in VR ansehen", result: "Ergebnis", learned: "Was ich gelernt habe",
       open: "Projekt ansehen", close: "Schließen", next: "Nächstes Projekt", watch: "Video ansehen", video: "Video", tools: "Tools & Technik", when: "Wann",
       devpost: "Devpost", ggj: "Global-Game-Jam-Seite", itch: "Auf itch.io spielen",
       award: "Gewinner:innen des Wettbewerbs", vernissage: "USTP Projektvernissage", instagram: "Instagram", tiktok: "TikTok", linkedin: "LinkedIn-Beitrag", makingof: "Making-of-Video"
@@ -934,7 +934,8 @@ function renderProjects() {
         <div class="p-card__media">
           ${pic(pr)}
           ${x.badge ? `<span class="p-card__badge">${esc(x.badge)}</span>` : ""}
-          ${pr.video ? `<span class="p-card__video">▶ ${esc(t("ui").video)}</span>` : ""}
+          ${pr.video ? `<span class="p-card__video">▶ ${esc(t("ui").video)}</span>
+          <span class="p-card__play" aria-hidden="true"></span>` : ""}
         </div>
         <div class="p-card__body">
           <p class="p-card__kicker">${esc(x.kicker)}</p>
@@ -1023,7 +1024,9 @@ function openProject(id, { push = true } = {}) {
   const pr = PROJECTS.find((p) => p.id === id);
   const x = I18N[lang].p[id];
   const ui = t("ui");
-  const list = visibleProjects();
+  // "Next project" follows the grid order (ORDER), early semester projects come after
+  const rankAll = (p) => (ORDER.includes(p.id) ? ORDER.indexOf(p.id) : 50 + PROJECTS.indexOf(p));
+  const list = visibleProjects().sort((a, b) => rankAll(a) - rankAll(b));
   const next = list.length > 1 ? list[(list.findIndex((p) => p.id === id) + 1) % list.length] : null;
   // Video loads only on click: faster, and no YouTube request for people who don't watch
   const media = pr.video
@@ -1054,6 +1057,9 @@ function openProject(id, { push = true } = {}) {
           <ul class="tags">${pr.tags.map((tg) => `<li>${esc(tg)}</li>`).join("")}</ul>
           ${pr.links.length ? `<div class="case__links">${pr.links.map((l) =>
             `<a class="btn" href="${l.url}" target="_blank" rel="noopener">${esc(ui[l.key])} ↗</a>`).join("")}</div>` : ""}
+          ${pr.video ? `<a class="case__qr" href="https://youtu.be/${pr.video}" target="_blank" rel="noopener">
+            <img src="assets/qr/${pr.id}.svg" alt="QR code: ${esc(x.title)} on YouTube" width="112" height="112">
+            <span>${esc(ui.scan)}</span></a>` : ""}
         </aside>
         <div class="case__story">
           ${block(ui.challenge, x.challenge)}
@@ -1103,19 +1109,13 @@ document.getElementById("projectGrid").addEventListener("click", (e) => {
   openProject(card.dataset.id);
 });
 
-/* ============ Hover preview: muted video plays inside the card (mouse only) ============ */
+/* ============ Hover preview (mouse only) ============
+   YouTube can't be embedded without its own interface (title, buttons), so cards never load YouTube.
+   A project can get its own short silent clip instead: preview: IMG + "…/clip.mp4" (5–10 s, landscape).
+   Without a clip, the card just zooms and shows a play button (CSS). */
 const canHover = matchMedia("(hover: hover) and (pointer: fine)");
 const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)");
 let previewTimer;
-// Open the connection to YouTube as soon as the mouse is near the projects, so previews start faster
-let warmedUp = false;
-document.getElementById("projects").addEventListener("pointerenter", () => {
-  if (warmedUp || !canHover.matches) return;
-  warmedUp = true;
-  ["https://www.youtube-nocookie.com", "https://i.ytimg.com", "https://www.google.com"].forEach((href) => {
-    document.head.appendChild(Object.assign(document.createElement("link"), { rel: "preconnect", href, crossOrigin: "" }));
-  });
-});
 function stopPreview(card) {
   clearTimeout(previewTimer);
   card.querySelector(".p-card__preview")?.remove();
@@ -1125,20 +1125,14 @@ document.getElementById("projectGrid").addEventListener("mouseover", (e) => {
   const card = e.target.closest(".p-card");
   if (!card || card.contains(e.relatedTarget) || !canHover.matches || reduceMotion.matches) return;
   const pr = PROJECTS.find((p) => p.id === card.dataset.id);
-  if (!pr?.video) return;
-  // short delay so just moving the mouse across the page doesn't start videos
-  previewTimer = setTimeout(() => {
-    const v = pr.video;
-    const frame = document.createElement("iframe");
-    frame.className = "p-card__preview";
-    frame.src = `https://www.youtube-nocookie.com/embed/${v}?autoplay=1&mute=1&controls=0&loop=1&playlist=${v}&playsinline=1&rel=0&disablekb=1&iv_load_policy=3&modestbranding=1`;
-    frame.title = "";
-    frame.tabIndex = -1;
-    frame.setAttribute("aria-hidden", "true");
-    frame.allow = "autoplay; encrypted-media";
-    // brief wait after load hides YouTube's black start frame
-    frame.addEventListener("load", () => setTimeout(() => card.classList.add("is-previewing"), 300));
-    card.querySelector(".p-card__media").appendChild(frame);
+  if (!pr?.preview) return;
+  previewTimer = setTimeout(() => { // short delay so just moving the mouse across the page doesn't start clips
+    const clip = Object.assign(document.createElement("video"), {
+      className: "p-card__preview", src: pr.preview, muted: true, loop: true, playsInline: true, autoplay: true
+    });
+    clip.setAttribute("aria-hidden", "true");
+    clip.addEventListener("playing", () => card.classList.add("is-previewing"), { once: true });
+    card.querySelector(".p-card__media").appendChild(clip);
   }, 120);
 });
 document.getElementById("projectGrid").addEventListener("mouseout", (e) => {
@@ -1369,13 +1363,6 @@ document.getElementById("stackGrid").addEventListener("click", (e) => {
   if (card) card.setAttribute("aria-pressed", card.getAttribute("aria-pressed") === "true" ? "false" : "true");
 });
 
-/* ============ YouTube click-to-load (privacy friendly) ============ */
-document.querySelectorAll(".video").forEach((v) => {
-  v.querySelector(".video__play").addEventListener("click", () => {
-    v.innerHTML = `<iframe src="https://www.youtube-nocookie.com/embed/${v.dataset.yt}?autoplay=1" title="Historia Virtualis making-of" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>`;
-    unlock("video");
-  });
-});
 
 /* ============ Reveal on scroll ============ */
 const io = "IntersectionObserver" in window ? new IntersectionObserver((entries) => {
