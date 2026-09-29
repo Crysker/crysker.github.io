@@ -47,7 +47,7 @@ const PROJECTS = [
   {
     id: "grim",
     jam: true, // game jams & hackathons filter
-    themes: ["sight"],
+    themes: ["sight", "games"],
     img: IMG + "grim.png",
     video: "7VHN2e4oFDc",
     tags: ["Unity", "Meta Quest 3", "Olfactory Display", "Game Jam"],
@@ -67,6 +67,7 @@ const PROJECTS = [
   },
   {
     id: "hue",
+    themes: ["games"],
     img: IMG + "hue.png",
     video: "aEI-z94dT4A", // trailer from the itch.io page
     tags: ["Unity", "C#", "Game Design"],
@@ -74,6 +75,7 @@ const PROJECTS = [
   },
   {
     id: "ocean",
+    themes: ["games"],
     img: IMG + "ocean.jpg",
     video: "yR7QZmcF6Uk",
     // own models first (goblins, huts, straw, bottle, nuclear barrel), then the rest of the cast
@@ -106,6 +108,7 @@ const PROJECTS = [
   {
     id: "deepspace",
     jam: true,
+    themes: ["games"],
     img: IMG + "deepspace.jpg",
     video: "i_oERAmOcPI",
     tags: ["Unity", "C#", "XR", "Level Design", "Animation", "Game Jam"],
@@ -215,7 +218,8 @@ const I18N = {
     "projects.more": "Show all projects (+{n})",
     "early.title": "My journey", "early.intro": "From my first browser game to award-winning VR, semester by semester.",
     "early.now": "Today", "early.intern.t": "UX/UI internship · EBCONT", "early.intern.p": "Design systems and prototypes in real product teams (see Experience).",
-    themes: { all: "All", sight: "Beyond sight", abilities: "Diverse abilities", shared: "Shared realities", jams: "Jams & hackathons" },
+    themes: { all: "All", sight: "Beyond sight", abilities: "Diverse abilities", shared: "Shared realities", games: "Games", jams: "Jams & hackathons" },
+    "games.t": "Games", "games.p": "Complete, playable games: from a deckbuilder on itch.io to VR and XR games with bosses, trash-dumping goblins and space junk.",
     "jams.t": "Game jams & hackathons", "jams.p": "A weekend, a team, one idea: where I try the wild stuff fast.",
     "tl.s5": "5th semester · 2023",
     "tl.bachelor": "Bachelor · Creative Computing · 2021–2024", "tl.master": "Master · Interactive Technologies (AR/VR) · since 2024",
@@ -514,7 +518,8 @@ const I18N = {
     "projects.more": "Alle Projekte zeigen (+{n})",
     "early.title": "Mein Weg", "early.intro": "Vom ersten Browserspiel bis zur preisgekrönten VR, Semester für Semester.",
     "early.now": "Heute", "early.intern.t": "UX/UI-Praktikum · EBCONT", "early.intern.p": "Design-Systeme und Prototypen in echten Produktteams (siehe Werdegang).",
-    themes: { all: "Alle", sight: "Mehr als Sehen", abilities: "Diverse Fähigkeiten", shared: "Geteilte Realitäten", jams: "Jams & Hackathons" },
+    themes: { all: "Alle", sight: "Mehr als Sehen", abilities: "Diverse Fähigkeiten", shared: "Geteilte Realitäten", games: "Games", jams: "Jams & Hackathons" },
+    "games.t": "Games", "games.p": "Fertige, spielbare Games: vom Deckbuilder auf itch.io bis zu VR- und XR-Spielen mit Bossen, müllenden Goblins und Weltraumschrott.",
     "jams.t": "Game Jams & Hackathons", "jams.p": "Ein Wochenende, ein Team, eine Idee: Hier probiere ich die verrückten Sachen schnell aus.",
     "tl.s5": "5. Semester · 2023",
     "tl.bachelor": "Bachelor · Creative Computing · 2021–2024", "tl.master": "Master · Interactive Technologies (AR/VR) · seit 2024",
@@ -879,14 +884,16 @@ const ICONS = {
   sight: svg('<path d="M3 10v4M7.5 6.5v11M12 3.5v17M16.5 7.5v9M21 10.5v3"/>'), // sound waves
   abilities: svg('<circle cx="12" cy="4.5" r="1.8"/><path d="M5 8.5l7 1.6 7-1.6M12 10.1v5M12 15.1l-3.5 5.9M12 15.1l3.5 5.9"/>'), // accessibility
   shared: svg('<circle cx="9" cy="12" r="5.5"/><circle cx="15" cy="12" r="5.5"/>'), // overlapping realities
+  games: svg('<rect x="2.5" y="7" width="19" height="11" rx="5.5"/><path d="M7.5 10.5v4M5.5 12.5h4"/><circle cx="15.5" cy="11.5" r=".6"/><circle cx="17.5" cy="13.5" r=".6"/>'), // gamepad
   jams: svg('<path d="M13 2 4 14h7l-1 8 9-12h-7l1-8z"/>'), // lightning – made fast
   work: svg('<rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8.5 7V5a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v2M3 13h18"/>') // briefcase
 };
-// The three research questions + game jams/hackathons as a category
+// The three research questions + games + game jams/hackathons as categories
 const THEMES = [
   { id: "sight", text: "explore.a", match: (pr) => (pr.themes || []).includes("sight") },
   { id: "abilities", text: "explore.b", match: (pr) => (pr.themes || []).includes("abilities") },
   { id: "shared", text: "explore.c", match: (pr) => (pr.themes || []).includes("shared") },
+  { id: "games", text: "games", match: (pr) => (pr.themes || []).includes("games") },
   { id: "jams", text: "jams", match: (pr) => pr.jam }
 ];
 let theme = "all";
