@@ -276,7 +276,7 @@ const I18N = {
       historia: {
         title: "Historia Virtualis",
         kicker: "Co-located multiplayer VR",
-        semester: "Master · since 2025",
+        semester: "Master · 3rd semester · since 2025",
         growth: "2× 1st place – co-located VR, designed and tested with real players.",
         highlight: "1st place at two competitions · shown at the European Researchers' Night",
         badge: "🏆 1st place ×2",
@@ -290,7 +290,9 @@ const I18N = {
       },
       sounds: {
         title: "Sounds of Shadow",
-        kicker: "University project · VR",
+        kicker: "Master project · VR",
+        semester: "Master · 2nd semester · 2025",
+        growth: "Designing for a missing sense: finding your way by sound alone.",
         highlight: "Playable VR prototype built around an accessibility question",
         summary: "Navigate total darkness using echolocation. A sonar pulse reveals the room — find three hidden keys without ever seeing clearly.",
         duration: "Semester project",
@@ -350,7 +352,7 @@ const I18N = {
         challenge: "Make ocean pollution something you feel, not something you read about: small careless acts pile up until they turn into a threat you can't ignore.",
         approach: "Five scenes, from a tutorial room to the beach, a death cell and a victory party. Goblins (fast, little trash) and ogres (slow, lots of trash) walk from their huts to the rivers via NavMesh; the trash then finds its way to the ocean with A* pathfinding. You collect it by hand into a bucket – until the boss fight starts, armed with watermelon swords from the Unity Asset Store. Sound and an in-game announcer with Wwise.",
         result: "A playable Meta Quest game built in two weeks by our team of three (LSW-Studios), with a full boss fight, animations and an easter egg.",
-        learned: "A silly premise makes a serious topic stick – people remember the watermelon swords and the message."
+        learned: ""
       },
       deepspace: {
         title: "Deep Space Cleaner Corp",
@@ -367,12 +369,12 @@ const I18N = {
       aroom: {
         title: "ARoom",
         kicker: "Master project · Mobile AR",
-        semester: "Master",
+        semester: "Master · 3rd semester · 2025",
         growth: "Mobile AR: scanning real rooms and decorating them virtually.",
         highlight: "See how a picture looks on your wall – before you hang it",
         summary: "An AR app that scans your room so you can place plants, decoration and picture frames – with your own uploaded images – and see how they would look in your space.",
-        duration: "[Duration]",
-        role: "[Your role]",
+        duration: "Semester project",
+        role: "Solo project – concept, design and development",
         challenge: "Will this picture work on that wall? Deciding how decoration fits a real room is hard to imagine from a shop page.",
         approach: "The app scans the whole room and detects walls and surfaces. You place plants, decoration or picture frames, upload your own images into the frames, then scale, rotate and recolour the frames until they fit your room.",
         result: "[What came out of it]",
@@ -550,7 +552,7 @@ const I18N = {
       historia: {
         title: "Historia Virtualis",
         kicker: "Co-located Multiplayer-VR",
-        semester: "Master · seit 2025",
+        semester: "Master · 3. Semester · seit 2025",
         growth: "2× 1. Platz – Co-located VR, gestaltet und getestet mit echten Spieler:innen.",
         highlight: "1. Platz bei zwei Wettbewerben · gezeigt bei der European Researchers' Night",
         badge: "🏆 2× 1. Platz",
@@ -564,7 +566,9 @@ const I18N = {
       },
       sounds: {
         title: "Sounds of Shadow",
-        kicker: "Uniprojekt · VR",
+        kicker: "Masterprojekt · VR",
+        semester: "Master · 2. Semester · 2025",
+        growth: "Gestalten für einen fehlenden Sinn: Orientierung nur über Klang.",
         highlight: "Spielbarer VR-Prototyp rund um eine Accessibility-Frage",
         summary: "Orientiere dich in völliger Dunkelheit per Echoortung. Ein Sonar-Impuls macht den Raum sichtbar – finde drei versteckte Schlüssel.",
         duration: "Semesterprojekt",
@@ -624,7 +628,7 @@ const I18N = {
         challenge: "Meeresverschmutzung spürbar machen statt nur darüber zu lesen: Kleine achtlose Handlungen summieren sich zu einer Bedrohung, die man nicht mehr ignorieren kann.",
         approach: "Fünf Szenen, vom Tutorial-Raum über den Strand bis zur Todeszelle und der Siegesfeier. Goblins (schnell, wenig Müll) und Oger (langsam, viel Müll) laufen per NavMesh von ihren Hütten zu den Flüssen; der Müll findet dann per A*-Pathfinding seinen Weg ins Meer. Man sammelt ihn per Hand in einen Eimer – bis der Bosskampf beginnt, bewaffnet mit Wassermelonen-Schwertern aus dem Unity Asset Store. Sound und ein Ansager im Spiel mit Wwise.",
         result: "Ein spielbares Meta-Quest-Spiel, in zwei Wochen von unserem Dreierteam (LSW-Studios) gebaut, mit komplettem Bosskampf, Animationen und einem Easter Egg.",
-        learned: "Eine alberne Prämisse lässt ein ernstes Thema hängen bleiben – man erinnert sich an die Wassermelonen-Schwerter und an die Botschaft."
+        learned: ""
       },
       deepspace: {
         title: "Deep Space Cleaner Corp",
@@ -641,12 +645,12 @@ const I18N = {
       aroom: {
         title: "ARoom",
         kicker: "Masterprojekt · Mobile AR",
-        semester: "Master",
+        semester: "Master · 3. Semester · 2025",
         growth: "Mobile AR: echte Räume scannen und virtuell einrichten.",
         highlight: "Sieh, wie ein Bild an deiner Wand wirkt – bevor du es aufhängst",
         summary: "Eine AR-App, die deinen Raum scannt, damit du Pflanzen, Deko und Bilderrahmen – mit eigenen hochgeladenen Bildern – platzieren und sehen kannst, wie sie bei dir wirken.",
-        duration: "[Dauer]",
-        role: "[Deine Rolle]",
+        duration: "Semesterprojekt",
+        role: "Allein umgesetzt – Konzept, Design und Entwicklung",
         challenge: "Passt dieses Bild an diese Wand? Wie Deko in einem echten Raum wirkt, kann man sich im Onlineshop kaum vorstellen.",
         approach: "Die App scannt den ganzen Raum und erkennt Wände und Flächen. Man platziert Pflanzen, Deko oder Bilderrahmen, lädt eigene Bilder in die Rahmen, skaliert und dreht sie und ändert die Rahmenfarbe, bis alles zum Raum passt.",
         result: "[Was daraus wurde]",
@@ -874,7 +878,7 @@ const JOURNEY = [
   { intern: true, when: "tl.s5" },
   { id: "hue" },
   { divider: "tl.master" },
-  { id: "aroom" }, { id: "historia", today: true }
+  { id: "sounds" }, { id: "aroom" }, { id: "historia", today: true }
 ];
 function renderEarly() {
   const P = I18N[lang].p;
