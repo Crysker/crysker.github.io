@@ -163,15 +163,21 @@ html[lang="de"] .lang [data-lang="de"] { background: var(--ink); color: var(--bg
 }
 /* the signature signs itself next to the name (sized with the name via em) */
 .hero__sig {
-  position: absolute; right: -.74em; bottom: .12em; width: .78em; height: .9em;
+  position: absolute; right: -1.02em; bottom: .12em; width: .78em; height: .9em;
   color: var(--turq-text); rotate: -6deg; pointer-events: none;
 }
 .hero__sig path {
   stroke: currentColor; stroke-width: 3.2; stroke-linecap: round; stroke-linejoin: round;
   stroke-dasharray: 1; stroke-dashoffset: 0;
-  animation: sign 2.2s cubic-bezier(.5, 0, .3, 1) .5s backwards; /* "backwards": hidden until it starts */
+  /* loops: writes itself, stays, un-writes backwards, repeat (~7s). Without animation it just stands there. */
+  animation: sign 7s ease-in-out .3s infinite backwards;
 }
-@keyframes sign { from { stroke-dashoffset: 1; } }
+@keyframes sign {
+  0% { stroke-dashoffset: 1; }
+  30% { stroke-dashoffset: 0; }   /* written */
+  78% { stroke-dashoffset: 0; }   /* stays */
+  100% { stroke-dashoffset: 1; }  /* un-written from the end back to the start */
+}
 .hero__name em { font-style: italic; color: var(--turq-text); }
 .hero__title {
   margin: 12px 0 0;
@@ -692,6 +698,14 @@ html:has(.case[open]) { overflow: hidden; }
   content: ""; position: absolute; inset: 0;
   background: repeating-linear-gradient(90deg, transparent 0 calc(20% - 2px), rgba(0, 0, 0, .7) calc(20% - 2px) 20%);
 }
+/* legend: what the numbers mean */
+.sheet__legend {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 6px 16px; margin: 18px 0 0; padding-top: 14px;
+  border-top: 1px dashed var(--line); font-size: 13px; font-weight: 700; color: var(--ink-soft);
+}
+.sheet__legend span { display: inline-flex; align-items: center; gap: 6px; }
+.sheet__legend .xp__lvl { font-size: 14px; }
+.sheet__legend em { font-style: normal; color: var(--turq-text); }
 .stack.is-in .xp__fill { animation: xp-fill 1.1s cubic-bezier(.3, .7, .3, 1) .25s backwards; }
 @keyframes xp-fill { from { width: 0; } }
 @media (max-width: 860px) { .sheet__cols { grid-template-columns: 1fr; } .sheet__note { margin-left: 0; width: 100%; } }

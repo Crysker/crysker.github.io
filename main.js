@@ -246,7 +246,7 @@ const I18N = {
     sheet: {
       title: "Character sheet", cls: "Class: Creative Technologist", note: "Self-assessed. No stat boosts were used.",
       groups: { build: "Build", design: "Design", team: "Team & Sound" },
-      levels: ["Novice", "Apprentice", "Adept", "Expert", "Master"], of: "of"
+      levels: ["Novice", "Apprentice", "Adept", "Expert", "Master"], of: "of", scale: "Level scale:", max: "(5 = max)"
     },
     skill: {
       webui: "Web & UI Design", ds: "Design Systems", proto: "Prototyping & Wireframing (low → high fidelity)",
@@ -542,7 +542,7 @@ const I18N = {
     sheet: {
       title: "Charakterbogen", cls: "Klasse: Creative Technologist", note: "Selbst eingeschätzt. Es wurden keine Stat-Boosts verwendet.",
       groups: { build: "Bauen", design: "Design", team: "Team & Sound" },
-      levels: ["Anfänger", "Lehrling", "Geübt", "Experte", "Meister"], of: "von"
+      levels: ["Anfänger", "Lehrling", "Geübt", "Experte", "Meister"], of: "von", scale: "Level-Skala:", max: "(5 = Maximum)"
     },
     skill: {
       webui: "Web & UI Design", ds: "Design-Systeme", proto: "Prototyping & Wireframing (Low → High Fidelity)",
@@ -1326,6 +1326,8 @@ function renderSkills() {
           <ul>${g.items.map(stat).join("")}</ul>
         </div>`).join("")}
       </div>
+      <p class="sheet__legend">${esc(S.scale)} ${S.levels.map((l, i) =>
+        `<span><b class="xp__lvl">${i + 1}</b> ${esc(l)}</span>`).join(" ")} <em>${esc(S.max)}</em></p>
     </section>`;
   const chips = SKILLS.map((g) => `
     <div class="skill-group">
