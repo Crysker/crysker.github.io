@@ -908,9 +908,9 @@ document.getElementById("themes").addEventListener("click", (e) => {
   renderProjects();
 });
 
-/* Main grid order (strongest first) and how many show before "Show all" */
-const ORDER = ["historia", "sounds", "cthulhu", "paper", "grim", "thesis", "aroom", "ocean", "hue", "deepspace"];
-const FIRST_SHOWN = 7;
+/* Main grid order (most hyped first) and how many show before "Show all" */
+const ORDER = ["historia", "grim", "paper", "cthulhu", "sounds", "thesis", "aroom", "ocean", "hue", "deepspace"];
+const FIRST_SHOWN = 4; // featured card + one row of three
 let showAllProjects = false;
 
 function renderProjects() {
