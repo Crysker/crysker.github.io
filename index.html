@@ -9,13 +9,19 @@
   <meta property="og:url" content="https://crysker.github.io/">
   <meta property="og:title" content="Serkan Sönmez · Interaction Designer & XR Developer">
   <meta property="og:description" content="Interaction & UX/UI Designer and XR / Unity Developer from St. Pölten, Austria. Available now for XR, UX/UI and Unity/C# roles.">
-  <meta property="og:image" content="https://crysker.github.io/assets/img/historia.jpg">
+  <!-- link preview (Discord, LinkedIn, WhatsApp…); bump ?v= after changing the image, previews are cached -->
+  <meta property="og:image" content="https://crysker.github.io/assets/og-image.jpg?v=1">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Serkan Sönmez, Interaction Designer and XR Developer, available now">
   <meta name="twitter:card" content="summary_large_image">
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%237c5cff'/%3E%3Ctext x='32' y='42' font-family='Georgia,serif' font-size='28' font-weight='700' text-anchor='middle' fill='%23fff'%3ES%C3%B6%3C/text%3E%3C/svg%3E">
+  <meta name="twitter:image" content="https://crysker.github.io/assets/og-image.jpg?v=1">
+  <!-- bump ?v= after changing the icon – browsers cache favicons very aggressively -->
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg?v=2">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,700;1,9..144,600;1,9..144,700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=19">
+  <link rel="stylesheet" href="styles.css?v=20">
 </head>
 <body>
   <a class="skip" href="#main" data-i18n="skip">Skip to content</a>
@@ -218,7 +224,7 @@
     <div class="game__head">
       <p class="game__kicker" data-i18n="captcha.kicker">Security check</p>
       <h2 id="gameTitle" data-i18n="captcha.title">Put every shape into its slot</h2>
-      <p class="game__hint" data-i18n="captcha.hint">Drag them, or tap a shape and then its slot.</p>
+      <p class="game__hint" data-i18n="captcha.hint">Drag them into the slots (or tap a shape, then a slot) and hit Verify.</p>
     </div>
     <div class="game__play" id="gamePlay">
       <div class="game__slots" id="gameSlots"></div>
@@ -236,7 +242,10 @@
     </div>
     <div class="game__foot">
       <span class="captcha__brand"><span class="captcha__logo" aria-hidden="true">↻</span>reSHAPTCHA</span>
-      <button class="game__close" id="gameClose" type="button" data-i18n="captcha.close">Close</button>
+      <span class="game__actions">
+        <button class="game__close" id="gameClose" type="button" data-i18n="captcha.close">Close</button>
+        <button class="game__verify" id="gameVerify" type="button" disabled data-i18n="captcha.verify">Verify</button>
+      </span>
     </div>
   </dialog>
 
@@ -266,6 +275,6 @@
   </dialog>
 
   <script src="logos.js?v=2"></script>
-  <script src="main.js?v=27"></script>
+  <script src="main.js?v=28"></script>
 </body>
 </html>

@@ -731,7 +731,18 @@ html:has(.case[open]) { overflow: hidden; }
 }
 .slot { border: 2px dashed var(--line); background: transparent; transition: border-color .2s, background .2s; }
 .slot:hover { border-color: var(--turq); }
-.slot.is-filled { border: 2px solid var(--turq); background: var(--turq-soft); cursor: default; animation: pop .35s; }
+/* filled = a piece sits in it (tap to take it back out); locked = verified correct */
+.slot.is-filled { border: 2px solid var(--ink-soft); border-style: solid; animation: pop .35s; }
+.slot.is-locked { border-color: var(--turq); background: var(--turq-soft); cursor: default; }
+.slot .piece-btn { border: 0; background: none; width: 100%; height: 100%; cursor: pointer; }
+.slot.is-locked .piece-btn { cursor: default; }
+.game__actions { display: flex; gap: 8px; }
+.game__verify {
+  padding: 8px 18px; border-radius: 999px; border: 0; cursor: pointer;
+  background: var(--turq); color: #062624; font: 800 14px var(--sans); text-transform: uppercase; letter-spacing: .05em;
+}
+.game__verify:disabled { opacity: .4; cursor: not-allowed; }
+.game__verify:not(:disabled):hover { box-shadow: 3px 3px 0 var(--orange); }
 .piece-btn {
   border: 1px solid var(--line); background: var(--surface-2); touch-action: none; user-select: none;
   cursor: grab; position: relative; transition: transform .25s;

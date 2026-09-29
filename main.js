@@ -249,10 +249,11 @@ const I18N = {
     toTop: "Back to top", "case.back": "All projects",
     lb: { close: "Close", prev: "Previous image", next: "Next image", zin: "Zoom in", zout: "Zoom out", hint: "Scroll, pinch or double-click to zoom · drag to move" },
     "captcha.check": "I'm not a robot", "captcha.kicker": "Security check", "captcha.note": "psst… are you human? 👀",
-    "captcha.title": "Put every shape into its slot", "captcha.hint": "Drag them, or tap a shape and then its slot.",
+    "captcha.title": "Put every shape into its slot", "captcha.hint": "Drag them into the slots (or tap a shape, then a slot) and hit Verify.",
     "captcha.memeBottom": "Now hire a human",
     "captcha.hire": "Okay, let's talk →", "captcha.close": "Close", "captcha.done": "Verified. Preparing your reward…",
-    "captcha.wrong": ["Hmm… suspiciously robotic.", "Beep boop? Try again.", "That's not where that goes, human.", "Are you a toaster?"],
+    "captcha.fail": ["Verification failed. Our AI suspects you might be a toaster. 🍞", "A triangle in a circle? Bold. Also wrong.", "Beep boop. That's exactly what a robot would do.", "Error 418: I'm a teapot. And you're not quite human yet.", "Even the goblins from #SaveTheOcean would get this one."],
+    "captcha.tip": "(Tip: every shape has exactly one matching outline.)", "captcha.verify": "Verify",
     "captcha.picked": "Picked up! Now choose its slot.", "captcha.slot": "Slot for the {s}", "captcha.won": "Verification complete ✓",
     shapeNames: { sphere: "sphere", cube: "cube", ring: "ring", tri: "triangle", pill: "pill" },
     "footer.fun": "No game engine was harmed in the making of this site.",
@@ -526,10 +527,11 @@ const I18N = {
     toTop: "Nach oben", "case.back": "Alle Projekte",
     lb: { close: "Schließen", prev: "Vorheriges Bild", next: "Nächstes Bild", zin: "Hineinzoomen", zout: "Herauszoomen", hint: "Scrollen, mit zwei Fingern oder Doppelklick zoomen · ziehen zum Verschieben" },
     "captcha.check": "Ich bin kein Roboter", "captcha.kicker": "Sicherheitsprüfung", "captcha.note": "psst… bist du ein Mensch? 👀",
-    "captcha.title": "Bring jede Form an ihren Platz", "captcha.hint": "Ziehen oder Form antippen, dann ihren Platz.",
+    "captcha.title": "Bring jede Form an ihren Platz", "captcha.hint": "Zieh sie in die Plätze (oder Form antippen, dann Platz) und drück auf Prüfen.",
     "captcha.memeBottom": "Jetzt stell einen Menschen ein",
     "captcha.hire": "Okay, lass uns reden →", "captcha.close": "Schließen", "captcha.done": "Verifiziert. Belohnung wird geladen…",
-    "captcha.wrong": ["Hmm… verdächtig robotisch.", "Beep boop? Nochmal.", "Da gehört das nicht hin, Mensch.", "Bist du ein Toaster?"],
+    "captcha.fail": ["Verifizierung fehlgeschlagen. Unsere KI vermutet, du bist ein Toaster. 🍞", "Ein Dreieck im Kreis? Mutig. Aber falsch.", "Beep boop. Genau das würde ein Roboter tun.", "Fehler 418: Ich bin eine Teekanne. Und du bist noch nicht ganz Mensch.", "Sogar die Goblins aus #SaveTheOcean würden das schaffen."],
+    "captcha.tip": "(Tipp: Jede Form hat genau einen passenden Umriss.)", "captcha.verify": "Prüfen",
     "captcha.picked": "Aufgehoben! Jetzt den Platz wählen.", "captcha.slot": "Platz für: {s}", "captcha.won": "Verifizierung abgeschlossen ✓",
     shapeNames: { sphere: "Kugel", cube: "Würfel", ring: "Ring", tri: "Dreieck", pill: "Pille" },
     "footer.fun": "Bei der Erstellung dieser Seite wurde keine Game Engine verletzt.",
@@ -1447,13 +1449,15 @@ const gameSlots = document.getElementById("gameSlots");
 const gameTray = document.getElementById("gameTray");
 const gameMsg = document.getElementById("gameMsg");
 const captchaBtn = document.getElementById("captchaOpen");
-let picked = null, placedCount = 0, wrongCount = 0;
+const verifyBtn = document.getElementById("gameVerify");
+let picked = null, fails = 0;
 
 const say = (text) => { gameMsg.textContent = text; };
 const shapeName = (s) => t("shapeNames")[s];
+const updateVerify = () => { verifyBtn.disabled = gameSlots.querySelectorAll(".slot.is-filled").length < SHAPES.length; };
 
 function startGame() {
-  placedCount = 0; wrongCount = 0; picked = null; say("");
+  fails = 0; picked = null; say("");
   document.getElementById("gameTitle").textContent = t("captcha.title");
   document.querySelector(".game__hint").hidden = false;
   document.getElementById("gameWin").hidden = true;
@@ -1473,6 +1477,7 @@ function startGame() {
   gameTray.innerHTML = shuffled.map((s) =>
     `<button type="button" class="piece-btn" data-shape="${s}" aria-pressed="false" aria-label="${esc(shapeName(s))}">
        <span class="piece piece--${s}" aria-hidden="true"></span></button>`).join("");
+  updateVerify();
   if (!game.open) game.showModal();
 }
 
@@ -1482,33 +1487,58 @@ function pick(btn) {
   say(t("captcha.picked"));
 }
 
+const shake = (el) => { el.classList.remove("is-wrong"); void el.offsetWidth; el.classList.add("is-wrong"); };
+
+// Any shape fits any slot – like a real CAPTCHA, you only find out when you hit "Verify"
 function tryPlace(btn, slot) {
   btn.style.transform = "";
-  if (!slot || slot.classList.contains("is-filled")) return;
-  if (btn.dataset.shape !== slot.dataset.shape) {
-    const lines = t("captcha.wrong");
-    say(lines[wrongCount++ % lines.length]);
-    btn.classList.remove("is-wrong"); void btn.offsetWidth; btn.classList.add("is-wrong"); // restart shake
-    return;
-  }
+  if (!slot) return;
+  if (slot.classList.contains("is-locked")) return shake(btn); // already verified correct
+  if (slot.classList.contains("is-filled")) unplace(slot); // swap: the old piece goes back to the tray
+  slot.querySelector(".is-ghost").hidden = true;
+  slot.appendChild(btn);
+  btn.setAttribute("aria-pressed", "false");
   slot.classList.add("is-filled");
-  slot.innerHTML = btn.innerHTML;
-  btn.remove();
   picked = null;
   say("");
-  if (++placedCount === SHAPES.length) {
-    say(t("captcha.done"));
-    setTimeout(() => {
-      document.getElementById("gamePlay").hidden = true;
-      document.getElementById("gameWin").hidden = false;
-      document.getElementById("gameTitle").textContent = t("captcha.won");
-      document.querySelector(".game__hint").hidden = true;
-      say("");
-      captchaBtn.classList.add("is-verified");
-      unlock("human");
-    }, 800);
-  }
+  updateVerify();
 }
+function unplace(slot) {
+  const btn = slot.querySelector(".piece-btn");
+  if (!btn) return null;
+  gameTray.appendChild(btn);
+  slot.querySelector(".is-ghost").hidden = false;
+  slot.classList.remove("is-filled");
+  updateVerify();
+  return btn;
+}
+
+function verify() {
+  const slots = [...gameSlots.querySelectorAll(".slot")];
+  const wrong = slots.filter((s) => s.querySelector(".piece-btn").dataset.shape !== s.dataset.shape);
+  if (!wrong.length) return win();
+  // correct ones get locked in, wrong ones jump back to the tray
+  slots.filter((s) => !wrong.includes(s)).forEach((s) => s.classList.add("is-locked"));
+  wrong.forEach((s) => { const btn = unplace(s); if (btn) shake(btn); });
+  const lines = t("captcha.fail");
+  say(lines[fails % lines.length] + (fails >= 2 ? " " + t("captcha.tip") : ""));
+  fails++;
+}
+function win() {
+  gameSlots.querySelectorAll(".slot").forEach((s) => s.classList.add("is-locked"));
+  verifyBtn.disabled = true;
+  say(t("captcha.done"));
+  setTimeout(() => {
+    document.getElementById("gamePlay").hidden = true;
+    document.getElementById("gameWin").hidden = false;
+    document.getElementById("gameTitle").textContent = t("captcha.won");
+    document.querySelector(".game__hint").hidden = true;
+    say("");
+    captchaBtn.classList.add("is-verified");
+    unlock("human");
+  }, 800);
+}
+verifyBtn.addEventListener("click", verify);
 
 // Drag with pointer events (mouse + touch); a press without movement counts as a tap
 let drag = null;
@@ -1547,7 +1577,9 @@ gameTray.addEventListener("click", (e) => {
 });
 gameSlots.addEventListener("click", (e) => {
   const slot = e.target.closest(".slot");
-  if (slot && picked) tryPlace(picked, slot);
+  if (!slot) return;
+  if (picked) tryPlace(picked, slot);
+  else if (slot.classList.contains("is-filled") && !slot.classList.contains("is-locked")) unplace(slot); // take it back out
 });
 
 if (achieved.includes("human")) captchaBtn.classList.add("is-verified"); // solved on an earlier visit
