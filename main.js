@@ -169,7 +169,7 @@ const I18N = {
     toTop: "Back to top", "case.back": "All projects",
     "captcha.check": "I'm not a robot", "captcha.kicker": "Security check",
     "captcha.title": "Put every shape into its slot", "captcha.hint": "Drag them – or tap a shape, then its slot.",
-    "captcha.memeTop": "Congrats, you're human", "captcha.memeBottom": "Now hire one",
+    "captcha.memeBottom": "Now hire a human",
     "captcha.hire": "Okay, let's talk →", "captcha.close": "Close", "captcha.done": "Verified. Preparing your reward…",
     "captcha.wrong": ["Hmm… suspiciously robotic.", "Beep boop? Try again.", "That's not where that goes, human.", "Are you a toaster?"],
     "captcha.picked": "Picked up – now choose its slot.", "captcha.slot": "Slot for the {s}", "captcha.won": "Verification complete ✓",
@@ -177,6 +177,13 @@ const I18N = {
     "footer.fun": "No game engine was harmed in the making of this site.",
     ach: {
       unlocked: "Achievement unlocked", count: "{n}/{total} achievements found", hint: "Can you find them all?",
+      title: "Achievements", locked: "???", reset: "Reset progress", close: "Close", open: "Show achievements",
+      done: "All found – you're officially thorough. 🎉",
+      hints: {
+        first: "Curiosity pays off – open something.", video: "Some things are better in motion.",
+        all: "Leave no project unopened.", lang: "Sprechen Sie Deutsch?", bottom: "How deep does this page go?",
+        secret: "↑ ↑ ↓ ↓ … you know the rest.", human: "Prove you're not a robot."
+      },
       first: ["Curious mind", "Opened your first project"],
       video: ["Popcorn time", "Watched a video"],
       all: ["Completionist", "Opened every project"],
@@ -358,7 +365,7 @@ const I18N = {
     toTop: "Nach oben", "case.back": "Alle Projekte",
     "captcha.check": "Ich bin kein Roboter", "captcha.kicker": "Sicherheitsprüfung",
     "captcha.title": "Bring jede Form an ihren Platz", "captcha.hint": "Ziehen – oder Form antippen, dann ihren Platz.",
-    "captcha.memeTop": "Glückwunsch, du bist ein Mensch", "captcha.memeBottom": "Jetzt stell einen ein",
+    "captcha.memeBottom": "Jetzt stell einen Menschen ein",
     "captcha.hire": "Okay, lass uns reden →", "captcha.close": "Schließen", "captcha.done": "Verifiziert. Belohnung wird geladen…",
     "captcha.wrong": ["Hmm… verdächtig robotisch.", "Beep boop? Nochmal.", "Da gehört das nicht hin, Mensch.", "Bist du ein Toaster?"],
     "captcha.picked": "Aufgehoben – jetzt den Platz wählen.", "captcha.slot": "Platz für: {s}", "captcha.won": "Verifizierung abgeschlossen ✓",
@@ -366,6 +373,13 @@ const I18N = {
     "footer.fun": "Bei der Erstellung dieser Seite wurde keine Game Engine verletzt.",
     ach: {
       unlocked: "Erfolg freigeschaltet", count: "{n}/{total} Erfolge gefunden", hint: "Findest du alle?",
+      title: "Erfolge", locked: "???", reset: "Fortschritt zurücksetzen", close: "Schließen", open: "Erfolge anzeigen",
+      done: "Alle gefunden – du bist offiziell gründlich. 🎉",
+      hints: {
+        first: "Neugier zahlt sich aus – öffne etwas.", video: "Manches wirkt in Bewegung besser.",
+        all: "Lass kein Projekt ungeöffnet.", lang: "Do you speak English?", bottom: "Wie tief geht diese Seite?",
+        secret: "↑ ↑ ↓ ↓ … den Rest kennst du.", human: "Beweise, dass du kein Roboter bist."
+      },
       first: ["Neugierig", "Erstes Projekt geöffnet"],
       video: ["Popcorn-Zeit", "Ein Video angesehen"],
       all: ["Komplettist", "Alle Projekte geöffnet"],
@@ -906,12 +920,50 @@ const openedProjects = new Set();
 const toast = document.getElementById("toast");
 let toastTimer;
 
+const trophiesDialog = document.getElementById("trophies");
 function renderTrophies() {
   const A = t("ach");
-  const count = A.count.replace("{n}", achieved.length).replace("{total}", ACHIEVEMENTS.length);
-  document.getElementById("trophyCount").textContent =
-    "🏆 " + count + (achieved.length < ACHIEVEMENTS.length ? " · " + A.hint : " 🎉");
+  const n = achieved.length, total = ACHIEVEMENTS.length;
+  const count = A.count.replace("{n}", n).replace("{total}", total);
+  const footer = document.getElementById("trophyCount");
+  footer.textContent = "🏆 " + count + (n < total ? " · " + A.hint : " 🎉");
+  footer.setAttribute("aria-label", A.open + ": " + count);
+  const btn = document.getElementById("trophyBtn");
+  btn.hidden = n === 0; // only for people who already started hunting
+  btn.setAttribute("aria-label", A.open + ": " + count);
+  document.getElementById("trophyMini").textContent = `${n}/${total}`;
+
+  // Overview: unlocked ones show what you did, locked ones a hint
+  document.getElementById("trophiesTitle").textContent = A.title;
+  document.getElementById("trophiesCount").textContent = n === total ? A.done : count;
+  document.getElementById("trophiesBar").style.width = (n / total) * 100 + "%";
+  document.getElementById("trophiesList").innerHTML = ACHIEVEMENTS.map((id) => {
+    const got = achieved.includes(id);
+    return `<li class="trophy${got ? " is-got" : ""}">
+      <span class="trophy__icon" aria-hidden="true">${got ? "🏆" : "🔒"}</span>
+      <span><b>${esc(got ? A[id][0] : A.locked)}</b><span>${esc(got ? A[id][1] : A.hints[id])}</span></span>
+    </li>`;
+  }).join("");
+  document.getElementById("trophiesReset").textContent = A.reset;
+  document.getElementById("trophiesReset").hidden = n === 0;
+  document.getElementById("trophiesClose").textContent = A.close;
 }
+function openTrophies() {
+  renderTrophies();
+  if (!trophiesDialog.open) trophiesDialog.showModal();
+}
+document.getElementById("trophyCount").addEventListener("click", openTrophies);
+document.getElementById("trophyBtn").addEventListener("click", openTrophies);
+document.getElementById("toast").addEventListener("click", openTrophies);
+document.getElementById("trophiesClose").addEventListener("click", () => trophiesDialog.close());
+trophiesDialog.addEventListener("click", (e) => { if (e.target === trophiesDialog) trophiesDialog.close(); });
+document.getElementById("trophiesReset").addEventListener("click", () => {
+  achieved = [];
+  openedProjects.clear();
+  try { localStorage.removeItem("achievements"); } catch (e) {}
+  document.getElementById("captchaOpen").classList.remove("is-verified");
+  renderTrophies();
+});
 function unlock(id) {
   if (achieved.includes(id)) return;
   achieved.push(id);
@@ -975,6 +1027,7 @@ const shapeName = (s) => t("shapeNames")[s];
 function startGame() {
   placedCount = 0; wrongCount = 0; picked = null; say("");
   document.getElementById("gameTitle").textContent = t("captcha.title");
+  document.querySelector(".game__hint").hidden = false;
   document.getElementById("gameWin").hidden = true;
   document.getElementById("gamePlay").hidden = false;
   gameSlots.innerHTML = SHAPES.map((s) =>
@@ -1021,6 +1074,7 @@ function tryPlace(btn, slot) {
       document.getElementById("gamePlay").hidden = true;
       document.getElementById("gameWin").hidden = false;
       document.getElementById("gameTitle").textContent = t("captcha.won");
+      document.querySelector(".game__hint").hidden = true;
       say("");
       captchaBtn.classList.add("is-verified");
       unlock("human");
@@ -1068,6 +1122,7 @@ gameSlots.addEventListener("click", (e) => {
   if (slot && picked) tryPlace(picked, slot);
 });
 
+if (achieved.includes("human")) captchaBtn.classList.add("is-verified"); // solved on an earlier visit
 captchaBtn.addEventListener("click", startGame);
 document.querySelectorAll(".hero .shape").forEach((s) => s.addEventListener("click", startGame)); // the shapes themselves
 document.getElementById("gameClose").addEventListener("click", () => game.close());

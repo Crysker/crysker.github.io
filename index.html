@@ -15,7 +15,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,700;1,9..144,600;1,9..144,700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=7">
+  <link rel="stylesheet" href="styles.css?v=8">
 </head>
 <body>
   <a class="skip" href="#main" data-i18n="skip">Skip to content</a>
@@ -194,11 +194,28 @@
       <p>© 2026 Serkan Sönmez · St. Pölten, Austria</p>
       <p class="footer__fun" data-i18n="footer.fun">No game engine was harmed in the making of this site.</p>
     </div>
-    <p class="footer__trophies" id="trophyCount"></p>
+    <button class="footer__trophies" id="trophyCount" type="button"></button>
     <a href="#top" data-i18n="footer.top">Back to top ↑</a>
   </footer>
 
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <!-- Achievement hunting: small counter (appears after the first unlock) + overview -->
+  <button class="trophy-btn" id="trophyBtn" type="button" hidden>
+    <span aria-hidden="true">🏆</span> <span id="trophyMini">0/7</span>
+  </button>
+  <dialog class="trophies" id="trophies" aria-labelledby="trophiesTitle">
+    <div class="trophies__head">
+      <h2 id="trophiesTitle"></h2>
+      <p class="trophies__count" id="trophiesCount"></p>
+      <div class="trophies__bar" aria-hidden="true"><span id="trophiesBar"></span></div>
+    </div>
+    <ul class="trophies__list" id="trophiesList"></ul>
+    <div class="trophies__foot">
+      <button class="game__close" id="trophiesReset" type="button"></button>
+      <button class="game__close" id="trophiesClose" type="button"></button>
+    </div>
+  </dialog>
 
   <a class="to-top" id="toTop" href="#top" data-i18n-label="toTop" aria-label="Back to top">
     <svg class="to-top__ring" viewBox="0 0 48 48" aria-hidden="true">
@@ -222,10 +239,9 @@
     <p class="game__msg" id="gameMsg" role="status"></p>
     <div class="game__win" id="gameWin" hidden>
       <figure class="meme">
-        <img src="assets/img/portrait.jpg" alt="" width="260" height="325">
+        <img src="assets/img/meme-success.png" alt="Success Kid meme: You did it!" width="476" height="314" loading="lazy">
         <figcaption>
-          <span class="meme__top" data-i18n="captcha.memeTop">Congrats, you're human</span>
-          <span class="meme__bottom" data-i18n="captcha.memeBottom">Now hire one</span>
+          <span class="meme__bottom" data-i18n="captcha.memeBottom">Now hire a human</span>
         </figcaption>
       </figure>
       <a class="btn btn--primary" href="#contact" id="gameHire" data-i18n="captcha.hire">Okay, let's talk →</a>
@@ -246,6 +262,6 @@
   </dialog>
 
   <script src="logos.js?v=2"></script>
-  <script src="main.js?v=8"></script>
+  <script src="main.js?v=9"></script>
 </body>
 </html>
