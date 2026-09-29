@@ -211,6 +211,7 @@ const I18N = {
     "explore.c.p": "Co-located multiplayer and mixed reality that connects digital content with real objects and real people in the same room.",
     "projects.title": "Projects",
     "projects.intro": "Pick a topic to filter, or open a project for the full story.",
+    "projects.more": "Show all projects (+{n})",
     "early.title": "My journey", "early.intro": "From my first browser game to award-winning VR, semester by semester.",
     "early.now": "Today", "early.intern.t": "UX/UI internship · EBCONT", "early.intern.p": "Design systems and prototypes in real product teams (see Experience).",
     themes: { all: "All", sight: "Beyond sight", abilities: "Diverse abilities", shared: "Shared realities", jams: "Jams & hackathons" },
@@ -411,7 +412,7 @@ const I18N = {
       cthulhu: {
         title: "Call of Cthulhu",
         kicker: "360° Audio & Video · VR",
-        semester: "Master · 3rd semester · 2025",
+        semester: "Master · 1st semester · 2024",
         growth: "Sound first: an underwater organ you play with your bare hands.",
         highlight: "Play a church organ at the bottom of the sea, while Cthulhu listens",
         summary: "An underwater VR level: you play a piano with your bare hands, and every key is mapped to a recorded church organ. Sea creatures gather to listen, and in the background Cthulhu manipulates you into playing the notes that set him free.",
@@ -507,6 +508,7 @@ const I18N = {
     "explore.c.p": "Co-located Multiplayer und Mixed Reality, die digitale Inhalte mit echten Objekten und echten Menschen im selben Raum verbinden.",
     "projects.title": "Projekte",
     "projects.intro": "Wähl ein Thema zum Filtern oder öffne ein Projekt für die ganze Geschichte.",
+    "projects.more": "Alle Projekte zeigen (+{n})",
     "early.title": "Mein Weg", "early.intro": "Vom ersten Browserspiel bis zur preisgekrönten VR, Semester für Semester.",
     "early.now": "Heute", "early.intern.t": "UX/UI-Praktikum · EBCONT", "early.intern.p": "Design-Systeme und Prototypen in echten Produktteams (siehe Werdegang).",
     themes: { all: "Alle", sight: "Mehr als Sehen", abilities: "Diverse Fähigkeiten", shared: "Geteilte Realitäten", jams: "Jams & Hackathons" },
@@ -707,7 +709,7 @@ const I18N = {
       cthulhu: {
         title: "Call of Cthulhu",
         kicker: "360° Audio & Video · VR",
-        semester: "Master · 3. Semester · 2025",
+        semester: "Master · 1. Semester · 2024",
         growth: "Klang zuerst: eine Unterwasser-Orgel, die man mit bloßen Händen spielt.",
         highlight: "Spiel eine Kirchenorgel am Meeresgrund, während Cthulhu zuhört",
         summary: "Ein Unterwasser-Level in VR: Du spielst ein Klavier mit bloßen Händen, jede Taste ist mit einer aufgenommenen Kirchenorgel belegt. Meerestiere versammeln sich und hören zu, und im Hintergrund manipuliert dich Cthulhu, damit du die Töne spielst, die ihn befreien.",
@@ -902,12 +904,24 @@ document.getElementById("themes").addEventListener("click", (e) => {
   renderProjects();
 });
 
+/* Main grid order (strongest first) and how many show before "Show all" */
+const ORDER = ["historia", "sounds", "cthulhu", "paper", "grim", "thesis", "aroom", "ocean", "hue", "deepspace"];
+const FIRST_SHOWN = 7;
+let showAllProjects = false;
+
 function renderProjects() {
   const grid = document.getElementById("projectGrid");
   const P = I18N[lang].p;
   const active = THEMES.find((th) => th.id === theme);
-  const shown = visibleProjects().filter((pr) => !pr.early && (!active || active.match(pr)));
+  const rank = (id) => (ORDER.indexOf(id) + 1 || 99);
+  const matching = visibleProjects()
+    .filter((pr) => !pr.early && (!active || active.match(pr)))
+    .sort((a, b) => rank(a.id) - rank(b.id));
+  // the full list starts short; a filter always shows everything that matches
+  const limited = !active && !showAllProjects && matching.length > FIRST_SHOWN;
+  const shown = limited ? matching.slice(0, FIRST_SHOWN) : matching;
   grid.classList.toggle("is-filtered", theme !== "all"); // filtered: equal cards, no featured layout
+  // compact cards: the long description and tech tags live on the project page
   grid.innerHTML = shown.map((pr) => {
     const x = P[pr.id];
     return `
@@ -922,15 +936,23 @@ function renderProjects() {
           <p class="p-card__kicker">${esc(x.kicker)}</p>
           <h3 class="p-card__title">${esc(x.title)}</h3>
           ${filled(x.highlight) ? `<p class="p-card__highlight">${esc(x.highlight)}</p>` : ""}
-          <p class="p-card__summary">${esc(x.summary)}</p>
+          ${pr.featured && theme === "all" ? `<p class="p-card__summary">${esc(x.summary)}</p>` : ""}
           ${filled(x.role) ? `<p class="p-card__role"><b>${esc(t("ui").role)}:</b> ${esc(x.role)}</p>` : ""}
-          <ul class="tags">${pr.tags.map((tg) => `<li>${esc(tg)}</li>`).join("")}</ul>
           <span class="p-card__more" aria-hidden="true">${esc(t("ui").open)} →</span>
         </div>
       </button>`;
   }).join("");
+  const more = document.getElementById("moreProjects");
+  more.hidden = !limited;
+  more.textContent = t("projects.more").replace("{n}", matching.length - FIRST_SHOWN);
   renderEarly();
 }
+document.getElementById("moreProjects").addEventListener("click", () => {
+  showAllProjects = true;
+  const firstNew = FIRST_SHOWN;
+  renderProjects();
+  document.querySelectorAll("#projectGrid .p-card")[firstNew]?.focus({ preventScroll: true }); // keyboard users land on the new cards
+});
 
 /* "My journey" – one step per semester, from the first browser game to the master's.
    Steps point at projects (semester + growth line come from their texts); hidden projects are skipped. */
@@ -940,7 +962,7 @@ const JOURNEY = [
   { intern: true, when: "tl.s5" },
   { id: "hue" },
   { divider: "tl.master" },
-  { id: "sounds" }, { id: "aroom" }, { id: "cthulhu" }, { id: "historia", today: true }
+  { id: "cthulhu" }, { id: "sounds" }, { id: "aroom" }, { id: "historia", today: true }
 ];
 function renderEarly() {
   const P = I18N[lang].p;

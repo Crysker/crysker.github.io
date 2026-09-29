@@ -169,13 +169,13 @@ html[lang="de"] .lang [data-lang="de"] { background: var(--ink); color: var(--bg
 .hero__sig path {
   stroke: currentColor; stroke-width: 3.2; stroke-linecap: round; stroke-linejoin: round;
   stroke-dasharray: 1; stroke-dashoffset: 0;
-  /* loops: writes itself, stays, un-writes backwards, repeat (~7s). Without animation it just stands there. */
-  animation: sign 7s ease-in-out .3s infinite backwards;
+  /* loops: writes itself, stays briefly, un-writes backwards, repeat (~4.5s). Without animation it just stands there. */
+  animation: sign 4.5s ease-in-out .3s infinite backwards;
 }
 @keyframes sign {
   0% { stroke-dashoffset: 1; }
-  30% { stroke-dashoffset: 0; }   /* written */
-  78% { stroke-dashoffset: 0; }   /* stays */
+  40% { stroke-dashoffset: 0; }   /* written */
+  64% { stroke-dashoffset: 0; }   /* stays ~1s */
   100% { stroke-dashoffset: 1; }  /* un-written from the end back to the start */
 }
 .hero__name em { font-style: italic; color: var(--turq-text); }
@@ -383,9 +383,14 @@ html[lang="de"] .lang [data-lang="de"] { background: var(--ink); color: var(--bg
 }
 .p-card:hover { transform: translateY(-5px); box-shadow: var(--shadow); }
 .p-card--featured { grid-column: 1 / -1; }
-/* featured card + an odd number of others would leave the last one alone in its row */
-.p-card:last-child:nth-child(even) { grid-column: 1 / -1; }
-.p-card:last-child:nth-child(even) .p-card__media { aspect-ratio: 21/9; }
+/* Desktop: 3 compact columns; the featured card lies flat (image left, text right) to save height */
+@media (min-width: 1000px) {
+  .projects__grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .projects__grid:not(.is-filtered) .p-card--featured { flex-direction: row; align-items: stretch; gap: 8px; }
+  .projects__grid:not(.is-filtered) .p-card--featured .p-card__media { flex: 0 0 58%; aspect-ratio: 16/9; }
+  .projects__grid:not(.is-filtered) .p-card--featured .p-card__body { padding: 12px 18px 4px; }
+}
+.more-projects { display: flex; margin: 28px auto 0; }
 /* When a theme filter is on, all cards are equal – the featured layout only makes sense for the full list */
 .projects__grid.is-filtered .p-card { grid-column: auto; }
 .projects__grid.is-filtered .p-card .p-card__media { aspect-ratio: 16/10; }
@@ -410,7 +415,8 @@ html[lang="de"] .lang [data-lang="de"] { background: var(--ink); color: var(--bg
 }
 .p-card__body { padding: 16px 10px 0; }
 .p-card__kicker { font-size: 13px; font-weight: 700; color: var(--orange-text); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 4px; }
-.p-card__title { font: 700 28px var(--serif); margin-bottom: 8px; }
+.p-card__title { font: 700 24px/1.15 var(--serif); margin-bottom: 8px; }
+.p-card--featured .p-card__title { font-size: clamp(28px, 3vw, 38px); }
 .p-card__highlight {
   display: inline-block; margin-bottom: 10px; padding: 4px 12px; border-radius: 10px;
   background: var(--turq-soft); color: var(--turq-ink); font-size: 14px; font-weight: 700;
@@ -424,8 +430,7 @@ html[lang="de"] .lang [data-lang="de"] { background: var(--ink); color: var(--bg
 .tags li { padding: 4px 10px; border-radius: 999px; background: var(--surface-2); font-size: 12px; font-weight: 700; color: var(--ink-soft); }
 @media (max-width: 760px) {
   .projects__grid { grid-template-columns: 1fr; }
-  .p-card--featured .p-card__media,
-  .p-card:last-child:nth-child(even) .p-card__media { aspect-ratio: 16/10; }
+  .p-card--featured .p-card__media { aspect-ratio: 16/10; }
 }
 
 /* Project case study – full-screen, feels like its own page */
