@@ -16,7 +16,7 @@ const PROJECTS = [
     id: "historia",
     featured: true,
     img: IMG + "historia.jpg",
-    video: "9Qa9gazr1qg",
+    video: "JfwlEoEAzEo", // Gameplay Trailer (the making-of is in About)
     tags: ["Unity", "C#", "Meta XR SDK", "Hand Tracking", "Shared Spatial Anchors", "Meta Avatars"],
     links: [
       { key: "devpost", url: "https://devpost.com/software/hisotria-virtualis" },
@@ -33,12 +33,14 @@ const PROJECTS = [
   {
     id: "grim",
     img: IMG + "grim.png",
+    video: "7VHN2e4oFDc",
     tags: ["Unity", "Meta Quest 3", "Olfactory Display", "Game Jam"],
     links: [{ key: "ggj", url: "https://globalgamejam.org/games/2026/grim-hollow-7" }]
   },
   {
     id: "paper",
     img: IMG + "paper.png",
+    video: "7b2H0eAUaGw",
     tags: ["Unity", "Python", "YOLO", "Roboflow", "Blender", "Mixed Reality"],
     links: [{ key: "devpost", url: "https://devpost.com/software/paper-therapy" }]
   },
@@ -51,7 +53,8 @@ const PROJECTS = [
   {
     id: "ocean",
     img: IMG + "ocean.jpg",
-    tags: ["Unity", "VR"],
+    video: "yR7QZmcF6Uk",
+    tags: ["Unity", "C#", "VR", "A* Pathfinding", "3D Modelling", "Animation"],
     links: []
   }
 ];
@@ -152,7 +155,7 @@ const I18N = {
     ui: {
       duration: "Duration", role: "My role", team: "Team",
       challenge: "Challenge", approach: "What we built", result: "Result", learned: "What I learned",
-      open: "View project", close: "Close", next: "Next project",
+      open: "View project", close: "Close", next: "Next project", watch: "Watch video", video: "Video",
       devpost: "Devpost", ggj: "Global Game Jam page", itch: "Play on itch.io",
       award: "Contest winners", vernissage: "USTP Projektvernissage"
     },
@@ -221,12 +224,13 @@ const I18N = {
       ocean: {
         title: "#SaveTheOcean",
         kicker: "VR game · Creative Code Lab 4",
-        summary: "[One or two sentences about the game.]",
+        highlight: "A* pathfinding sends the trash downriver – until a sea monster appears",
+        summary: "Goblin villagers keep throwing trash into the river. Collect it in VR before it reaches the ocean – let too much through and a sea monster rises that you have to fight.",
         duration: "2 weeks",
-        role: "[Your role]",
-        challenge: "[What problem or idea did you start from?]",
-        approach: "[What did you build?]",
-        result: "[What came out of it?]",
+        role: "3D modelling and animation of the goblins and their houses, Unity setup, world design, UI and UI logic",
+        challenge: "Turn river pollution into a game loop where small careless acts pile up into a threat you can't ignore.",
+        approach: "The trash finds its way along the river into the ocean using A* pathfinding. The more of it gets through, the closer the sea monster gets to spawning – so collecting turns into a race before it becomes a boss fight.",
+        result: "A playable VR game, built in two weeks as team LSW-Studios.",
         learned: "[One takeaway.]"
       }
     }
@@ -309,7 +313,7 @@ const I18N = {
     ui: {
       duration: "Dauer", role: "Meine Rolle", team: "Team",
       challenge: "Herausforderung", approach: "Was wir gebaut haben", result: "Ergebnis", learned: "Was ich gelernt habe",
-      open: "Projekt ansehen", close: "Schließen", next: "Nächstes Projekt",
+      open: "Projekt ansehen", close: "Schließen", next: "Nächstes Projekt", watch: "Video ansehen", video: "Video",
       devpost: "Devpost", ggj: "Global-Game-Jam-Seite", itch: "Auf itch.io spielen",
       award: "Gewinner:innen des Wettbewerbs", vernissage: "USTP Projektvernissage"
     },
@@ -378,12 +382,13 @@ const I18N = {
       ocean: {
         title: "#SaveTheOcean",
         kicker: "VR-Spiel · Creative Code Lab 4",
-        summary: "[Ein, zwei Sätze zum Spiel.]",
+        highlight: "A*-Pathfinding treibt den Müll flussabwärts – bis ein Seemonster auftaucht",
+        summary: "Goblin-Dorfbewohner werfen ständig Müll in den Fluss. Sammle ihn in VR ein, bevor er das Meer erreicht – kommt zu viel durch, taucht ein Seemonster auf, gegen das du kämpfen musst.",
         duration: "2 Wochen",
-        role: "[Deine Rolle]",
-        challenge: "[Von welcher Idee oder welchem Problem bist du ausgegangen?]",
-        approach: "[Was habt ihr gebaut?]",
-        result: "[Was ist daraus geworden?]",
+        role: "3D-Modellierung und Animation der Goblins und ihrer Häuser, Unity-Setup, World Design, UI und UI-Logik",
+        challenge: "Flussverschmutzung als Spielschleife: Kleine achtlose Handlungen summieren sich zu einer Bedrohung, die man nicht mehr ignorieren kann.",
+        approach: "Der Müll findet per A*-Pathfinding seinen Weg den Fluss hinunter ins Meer. Je mehr durchkommt, desto näher rückt das Seemonster – aus dem Sammeln wird ein Wettlauf, bevor es zum Bosskampf kommt.",
+        result: "Ein spielbares VR-Spiel, in zwei Wochen als Team LSW-Studios entwickelt.",
         learned: "[Eine Erkenntnis.]"
       }
     }
@@ -482,6 +487,7 @@ function renderProjects() {
         <div class="p-card__media">
           <img src="${pr.img}" alt="" loading="lazy">
           ${x.badge ? `<span class="p-card__badge">${esc(x.badge)}</span>` : ""}
+          ${pr.video ? `<span class="p-card__video">▶ ${esc(t("ui").video)}</span>` : ""}
         </div>
         <div class="p-card__body">
           <p class="p-card__kicker">${esc(x.kicker)}</p>
@@ -505,8 +511,14 @@ function openProject(id) {
   const ui = t("ui");
   const list = visibleProjects();
   const next = list.length > 1 ? list[(list.findIndex((p) => p.id === id) + 1) % list.length] : null;
+  // Video loads only on click: faster, and no YouTube request for people who don't watch
   const media = pr.video
-    ? `<iframe src="https://www.youtube-nocookie.com/embed/${pr.video}" title="${esc(x.title)}" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>`
+    ? `<button type="button" class="video__play modal__video" data-yt="${pr.video}" data-title="${esc(x.title)}"
+         aria-label="${esc(ui.watch)}: ${esc(x.title)}">
+         <img src="${pr.img}" alt="">
+         <span class="video__btn" aria-hidden="true">▶</span>
+         <span class="video__label">${esc(ui.watch)}</span>
+       </button>`
     : `<img src="${pr.img}" alt="">`;
   const block = (label, val) => filled(val) ? `
     <div class="modal__block"><h3>${esc(label)}</h3>${
@@ -554,10 +566,16 @@ function closeProject() {
 modal.querySelector(".modal__close").addEventListener("click", closeProject);
 modal.addEventListener("click", (e) => {
   if (e.target === modal) return closeProject();
+  const play = e.target.closest(".modal__video");
+  if (play) {
+    play.outerHTML = `<iframe src="https://www.youtube-nocookie.com/embed/${play.dataset.yt}?autoplay=1" title="${esc(play.dataset.title)}" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>`;
+    return;
+  }
   const next = e.target.closest(".modal__next");
   if (next) openProject(next.dataset.id);
 });
-modal.addEventListener("close", onProjectClosed); // Esc key
+// Esc key. The event arrives async – ignore it if another project was opened meanwhile.
+modal.addEventListener("close", () => { if (!modal.open) onProjectClosed(); });
 
 function openProjectFromHash() {
   const id = location.hash.replace("#project-", "");
