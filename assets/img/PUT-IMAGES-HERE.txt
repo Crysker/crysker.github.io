@@ -1,2 +1,0 @@
-Put these files here:
-portrait.jpg, historia.jpg, sounds.png, grim.png, paper.png, hue.png, ocean.jpg
