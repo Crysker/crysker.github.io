@@ -21,7 +21,6 @@ const PROJECTS = [
     featured: true,
     img: IMG + "historia.jpg",
     video: "JfwlEoEAzEo", // Gameplay Trailer
-    preview: IMG + "historia/preview.mp4", // short silent hover clip
     gallery: [
       { video: IMG + "historia/ingame.mp4", poster: IMG + "historia/ingame.jpg" },
       IMG + "historia/village.webp", IMG + "historia/well.webp", IMG + "historia/street.webp",
@@ -77,7 +76,6 @@ const PROJECTS = [
     id: "ocean",
     img: IMG + "ocean.jpg",
     video: "yR7QZmcF6Uk",
-    preview: IMG + "ocean/goblin-walk.mp4",
     // own models first (goblins, huts, straw, bottle, nuclear barrel), then the rest of the cast
     gallery: [
       { video: IMG + "ocean/goblin-walk.mp4", poster: IMG + "ocean/goblin-walk.jpg", loop: true },
