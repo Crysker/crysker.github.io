@@ -90,15 +90,15 @@ const PROJECTS = [
     solo: true, // solo projects say "What I built" instead of "What we built"
     img: IMG + "aroom.jpg",
     video: "cy6opOVHqwc",
-    tags: ["AR", "Mobile"],
+    tags: ["Unity", "AR Foundation", "Android", "C#", "Mobile AR"],
     links: []
   },
   {
-    id: "deepspace", // hidden until its summary is written
+    id: "deepspace",
     jam: true,
     img: IMG + "deepspace.jpg",
     video: "i_oERAmOcPI",
-    tags: ["Unity", "VR", "Game Jam"],
+    tags: ["Unity", "C#", "XR", "Level Design", "Animation", "Game Jam"],
     links: []
   },
   {
@@ -365,15 +365,15 @@ const I18N = {
       },
       deepspace: {
         title: "Deep Space Cleaner Corp",
-        kicker: "XR Game Jam 2025 · VR",
-        highlight: "[One-line result]",
-        summary: "[One or two sentences about the game.]",
+        kicker: "XR Game Jam 2025 · XR",
+        highlight: "Keep the space highway clear for the big transport ships",
+        summary: "Space junk is blocking the space highway. As a cleaner, you clear the debris so the huge transport ships can pass without trouble.",
         duration: "Game jam",
-        role: "[Your role]",
-        challenge: "[Idea / theme]",
-        approach: "[What you built]",
-        result: "[What came out of it]",
-        learned: "[One takeaway]"
+        role: "Level design, coding and animations (team of two)",
+        challenge: "Build a complete, playable XR game in the few days of a game jam, with only two people.",
+        approach: "Debris drifts across the highway and has to be cleared before the next transport ship comes through. I built the levels, programmed the gameplay and created the animations; my teammate covered the rest.",
+        result: "A playable XR game made in two for the XR Game Jam 2025.",
+        learned: ""
       },
       aroom: {
         title: "ARoom",
@@ -642,15 +642,15 @@ const I18N = {
       },
       deepspace: {
         title: "Deep Space Cleaner Corp",
-        kicker: "XR Game Jam 2025 · VR",
-        highlight: "[Ergebnis in einem Satz]",
-        summary: "[Ein, zwei Sätze zum Spiel.]",
+        kicker: "XR Game Jam 2025 · XR",
+        highlight: "Halte den Space-Highway frei für die großen Transportschiffe",
+        summary: "Weltraumschrott blockiert den Space-Highway. Als Reinigungskraft räumst du die Trümmer weg, damit die riesigen Transportschiffe ohne Probleme durchkommen.",
         duration: "Game Jam",
-        role: "[Deine Rolle]",
-        challenge: "[Idee / Thema]",
-        approach: "[Was ihr gebaut habt]",
-        result: "[Was daraus wurde]",
-        learned: "[Eine Erkenntnis]"
+        role: "Level Design, Programmierung und Animationen (Zweierteam)",
+        challenge: "Ein komplettes, spielbares XR-Spiel in den wenigen Tagen eines Game Jams bauen, nur zu zweit.",
+        approach: "Trümmer treiben über den Highway und müssen weg, bevor das nächste Transportschiff kommt. Ich habe die Levels gebaut, das Gameplay programmiert und die Animationen erstellt; mein Teamkollege hat den Rest übernommen.",
+        result: "Ein spielbares XR-Spiel, zu zweit für den XR Game Jam 2025 entwickelt.",
+        learned: ""
       },
       aroom: {
         title: "ARoom",
