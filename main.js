@@ -31,6 +31,7 @@ const PROJECTS = [
       { key: "devpost", url: "https://devpost.com/software/hisotria-virtualis" },
       { key: "award", url: "https://eudres.eu/news/the-winners-of-the-12th-edition-of-the-interactive-digital-media-student-contest-2026" },
       { key: "vernissage", url: "https://projektevernissage.ustp.at/B/projekteinsicht/?id=1922" },
+      { key: "makingof", url: "https://www.youtube.com/watch?v=9Qa9gazr1qg" },
       { key: "linkedin", url: "https://www.linkedin.com/posts/serkan-soenmez57_to-start-the-year-on-a-positive-note-my-ugcPost-7416919765048291328-0S2U/" },
       { key: "instagram", url: "https://www.instagram.com/historia_virtualis/" },
       { key: "tiktok", url: "https://www.tiktok.com/@historia_virtualis" }
@@ -185,7 +186,7 @@ const I18N = {
     "hero.also": "also",
     "hero.status": "Available now · open to XR, UX/UI and Unity/C# roles",
     cv: "Download CV", "nav.cv": "CV ↓",
-    "hero.lead": "I design and build interactive experiences: on screens, in space, and for all the senses.",
+    "hero.lead": "I design and build interactive experiences for screens, spaces and all the senses. Creative Technologist from St. Pölten, graduating as Dipl.‑Ing. in Interactive Technologies in February 2027.",
     "hero.cta1": "See my work", "hero.cta2": "Let's talk",
     "hero.scroll": "scroll down and get to know me",
     "about.title": "About me",
@@ -204,7 +205,7 @@ const I18N = {
     "explore.c.t": "Shared & physical realities",
     "explore.c.p": "Co-located multiplayer and mixed reality that connects digital content with real objects and real people in the same room.",
     "projects.title": "Projects",
-    "projects.intro": "Three questions connect my work. Pick one, or click a project for the full story.",
+    "projects.intro": "Pick a topic to filter, or open a project for the full story.",
     "early.title": "My journey", "early.intro": "From my first browser game to award-winning VR, semester by semester.",
     "early.now": "Today", "early.intern.t": "UX/UI internship · EBCONT", "early.intern.p": "Design systems and prototypes in real product teams (see Experience).",
     themes: { all: "All", sight: "Beyond sight", abilities: "Diverse abilities", shared: "Shared realities", jams: "Jams & hackathons" },
@@ -287,7 +288,7 @@ const I18N = {
       challenge: "Challenge", approach: "What we built", approachSolo: "What I built", result: "Result", learned: "What I learned",
       open: "View project", close: "Close", next: "Next project", watch: "Watch video", video: "Video", tools: "Tools & tech", when: "When",
       devpost: "Devpost", ggj: "Global Game Jam page", itch: "Play on itch.io",
-      award: "Contest winners", vernissage: "USTP Projektvernissage", instagram: "Instagram", tiktok: "TikTok", linkedin: "LinkedIn post"
+      award: "Contest winners", vernissage: "USTP Projektvernissage", instagram: "Instagram", tiktok: "TikTok", linkedin: "LinkedIn post", makingof: "Making-of video"
     },
     p: {
       historia: {
@@ -297,7 +298,7 @@ const I18N = {
         growth: "2× 1st place: co-located VR, designed and tested with real players.",
         highlight: "1st place at two competitions · shown at the European Researchers' Night",
         badge: "🏆 1st place ×2",
-        summary: "Three players, one room, Roman St. Pölten: bake a festive bread in a 1st-century bakery, and only succeed together.",
+        summary: "Three players, one room, Roman St. Pölten: bake a festive bread together in a 1st-century bakery to escape.",
         duration: "6 months, still in development",
         role: "Development, 3D modelling and testing: a bit of everything",
         challenge: "Make three people in the same physical room feel like they share one virtual world, and design puzzles that genuinely require collaboration.",
@@ -476,7 +477,7 @@ const I18N = {
     "hero.also": "auch",
     "hero.status": "Ab sofort verfügbar · offen für XR-, UX/UI- und Unity/C#-Stellen",
     cv: "Lebenslauf herunterladen", "nav.cv": "CV ↓",
-    "hero.lead": "Ich gestalte und entwickle interaktive Erlebnisse: auf Bildschirmen, im Raum und für alle Sinne.",
+    "hero.lead": "Ich gestalte und entwickle interaktive Erlebnisse für Bildschirme, Räume und alle Sinne. Ich bin Creative Technologist aus St. Pölten und schließe im Februar 2027 meinen Master in Interactive Technologies als Dipl.‑Ing. ab.",
     "hero.cta1": "Meine Arbeiten", "hero.cta2": "Lass uns reden",
     "hero.scroll": "scroll runter und lern mich kennen",
     "about.title": "Über mich",
@@ -495,7 +496,7 @@ const I18N = {
     "explore.c.t": "Geteilte & physische Realitäten",
     "explore.c.p": "Co-located Multiplayer und Mixed Reality, die digitale Inhalte mit echten Objekten und echten Menschen im selben Raum verbinden.",
     "projects.title": "Projekte",
-    "projects.intro": "Drei Fragen verbinden meine Arbeit. Wähl eine aus oder klick auf ein Projekt für die ganze Geschichte.",
+    "projects.intro": "Wähl ein Thema zum Filtern oder öffne ein Projekt für die ganze Geschichte.",
     "early.title": "Mein Weg", "early.intro": "Vom ersten Browserspiel bis zur preisgekrönten VR, Semester für Semester.",
     "early.now": "Heute", "early.intern.t": "UX/UI-Praktikum · EBCONT", "early.intern.p": "Design-Systeme und Prototypen in echten Produktteams (siehe Werdegang).",
     themes: { all: "Alle", sight: "Mehr als Sehen", abilities: "Diverse Fähigkeiten", shared: "Geteilte Realitäten", jams: "Jams & Hackathons" },
@@ -578,7 +579,7 @@ const I18N = {
       challenge: "Herausforderung", approach: "Was wir gebaut haben", approachSolo: "Was ich gebaut habe", result: "Ergebnis", learned: "Was ich gelernt habe",
       open: "Projekt ansehen", close: "Schließen", next: "Nächstes Projekt", watch: "Video ansehen", video: "Video", tools: "Tools & Technik", when: "Wann",
       devpost: "Devpost", ggj: "Global-Game-Jam-Seite", itch: "Auf itch.io spielen",
-      award: "Gewinner:innen des Wettbewerbs", vernissage: "USTP Projektvernissage", instagram: "Instagram", tiktok: "TikTok", linkedin: "LinkedIn-Beitrag"
+      award: "Gewinner:innen des Wettbewerbs", vernissage: "USTP Projektvernissage", instagram: "Instagram", tiktok: "TikTok", linkedin: "LinkedIn-Beitrag", makingof: "Making-of-Video"
     },
     p: {
       historia: {
@@ -588,7 +589,7 @@ const I18N = {
         growth: "2× 1. Platz: Co-located VR, gestaltet und getestet mit echten Spieler:innen.",
         highlight: "1. Platz bei zwei Wettbewerben · gezeigt bei der European Researchers' Night",
         badge: "🏆 2× 1. Platz",
-        summary: "Drei Spieler:innen, ein Raum, das römische St. Pölten: Backt in einer Bäckerei aus dem 1. Jahrhundert ein Festbrot und schafft es nur gemeinsam.",
+        summary: "Drei Spieler:innen, ein Raum, das römische St. Pölten: Backt gemeinsam in einer Bäckerei aus dem 1. Jahrhundert ein Festbrot, um zu entkommen.",
         duration: "6 Monate, wird weiterentwickelt",
         role: "Entwicklung, 3D-Modellierung und Testing: ein bisschen von allem",
         challenge: "Drei Menschen im selben physischen Raum sollen das Gefühl haben, eine gemeinsame virtuelle Welt zu teilen, mit Rätseln, die echte Zusammenarbeit erfordern.",
@@ -1242,6 +1243,13 @@ modalBody.addEventListener("click", (e) => {
   openLightbox(all.map((i) => i.currentSrc || i.src), all.indexOf(img));
 });
 
+document.addEventListener("click", (e) => {
+  const a = e.target.closest("[data-open]");
+  if (!a) return;
+  e.preventDefault();
+  openProject(a.dataset.open);
+});
+
 function projectIdFromHash() {
   const id = location.hash.replace("#project-", "");
   return location.hash.startsWith("#project-") && visibleProjects().some((p) => p.id === id) ? id : null;
@@ -1340,7 +1348,7 @@ document.querySelectorAll('a[href="#top"]').forEach((a) => a.addEventListener("c
 
 /* ============ Highlight the menu item of the section in view ============ */
 // Sections without their own menu item count towards the closest related one
-const NAV_FOR = { projects: "projects", about: "about", experience: "experience", stack: "experience", contact: "contact" };
+const NAV_FOR = { projects: "projects", experience: "experience", stack: "experience", contact: "contact" };
 const navLinks = [...document.querySelectorAll('.nav__links a[href^="#"]')];
 const spy = "IntersectionObserver" in window ? new IntersectionObserver((entries) => {
   entries.forEach((en) => {

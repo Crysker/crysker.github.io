@@ -157,9 +157,21 @@ html[lang="de"] .lang [data-lang="de"] { background: var(--ink); color: var(--bg
 }
 .hero__hello { font: 600 20px var(--sans); color: var(--ink-soft); margin: 0; }
 .hero__name {
+  position: relative;
   font: 700 clamp(64px, 12vw, 148px)/1 var(--serif);
   letter-spacing: -.04em;
 }
+/* the signature signs itself next to the name (sized with the name via em) */
+.hero__sig {
+  position: absolute; right: -.8em; bottom: -.16em; width: .64em; height: .73em;
+  color: var(--turq-text); rotate: -6deg; pointer-events: none;
+}
+.hero__sig path {
+  stroke: currentColor; stroke-width: 3.2; stroke-linecap: round; stroke-linejoin: round;
+  stroke-dasharray: 1; stroke-dashoffset: 0;
+  animation: sign 2.2s cubic-bezier(.5, 0, .3, 1) .5s backwards; /* "backwards": hidden until it starts */
+}
+@keyframes sign { from { stroke-dashoffset: 1; } }
 .hero__name em { font-style: italic; color: var(--turq-text); }
 .hero__title {
   margin: 12px 0 0;
@@ -199,7 +211,7 @@ html[lang="de"] .lang [data-lang="de"] { background: var(--ink); color: var(--bg
   width: 100%; height: 100%; object-fit: cover;
   transform: scale(1.65); transform-origin: 62% 46%;
 }
-.hero__lead { max-width: 34ch; margin: 32px 0 24px; font-size: 19px; color: var(--ink-soft); }
+.hero__lead { max-width: 46ch; margin: 32px 0 24px; font-size: 19px; color: var(--ink-soft); }
 .hero__cta { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
 .captcha { margin-top: 56px; }
 
@@ -305,6 +317,15 @@ html[lang="de"] .lang [data-lang="de"] { background: var(--ink); color: var(--bg
 }
 .facts strong { display: block; font: 700 34px/1 var(--serif); color: var(--turq-ink); }
 .facts span { font-size: 14px; color: var(--ink-soft); font-weight: 600; }
+.experience .facts { margin: 20px 0 36px; max-width: 760px; }
+/* the awards tile is a link to Historia Virtualis */
+.facts li:has(.facts__link) { padding: 0; }
+.facts__link {
+  display: block; height: 100%; padding: 16px 18px; border-radius: 18px; color: inherit; text-decoration: none;
+  transition: background .2s, box-shadow .2s;
+}
+.facts__link:hover { background: var(--turq-soft); box-shadow: inset 0 0 0 2px var(--turq); }
+.facts .facts__go { color: var(--turq-text); font-weight: 800; }
 
 .video { border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); background: #000; aspect-ratio: 16/9; }
 .video__play { position: relative; width: 100%; height: 100%; border: 0; padding: 0; cursor: pointer; background: none; }

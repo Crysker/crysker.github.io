@@ -21,7 +21,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,700;1,9..144,600;1,9..144,700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=21">
+  <link rel="stylesheet" href="styles.css?v=23">
 </head>
 <body>
   <a class="skip" href="#main" data-i18n="skip">Skip to content</a>
@@ -34,7 +34,6 @@
     <nav aria-label="Main">
       <ul class="nav__links" id="navLinks">
         <li><a href="#projects" data-i18n="nav.projects">Projects</a></li>
-        <li><a href="#about" data-i18n="nav.about">About</a></li>
         <li><a href="#experience" data-i18n="nav.experience">Experience</a></li>
         <li><a href="#contact" data-i18n="nav.contact">Contact</a></li>
         <li class="js-cv-item" hidden><a class="nav__cv js-cv" href="#" target="_blank" rel="noopener" data-i18n="nav.cv">CV ↓</a></li>
@@ -53,7 +52,7 @@
       <div class="shape shape--tri" aria-hidden="true"></div>
 
       <p class="hero__hello" data-i18n="hero.hello">Hi, I'm</p>
-      <h1 class="hero__name"><em>Serkan</em>!</h1>
+      <h1 class="hero__name"><em>Serkan</em>!<svg class="hero__sig" viewBox="0 0 67 76" aria-hidden="true" fill="none"><path pathLength="1" d="M26.9211 15.6547C27.2235 15.1789 27.831 14.398 28.2664 13.4856C28.6792 12.6204 29.3092 11.9656 29.5276 11.0525C30.0516 8.86113 28.7122 4.63177 27.0352 2.64644C26.1934 1.64991 24.6268 1.40415 23.3839 1.1858C22.2354 0.984051 20.3303 0.924435 18.693 1.11866C16.2154 1.41258 15.0639 2.26971 14.0849 2.55258C12.5452 2.99749 10.0348 4.6083 8.43594 5.78803C7.65109 6.36715 6.63507 7.132 5.45991 8.09076C4.48188 8.88869 3.89498 9.95812 3.24255 11.0648C1.74611 13.6033 1.76236 17.8056 2.00026 19.9297C2.20806 21.7851 3.54042 24.0783 4.12832 25.0586C4.72152 26.0477 5.49576 26.7741 6.34307 27.6227C7.23829 28.5193 8.18892 29.1231 9.18744 29.7514C11.2934 31.0766 12.6184 31.5555 14.182 32.5736C16.9376 34.3677 17.791 35.2029 19.6792 36.4419C20.3535 36.8844 21.5231 37.9378 23.6459 39.6917C24.7685 40.6192 25.6394 41.3744 26.3347 42.0039M26.3347 42.0039C28.1657 43.6616 28.7792 44.4482 29.5667 45.2182C31.5191 47.1273 32.3048 48.4106 34.3006 51.0366C35.1429 52.145 35.436 53.106 35.9137 54.1261C37.348 57.1884 36.0486 60.9691 35.743 62.0791C35.4051 63.306 34.7034 64.4887 33.4871 66.4212C33.0355 67.139 32.2266 67.7489 31.0586 68.8746C29.4019 70.4712 26.8481 71.7887 23.2783 72.9162C18.2729 74.4973 14.6285 74.315 13.7832 74.3365C11.3757 74.3977 8.24366 74.2733 6.39978 73.0844C2.43524 70.5283 1.85621 68.8035 1.15555 67.4758C0.914339 67.0188 0.980223 66.1521 1.1738 64.6803C1.44388 62.627 3.0568 60.2926 5.24287 57.5205C6.4766 55.9561 8.16024 54.2323 12.2502 51.0008C14.9281 48.8849 18.6373 46.1627 26.3347 42.0039ZM26.3347 42.0039C30.3934 39.811 35.5608 37.2187 42.2705 34.1053C61.7053 25.0873 47.3289 31.3192 65.4321 23.655M35.5247 26.2135C35.6967 26.2135 36.0005 26.2996 36.3909 26.5375C36.589 26.6582 36.6953 26.9044 36.7617 27.1873C36.8282 27.4702 36.8282 27.8143 36.7207 28.0346C36.6131 28.2549 36.3981 28.3409 36.2442 28.2777C36.0904 28.2145 36.0044 27.9994 35.9816 27.7811C35.9587 27.5627 36.0018 27.3476 36.0885 27.1508C36.1751 26.954 36.3042 26.7819 36.4372 26.6046"/></svg></h1>
       <p class="hero__title" data-i18n="hero.title">Interaction Designer &amp; XR Developer</p>
       <p class="hero__roles" aria-live="polite"><span class="hero__also" data-i18n="hero.also">also</span> <span id="role">UX Researcher</span></p>
       <p class="hero__status" id="heroStatus" hidden><span class="hero__dot" aria-hidden="true"></span><span data-i18n="hero.status"></span></p>
@@ -63,7 +62,7 @@
         <div class="shape shape--pill" aria-hidden="true"></div>
         <span class="hero__photo"><img src="assets/img/portrait.jpg" alt="Portrait of Serkan Sönmez" width="260" height="325"></span>
       </div>
-      <p class="hero__lead" data-i18n="hero.lead">I design and build interactive experiences: on screens, in space, and for all the senses.</p>
+      <p class="hero__lead" data-i18n="hero.lead">I design and build interactive experiences for screens, spaces and all the senses. Creative Technologist from St. Pölten, graduating as Dipl.‑Ing. in Interactive Technologies in February 2027.</p>
       <div class="hero__cta">
         <a class="btn btn--primary" href="#projects" data-i18n="hero.cta1">See my work</a>
         <a class="btn js-cv" href="#" target="_blank" rel="noopener" hidden data-i18n="cv">Download CV</a>
@@ -81,7 +80,7 @@
     <!-- PROJECTS (first: it's what recruiters came for) -->
     <section class="section projects" id="projects">
       <h2 class="section__title" data-i18n="projects.title">Projects</h2>
-      <p class="section__intro" data-i18n="projects.intro">Three questions connect my work. Pick one, or click a project for the full story.</p>
+      <p class="section__intro" data-i18n="projects.intro">Pick a topic to filter, or open a project for the full story.</p>
       <!-- The research themes, now as filters right where the projects are -->
       <div class="themes" id="themes" role="group" aria-label="Filter projects by theme"></div>
       <p class="themes__desc" id="themeDesc" aria-live="polite" hidden></p>
@@ -95,33 +94,14 @@
       </div>
     </section>
 
-    <!-- ABOUT -->
-    <section class="section about" id="about">
-      <h2 class="section__title" data-i18n="about.title">About me</h2>
-      <div class="about__grid">
-        <div class="about__text">
-          <p data-i18n="about.p1">I'm a Creative Technologist from St. Pölten, Austria, currently finishing my MSc in Interactive Technologies (AR/VR).</p>
-          <p data-i18n="about.p2">I spent two years as a UX/UI designer at EBCONT working on 15 projects, from public administration to enterprise software, and I've been building with Unity for six years.</p>
-          <p data-i18n="about.p3">What drives me: understanding why people do what they do, and designing experiences that work for everyone.</p>
-          <ul class="facts">
-            <li><strong>6</strong><span data-i18n="about.f1">years of Unity</span></li>
-            <li><strong>15</strong><span data-i18n="about.f2">client projects</span></li>
-            <li><strong>2×</strong><span data-i18n="about.f3">1st place awards</span></li>
-          </ul>
-        </div>
-        <div class="video" data-yt="9Qa9gazr1qg">
-          <button type="button" class="video__play" aria-label="Play video: Historia Virtualis making-of">
-            <img src="https://img.youtube.com/vi/9Qa9gazr1qg/hqdefault.jpg" alt="" loading="lazy">
-            <span class="video__btn" aria-hidden="true"></span>
-            <span class="video__label" data-i18n="about.video">Making-of: Historia Virtualis</span>
-          </button>
-        </div>
-      </div>
-    </section>
-
-    <!-- EXPERIENCE -->
+    <!-- EXPERIENCE (the old "About me" section was merged into the hero and here) -->
     <section class="section experience" id="experience">
       <h2 class="section__title" data-i18n="exp.title">Experience & education</h2>
+      <ul class="facts">
+        <li><strong>6</strong><span data-i18n="about.f1">years of Unity</span></li>
+        <li><strong>15</strong><span data-i18n="about.f2">client projects</span></li>
+        <li><a class="facts__link" href="#project-historia" data-open="historia"><strong>2×</strong><span data-i18n="about.f3">1st place awards</span> <span class="facts__go" aria-hidden="true">→</span></a></li>
+      </ul>
       <ol class="timeline">
         <li>
           <span class="timeline__date">2026</span>
@@ -274,6 +254,6 @@
   </dialog>
 
   <script src="logos.js?v=2"></script>
-  <script src="main.js?v=30"></script>
+  <script src="main.js?v=32"></script>
 </body>
 </html>
