@@ -14,6 +14,8 @@ Plain HTML/CSS/JS, no build step. Open `index.html` in a browser to preview.
 ## Linking a single project
 Every project has its own link that opens it directly – handy in cover letters:
 `https://crysker.github.io/#project-historia` (also `sounds`, `grim`, `paper`, `hue`).
+The full list of projects (with the topic filters) is at `https://crysker.github.io/#projects-all`;
+the home page shows only the first three (`FIRST_SHOWN` in `main.js`).
 
 ## After changing styles.css or main.js
 Bump the `?v=` number where the file is linked at the bottom/top of `index.html`,

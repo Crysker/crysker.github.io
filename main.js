@@ -203,8 +203,7 @@ const I18N = {
     "explore.c.p": "Co-located multiplayer and mixed reality that connects digital content with real objects and real people in the same room.",
     "projects.title": "Projects",
     "projects.intro": "Pick a topic to filter, or open a project for the full story.",
-    "projects.more": "Show all projects (+{n})", "projects.less": "Show fewer projects",
-    "projects.shelf": "More work",
+    "projects.all": "See all projects", "projects.titleAll": "All projects", "crumb.home": "Home",
     themes: { all: "All", sight: "Beyond sight", abilities: "Diverse abilities", shared: "Shared realities", games: "Games", jams: "Jams & hackathons" },
     "games.t": "Games", "games.p": "Complete, playable games: from a deckbuilder on itch.io to VR and XR games with bosses, trash-dumping goblins and space junk.",
     "jams.t": "Game jams & hackathons", "jams.p": "A weekend, a team, one idea: where I try the wild stuff fast.",
@@ -247,14 +246,6 @@ const I18N = {
     "contact.copy": "Copy", "contact.copied": "Email address copied",
     toTop: "Back to top", "case.back": "All projects",
     lb: { close: "Close", prev: "Previous image", next: "Next image", zin: "Zoom in", zout: "Zoom out", hint: "Scroll, pinch or double-click to zoom · drag to move" },
-    "captcha.check": "I'm not a robot", "captcha.kicker": "Security check", "captcha.note": "psst… are you human? 👀",
-    "captcha.title": "Put every shape into its slot", "captcha.hint": "Drag them into the slots (or tap a shape, then a slot) and hit Verify.",
-    "captcha.memeBottom": "Now hire a human",
-    "captcha.hire": "Okay, let's talk →", "captcha.close": "Close", "captcha.done": "Verified. Preparing your reward…",
-    "captcha.fail": ["Verification failed. Our AI suspects you might be a toaster. 🍞", "A triangle in a circle? Bold. Also wrong.", "Beep boop. That's exactly what a robot would do.", "Error 418: I'm a teapot. And you're not quite human yet.", "Even the goblins from #SaveTheOcean would get this one."],
-    "captcha.tip": "(Tip: every shape has exactly one matching outline.)", "captcha.verify": "Verify",
-    "captcha.picked": "Picked up! Now choose its slot.", "captcha.slot": "Slot for the {s}", "captcha.won": "Verification complete ✓",
-    shapeNames: { sphere: "sphere", cube: "cube", ring: "ring", tri: "triangle", pill: "pill" },
     "footer.fun": "No game engine was harmed in the making of this site.",
     ach: {
       unlocked: "Achievement unlocked", count: "{n}/{total} achievements found", hint: "Can you find them all?",
@@ -492,8 +483,7 @@ const I18N = {
     "explore.c.p": "Co-located Multiplayer und Mixed Reality, die digitale Inhalte mit echten Objekten und echten Menschen im selben Raum verbinden.",
     "projects.title": "Projekte",
     "projects.intro": "Wähl ein Thema zum Filtern oder öffne ein Projekt für die ganze Geschichte.",
-    "projects.more": "Alle Projekte zeigen (+{n})", "projects.less": "Weniger Projekte zeigen",
-    "projects.shelf": "Mehr Arbeiten",
+    "projects.all": "Alle Projekte ansehen", "projects.titleAll": "Alle Projekte", "crumb.home": "Start",
     themes: { all: "Alle", sight: "Mehr als Sehen", abilities: "Diverse Fähigkeiten", shared: "Geteilte Realitäten", games: "Games", jams: "Jams & Hackathons" },
     "games.t": "Games", "games.p": "Fertige, spielbare Games: vom Deckbuilder auf itch.io bis zu VR- und XR-Spielen mit Bossen, müllenden Goblins und Weltraumschrott.",
     "jams.t": "Game Jams & Hackathons", "jams.p": "Ein Wochenende, ein Team, eine Idee: Hier probiere ich die verrückten Sachen schnell aus.",
@@ -536,14 +526,6 @@ const I18N = {
     "contact.copy": "Kopieren", "contact.copied": "E-Mail-Adresse kopiert",
     toTop: "Nach oben", "case.back": "Alle Projekte",
     lb: { close: "Schließen", prev: "Vorheriges Bild", next: "Nächstes Bild", zin: "Hineinzoomen", zout: "Herauszoomen", hint: "Scrollen, mit zwei Fingern oder Doppelklick zoomen · ziehen zum Verschieben" },
-    "captcha.check": "Ich bin kein Roboter", "captcha.kicker": "Sicherheitsprüfung", "captcha.note": "psst… bist du ein Mensch? 👀",
-    "captcha.title": "Bring jede Form an ihren Platz", "captcha.hint": "Zieh sie in die Plätze (oder Form antippen, dann Platz) und drück auf Prüfen.",
-    "captcha.memeBottom": "Jetzt stell einen Menschen ein",
-    "captcha.hire": "Okay, lass uns reden →", "captcha.close": "Schließen", "captcha.done": "Verifiziert. Belohnung wird geladen…",
-    "captcha.fail": ["Verifizierung fehlgeschlagen. Unsere KI vermutet, du bist ein Toaster. 🍞", "Ein Dreieck im Kreis? Mutig. Aber falsch.", "Beep boop. Genau das würde ein Roboter tun.", "Fehler 418: Ich bin eine Teekanne. Und du bist noch nicht ganz Mensch.", "Sogar die Goblins aus #SaveTheOcean würden das schaffen."],
-    "captcha.tip": "(Tipp: Jede Form hat genau einen passenden Umriss.)", "captcha.verify": "Prüfen",
-    "captcha.picked": "Aufgehoben! Jetzt den Platz wählen.", "captcha.slot": "Platz für: {s}", "captcha.won": "Verifizierung abgeschlossen ✓",
-    shapeNames: { sphere: "Kugel", cube: "Würfel", ring: "Ring", tri: "Dreieck", pill: "Pille" },
     "footer.fun": "Bei der Erstellung dieser Seite wurde keine Game Engine verletzt.",
     ach: {
       unlocked: "Erfolg freigeschaltet", count: "{n}/{total} Erfolge gefunden", hint: "Findest du alle?",
@@ -927,28 +909,36 @@ document.getElementById("themes").addEventListener("click", (e) => {
 
 /* Main grid order (most hyped first) and how many show before "Show all" */
 const ORDER = ["historia", "grim", "paper", "cthulhu", "sounds", "thesis", "aroom", "ocean", "hue", "deepspace"];
-const FIRST_SHOWN = 3; // the three highlighted projects (the rest sits in the shelf until "Show all")
-let showAllProjects = false;
+const FIRST_SHOWN = 3; // the home page shows the three strongest projects; the rest lives on the "All projects" view (#projects-all)
+/* The "All projects" view is a second screen inside this page (link: crysker.github.io/#projects-all):
+   it hides the other sections, lists everything with the topic filters, and the back link returns to the home page. */
+let allView = location.hash === "#projects-all";
 
 function renderProjects() {
   const grid = document.getElementById("projectGrid");
   const P = I18N[lang].p;
-  const active = THEMES.find((th) => th.id === theme);
+  const active = allView ? THEMES.find((th) => th.id === theme) : null;
   const rank = (id) => (ORDER.indexOf(id) + 1 || 99);
   const matching = visibleProjects()
-    .filter((pr) => !pr.early && (!active || active.match(pr)))
+    .filter((pr) => (allView || !pr.early) && (!active || active.match(pr))) // the old semester projects only appear on the full list
     .sort((a, b) => rank(a.id) - rank(b.id));
-  // the full list starts short; a filter always shows everything that matches
-  const limited = !active && !showAllProjects && matching.length > FIRST_SHOWN;
-  const shown = limited ? matching.slice(0, FIRST_SHOWN) : matching;
-  grid.classList.toggle("is-filtered", theme !== "all"); // filtered: no highlighted top three
-  // first screen stays calm: the topic filters only appear once someone asks for more (Show all, or a filter is active)
-  document.getElementById("themes").hidden = limited;
+  const shown = allView ? matching : matching.slice(0, FIRST_SHOWN);
+  document.body.classList.toggle("view-all", allView);
+  document.getElementById("projectsTitle").textContent = t(allView ? "projects.titleAll" : "projects.title");
+  const crumbs = document.getElementById("projectsCrumbs");
+  crumbs.hidden = !allView;
+  crumbs.innerHTML = `<ol><li><a href="#">${esc(t("crumb.home"))}</a></li><li aria-current="page">${esc(t("projects.titleAll"))}</li></ol>`;
+  // topic filters belong to the full list; the home page stays calm
+  document.getElementById("themes").hidden = !allView;
+  const more = document.getElementById("moreProjects");
+  more.hidden = allView;
+  more.textContent = t("projects.all") + " →";
+  grid.classList.toggle("is-filtered", !!active);
   // compact cards: the long description and tech tags live on the project page
-  grid.innerHTML = shown.map((pr, i) => {
+  grid.innerHTML = shown.map((pr) => {
     const x = P[pr.id];
     return `
-      <button type="button" class="p-card${!active && i < FIRST_SHOWN ? " p-card--top" : ""}" data-id="${pr.id}"
+      <button type="button" class="p-card" data-id="${pr.id}"
               aria-label="${esc(t("ui").open)}: ${esc(x.title)}">
         <div class="p-card__media">
           ${pic(pr)}
@@ -965,39 +955,22 @@ function renderProjects() {
         </div>
       </button>`;
   }).join("");
-  const more = document.getElementById("moreProjects");
-  // one button toggles between the short list and everything (a topic filter shows its matches without it)
-  const canCollapse = !active && showAllProjects && matching.length > FIRST_SHOWN;
-  more.hidden = !(limited || canCollapse);
-  more.textContent = limited ? t("projects.more").replace("{n}", matching.length - FIRST_SHOWN) : t("projects.less");
-  // quiet shelf under the top projects: the rest, one click from the case study
-  const shelf = document.getElementById("shelf");
-  shelf.hidden = !limited;
-  document.getElementById("shelfLabel").textContent = t("projects.shelf");
-  document.getElementById("shelfRow").innerHTML = limited ? matching.slice(FIRST_SHOWN).map((pr) => `
-    <button type="button" class="shelf__chip" data-id="${pr.id}" aria-label="${esc(t("ui").open)}: ${esc(P[pr.id].title)}">
-      <span class="shelf__img">${pic(pr)}</span>
-      <span class="shelf__title">${esc(P[pr.id].title)}</span>
-    </button>`).join("") : "";
 }
-document.getElementById("shelfRow").addEventListener("click", (e) => {
-  const chip = e.target.closest(".shelf__chip");
-  if (!chip) return;
-  lastCardId = chip.dataset.id;
-  openProject(chip.dataset.id);
-});
-document.getElementById("moreProjects").addEventListener("click", () => {
-  if (showAllProjects) { // collapse again and go back to the top of the section
-    showAllProjects = false;
-    renderProjects();
-    document.getElementById("projects").scrollIntoView({ block: "start" });
-    return;
-  }
-  showAllProjects = true;
-  const firstNew = FIRST_SHOWN;
+
+/* switching between the home page and the "All projects" view follows the address (#projects-all) */
+function syncView() {
+  const h = location.hash;
+  const next = h === "#projects-all" ? true : (h.startsWith("#project-") ? allView : false); // a case study keeps the view behind it
+  if (next === allView) return;
+  allView = next;
+  if (allView) theme = "all";
+  renderThemes();
   renderProjects();
-  document.querySelectorAll("#projectGrid .p-card")[firstNew]?.focus({ preventScroll: true }); // keyboard users land on the new cards
-});
+  if (allView) window.scrollTo({ top: 0, behavior: "auto" });
+  else if (h === "#projects") document.getElementById("projects").scrollIntoView({ block: "start" });
+  else window.scrollTo({ top: 0, behavior: "auto" });
+}
+addEventListener("hashchange", syncView);
 
 const modal = document.getElementById("projectModal");
 const modalBody = document.getElementById("modalBody");
@@ -1007,6 +980,7 @@ const modalBody = document.getElementById("modalBody");
    and the browser's back button closes the view like a normal page. */
 const caseNext = document.getElementById("caseNext");
 let pushedHistory = false;
+let afterClose = null; // runs once the case study is closed (used by the "Home" crumb)
 
 function openProject(id, { push = true } = {}) {
   const pr = PROJECTS.find((p) => p.id === id);
@@ -1066,6 +1040,7 @@ function openProject(id, { push = true } = {}) {
         <span><small>${esc(ui.next)}</small><b>${esc(I18N[lang].p[next.id].title)} →</b></span>
       </button>` : ""}
     </article>`;
+  renderCaseCrumbs(x.title);
   caseNext.hidden = !next;
   if (next) {
     caseNext.dataset.id = next.id;
@@ -1074,7 +1049,7 @@ function openProject(id, { push = true } = {}) {
   }
   if (!modal.open) modal.showModal();
   modal.scrollTop = 0;
-  modal.querySelector(".case__back").focus({ preventScroll: true });
+  document.querySelector("#caseCrumbs a")?.focus({ preventScroll: true });
 
   const hash = "#project-" + id;
   if (location.hash !== hash) {
@@ -1152,14 +1127,33 @@ function finishClose() {
   modalBody.innerHTML = ""; // stops video
   pushedHistory = false;
   // put keyboard focus back on the card the visitor came from
-  document.querySelector(`.p-card[data-id="${lastCardId}"], .shelf__chip[data-id="${lastCardId}"]`)?.focus({ preventScroll: true });
+  document.querySelector(`.p-card[data-id="${lastCardId}"]`)?.focus({ preventScroll: true });
+  const cb = afterClose;
+  afterClose = null;
+  if (cb) cb();
 }
 function closeProject() {
   if (pushedHistory) return history.back(); // popstate below finishes the close
   finishClose();
   if (location.hash.startsWith("#project-")) history.replaceState(null, "", location.pathname + location.search);
 }
-modal.querySelector(".case__back").addEventListener("click", closeProject);
+function renderCaseCrumbs(title) { // Home > Projects (or All projects) > this project
+  document.querySelector("#caseCrumbs ol").innerHTML = `
+    <li><a href="#" data-go="home">${esc(t("crumb.home"))}</a></li>
+    <li><a href="#" data-go="back">${esc(t(allView ? "projects.titleAll" : "projects.title"))}</a></li>
+    <li aria-current="page">${esc(title)}</li>`;
+}
+document.getElementById("caseCrumbs").addEventListener("click", (e) => {
+  const a = e.target.closest("a[data-go]");
+  if (!a) return;
+  e.preventDefault();
+  if (a.dataset.go === "home") afterClose = () => { // back to the very top of the home page
+    history.replaceState(null, "", location.pathname + location.search);
+    syncView();
+    window.scrollTo({ top: 0, behavior: "auto" });
+  };
+  closeProject();
+});
 caseNext.addEventListener("click", () => openProject(caseNext.dataset.id));
 modal.addEventListener("cancel", (e) => { e.preventDefault(); closeProject(); }); // Esc key
 modal.addEventListener("click", (e) => {
@@ -1302,6 +1296,7 @@ function openProjectFromHash() {
 }
 // Browser back/forward, or a project link opened on this page
 addEventListener("popstate", () => {
+  syncView();
   const id = projectIdFromHash();
   if (id) openProject(id, { push: false });
   else if (modal.open) finishClose();

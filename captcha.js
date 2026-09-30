@@ -4,7 +4,8 @@ const CAPTCHA_T = {
   en: {
     kicker: "Security check", title: "Put every shape into its slot",
     hint: "Drag them into the slots (or tap a shape, then a slot) and hit Verify.",
-    memeBottom: "Now hire a human", hire: "Okay, let's talk →", close: "Close", verify: "Verify",
+    close: "Close", verify: "Verify",
+    perfect: "100% human. Suspiciously perfect.", mixed: "{h}% human, {t}% toaster 🍞",
     done: "Verified. Preparing your reward…",
     fail: ["Verification failed. Our AI suspects you might be a toaster. 🍞", "A triangle in a circle? Bold. Also wrong.", "Beep boop. That's exactly what a robot would do.", "Error 418: I'm a teapot. And you're not quite human yet.", "Even the goblins from #SaveTheOcean would get this one."],
     tip: "(Tip: every shape has exactly one matching outline.)",
@@ -14,7 +15,8 @@ const CAPTCHA_T = {
   de: {
     kicker: "Sicherheitsprüfung", title: "Bring jede Form an ihren Platz",
     hint: "Zieh sie in die Plätze (oder Form antippen, dann Platz) und drück auf Prüfen.",
-    memeBottom: "Jetzt stell einen Menschen ein", hire: "Okay, lass uns reden →", close: "Schließen", verify: "Prüfen",
+    close: "Schließen", verify: "Prüfen",
+    perfect: "100 % Mensch. Verdächtig perfekt.", mixed: "{h} % Mensch, {t} % Toaster 🍞",
     done: "Verifiziert. Belohnung wird geladen…",
     fail: ["Verifizierung fehlgeschlagen. Unsere KI vermutet, du bist ein Toaster. 🍞", "Ein Dreieck im Kreis? Mutig. Aber falsch.", "Beep boop. Genau das würde ein Roboter tun.", "Fehler 418: Ich bin eine Teekanne. Und du bist noch nicht ganz Mensch.", "Sogar die Goblins aus #SaveTheOcean würden das schaffen."],
     tip: "(Tipp: Jede Form hat genau einen passenden Umriss.)",
@@ -31,16 +33,23 @@ const gameTray = document.getElementById("gameTray");
 const gameMsg = document.getElementById("gameMsg");
 const verifyBtn = document.getElementById("gameVerify");
 let picked = null, fails = 0;
+new Image().src = "assets/img/meme-success.png"; // load the reward early, so it is there the moment you win
 
 const say = (text) => { gameMsg.textContent = text; };
 const shapeName = (s) => ct("shapeNames")[s];
 const updateVerify = () => { verifyBtn.disabled = gameSlots.querySelectorAll(".slot.is-filled").length < SHAPES.length; };
 
+/* the verdict: every failed Verify costs 10% (never worse than 50/50) */
+function renderVerdict() {
+  const human = Math.max(50, 100 - 10 * fails), toaster = 100 - human;
+  document.getElementById("gameVerdict").textContent = toaster === 0 ? ct("perfect") : ct("mixed").replace("{h}", human).replace("{t}", toaster);
+}
+
 /* the fixed texts of the window (kicker, hint, buttons …) follow the language */
 function refreshCaptchaTexts() {
   document.querySelectorAll("[data-cap]").forEach((el) => { el.textContent = ct(el.dataset.cap); });
   if (!document.getElementById("gamePlay").hidden) document.getElementById("gameTitle").textContent = ct("title");
-  else document.getElementById("gameTitle").textContent = ct("won");
+  else { document.getElementById("gameTitle").textContent = ct("won"); renderVerdict(); }
 }
 
 function startCaptcha() {
@@ -120,6 +129,7 @@ function win() {
     document.getElementById("gamePlay").hidden = true;
     document.getElementById("gameWin").hidden = false;
     document.getElementById("gameTitle").textContent = ct("won");
+    renderVerdict();
     document.querySelector(".game__hint").hidden = true;
     say("");
     unlock("human");

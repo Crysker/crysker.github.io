@@ -4,7 +4,7 @@
 
 const PLAY_T = {
   en: {
-    nav: "Play", title: "Play", back: "Back", close: "Close", soundOn: "Turn sound on", soundOff: "Turn sound off",
+    home: "Home", nav: "Play", title: "Play", back: "Back", close: "Close", soundOn: "Turn sound on", soundOff: "Turn sound off",
     intro: "Tiny games, made for fun. More are on the way.",
     g1: ["Guess the Average", "How much beer does an Austrian drink? How many cups of tea a Turk? Guess the number, the closer the more points."],
     best: "Best: {n}", verified: "Verified", robot: "I'm not a robot", play: "Play", soon: "Soon", g2: "Tiny Orchestra", g3: "Tower of Babel",
@@ -18,7 +18,7 @@ const PLAY_T = {
     ask: "Your guess (use the slider or type it)"
   },
   de: {
-    nav: "Spielen", title: "Spielen", back: "Zurück", close: "Schließen", soundOn: "Ton einschalten", soundOff: "Ton ausschalten",
+    home: "Start", nav: "Spielen", title: "Spielen", back: "Zurück", close: "Schließen", soundOn: "Ton einschalten", soundOff: "Ton ausschalten",
     intro: "Kleine Spiele, nur zum Spaß. Mehr folgt.",
     g1: ["Schätz den Durchschnitt", "Wie viel Bier trinkt ein Österreicher? Wie viele Tassen Tee ein Türke? Schätze die Zahl, je näher, desto mehr Punkte."],
     best: "Bestwert: {n}", verified: "Verifiziert", robot: "Ich bin kein Roboter", play: "Spielen", soon: "Bald", g2: "Mini-Orchester", g3: "Turmbau zu Babel",
@@ -139,6 +139,11 @@ function renderPlay() {
   snd.setAttribute("aria-label", playMuted ? pt("soundOn") : pt("soundOff"));
   snd.setAttribute("aria-pressed", String(!playMuted));
   playBack.hidden = play.screen === "menu";
+  // breadcrumbs: Home > Play (> the game you are in)
+  document.getElementById("playCrumbs").innerHTML = "<ol>" +
+    `<li><a href="index.html">${esc(pt("home"))}</a></li>` +
+    (play.screen === "menu" ? `<li aria-current="page">${esc(pt("title"))}</li>`
+      : `<li><a href="#" data-menu>${esc(pt("title"))}</a></li><li aria-current="page">${esc(pt("g1")[0])}</li>`) + "</ol>";
   document.querySelector(".play-card").classList.toggle("is-menu", play.screen === "menu");
   if (play.screen === "menu") renderMenu();
   else if (play.screen === "q") renderQuestion();
@@ -355,6 +360,13 @@ function renderEnd() {
   });
 }
 
+document.getElementById("playCrumbs").addEventListener("click", (e) => {
+  if (!e.target.closest("a[data-menu]")) return;
+  e.preventDefault();
+  sfx.click();
+  play.screen = "menu";
+  renderPlay();
+});
 playBack.addEventListener("click", () => { sfx.click(); play.screen = "menu"; renderPlay(); });
 document.getElementById("playSound").addEventListener("click", () => {
   playMuted = !playMuted;

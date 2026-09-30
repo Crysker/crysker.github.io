@@ -16,7 +16,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,700;1,9..144,600;1,9..144,700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <script>try { var th = localStorage.getItem("theme"); if (th === "light" || th === "dark") document.documentElement.dataset.theme = th; } catch (e) {}</script>
-  <link rel="stylesheet" href="styles.css?v=86">
+  <link rel="stylesheet" href="styles.css?v=95">
 </head>
 <body>
   <a class="skip" href="#main" data-nav="skip">Skip to content</a>
@@ -45,6 +45,7 @@
 
   <main id="main" class="playpage">
     <div class="play-card">
+      <nav class="crumbs" id="playCrumbs" aria-label="Breadcrumb"></nav>
       <div class="play__bar">
         <button type="button" class="play__back" id="playBack" hidden aria-label="Back">←</button>
         <h1 id="playTitle">Play</h1>
@@ -68,12 +69,9 @@
     <p class="game__msg" id="gameMsg" role="status"></p>
     <div class="game__win" id="gameWin" hidden>
       <figure class="meme">
-        <img src="assets/img/meme-success.png" alt="Success Kid meme: You did it!" width="476" height="314" loading="lazy">
-        <figcaption>
-          <span class="meme__bottom" data-cap="memeBottom">Now hire a human</span>
-        </figcaption>
+        <img src="assets/img/meme-success.png" alt="Success Kid meme: You did it!" width="476" height="314">
       </figure>
-      <a class="btn btn--primary" href="index.html#contact" id="gameHire" data-cap="hire">Okay, let's talk →</a>
+      <p class="game__verdict" id="gameVerdict"></p>
     </div>
     <div class="game__foot">
       <span class="captcha__brand"><span class="captcha__logo" aria-hidden="true">↻</span>reSHAPTCHA</span>
@@ -88,7 +86,7 @@
 
   <script src="play-shell.js?v=1"></script>
   <script src="guess-data.js?v=3"></script>
-  <script src="captcha.js?v=1"></script>
-  <script src="play.js?v=19"></script>
+  <script src="captcha.js?v=2"></script>
+  <script src="play.js?v=20"></script>
 </body>
 </html>

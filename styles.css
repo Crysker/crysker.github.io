@@ -331,35 +331,18 @@ html[lang="de"] .lang [data-lang="de"] { background: var(--ink); color: var(--bg
 @media (min-width: 1000px) {
   .projects__grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 }
-.more-projects { display: flex; margin: 28px auto 0; }
-/* The top 3 stand out with a turquoise accent on the cards */
-.p-card--top {
-  border-color: color-mix(in srgb, var(--turq) 55%, var(--line));
-  box-shadow: 0 0 0 1px color-mix(in srgb, var(--turq) 35%, transparent), 0 18px 40px -22px color-mix(in srgb, var(--turq) 70%, transparent);
-}
-.p-card--top:hover { box-shadow: 0 0 0 2px var(--turq), 0 22px 44px -20px color-mix(in srgb, var(--turq) 80%, transparent); }
-/* Quiet shelf: small thumbnails for the projects outside the top 3 */
-.shelf { margin-top: 30px; }
-.shelf__label { font: 800 12px var(--sans); letter-spacing: .08em; text-transform: uppercase; color: var(--ink-soft); margin: 0 0 10px; }
-.shelf__row { display: flex; gap: 12px; overflow-x: auto; padding: 2px 2px 10px; scroll-snap-type: x proximity; scrollbar-width: thin; }
-.shelf__chip {
-  flex: 0 0 auto; width: 148px; display: flex; flex-direction: column; gap: 6px; padding: 6px 6px 10px; text-align: left; cursor: pointer;
-  border-radius: 16px; background: var(--surface); border: 1px solid var(--line); color: var(--ink); font: inherit; scroll-snap-align: start;
-  transition: transform .2s, border-color .2s;
-}
-.shelf__chip:hover, .shelf__chip:focus-visible { transform: translateY(-3px); border-color: var(--turq); }
-.shelf__img { display: block; aspect-ratio: 16/10; overflow: hidden; border-radius: 11px; background: var(--surface-2); }
-.shelf__img img, .shelf__img .ph { width: 100%; height: 100%; object-fit: cover; }
-.shelf__img img { filter: saturate(.75); transition: filter .2s; }
-.shelf__chip:hover .shelf__img img { filter: none; }
-.shelf__title { font-size: 13px; font-weight: 700; line-height: 1.25; padding: 0 4px; }
-@media (min-width: 1000px) { .shelf__row { overflow: visible; flex-wrap: wrap; } .shelf__chip { width: calc((100% - 6 * 12px) / 7); } }
+.more-projects { display: flex; margin: 22px auto 0; padding: 10px 20px; border: 1px solid var(--line); background: transparent; color: var(--ink-soft); font-size: 14px; font-weight: 600; }
+.more-projects:hover { border-color: var(--turq); color: var(--ink); }
 .p-card__media { position: relative; border-radius: 18px; overflow: hidden; aspect-ratio: 16/9; background: var(--surface-2); }
 .p-card__media img { width: 100%; height: 100%; object-fit: cover; transition: transform .5s; }
 .p-card:hover .p-card__media img { transform: scale(1.04); }
+.p-card__video {
+  position: absolute; right: 12px; bottom: 12px; padding: 6px 12px; border-radius: 999px;
+  background: rgba(0, 0, 0, .65); color: #fff; font: 700 13px var(--sans); backdrop-filter: blur(6px);
+}
 .p-card__badge {
-  position: absolute; top: 12px; left: 12px; padding: 6px 12px; border-radius: 999px;
-  background: var(--yellow); color: #1d1b2e; font: 800 13px var(--sans); box-shadow: var(--shadow);
+  position: absolute; top: 12px; left: 12px; padding: 5px 11px; border-radius: 999px;
+  background: rgba(20, 20, 30, .72); color: #fff; font: 700 12px var(--sans); backdrop-filter: blur(6px);
 }
 /* Hover preview: own clip fills the card; YouTube is fitted in full (no zoom) on a dark backdrop */
 .p-card__preview {
@@ -380,17 +363,10 @@ html[lang="de"] .lang [data-lang="de"] { background: var(--ink); color: var(--bg
   clip-path: polygon(0 0, 100% 50%, 0 100%);
 }
 .p-card:hover .p-card__play, .p-card:focus-visible .p-card__play { opacity: 1; scale: 1; }
-.p-card__video {
-  position: absolute; right: 12px; bottom: 12px; padding: 6px 12px; border-radius: 999px;
-  background: rgba(0, 0, 0, .65); color: #fff; font: 700 13px var(--sans); backdrop-filter: blur(6px);
-}
 .p-card__body { padding: 16px 10px 0; }
-.p-card__kicker { font-size: 13px; font-weight: 700; color: var(--orange-text); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 4px; }
+.p-card__kicker { font-size: 12px; font-weight: 700; color: var(--ink-soft); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 4px; }
 .p-card__title { font: 700 24px/1.15 var(--serif); margin-bottom: 8px; }
-.p-card__highlight {
-  display: inline-block; margin-bottom: 10px; padding: 4px 12px; border-radius: 10px;
-  background: var(--turq-soft); color: var(--turq-ink); font-size: 14px; font-weight: 700;
-}
+.p-card__highlight { margin-bottom: 4px; color: var(--ink-soft); font-size: 14px; line-height: 1.45; }
 .p-card__role { font-size: 15px; margin-bottom: 14px; }
 .p-card__body { display: flex; flex-direction: column; align-items: flex-start; flex: 1; }
 .p-card__role, .p-card__more { display: none; } /* role and the open link live in the case study; the whole card is the button */
@@ -424,12 +400,10 @@ html:has(.case[open]) { overflow: hidden; }
   background: color-mix(in srgb, var(--surface) 85%, transparent); backdrop-filter: blur(14px);
   border: 1px solid var(--line); border-radius: 999px; box-shadow: var(--shadow);
 }
-.case__back, .case__next {
+.case__next {
   display: inline-flex; align-items: center; gap: 8px; padding: 10px 18px; border-radius: 999px; cursor: pointer;
   border: 0; font: 700 15px var(--sans); transition: background .2s, transform .2s;
 }
-.case__back { background: var(--surface-2); color: var(--ink); }
-.case__back:hover { transform: translateX(-3px); }
 .case__next { background: var(--turq); color: #062624; }
 .case__next:hover { transform: translateX(3px); }
 
@@ -837,17 +811,10 @@ button.ptile:hover, button.ptile:focus-visible { transform: translateY(-4px) rot
 }
 .game__close:hover { border-color: var(--turq); }
 
-/* The meme: the image brings its own top line, we add the bottom one */
+/* The meme (the picture brings its own top line) and the verdict under it */
 .meme { position: relative; width: min(420px, 100%); margin: 0; border-radius: 16px; overflow: hidden; box-shadow: var(--shadow); }
 .meme img { width: 100%; height: auto; }
-/* bottom caption sits above the image's watermark line */
-.meme figcaption { position: absolute; left: 0; right: 0; bottom: 22px; display: flex; justify-content: center; padding: 0 12px; }
-.meme span {
-  font: 400 clamp(22px, 6vw, 30px)/1.05 Impact, "Anton", "Arial Black", sans-serif; text-transform: uppercase;
-  color: #fff; text-align: center; letter-spacing: .01em;
-  -webkit-text-stroke: 1.5px #000; paint-order: stroke fill;
-  text-shadow: 0 2px 0 #000, 0 -1px 0 #000, 2px 0 0 #000, -2px 0 0 #000;
-}
+.game__verdict { margin: 0; text-align: center; font: 700 clamp(22px, 5vw, 28px)/1.2 var(--serif); color: var(--turq-text); }
 @media (max-width: 520px) { .game { --p: 36px; } .game__slots, .game__tray { gap: 6px; } }
 
 /* Achievement toast – bottom left, out of the way of the back-to-top button */
@@ -946,7 +913,6 @@ button.ptile:hover, button.ptile:focus-visible { transform: translateY(-4px) rot
   .hero__lead { margin: 14px 0 0; font-size: 17px; }
   .hero__portrait { width: min(235px, 100%); }
   #projects.section { padding-top: 24px; }
-  #projects .section__intro { display: none; } /* the filters and the cards explain themselves */
   .themes { margin: 0 0 12px; }
   .p-card__body { padding-top: 12px; }
 }
@@ -957,3 +923,24 @@ button.ptile:hover, button.ptile:focus-visible { transform: translateY(-4px) rot
   .hero__portrait { margin: 40px 0 44px; }
   .hero__lead { margin: 0 0 8px; }
 }
+
+/* ============ "All projects" view (#projects-all) ============ */
+#projects .section__intro { display: none; } /* the home page shows just the three cards and a button */
+body.view-all #projects .section__intro { display: block; }
+body.view-all .hero, body.view-all #stack, body.view-all #experience, body.view-all #contact { display: none; }
+body.view-all #projects.section { padding-top: 110px; padding-bottom: 60px; } /* clears the sticky menu bar */
+.more-projects { text-decoration: none; width: fit-content; }
+
+/* ============ Breadcrumbs ============ */
+.crumbs { margin: 0 0 14px; }
+.crumbs ol { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; list-style: none; margin: 0; padding: 0; font: 600 13px var(--sans); color: var(--ink-soft); }
+.crumbs li + li::before { content: "›"; margin-right: 8px; opacity: .55; }
+.crumbs a, .crumbs button { padding: 0; border: 0; background: none; color: inherit; font: inherit; text-decoration: none; cursor: pointer; }
+.crumbs a:hover, .crumbs button:hover, .crumbs a:focus-visible, .crumbs button:focus-visible { color: var(--ink); text-decoration: underline; text-underline-offset: 3px; }
+.crumbs [aria-current] { color: var(--ink); }
+.crumbs--case { margin: 0; min-width: 0; padding-left: 10px; }
+.crumbs--case ol { flex-wrap: nowrap; }
+.crumbs--case li:last-child { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+@media (max-width: 560px) { .crumbs--case li:first-child { display: none; } .crumbs--case li:nth-child(2)::before { content: none; } } /* small phones: just "Projects > Title" */
+.play-card .crumbs { padding: 12px 18px 0; margin: 0; }
+.play-card.is-menu .crumbs { padding: 0 0 10px; }

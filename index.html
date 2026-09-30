@@ -22,7 +22,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,700;1,9..144,600;1,9..144,700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <script>try { var th = localStorage.getItem("theme"); if (th === "light" || th === "dark") document.documentElement.dataset.theme = th; } catch (e) {}</script>
-  <link rel="stylesheet" href="styles.css?v=86">
+  <link rel="stylesheet" href="styles.css?v=95">
 </head>
 <body>
   <a class="skip" href="#main" data-i18n="skip">Skip to content</a>
@@ -67,18 +67,14 @@
 
     <!-- PROJECTS (first: it's what recruiters came for) -->
     <section class="section projects" id="projects">
-      <h2 class="section__title" data-i18n="projects.title">Projects</h2>
+      <nav class="crumbs" id="projectsCrumbs" aria-label="Breadcrumb" hidden></nav>
+      <h2 class="section__title" id="projectsTitle">Projects</h2>
       <p class="section__intro" data-i18n="projects.intro">Pick a topic to filter, or open a project for the full story.</p>
       <!-- The research themes, now as filters right where the projects are -->
       <div class="themes" id="themes" role="group" aria-label="Filter projects by theme"></div>
       <p class="themes__desc" id="themeDesc" aria-live="polite" hidden></p>
       <div class="projects__grid" id="projectGrid"></div>
-      <!-- Quiet shelf: the projects outside the top 3, one click from the case study -->
-      <div class="shelf" id="shelf" hidden>
-        <p class="shelf__label" id="shelfLabel"></p>
-        <div class="shelf__row" id="shelfRow"></div>
-      </div>
-      <button class="btn more-projects" id="moreProjects" type="button" hidden></button>
+      <a class="btn more-projects" id="moreProjects" href="#projects-all"></a>
     </section>
 
     <!-- STACK -->
@@ -202,13 +198,13 @@
   <!-- Project case study: full-screen view with its own link (#project-<id>) -->
   <dialog class="case" id="projectModal" aria-labelledby="modalTitle">
     <div class="case__bar">
-      <button class="case__back" type="button"><span aria-hidden="true">←</span> <span data-i18n="case.back">All projects</span></button>
+      <nav class="crumbs crumbs--case" id="caseCrumbs" aria-label="Breadcrumb"><ol></ol></nav>
       <button class="case__next" id="caseNext" type="button" hidden></button>
     </div>
     <div id="modalBody"></div>
   </dialog>
 
   <script src="logos.js?v=4"></script>
-  <script src="main.js?v=75"></script>
+  <script src="main.js?v=81"></script>
 </body>
 </html>
