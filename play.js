@@ -7,7 +7,7 @@ const PLAY_T = {
     nav: "Play", title: "Play", back: "Back", close: "Close", soundOn: "Turn sound on", soundOff: "Turn sound off",
     intro: "Tiny games, made for fun. More are on the way.",
     g1: ["Guess the Average", "How much beer does an Austrian drink? How many cups of tea a Turk? Guess the number, the closer the more points."],
-    best: "Best: {n}", play: "Play",
+    best: "Best: {n}", play: "Play", soon: "Soon", g2: "Tiny Orchestra", g3: "Tower of Babel",
     more: "Fun fact & source", answers: "Show my answers", q: "Question {i} of {n}", lock: "Lock in", next: "Next", finish: "See result",
     diff: { easy: "Easy", medium: "Medium", hard: "Hard" },
     you: "You", real: "Real", points: "+{n} / 100", off: "{p} off", exact: "Spot on!",
@@ -21,7 +21,7 @@ const PLAY_T = {
     nav: "Spielen", title: "Spielen", back: "Zurück", close: "Schließen", soundOn: "Ton einschalten", soundOff: "Ton ausschalten",
     intro: "Kleine Spiele, nur zum Spaß. Mehr folgt.",
     g1: ["Schätz den Durchschnitt", "Wie viel Bier trinkt ein Österreicher? Wie viele Tassen Tee ein Türke? Schätze die Zahl, je näher, desto mehr Punkte."],
-    best: "Bestwert: {n}", play: "Spielen",
+    best: "Bestwert: {n}", play: "Spielen", soon: "Bald", g2: "Mini-Orchester", g3: "Turmbau zu Babel",
     more: "Fun Fact & Quelle", answers: "Meine Antworten zeigen", q: "Frage {i} von {n}", lock: "Bestätigen", next: "Weiter", finish: "Ergebnis ansehen",
     diff: { easy: "Leicht", medium: "Mittel", hard: "Schwer" },
     you: "Du", real: "Echt", points: "+{n} / 100", off: "{p} daneben", exact: "Volltreffer!",
@@ -139,21 +139,50 @@ function renderPlay() {
   snd.setAttribute("aria-label", playMuted ? pt("soundOn") : pt("soundOff"));
   snd.setAttribute("aria-pressed", String(!playMuted));
   playBack.hidden = play.screen === "menu";
+  document.querySelector(".play-card").classList.toggle("is-menu", play.screen === "menu");
   if (play.screen === "menu") renderMenu();
   else if (play.screen === "q") renderQuestion();
   else renderEnd();
 }
 
+/* Menu: a neal.fun-style grid, one picture tile per game with just its title; the tile is the button. */
+const TILE_ART = {
+  guess: `<svg viewBox="0 0 80 80" width="100%" height="100%" focusable="false">
+    <text x="40" y="36" text-anchor="middle" class="pgame__q">?</text>
+    <line x1="14" y1="56" x2="66" y2="56" class="pgame__rail"/>
+    <line x1="14" y1="56" x2="32" y2="56" class="pgame__fill"/>
+    <line x1="32" y1="56" x2="52" y2="56" class="pgame__gap"/>
+    <circle cx="52" cy="56" r="7" class="pgame__real"/>
+    <circle cx="32" cy="56" r="7" class="pgame__you"/></svg>`,
+  orchestra: `<svg viewBox="0 0 80 80" width="100%" height="100%" focusable="false">
+    <rect x="16" y="38" width="9" height="26" rx="4.5" class="tile__bar tile__bar--a"/>
+    <rect x="29" y="22" width="9" height="42" rx="4.5" class="tile__bar tile__bar--b"/>
+    <rect x="42" y="30" width="9" height="34" rx="4.5" class="tile__bar tile__bar--c"/>
+    <rect x="55" y="16" width="9" height="48" rx="4.5" class="tile__bar tile__bar--d"/></svg>`,
+  tower: `<svg viewBox="0 0 80 80" width="100%" height="100%" focusable="false">
+    <rect x="22" y="54" width="36" height="12" rx="3" class="tile__blk tile__blk--a"/>
+    <rect x="27" y="41" width="28" height="12" rx="3" class="tile__blk tile__blk--b" transform="rotate(-4 41 47)"/>
+    <rect x="30" y="28" width="22" height="12" rx="3" class="tile__blk tile__blk--c" transform="rotate(5 41 34)"/>
+    <rect x="34" y="16" width="14" height="11" rx="3" class="tile__blk tile__blk--d" transform="rotate(-8 41 21)"/></svg>`
+};
+
 function renderMenu() {
   const best = bestScore();
   playBody.innerHTML = `
     <p class="play__intro">${esc(pt("intro"))}</p>
-    <div class="play__games">
-      <div class="pgame" id="pgameGuess">
-        <span class="pgame__icon" aria-hidden="true">🎯</span>
-        <span class="pgame__text"><b>${esc(pt("g1")[0])}</b><span>${esc(pt("g1")[1])}</span>
-          ${best ? `<small>${esc(pt("best").replace("{n}", fmtNum(best)))}</small>` : ""}</span>
-        <button type="button" class="btn btn--primary pgame__btn">${esc(pt("play"))} →</button>
+    <div class="pgrid">
+      <button type="button" class="ptile" id="pgameGuess">
+        <span class="ptile__art" aria-hidden="true">${TILE_ART.guess}</span>
+        <span class="ptile__title">${esc(pt("g1")[0])}</span>
+        ${best ? `<small class="ptile__best">${esc(pt("best").replace("{n}", fmtNum(best)))}</small>` : ""}
+      </button>
+      <div class="ptile ptile--soon" aria-disabled="true">
+        <span class="ptile__art" aria-hidden="true">${TILE_ART.orchestra}</span>
+        <span class="ptile__title">${esc(pt("g2"))}</span><small class="ptile__best">${esc(pt("soon"))}</small>
+      </div>
+      <div class="ptile ptile--soon" aria-disabled="true">
+        <span class="ptile__art" aria-hidden="true">${TILE_ART.tower}</span>
+        <span class="ptile__title">${esc(pt("g3"))}</span><small class="ptile__best">${esc(pt("soon"))}</small>
       </div>
     </div>`;
   document.getElementById("pgameGuess").addEventListener("click", () => { sfx.click(); startGame(); });
