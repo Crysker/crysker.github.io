@@ -18,7 +18,6 @@ const PROJECTS = [
   {
     id: "historia",
     themes: ["shared"],
-    featured: true,
     img: IMG + "historia.jpg",
     video: "JfwlEoEAzEo", // Gameplay Trailer
     gallery: [
@@ -124,7 +123,7 @@ const PROJECTS = [
     links: []
   },
 
-  /* Early work (early: true) – shown in "Where I started" as a timeline, not in the main grid.
+  /* Early work (early: true) – not listed on the page any more; the case studies still open via their direct links (#project-<id>).
      Images: "img" can be left out until there is one – the card then shows a placeholder. */
   {
     id: "nott",
@@ -161,15 +160,6 @@ const PROJECTS = [
   }
 ];
 
-const STACK = [
-  { id: "figma", logo: "figma" },
-  { id: "unity", logo: "unity" },
-  { id: "csharp", logo: "csharp" },
-  { id: "metaxr", logo: "meta" },
-  { id: "blender", logo: "blender" },
-  { id: "research", glyph: "UX" }
-];
-
 /* Skills from the CV. Items: [label, logoKey?] – labels starting with "@" are translated via I18N.skill */
 /* Character sheet: self-assessed skill points (1–5), [label, logoKey | null, points] */
 const STATS = [
@@ -180,7 +170,7 @@ const STATS = [
 /* Unrated skills as chips. Items: [label, logoKey?] – labels starting with "@" are translated via I18N.skill */
 const SKILLS = [
   { id: "perks", items: [["@research"], ["@a11y"], ["@ds"], ["@proto"], ["@webui"], ["VR / MR"], ["Hand Tracking"], ["Shared Spatial Anchors"], ["Netcode for GameObjects"], ["@3d"]] },
-  { id: "inventory", items: [["Framer", "framer"], ["Java", "java"], ["Slack", "slack"], ["MS Teams"], ["MS Office"]] },
+  { id: "inventory", items: [["Claude Code", "claude"], ["GitHub Copilot", "copilot"], ["Framer", "framer"], ["Java", "java"], ["Slack", "slack"], ["MS Teams", "teams"], ["MS Office", "office"]] },
   { id: "lang", items: [["@tr"], ["@de"], ["@en"], ["@fr"]] }
 ];
 
@@ -213,15 +203,11 @@ const I18N = {
     "explore.c.p": "Co-located multiplayer and mixed reality that connects digital content with real objects and real people in the same room.",
     "projects.title": "Projects",
     "projects.intro": "Pick a topic to filter, or open a project for the full story.",
-    "projects.more": "Show all projects (+{n})",
-    "projects.shelf": "More work", "projects.top": "Featured work",
-    "early.title": "My journey", "early.intro": "From my first browser game to award-winning VR, semester by semester.",
-    "early.more": "Show earlier work (+{n})", "early.now": "Today", "early.intern.t": "UX/UI internship · EBCONT", "early.intern.p": "Design systems and prototypes in real product teams (see Experience).",
+    "projects.more": "Show all projects (+{n})", "projects.less": "Show fewer projects",
+    "projects.shelf": "More work",
     themes: { all: "All", sight: "Beyond sight", abilities: "Diverse abilities", shared: "Shared realities", games: "Games", jams: "Jams & hackathons" },
     "games.t": "Games", "games.p": "Complete, playable games: from a deckbuilder on itch.io to VR and XR games with bosses, trash-dumping goblins and space junk.",
     "jams.t": "Game jams & hackathons", "jams.p": "A weekend, a team, one idea: where I try the wild stuff fast.",
-    "tl.s5": "5th semester · 2023",
-    "tl.bachelor": "Bachelor · Creative Computing · 2021–2024", "tl.master": "Master · Interactive Technologies (AR/VR) · since 2024",
     "thesis.title": "Bachelor's thesis",
     "thesis.kicker": "BSc Creative Computing · USTP · 2024",
     "thesis.name": "Learning nature survival skills in a playful VR world",
@@ -244,8 +230,6 @@ const I18N = {
     "exp.bsc.t": "BSc Creative Computing · USTP",
     "exp.bsc.p": "Programming, UX/UI, web & mobile, game development and XR.",
     "stack.title": "Stack & skills",
-    "stack.intro": "Hover over or tap a card to flip it.",
-    "stack.hint": "Hover or tap",
     "nav.menu": "Menu",
     skillGroups: { perks: "Perks", inventory: "Also in the inventory", lang: "Languages" },
     sheet: {
@@ -257,14 +241,6 @@ const I18N = {
       webui: "Web & UI Design", ds: "Design Systems", proto: "Prototyping & Wireframing (low → high fidelity)",
       research: "UX Research & User Testing", a11y: "Accessibility", "3d": "3D Modelling & 3D Printing",
       tr: "Turkish <small>native</small>", de: "German <small>native</small>", en: "English <small>C1</small>", fr: "French <small>B2</small>"
-    },
-    stack: {
-      figma: ["Figma", "My daily driver for design systems, prototypes and handoff. I once pushed its variables feature so far that Figma support confirmed I'd found a bug."],
-      unity: ["Unity", "Six years, from my first games in high school to co-located VR multiplayer with hand tracking and spatial anchors."],
-      csharp: ["C#", "My main language: gameplay systems, interaction logic and networked multiplayer with Netcode for GameObjects."],
-      metaxr: ["Meta XR SDK", "Hand tracking, passthrough, Shared Spatial Anchors and Meta Avatars on Quest 3."],
-      blender: ["Blender", "3D modelling, UV mapping and simple animations, plus prep for 3D printing."],
-      research: ["UX Research", "User testing, feature evaluation and accessibility audits, turned into concrete design decisions."]
     },
     "contact.title": "Let's build something<br><em>people remember.</em>",
     "contact.book": "Book a 30-min call",
@@ -516,15 +492,11 @@ const I18N = {
     "explore.c.p": "Co-located Multiplayer und Mixed Reality, die digitale Inhalte mit echten Objekten und echten Menschen im selben Raum verbinden.",
     "projects.title": "Projekte",
     "projects.intro": "Wähl ein Thema zum Filtern oder öffne ein Projekt für die ganze Geschichte.",
-    "projects.more": "Alle Projekte zeigen (+{n})",
-    "projects.shelf": "Mehr Arbeiten", "projects.top": "Ausgewählte Arbeiten",
-    "early.title": "Mein Weg", "early.intro": "Vom ersten Browserspiel bis zur preisgekrönten VR, Semester für Semester.",
-    "early.more": "Frühere Arbeiten zeigen (+{n})", "early.now": "Heute", "early.intern.t": "UX/UI-Praktikum · EBCONT", "early.intern.p": "Design-Systeme und Prototypen in echten Produktteams (siehe Werdegang).",
+    "projects.more": "Alle Projekte zeigen (+{n})", "projects.less": "Weniger Projekte zeigen",
+    "projects.shelf": "Mehr Arbeiten",
     themes: { all: "Alle", sight: "Mehr als Sehen", abilities: "Diverse Fähigkeiten", shared: "Geteilte Realitäten", games: "Games", jams: "Jams & Hackathons" },
     "games.t": "Games", "games.p": "Fertige, spielbare Games: vom Deckbuilder auf itch.io bis zu VR- und XR-Spielen mit Bossen, müllenden Goblins und Weltraumschrott.",
     "jams.t": "Game Jams & Hackathons", "jams.p": "Ein Wochenende, ein Team, eine Idee: Hier probiere ich die verrückten Sachen schnell aus.",
-    "tl.s5": "5. Semester · 2023",
-    "tl.bachelor": "Bachelor · Creative Computing · 2021–2024", "tl.master": "Master · Interactive Technologies (AR/VR) · seit 2024",
     "thesis.title": "Bachelorarbeit",
     "thesis.kicker": "BSc Creative Computing · USTP · 2024",
     "thesis.name": "Überlebenstechniken in der Natur spielerisch in VR lernen",
@@ -547,8 +519,6 @@ const I18N = {
     "exp.bsc.t": "BSc Creative Computing · USTP",
     "exp.bsc.p": "Programmierung, UX/UI, Web & Mobile, Game Development und XR.",
     "stack.title": "Stack & Skills",
-    "stack.intro": "Fahr mit der Maus über eine Karte oder tipp darauf, um sie umzudrehen.",
-    "stack.hint": "Hovern oder tippen",
     "nav.menu": "Menü",
     skillGroups: { perks: "Perks", inventory: "Außerdem im Inventar", lang: "Sprachen" },
     sheet: {
@@ -560,14 +530,6 @@ const I18N = {
       webui: "Web & UI Design", ds: "Design-Systeme", proto: "Prototyping & Wireframing (Low → High Fidelity)",
       research: "UX Research & User Testing", a11y: "Barrierefreiheit", "3d": "3D-Modellierung & 3D-Druck",
       tr: "Türkisch <small>Muttersprache</small>", de: "Deutsch <small>Muttersprache</small>", en: "Englisch <small>C1</small>", fr: "Französisch <small>B2</small>"
-    },
-    stack: {
-      figma: ["Figma", "Mein tägliches Werkzeug für Design-Systeme, Prototypen und Übergaben. Mit dem Variables-Feature habe ich Figma einmal so ausgereizt, dass der Support einen Bug bestätigt hat."],
-      unity: ["Unity", "Sechs Jahre, von meinen ersten Spielen in der Schule bis zu Co-located-VR-Multiplayer mit Hand Tracking und Spatial Anchors."],
-      csharp: ["C#", "Meine Hauptsprache: Gameplay-Systeme, Interaktionslogik und Netzwerk-Multiplayer mit Netcode for GameObjects."],
-      metaxr: ["Meta XR SDK", "Hand Tracking, Passthrough, Shared Spatial Anchors und Meta Avatars auf der Quest 3."],
-      blender: ["Blender", "3D-Modellierung, UV-Mapping und einfache Animationen, plus Vorbereitung für den 3D-Druck."],
-      research: ["UX Research", "User Testing, Feature-Evaluierung und Accessibility-Analysen, übersetzt in konkrete Designentscheidungen."]
     },
     "contact.title": "Lass uns etwas bauen,<br><em>das in Erinnerung bleibt.</em>",
     "contact.book": "30-Min-Call buchen",
@@ -823,7 +785,6 @@ function applyLang() {
   applyMode();
   renderThemes();
   renderProjects();
-  renderStack();
   renderSkills();
   renderTrophies();
   if (typeof renderPlay === "function") renderPlay();
@@ -966,7 +927,7 @@ document.getElementById("themes").addEventListener("click", (e) => {
 
 /* Main grid order (most hyped first) and how many show before "Show all" */
 const ORDER = ["historia", "grim", "paper", "cthulhu", "sounds", "thesis", "aroom", "ocean", "hue", "deepspace"];
-const FIRST_SHOWN = 3; // featured card + two cards beneath
+const FIRST_SHOWN = 3; // the three highlighted projects (the rest sits in the shelf until "Show all")
 let showAllProjects = false;
 
 function renderProjects() {
@@ -980,16 +941,14 @@ function renderProjects() {
   // the full list starts short; a filter always shows everything that matches
   const limited = !active && !showAllProjects && matching.length > FIRST_SHOWN;
   const shown = limited ? matching.slice(0, FIRST_SHOWN) : matching;
-  grid.classList.toggle("is-filtered", theme !== "all"); // filtered: equal cards, no featured layout
-  const topLabel = document.getElementById("topLabel");
-  topLabel.hidden = !limited;
-  topLabel.textContent = t("projects.top");
-  grid.classList.toggle("is-top", limited); // short list: 2 columns so the last row has no gap
+  grid.classList.toggle("is-filtered", theme !== "all"); // filtered: no highlighted top three
+  // first screen stays calm: the topic filters only appear once someone asks for more (Show all, or a filter is active)
+  document.getElementById("themes").hidden = limited;
   // compact cards: the long description and tech tags live on the project page
-  grid.innerHTML = shown.map((pr) => {
+  grid.innerHTML = shown.map((pr, i) => {
     const x = P[pr.id];
     return `
-      <button type="button" class="p-card${pr.featured ? " p-card--featured" : ""}" data-id="${pr.id}"
+      <button type="button" class="p-card${!active && i < FIRST_SHOWN ? " p-card--top" : ""}" data-id="${pr.id}"
               aria-label="${esc(t("ui").open)}: ${esc(x.title)}">
         <div class="p-card__media">
           ${pic(pr)}
@@ -1001,15 +960,16 @@ function renderProjects() {
           <p class="p-card__kicker">${esc(x.kicker)}</p>
           <h3 class="p-card__title">${esc(x.title)}</h3>
           ${filled(x.highlight) ? `<p class="p-card__highlight">${esc(x.highlight)}</p>` : ""}
-          ${pr.featured && theme === "all" ? `<p class="p-card__summary">${esc(x.summary)}</p>` : ""}
           ${filled(x.role) ? `<p class="p-card__role"><b>${esc(t("ui").role)}:</b> ${esc(x.role)}</p>` : ""}
           <span class="p-card__more" aria-hidden="true">${esc(t("ui").open)} →</span>
         </div>
       </button>`;
   }).join("");
   const more = document.getElementById("moreProjects");
-  more.hidden = !limited;
-  more.textContent = t("projects.more").replace("{n}", matching.length - FIRST_SHOWN);
+  // one button toggles between the short list and everything (a topic filter shows its matches without it)
+  const canCollapse = !active && showAllProjects && matching.length > FIRST_SHOWN;
+  more.hidden = !(limited || canCollapse);
+  more.textContent = limited ? t("projects.more").replace("{n}", matching.length - FIRST_SHOWN) : t("projects.less");
   // quiet shelf under the top projects: the rest, one click from the case study
   const shelf = document.getElementById("shelf");
   shelf.hidden = !limited;
@@ -1019,7 +979,6 @@ function renderProjects() {
       <span class="shelf__img">${pic(pr)}</span>
       <span class="shelf__title">${esc(P[pr.id].title)}</span>
     </button>`).join("") : "";
-  renderEarly();
 }
 document.getElementById("shelfRow").addEventListener("click", (e) => {
   const chip = e.target.closest(".shelf__chip");
@@ -1028,55 +987,16 @@ document.getElementById("shelfRow").addEventListener("click", (e) => {
   openProject(chip.dataset.id);
 });
 document.getElementById("moreProjects").addEventListener("click", () => {
+  if (showAllProjects) { // collapse again and go back to the top of the section
+    showAllProjects = false;
+    renderProjects();
+    document.getElementById("projects").scrollIntoView({ block: "start" });
+    return;
+  }
   showAllProjects = true;
   const firstNew = FIRST_SHOWN;
   renderProjects();
   document.querySelectorAll("#projectGrid .p-card")[firstNew]?.focus({ preventScroll: true }); // keyboard users land on the new cards
-});
-
-/* "My journey" – one step per semester, from the first browser game to the master's.
-   Steps point at projects (semester + growth line come from their texts); hidden projects are skipped. */
-const JOURNEY = [ // newest first
-  { divider: "tl.master" },
-  { id: "historia", today: true }, { id: "aroom" }, { id: "sounds" }, { id: "cthulhu" },
-  { divider: "tl.bachelor" },
-  { id: "thesis" }, { id: "hue" },
-  { intern: true, when: "tl.s5", earlier: true },
-  { id: "ocean", earlier: true }, { id: "memeit", earlier: true }, { id: "nftrade", earlier: true }, { id: "nott", earlier: true }
-];
-/* One plain row per project, like an archive table: when · name + what it is · tech. A click opens the case study. */
-let showEarlier = false;
-function renderEarly() {
-  const P = I18N[lang].p;
-  const visible = visibleProjects();
-  const all = JOURNEY.filter((s) => s.divider || s.intern || visible.some((p) => p.id === s.id));
-  const hiddenCount = showEarlier ? 0 : all.filter((s) => s.earlier).length;
-  const steps = showEarlier ? all : all.filter((s) => !s.earlier);
-  document.getElementById("early").hidden = !steps.length;
-  document.getElementById("earlyList").innerHTML = steps.map((s) => {
-    if (s.divider) return `
-    <li class="journey__divider"><span>${esc(t(s.divider))}</span></li>`;
-    if (s.intern) return `
-    <li><a class="jrow" href="#experience">
-      <span class="jrow__when"><span class="jw-full">${esc(t(s.when))}</span><span class="jw-year">${esc(t(s.when).split(" · ").pop())}</span></span>
-      <span class="jrow__main"><b class="jrow__title">${esc(t("early.intern.t"))}</b><span class="jrow__kind">${esc(t("early.intern.p"))}</span></span>
-    </a></li>`;
-    const pr = PROJECTS.find((p) => p.id === s.id), x = P[s.id];
-    return `
-    <li><button type="button" class="jrow${s.today ? " is-today" : ""}" data-id="${s.id}" aria-label="${esc(t("ui").open)}: ${esc(x.title)}">
-      <span class="jrow__when">${s.today ? esc(t("early.now")) : `<span class="jw-full">${esc(x.semester)}</span><span class="jw-year">${esc(x.semester.split(" · ").pop())}</span>`}</span>
-      <span class="jrow__main"><b class="jrow__title">${esc(x.title)}</b><span class="jrow__kind">${esc(x.kicker)}</span></span>
-      <span class="jrow__tags">${(pr.tags || []).slice(0, 4).map((g) => `<span>${esc(g)}</span>`).join("")}</span>
-    </button></li>`;
-  }).join("") + (hiddenCount ? `
-    <li class="journey__more"><button type="button" class="btn more-projects" id="earlierBtn">${esc(t("early.more").replace("{n}", hiddenCount))}</button></li>` : "");
-}
-document.getElementById("earlyList").addEventListener("click", (e) => {
-  if (e.target.closest("#earlierBtn")) { showEarlier = true; renderEarly(); return; }
-  const card = e.target.closest("button.jrow");
-  if (!card) return;
-  lastCardId = card.dataset.id;
-  openProject(card.dataset.id);
 });
 
 const modal = document.getElementById("projectModal");
@@ -1232,7 +1152,7 @@ function finishClose() {
   modalBody.innerHTML = ""; // stops video
   pushedHistory = false;
   // put keyboard focus back on the card the visitor came from
-  document.querySelector(`.p-card[data-id="${lastCardId}"], .shelf__chip[data-id="${lastCardId}"], .jrow[data-id="${lastCardId}"]`)?.focus({ preventScroll: true });
+  document.querySelector(`.p-card[data-id="${lastCardId}"], .shelf__chip[data-id="${lastCardId}"]`)?.focus({ preventScroll: true });
 }
 function closeProject() {
   if (pushedHistory) return history.back(); // popstate below finishes the close
@@ -1387,23 +1307,6 @@ addEventListener("popstate", () => {
   else if (modal.open) finishClose();
 });
 
-/* ============ Stack flip cards ============ */
-function renderStack() {
-  const S = t("stack");
-  document.getElementById("stackGrid").innerHTML = STACK.map((s) => `
-    <button type="button" class="flip" aria-pressed="false">
-      <span class="flip__inner">
-        <span class="flip__face flip__front">
-          <span class="flip__mono${s.glyph ? " flip__mono--glyph" : ""}">${s.logo ? `<img src="${LOGOS[s.logo]}" alt="">` : s.glyph}</span>
-          <span>
-            <span class="flip__name">${esc(S[s.id][0])}</span><br>
-            <span class="flip__hint">${esc(t("stack.hint"))}</span>
-          </span>
-        </span>
-        <span class="flip__face flip__back">${esc(S[s.id][1])}</span>
-      </span>
-    </button>`).join("");
-}
 function renderSkills() {
   const G = t("skillGroups"), K = t("skill"), S = t("sheet");
   // RPG-style character sheet: 5 diamond pips per skill, they light up one by one when the section scrolls in
@@ -1444,11 +1347,6 @@ function renderSkills() {
     </div>`).join("");
   document.getElementById("skills").innerHTML = sheet + chips;
 }
-
-document.getElementById("stackGrid").addEventListener("click", (e) => {
-  const card = e.target.closest(".flip");
-  if (card) card.setAttribute("aria-pressed", card.getAttribute("aria-pressed") === "true" ? "false" : "true");
-});
 
 
 /* ============ Reveal on scroll ============ */
@@ -1492,7 +1390,7 @@ document.querySelectorAll('a[href="#top"]').forEach((a) => a.addEventListener("c
 
 /* ============ Highlight the menu item of the section in view ============ */
 // Sections without their own menu item count towards the closest related one
-const NAV_FOR = { projects: "projects", experience: "experience", stack: "experience", contact: "contact" };
+const NAV_FOR = { projects: "projects", stack: "projects", experience: "experience", contact: "contact" };
 const navLinks = [...document.querySelectorAll('.nav__links a[href^="#"]')];
 const spy = "IntersectionObserver" in window ? new IntersectionObserver((entries) => {
   entries.forEach((en) => {
@@ -1595,7 +1493,7 @@ function unlock(id) {
 function trackProjectOpened(id) {
   unlock("first");
   openedProjects.add(id);
-  if (visibleProjects().every((p) => openedProjects.has(p.id))) unlock("all");
+  if (visibleProjects().filter((p) => !p.early).every((p) => openedProjects.has(p.id))) unlock("all");
 }
 
 /* Secret: ↑ ↑ ↓ ↓ ← → ← → B A */
