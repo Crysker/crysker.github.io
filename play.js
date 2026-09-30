@@ -234,7 +234,7 @@ function applyReveal(animate) {
   if (animate) requestAnimationFrame(() => requestAnimationFrame(() => track.classList.add("is-revealed")));
   else track.classList.add("is-revealed");
   const pct = Math.round(Math.abs(r.guess / q.value - 1) * 100);
-  const offText = r.score >= 99 ? pt("exact") : pt("off").replace("{p}", (r.guess > q.value ? "+" : "−") + pct + "%");
+  const offText = r.score >= 100 ? pt("exact") : pt("off").replace("{p}", (r.guess > q.value ? "+" : "−") + pct + "%");
   // the real number hangs right under the orange dot; near the edges the label leans inward so it stays inside the window
   const lbl = document.getElementById("pqRealLbl");
   lbl.innerHTML = `${esc(pt("real"))}: <b>${esc(fmtNum(q.value, q.dec))} ${esc(q.unit[lang])}</b>`;
