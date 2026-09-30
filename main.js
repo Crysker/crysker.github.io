@@ -216,8 +216,9 @@ const I18N = {
     "projects.title": "Projects",
     "projects.intro": "Pick a topic to filter, or open a project for the full story.",
     "projects.more": "Show all projects (+{n})",
+    "projects.shelf": "More work",
     "early.title": "My journey", "early.intro": "From my first browser game to award-winning VR, semester by semester.",
-    "early.now": "Today", "early.intern.t": "UX/UI internship · EBCONT", "early.intern.p": "Design systems and prototypes in real product teams (see Experience).",
+    "early.more": "Show earlier work (+{n})", "early.now": "Today", "early.intern.t": "UX/UI internship · EBCONT", "early.intern.p": "Design systems and prototypes in real product teams (see Experience).",
     themes: { all: "All", sight: "Beyond sight", abilities: "Diverse abilities", shared: "Shared realities", games: "Games", jams: "Jams & hackathons" },
     "games.t": "Games", "games.p": "Complete, playable games: from a deckbuilder on itch.io to VR and XR games with bosses, trash-dumping goblins and space junk.",
     "jams.t": "Game jams & hackathons", "jams.p": "A weekend, a team, one idea: where I try the wild stuff fast.",
@@ -316,9 +317,9 @@ const I18N = {
         badge: "🏆 1st place ×2",
         summary: "Three players, one room, Roman St. Pölten: the governor is expecting guests from Rome, and together you have to bake the festive bread for them in a 1st-century bakery.",
         duration: "6 months, still in development",
-        role: "Development, 3D modelling and testing: a bit of everything",
-        challenge: "Make three people in the same physical room feel like they share one virtual world, and design puzzles that genuinely require collaboration.",
-        approach: "Every player gets one tool (an axe, a peel or flint and steel), so nobody can solve the room alone. Hand tracking replaces controllers, Shared Spatial Anchors align everyone's world, and Meta Avatars give each player a body.",
+        role: "A bit of everything: UI, 3D modelling, level design, puzzles, Meta Avatars, bug fixing, testing and evaluation",
+        challenge: "Make three people in the same physical room feel like they share one virtual world. Multiplayer and the shared space were the biggest struggle, especially on a Wi-Fi that could barely carry several Quest 3 headsets at once. On top of that, the puzzles had to require real collaboration without getting too hard, and every interaction had to feel intuitive with bare hands.",
+        approach: "Every player gets one tool (an axe, a peel or flint and steel), so nobody can solve the room alone. Hand tracking replaces controllers, Shared Spatial Anchors align everyone's world, and Meta Avatars give each player a body. One teammate built most of the advanced scripting and the multiplayer, another did project management and some coding and helped with testing, and the first and I shared the evaluation. I designed the UI, modelled and built the levels, implemented the avatars and designed and fixed the puzzles. The two of them did the audio. There was no shortcut for the networking and the puzzles: we tested and fixed, again and again, with around 50 players so far.",
         result: ["1st place: 12th Interactive Digital Media Student Contest 2026", "1st place: USTP Projektvernissage 2025", "Shown at the European Researchers' Night", "Coming up: Lange Nacht der Forschung"],
         learned: "Tracking struggles with reflective surfaces, so we learned to design the physical test space as carefully as the virtual one."
       },
@@ -342,10 +343,10 @@ const I18N = {
         highlight: "Real scents synced to gameplay on Quest 3",
         summary: "Collect mushrooms in a dangerous forest and actually smell it. Built for Meta Quest 3 with an olfactory device that releases real scents.",
         duration: "Game jam",
-        role: "UI, development and 3D modelling",
-        challenge: "Add a whole new sense to VR within the time limit of a game jam.",
-        approach: "The game triggers scents from an olfactory device in sync with what happens in the forest, turning smell into part of the gameplay.",
-        result: "Submitted to the Global Game Jam 2026.",
+        role: "Level design, Unity setup, UI (designed in Figma, imported into Unity) and UX tuning of the scents",
+        challenge: "Smell has hardly ever been part of a game. We had to design it as real gameplay, not a gimmick: which scent, where, how strong and when, all within the time limit of a game jam.",
+        approach: "We used the Omara, a small scent device with cartridges for 16 different smells. Following its official tutorial, scents are triggered by colliders in the forest: each one defines what is sprayed and how strongly, and the closer you get to the collider's centre, the stronger the smell gets. I built the level around these scent zones and tuned them until they felt right to the player.",
+        result: "A playable VR forest you can smell, submitted to the Global Game Jam 2026. Playtesters found it cool and funny, because smelling is something you never get to do in a game.",
         learned: "Smell is powerful, and very easy to overdo. Timing matters as much as the scent itself."
       },
       paper: {
@@ -355,10 +356,10 @@ const I18N = {
         summary: "A mixed reality origami coach: a YOLO model recognises your current fold in real time, and a 3D animation shows the next step right on your paper.",
         duration: "48 hours",
         role: "UI, plus the Roboflow pipeline: annotating the dataset and training the model",
-        challenge: "Translating instructions from a screen onto the paper in front of you is frustrating. Could MR guide you step by step instead?",
-        approach: "We built a dataset of folding steps for an origami heart, trained a YOLO model with Roboflow and connected its predictions to a Quest 3 app that shows animated 3D models of the next fold.",
-        result: "A working prototype after 48 hours, with plans to support more origami designs.",
-        learned: "Telling nearly identical fold stages apart is the real challenge: data quality beats model size."
+        challenge: "Folding from a screen is frustrating: you look at a video, then at your paper, then back. Could MR put the next fold right onto the paper? That needs a model that reliably tells which fold step you are on, trained on data we had to collect ourselves within 48 hours, and then wired into a Meta Quest app in Unity.",
+        approach: "We photographed every folding step of an origami heart, split across the team: A teammate and I took the pictures of every step and I annotated them in Roboflow, one teammate built the Unity integration, another handled the machine learning, and I designed the UI. When we ran out of Roboflow credits, the two of us trained the model on our own accounts. A YOLO model recognises the current step, and the Quest 3 app plays an animated 3D model of the next fold until it sees that fold on your paper.",
+        result: "A full pipeline in 48 hours, from photos to a Quest app that animates the next fold, and probably one of the biggest datasets for heart origami steps. The model was overfitted and did not detect as reliably as we wanted, but we now know exactly what to fix.",
+        learned: "We shot everything on plain white paper. A gridded, coloured sheet would have made the fold steps far easier to tell apart. Data quality beats model size, and the set-up of the shoot is part of the data."
       },
       hue: {
         title: "Hue of Hope",
@@ -516,8 +517,9 @@ const I18N = {
     "projects.title": "Projekte",
     "projects.intro": "Wähl ein Thema zum Filtern oder öffne ein Projekt für die ganze Geschichte.",
     "projects.more": "Alle Projekte zeigen (+{n})",
+    "projects.shelf": "Mehr Arbeiten",
     "early.title": "Mein Weg", "early.intro": "Vom ersten Browserspiel bis zur preisgekrönten VR, Semester für Semester.",
-    "early.now": "Heute", "early.intern.t": "UX/UI-Praktikum · EBCONT", "early.intern.p": "Design-Systeme und Prototypen in echten Produktteams (siehe Werdegang).",
+    "early.more": "Frühere Arbeiten zeigen (+{n})", "early.now": "Heute", "early.intern.t": "UX/UI-Praktikum · EBCONT", "early.intern.p": "Design-Systeme und Prototypen in echten Produktteams (siehe Werdegang).",
     themes: { all: "Alle", sight: "Mehr als Sehen", abilities: "Diverse Fähigkeiten", shared: "Geteilte Realitäten", games: "Games", jams: "Jams & Hackathons" },
     "games.t": "Games", "games.p": "Fertige, spielbare Games: vom Deckbuilder auf itch.io bis zu VR- und XR-Spielen mit Bossen, müllenden Goblins und Weltraumschrott.",
     "jams.t": "Game Jams & Hackathons", "jams.p": "Ein Wochenende, ein Team, eine Idee: Hier probiere ich die verrückten Sachen schnell aus.",
@@ -616,9 +618,9 @@ const I18N = {
         badge: "🏆 2× 1. Platz",
         summary: "Drei Spieler:innen, ein Raum, das römische St. Pölten: Der Statthalter bekommt Besuch aus Rom, und ihr müsst gemeinsam in einer Bäckerei aus dem 1. Jahrhundert das Festtagsbrot für seine Gäste backen.",
         duration: "6 Monate, wird weiterentwickelt",
-        role: "Entwicklung, 3D-Modellierung und Testing: ein bisschen von allem",
-        challenge: "Drei Menschen im selben physischen Raum sollen das Gefühl haben, eine gemeinsame virtuelle Welt zu teilen, mit Rätseln, die echte Zusammenarbeit erfordern.",
-        approach: "Jede Person bekommt ein Werkzeug (Axt, Brotschieber oder Feuerstein), niemand kann den Raum allein lösen. Hand Tracking ersetzt Controller, Shared Spatial Anchors richten die Welten aneinander aus, Meta Avatars geben allen einen Körper.",
+        role: "Ein bisschen von allem: UI, 3D-Modellierung, Level Design, Rätsel, Meta Avatars, Bugfixing, Testing und Evaluierung",
+        challenge: "Drei Menschen im selben physischen Raum sollen das Gefühl haben, eine gemeinsame virtuelle Welt zu teilen. Multiplayer und der geteilte Raum waren die größte Hürde, besonders mit einem WLAN, das mehrere Quest 3 kaum gleichzeitig tragen konnte. Dazu sollten die Rätsel echte Zusammenarbeit erfordern, ohne zu schwer zu werden, und jede Interaktion sollte sich mit bloßen Händen intuitiv anfühlen.",
+        approach: "Jede Person bekommt ein Werkzeug (Axt, Brotschieber oder Feuerstein), niemand kann den Raum allein lösen. Hand Tracking ersetzt Controller, Shared Spatial Anchors richten die Welten aneinander aus, Meta Avatars geben allen einen Körper. Ein Teamkollege hat den Großteil des fortgeschrittenen Scriptings und den Multiplayer gebaut, ein anderer hat Projektmanagement und etwas Code übernommen und beim Testen geholfen, die Evaluierung haben der erste und ich gemeinsam gemacht. Ich habe die UI gestaltet, Levels modelliert und gebaut, die Avatars umgesetzt und die Rätsel entworfen und gefixt. Audio haben die beiden gemacht. Für Netzwerk und Rätsel gab es keine Abkürzung: Wir haben immer wieder getestet und gefixt, bisher mit rund 50 Spieler:innen.",
         result: ["1. Platz: 12th Interactive Digital Media Student Contest 2026", "1. Platz: Projektvernissage der USTP 2025", "Präsentiert bei der European Researchers' Night", "Demnächst: Lange Nacht der Forschung"],
         learned: "Tracking hat Probleme mit spiegelnden Oberflächen, deshalb haben wir gelernt, den physischen Testraum genauso sorgfältig zu gestalten wie den virtuellen."
       },
@@ -642,10 +644,10 @@ const I18N = {
         highlight: "Echte Gerüche, synchron zum Gameplay auf der Quest 3",
         summary: "Sammle Pilze in einem gefährlichen Wald und rieche ihn wirklich. Für Meta Quest 3 mit einem Duftgerät, das echte Gerüche abgibt.",
         duration: "Game Jam",
-        role: "UI, Entwicklung und 3D-Modellierung",
-        challenge: "In der kurzen Zeit eines Game Jams einen ganz neuen Sinn in VR einbinden.",
-        approach: "Das Spiel löst passend zum Geschehen im Wald Gerüche über ein Duftgerät aus. Geruch wird Teil des Gameplays.",
-        result: "Eingereicht beim Global Game Jam 2026.",
+        role: "Level Design, Unity-Setup, UI (in Figma gestaltet und in Unity importiert) und UX-Feintuning der Gerüche",
+        challenge: "Geruch war in Spielen bisher kaum ein Thema. Wir mussten ihn als echtes Gameplay gestalten statt als Gimmick: welcher Duft, wo, wie stark und wann, und das in der kurzen Zeit eines Game Jams.",
+        approach: "Wir haben das Omara verwendet, ein kleines Duftgerät mit Kartuschen für 16 verschiedene Gerüche. Nach dem offiziellen Tutorial werden Düfte über Collider im Wald ausgelöst: Jeder legt fest, was versprüht wird und wie stark, und je näher man dem Mittelpunkt des Colliders kommt, desto intensiver wird der Geruch. Ich habe das Level um diese Duftzonen herum gebaut und sie so lange abgestimmt, bis sie sich für Spielende richtig anfühlten.",
+        result: "Ein spielbarer VR-Wald, den man riechen kann, eingereicht beim Global Game Jam 2026. Die Playtester fanden es cool und lustig, weil man in einem Spiel sonst nie etwas riecht.",
         learned: "Geruch ist mächtig und schnell zu viel. Timing ist genauso wichtig wie der Duft selbst."
       },
       paper: {
@@ -655,10 +657,10 @@ const I18N = {
         summary: "Ein Mixed-Reality-Origami-Coach: Ein YOLO-Modell erkennt deinen aktuellen Faltschritt in Echtzeit, eine 3D-Animation zeigt den nächsten direkt auf deinem Papier.",
         duration: "48 Stunden",
         role: "UI sowie die Roboflow-Pipeline: Annotation des Datensatzes und Training des Modells",
-        challenge: "Anleitungen vom Bildschirm aufs Papier zu übertragen ist mühsam. Kann MR stattdessen Schritt für Schritt führen?",
-        approach: "Wir haben einen Datensatz mit Faltschritten für ein Origami-Herz erstellt, ein YOLO-Modell mit Roboflow trainiert und die Vorhersagen mit einer Quest-3-App verbunden, die den nächsten Schritt animiert zeigt.",
-        result: "Ein funktionierender Prototyp nach 48 Stunden, mit Plänen für weitere Origami-Modelle.",
-        learned: "Fast identische Faltschritte zu unterscheiden ist die eigentliche Herausforderung: Datenqualität schlägt Modellgröße."
+        challenge: "Falten nach Bildschirm ist mühsam: Video anschauen, aufs Papier schauen, wieder zurück. Kann MR den nächsten Falz direkt aufs Papier legen? Dafür braucht es ein Modell, das zuverlässig erkennt, bei welchem Schritt man gerade ist, trainiert mit Daten, die wir in 48 Stunden selbst sammeln mussten, und danach in eine Meta-Quest-App in Unity eingebunden.",
+        approach: "Wir haben jeden Faltschritt eines Origami-Herzens fotografiert, im Team aufgeteilt: Ein Teamkollege und ich haben jeden Schritt fotografiert und ich habe alles in Roboflow annotiert, ein Teamkollege hat die Unity-Integration gebaut, ein weiterer das Machine Learning übernommen, und ich habe die UI gestaltet. Als uns die Roboflow-Credits ausgingen, haben wir beide das Modell auf unseren eigenen Accounts trainiert. Ein YOLO-Modell erkennt den aktuellen Schritt, und die Quest-3-App spielt ein animiertes 3D-Modell des nächsten Falzes ab, bis sie diesen auf deinem Papier erkennt.",
+        result: "Eine komplette Pipeline in 48 Stunden, vom Foto bis zur Quest-App, die den nächsten Falz animiert, und wohl einer der größten Datensätze für Herz-Origami-Schritte. Das Modell war überangepasst und erkannte nicht so zuverlässig wie gewünscht, aber wir wissen jetzt genau, was zu verbessern ist.",
+        learned: "Wir haben alles auf glattem weißem Papier fotografiert. Ein kariertes, farbiges Blatt hätte die Faltschritte viel leichter unterscheidbar gemacht. Datenqualität schlägt Modellgröße, und der Aufbau des Fotoshootings gehört zu den Daten."
       },
       hue: {
         title: "Hue of Hope",
@@ -815,6 +817,7 @@ function applyLang() {
   document.getElementById("langToggle").setAttribute(
     "aria-label", lang === "en" ? "Auf Deutsch umschalten" : "Switch to English"
   );
+  applyMode();
   renderThemes();
   renderProjects();
   renderStack();
@@ -829,6 +832,27 @@ document.getElementById("langToggle").addEventListener("click", () => {
   try { localStorage.setItem("lang", lang); } catch (e) {}
   applyLang();
 });
+
+/* ============ Light / dark ============
+   No choice yet = follow the system; the button then stores an explicit choice. */
+const themeBtn = document.getElementById("themeToggle");
+const systemDark = window.matchMedia("(prefers-color-scheme: dark)");
+function applyMode() {
+  const explicit = document.documentElement.dataset.theme;
+  const dark = explicit ? explicit === "dark" : systemDark.matches;
+  document.documentElement.dataset.mode = dark ? "dark" : "light";
+  themeBtn.setAttribute("aria-label", lang === "en"
+    ? (dark ? "Switch to light mode" : "Switch to dark mode")
+    : (dark ? "Zum hellen Modus wechseln" : "Zum dunklen Modus wechseln"));
+}
+themeBtn.addEventListener("click", () => {
+  const next = document.documentElement.dataset.mode === "dark" ? "light" : "dark";
+  document.documentElement.dataset.theme = next;
+  try { localStorage.setItem("theme", next); } catch (e) {}
+  applyMode();
+});
+systemDark.addEventListener("change", applyMode);
+applyMode();
 
 /* ============ Mobile menu ============ */
 const nav = document.querySelector(".nav");
@@ -918,7 +942,7 @@ document.getElementById("themes").addEventListener("click", (e) => {
 
 /* Main grid order (most hyped first) and how many show before "Show all" */
 const ORDER = ["historia", "grim", "paper", "cthulhu", "sounds", "thesis", "aroom", "ocean", "hue", "deepspace"];
-const FIRST_SHOWN = 4; // featured card + one row of three
+const FIRST_SHOWN = 3; // featured card + two cards beneath
 let showAllProjects = false;
 
 function renderProjects() {
@@ -933,6 +957,7 @@ function renderProjects() {
   const limited = !active && !showAllProjects && matching.length > FIRST_SHOWN;
   const shown = limited ? matching.slice(0, FIRST_SHOWN) : matching;
   grid.classList.toggle("is-filtered", theme !== "all"); // filtered: equal cards, no featured layout
+  grid.classList.toggle("is-top", limited); // short list: 2 columns so the last row has no gap
   // compact cards: the long description and tech tags live on the project page
   grid.innerHTML = shown.map((pr) => {
     const x = P[pr.id];
@@ -958,8 +983,23 @@ function renderProjects() {
   const more = document.getElementById("moreProjects");
   more.hidden = !limited;
   more.textContent = t("projects.more").replace("{n}", matching.length - FIRST_SHOWN);
+  // quiet shelf under the top projects: the rest, one click from the case study
+  const shelf = document.getElementById("shelf");
+  shelf.hidden = !limited;
+  document.getElementById("shelfLabel").textContent = t("projects.shelf");
+  document.getElementById("shelfRow").innerHTML = limited ? matching.slice(FIRST_SHOWN).map((pr) => `
+    <button type="button" class="shelf__chip" data-id="${pr.id}" aria-label="${esc(t("ui").open)}: ${esc(P[pr.id].title)}">
+      <span class="shelf__img">${pic(pr)}</span>
+      <span class="shelf__title">${esc(P[pr.id].title)}</span>
+    </button>`).join("") : "";
   renderEarly();
 }
+document.getElementById("shelfRow").addEventListener("click", (e) => {
+  const chip = e.target.closest(".shelf__chip");
+  if (!chip) return;
+  lastCardId = chip.dataset.id;
+  openProject(chip.dataset.id);
+});
 document.getElementById("moreProjects").addEventListener("click", () => {
   showAllProjects = true;
   const firstNew = FIRST_SHOWN;
@@ -969,51 +1009,44 @@ document.getElementById("moreProjects").addEventListener("click", () => {
 
 /* "My journey" – one step per semester, from the first browser game to the master's.
    Steps point at projects (semester + growth line come from their texts); hidden projects are skipped. */
-const JOURNEY = [
-  { divider: "tl.bachelor" },
-  { id: "nott" }, { id: "nftrade" }, { id: "memeit" }, { id: "ocean" },
-  { intern: true, when: "tl.s5" },
-  { id: "hue" }, { id: "thesis" },
+const JOURNEY = [ // newest first
   { divider: "tl.master" },
-  { id: "cthulhu" }, { id: "sounds" }, { id: "aroom" }, { id: "historia", today: true }
+  { id: "historia", today: true }, { id: "aroom" }, { id: "sounds" }, { id: "cthulhu" },
+  { divider: "tl.bachelor" },
+  { id: "thesis" }, { id: "hue" },
+  { intern: true, when: "tl.s5", earlier: true },
+  { id: "ocean", earlier: true }, { id: "memeit", earlier: true }, { id: "nftrade", earlier: true }, { id: "nott", earlier: true }
 ];
+/* One plain row per project, like an archive table: when · name + what it is · tech. A click opens the case study. */
+let showEarlier = false;
 function renderEarly() {
   const P = I18N[lang].p;
   const visible = visibleProjects();
-  const steps = JOURNEY.filter((s) => s.divider || s.intern || visible.some((p) => p.id === s.id));
+  const all = JOURNEY.filter((s) => s.divider || s.intern || visible.some((p) => p.id === s.id));
+  const hiddenCount = showEarlier ? 0 : all.filter((s) => s.earlier).length;
+  const steps = showEarlier ? all : all.filter((s) => !s.earlier);
   document.getElementById("early").hidden = !steps.length;
   document.getElementById("earlyList").innerHTML = steps.map((s) => {
     if (s.divider) return `
     <li class="journey__divider"><span>${esc(t(s.divider))}</span></li>`;
     if (s.intern) return `
-    <li class="journey__step">
-      <a class="early-card early-card--intern" href="#experience">
-        <span class="early-card__media"><span class="ph ph--icon">${ICONS.work}</span></span>
-        <span class="early-card__text">
-          <span class="early-card__when">${esc(t(s.when))}</span>
-          <b class="early-card__title">${esc(t("early.intern.t"))}</b>
-          <span class="early-card__growth">${esc(t("early.intern.p"))}</span>
-        </span>
-      </a>
-    </li>`;
+    <li><a class="jrow" href="#experience">
+      <span class="jrow__when"><span class="jw-full">${esc(t(s.when))}</span><span class="jw-year">${esc(t(s.when).split(" · ").pop())}</span></span>
+      <span class="jrow__main"><b class="jrow__title">${esc(t("early.intern.t"))}</b><span class="jrow__kind">${esc(t("early.intern.p"))}</span></span>
+    </a></li>`;
     const pr = PROJECTS.find((p) => p.id === s.id), x = P[s.id];
     return `
-    <li class="journey__step${s.today ? " is-today" : ""}">
-      <button type="button" class="early-card${s.today ? " early-card--today" : ""}" data-id="${s.id}"
-              aria-label="${esc(t("ui").open)}: ${esc(x.title)}">
-        <span class="early-card__media">${pic(pr)}</span>
-        <span class="early-card__text">
-          <span class="early-card__when">${esc(s.today ? t("early.now") + " · " + x.semester : x.semester)}</span>
-          <b class="early-card__title">${esc(x.title)}</b>
-          <span class="early-card__kicker">${esc(x.kicker)}</span>
-          ${filled(x.growth) ? `<span class="early-card__growth">${esc(x.growth)}</span>` : ""}
-        </span>
-      </button>
-    </li>`;
-  }).join("");
+    <li><button type="button" class="jrow${s.today ? " is-today" : ""}" data-id="${s.id}" aria-label="${esc(t("ui").open)}: ${esc(x.title)}">
+      <span class="jrow__when">${s.today ? esc(t("early.now")) : `<span class="jw-full">${esc(x.semester)}</span><span class="jw-year">${esc(x.semester.split(" · ").pop())}</span>`}</span>
+      <span class="jrow__main"><b class="jrow__title">${esc(x.title)}</b><span class="jrow__kind">${esc(x.kicker)}</span></span>
+      <span class="jrow__tags">${(pr.tags || []).slice(0, 4).map((g) => `<span>${esc(g)}</span>`).join("")}</span>
+    </button></li>`;
+  }).join("") + (hiddenCount ? `
+    <li class="journey__more"><button type="button" class="btn more-projects" id="earlierBtn">${esc(t("early.more").replace("{n}", hiddenCount))}</button></li>` : "");
 }
 document.getElementById("earlyList").addEventListener("click", (e) => {
-  const card = e.target.closest("button.early-card");
+  if (e.target.closest("#earlierBtn")) { showEarlier = true; renderEarly(); return; }
+  const card = e.target.closest("button.jrow");
   if (!card) return;
   lastCardId = card.dataset.id;
   openProject(card.dataset.id);
@@ -1172,7 +1205,7 @@ function finishClose() {
   modalBody.innerHTML = ""; // stops video
   pushedHistory = false;
   // put keyboard focus back on the card the visitor came from
-  document.querySelector(`.p-card[data-id="${lastCardId}"]`)?.focus({ preventScroll: true });
+  document.querySelector(`.p-card[data-id="${lastCardId}"], .shelf__chip[data-id="${lastCardId}"], .jrow[data-id="${lastCardId}"]`)?.focus({ preventScroll: true });
 }
 function closeProject() {
   if (pushedHistory) return history.back(); // popstate below finishes the close

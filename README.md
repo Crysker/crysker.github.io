@@ -20,7 +20,7 @@ otherwise returning visitors may get a mix of old and new files for up to 10 min
 
 ## Placeholders
 Texts in `[brackets]` in `main.js` are never shown on the page, and a project whose
-summary is still a placeholder is hidden entirely. Still open: the #SaveTheOcean texts.
+summary is still a placeholder is hidden entirely. Still open: ARoom's result and takeaway.
 
 ## Publish free on GitHub Pages
 1. Create a repo (e.g. `portfolio`) on github.com and upload all files.
