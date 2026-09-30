@@ -216,7 +216,7 @@ const I18N = {
     "projects.title": "Projects",
     "projects.intro": "Pick a topic to filter, or open a project for the full story.",
     "projects.more": "Show all projects (+{n})",
-    "projects.shelf": "More work",
+    "projects.shelf": "More work", "projects.top": "Featured work",
     "early.title": "My journey", "early.intro": "From my first browser game to award-winning VR, semester by semester.",
     "early.more": "Show earlier work (+{n})", "early.now": "Today", "early.intern.t": "UX/UI internship · EBCONT", "early.intern.p": "Design systems and prototypes in real product teams (see Experience).",
     themes: { all: "All", sight: "Beyond sight", abilities: "Diverse abilities", shared: "Shared realities", games: "Games", jams: "Jams & hackathons" },
@@ -387,7 +387,7 @@ const I18N = {
         challenge: "Make ocean pollution something you feel, not something you read about: small careless acts pile up until they turn into a threat you can't ignore.",
         approach: "Five scenes, from a tutorial room to the beach, a death cell and a victory party. Goblins (fast, little trash) and ogres (slow, lots of trash) walk from their huts to the rivers via NavMesh; the trash then finds its way to the ocean with A* pathfinding. You collect it by hand into a bucket until the boss fight starts, armed with watermelon swords from the Unity Asset Store. Sound and an in-game announcer with Wwise.",
         result: "A playable Meta Quest game built in two weeks by our team of three (LSW-Studios), with a full boss fight, animations and an easter egg.",
-        learned: ""
+        learned: "VR interactions get very complex once you really dig into them. How players interact and move through the game changes the level design, from where things are placed to how far they have to reach."
       },
       deepspace: {
         title: "Deep Space Cleaner Corp",
@@ -399,7 +399,7 @@ const I18N = {
         challenge: "Build a complete, playable XR game in the few days of a game jam, with only two people.",
         approach: "Debris drifts across the highway and has to be cleared before the next transport ship comes through. I built the levels, programmed the gameplay and created the animations; my teammate covered the rest.",
         result: "A playable XR game made in two for the XR Game Jam 2025.",
-        learned: ""
+        learned: "In VR, level design follows how players move and interact. Even a simple idea like clearing debris gets complex once the player can reach, turn and walk around it."
       },
       aroom: {
         title: "ARoom",
@@ -517,7 +517,7 @@ const I18N = {
     "projects.title": "Projekte",
     "projects.intro": "Wähl ein Thema zum Filtern oder öffne ein Projekt für die ganze Geschichte.",
     "projects.more": "Alle Projekte zeigen (+{n})",
-    "projects.shelf": "Mehr Arbeiten",
+    "projects.shelf": "Mehr Arbeiten", "projects.top": "Ausgewählte Arbeiten",
     "early.title": "Mein Weg", "early.intro": "Vom ersten Browserspiel bis zur preisgekrönten VR, Semester für Semester.",
     "early.more": "Frühere Arbeiten zeigen (+{n})", "early.now": "Heute", "early.intern.t": "UX/UI-Praktikum · EBCONT", "early.intern.p": "Design-Systeme und Prototypen in echten Produktteams (siehe Werdegang).",
     themes: { all: "Alle", sight: "Mehr als Sehen", abilities: "Diverse Fähigkeiten", shared: "Geteilte Realitäten", games: "Games", jams: "Jams & Hackathons" },
@@ -688,7 +688,7 @@ const I18N = {
         challenge: "Meeresverschmutzung spürbar machen statt nur darüber zu lesen: Kleine achtlose Handlungen summieren sich zu einer Bedrohung, die man nicht mehr ignorieren kann.",
         approach: "Fünf Szenen, vom Tutorial-Raum über den Strand bis zur Todeszelle und der Siegesfeier. Goblins (schnell, wenig Müll) und Oger (langsam, viel Müll) laufen per NavMesh von ihren Hütten zu den Flüssen; der Müll findet dann per A*-Pathfinding seinen Weg ins Meer. Man sammelt ihn per Hand in einen Eimer, bis der Bosskampf beginnt, bewaffnet mit Wassermelonen-Schwertern aus dem Unity Asset Store. Sound und ein Ansager im Spiel mit Wwise.",
         result: "Ein spielbares Meta-Quest-Spiel, in zwei Wochen von unserem Dreierteam (LSW-Studios) gebaut, mit komplettem Bosskampf, Animationen und einem Easter Egg.",
-        learned: ""
+        learned: "VR-Interaktionen werden sehr komplex, sobald man wirklich in die Tiefe geht. Wie Spielende interagieren und sich durchs Spiel bewegen, verändert das Level Design, von der Platzierung der Objekte bis zur Reichweite."
       },
       deepspace: {
         title: "Deep Space Cleaner Corp",
@@ -700,7 +700,7 @@ const I18N = {
         challenge: "Ein komplettes, spielbares XR-Spiel in den wenigen Tagen eines Game Jams bauen, nur zu zweit.",
         approach: "Trümmer treiben über den Highway und müssen weg, bevor das nächste Transportschiff kommt. Ich habe die Levels gebaut, das Gameplay programmiert und die Animationen erstellt; mein Teamkollege hat den Rest übernommen.",
         result: "Ein spielbares XR-Spiel, zu zweit für den XR Game Jam 2025 entwickelt.",
-        learned: ""
+        learned: "In VR folgt das Level Design dem Bewegen und Interagieren der Spielenden. Selbst eine einfache Idee wie Trümmer wegräumen wird komplex, sobald man sie greifen, drehen und umrunden kann."
       },
       aroom: {
         title: "ARoom",
@@ -957,6 +957,9 @@ function renderProjects() {
   const limited = !active && !showAllProjects && matching.length > FIRST_SHOWN;
   const shown = limited ? matching.slice(0, FIRST_SHOWN) : matching;
   grid.classList.toggle("is-filtered", theme !== "all"); // filtered: equal cards, no featured layout
+  const topLabel = document.getElementById("topLabel");
+  topLabel.hidden = !limited;
+  topLabel.textContent = t("projects.top");
   grid.classList.toggle("is-top", limited); // short list: 2 columns so the last row has no gap
   // compact cards: the long description and tech tags live on the project page
   grid.innerHTML = shown.map((pr) => {

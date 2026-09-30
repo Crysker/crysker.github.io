@@ -417,7 +417,26 @@ html[lang="de"] .lang [data-lang="de"] { background: var(--ink); color: var(--bg
   .projects__grid:not(.is-filtered) .p-card--featured .p-card__body { padding: 12px 18px 4px; }
 }
 @media (min-width: 761px) { .projects__grid.is-top { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+/* Wide screens: the top 3 sit in one equal row; summary and role live in the case study */
+@media (min-width: 1000px) {
+  .projects__grid.is-top { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .projects__grid.is-top:not(.is-filtered) .p-card--featured { grid-column: auto; flex-direction: column; gap: 0; }
+  .projects__grid.is-top:not(.is-filtered) .p-card--featured .p-card__media { flex: none; aspect-ratio: 16/10; }
+  .projects__grid.is-top:not(.is-filtered) .p-card--featured .p-card__body { padding: 16px 10px 0; }
+  .projects__grid.is-top .p-card--featured .p-card__title { font-size: 24px; }
+  .projects__grid.is-top .p-card__summary, .projects__grid.is-top .p-card__role { display: none; }
+}
 .more-projects { display: flex; margin: 28px auto 0; }
+/* The top 3 stand out: a label above and a turquoise accent on the cards */
+.featured-label { display: flex; align-items: center; gap: 12px; margin: 0 0 12px; font: 800 12px var(--sans); letter-spacing: .1em; text-transform: uppercase; color: var(--turq-text); }
+.featured-label::before { content: "★"; font-size: 13px; }
+.featured-label::after { content: ""; flex: 1; height: 1px; background: linear-gradient(90deg, var(--turq), transparent); }
+.projects__grid.is-top .p-card {
+  border-color: color-mix(in srgb, var(--turq) 55%, var(--line));
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--turq) 35%, transparent), 0 18px 40px -22px color-mix(in srgb, var(--turq) 70%, transparent);
+}
+.projects__grid.is-top .p-card:hover { box-shadow: 0 0 0 2px var(--turq), 0 22px 44px -20px color-mix(in srgb, var(--turq) 80%, transparent); }
+.projects__grid.is-top .p-card__more { color: var(--turq-text); font-weight: 800; }
 /* Quiet shelf: small thumbnails for the projects outside the top 3 */
 .shelf { margin-top: 30px; }
 .shelf__label { font: 800 12px var(--sans); letter-spacing: .08em; text-transform: uppercase; color: var(--ink-soft); margin: 0 0 10px; }

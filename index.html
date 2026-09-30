@@ -22,7 +22,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,700;1,9..144,600;1,9..144,700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <script>try { var th = localStorage.getItem("theme"); if (th === "light" || th === "dark") document.documentElement.dataset.theme = th; } catch (e) {}</script>
-  <link rel="stylesheet" href="styles.css?v=47">
+  <link rel="stylesheet" href="styles.css?v=49">
 </head>
 <body>
   <a class="skip" href="#main" data-i18n="skip">Skip to content</a>
@@ -89,6 +89,7 @@
       <!-- The research themes, now as filters right where the projects are -->
       <div class="themes" id="themes" role="group" aria-label="Filter projects by theme"></div>
       <p class="themes__desc" id="themeDesc" aria-live="polite" hidden></p>
+      <p class="featured-label" id="topLabel" hidden></p>
       <div class="projects__grid" id="projectGrid"></div>
       <!-- Quiet shelf: the projects outside the top 3, one click from the case study -->
       <div class="shelf" id="shelf" hidden>
@@ -265,6 +266,6 @@
   </dialog>
 
   <script src="logos.js?v=2"></script>
-  <script src="main.js?v=60"></script>
+  <script src="main.js?v=62"></script>
 </body>
 </html>
