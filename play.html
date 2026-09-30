@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Play · Serkan Sönmez</title>
+  <meta name="description" content="Tiny games by Serkan Sönmez, made for fun. Start with Guess the Average.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://crysker.github.io/play.html">
+  <meta property="og:title" content="Play · Serkan Sönmez">
+  <meta property="og:description" content="Tiny games, made for fun. Guess the Average: how much beer does an Austrian drink per year?">
+  <meta property="og:image" content="https://crysker.github.io/assets/og-image.jpg?v=2">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg?v=2">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,700;1,9..144,600;1,9..144,700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script>try { var th = localStorage.getItem("theme"); if (th === "light" || th === "dark") document.documentElement.dataset.theme = th; } catch (e) {}</script>
+  <link rel="stylesheet" href="styles.css?v=61">
+</head>
+<body>
+  <a class="skip" href="#main" data-nav="skip">Skip to content</a>
+
+  <header class="nav" id="top">
+    <a class="nav__logo" href="index.html" aria-label="Serkan Sönmez, home">Se<span>Sö</span></a>
+    <button class="nav__menu" id="menuToggle" type="button" aria-expanded="false" aria-controls="navLinks">
+      <span class="nav__burger" aria-hidden="true"></span><span class="sr-only" data-nav="menu">Menu</span>
+    </button>
+    <nav aria-label="Main">
+      <ul class="nav__links" id="navLinks">
+        <li><a href="index.html#projects" data-nav="projects">Projects</a></li>
+        <li><a href="index.html#experience" data-nav="experience">Experience</a></li>
+        <li><a href="index.html#contact" data-nav="contact">Contact</a></li>
+        <li><a href="play.html" aria-current="page" data-nav="play">Play</a></li>
+      </ul>
+    </nav>
+    <button class="lang" id="langToggle" type="button" aria-label="Switch language">
+      <span data-lang="en">EN</span><span data-lang="de">DE</span>
+    </button>
+    <button class="theme-btn" id="themeToggle" type="button" aria-label="Switch to dark mode">
+      <svg class="theme-btn__moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4 8 8 0 1 0 20 14.5z"/></svg>
+      <svg class="theme-btn__sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+    </button>
+  </header>
+
+  <main id="main" class="playpage">
+    <div class="play-card">
+      <div class="play__bar">
+        <button type="button" class="play__back" id="playBack" hidden aria-label="Back">←</button>
+        <h1 id="playTitle">Play</h1>
+        <button type="button" class="play__back" id="playSound" aria-pressed="true" aria-label="Turn sound off">🔊</button>
+      </div>
+      <div class="play__body" id="playBody"></div>
+    </div>
+  </main>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="play-shell.js?v=1"></script>
+  <script src="guess-data.js?v=3"></script>
+  <script src="play.js?v=16"></script>
+</body>
+</html>

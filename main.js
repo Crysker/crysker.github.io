@@ -188,7 +188,7 @@ const I18N = {
   en: {
     skip: "Skip to content",
     "nav.about": "About", "nav.explore": "Research", "nav.projects": "Projects",
-    "nav.experience": "Experience", "nav.contact": "Contact",
+    "nav.experience": "Experience", "nav.contact": "Contact", "nav.play": "Play",
     roles: ["UX/UI Designer", "Unity & C# Developer", "UX Researcher", "Accessibility Advocate", "Workshop Coach"],
     "hero.hello": "Hi, I'm",
     "hero.title": "Interaction Designer &amp; XR Developer",
@@ -493,7 +493,7 @@ const I18N = {
   de: {
     skip: "Zum Inhalt springen",
     "nav.about": "Über mich", "nav.explore": "Forschung", "nav.projects": "Projekte",
-    "nav.experience": "Werdegang", "nav.contact": "Kontakt",
+    "nav.experience": "Werdegang", "nav.contact": "Kontakt", "nav.play": "Spielen",
     roles: ["UX/UI Designer", "Unity- & C#-Entwickler", "UX-Researcher", "Accessibility-Verfechter", "Workshop-Coach"],
     "hero.hello": "Hi, ich bin",
     "hero.title": "Interaction Designer &amp; XR-Entwickler",

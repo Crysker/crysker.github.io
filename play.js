@@ -1,6 +1,6 @@
 /* ============ Play tab ============
    A small window with tiny games. First game: "Guess the Average" (questions in guess-data.js).
-   Uses helpers from main.js: lang, esc, unlock, setMenu. */
+   Runs on play.html. Uses helpers from play-shell.js: lang, esc, unlock. */
 
 const PLAY_T = {
   en: {
@@ -76,7 +76,6 @@ const sfx = {
   count(frac) { tone(380 + frac * 760, 0, 0.045, "square", 0.03); }
 };
 
-const playDialog = document.getElementById("playDialog");
 const playBody = document.getElementById("playBody");
 const playBack = document.getElementById("playBack");
 let play = { screen: "menu", qs: [], i: 0, results: [], guess: null };
@@ -133,16 +132,13 @@ function startGame() {
 }
 
 function renderPlay() {
-  if (!playDialog) return;
   document.getElementById("playTitle").textContent = pt("title");
-  document.getElementById("playClose").setAttribute("aria-label", pt("close"));
   playBack.setAttribute("aria-label", pt("back"));
   const snd = document.getElementById("playSound");
   snd.textContent = playMuted ? "🔇" : "🔊";
   snd.setAttribute("aria-label", playMuted ? pt("soundOn") : pt("soundOff"));
   snd.setAttribute("aria-pressed", String(!playMuted));
   playBack.hidden = play.screen === "menu";
-  document.querySelectorAll("[data-play-nav]").forEach((el) => { el.textContent = pt("nav"); });
   if (play.screen === "menu") renderMenu();
   else if (play.screen === "q") renderQuestion();
   else renderEnd();
@@ -318,12 +314,6 @@ function renderEnd() {
   });
 }
 
-function openPlay() {
-  if (typeof setMenu === "function") setMenu(false);
-  play = { screen: "menu", qs: [], i: 0, results: [], guess: null };
-  renderPlay();
-  if (!playDialog.open) playDialog.showModal();
-}
 playBack.addEventListener("click", () => { sfx.click(); play.screen = "menu"; renderPlay(); });
 document.getElementById("playSound").addEventListener("click", () => {
   playMuted = !playMuted;
@@ -331,7 +321,4 @@ document.getElementById("playSound").addEventListener("click", () => {
   renderPlay();
   sfx.click();
 });
-document.getElementById("playClose").addEventListener("click", () => playDialog.close());
-playDialog.addEventListener("click", (e) => { if (e.target === playDialog) playDialog.close(); });
-document.querySelectorAll("[data-play-open]").forEach((b) => b.addEventListener("click", openPlay));
 renderPlay();
