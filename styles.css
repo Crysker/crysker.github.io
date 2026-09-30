@@ -187,48 +187,23 @@ html[lang="de"] .lang [data-lang="de"] { background: var(--ink); color: var(--bg
   font: 700 clamp(64px, 12vw, 148px)/1 var(--serif);
   letter-spacing: -.04em;
 }
-/* the signature signs itself next to the name (sized with the name via em) */
+/* the signature sits on the corner of the photo and writes itself when you hover or tap the photo */
 .hero__sig {
-  position: absolute; right: -1.02em; bottom: .12em; width: .78em; height: .9em;
+  position: absolute; right: -34px; bottom: -22px; z-index: 2; width: 96px; height: 109px;
   color: var(--turq-text); rotate: -6deg; pointer-events: none;
 }
 .hero__sig path {
   stroke: currentColor; stroke-width: 3.2; stroke-linecap: round; stroke-linejoin: round;
-  stroke-dasharray: 1; stroke-dashoffset: 0;
-  /* loops: writes itself, stays briefly, un-writes backwards, repeat (~4.5s). Without animation it just stands there. */
-  animation: sign 4.5s ease-in-out .3s infinite backwards;
+  stroke-dasharray: 1 2; stroke-dashoffset: 0; /* at rest it simply stands there, fully written. The long gap keeps unwritten strokes fully invisible (no stray round-cap dots) */
 }
-@keyframes sign {
-  0% { stroke-dashoffset: 1; }
-  40% { stroke-dashoffset: 0; }   /* written */
-  64% { stroke-dashoffset: 0; }   /* stays ~1s */
-  100% { stroke-dashoffset: 1; }  /* un-written from the end back to the start */
-}
+/* the writing itself is driven from main.js (signNow): one continuous ease-out over the four strokes */
+@media (max-width: 700px) { .hero__sig { right: -14px; bottom: -16px; width: 68px; height: 77px; } }
 .hero__name em { font-style: italic; color: var(--turq-text); }
 .hero__title {
   margin: 12px 0 0;
   font: 700 clamp(22px, 3.2vw, 32px)/1.2 var(--sans); letter-spacing: -.01em;
   text-wrap: balance;
 }
-.hero__roles {
-  margin: 12px 0 20px; min-height: 1.6em;
-  font: 600 clamp(15px, 2vw, 18px) var(--sans);
-}
-.hero__also { color: var(--ink-soft); margin-right: 4px; }
-.hero__status {
-  display: inline-flex; align-items: center; gap: 8px; margin: 0 0 24px;
-  padding: 6px 14px; border-radius: 18px; border: 1px solid var(--line);
-  background: var(--surface); font-size: 14px; font-weight: 600;
-  text-align: left; text-wrap: balance;
-}
-.hero__dot { flex: none; }
-.hero__dot { width: 8px; height: 8px; border-radius: 50%; background: #22c55e; box-shadow: 0 0 0 4px rgba(34,197,94,.2); }
-#role {
-  display: inline-block; padding: 4px 16px; border-radius: 999px;
-  background: var(--turq); color: #062624;
-  transition: opacity .25s, transform .25s;
-}
-#role.is-out { opacity: 0; transform: translateY(8px); }
 
 .hero__portrait { position: relative; width: min(260px, 64vw); }
 .hero__photo {
@@ -244,8 +219,6 @@ html[lang="de"] .lang [data-lang="de"] { background: var(--ink); color: var(--bg
   transform: scale(1.65); transform-origin: 62% 46%;
 }
 .hero__lead { max-width: 46ch; margin: 32px 0 24px; font-size: 19px; color: var(--ink-soft); }
-.hero__cta { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
-.captcha { margin-top: 56px; }
 
 /* floating shapes (pure CSS, no images) */
 .shape { position: absolute; z-index: -1; animation: float 7s ease-in-out infinite; }
@@ -286,15 +259,10 @@ html[lang="de"] .lang [data-lang="de"] { background: var(--ink); color: var(--bg
   .shape--sphere { width: 56px; height: 56px; left: 3%; top: 10px; }
   .shape--cube { width: 46px; height: 46px; right: 5%; top: 18px; }
   .shape--tri { display: none; }
-  /* Phones: get the buttons onto the first screen – photo moves below them */
+  /* Phones: the photo moves below the text */
   .hero { padding-top: 40px; }
-  .hero__status { margin-bottom: 4px; }
-  .hero__portrait { order: 2; width: min(230px, 60vw); margin-top: 40px; }
-  .captcha { order: 3; margin-top: 64px; } /* room for the ring under the photo and the sticker above the box */
+    .hero__portrait { order: 2; width: min(230px, 60vw); margin-top: 40px; }
   .hero__lead { margin: 18px 0 20px; font-size: 18px; }
-  .hero__cta { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: 100%; max-width: 400px; }
-  .hero__cta .btn { justify-content: center; text-align: center; padding: 12px 14px; }
-  .hero__cta .btn--primary { grid-column: 1 / -1; }
 }
 
 /* Desktop: text + buttons left, photo right – everything a recruiter needs fits on the first screen */
@@ -306,11 +274,7 @@ html[lang="de"] .lang [data-lang="de"] { background: var(--ink); color: var(--bg
       "hello  photo"
       "name   photo"
       "title  photo"
-      "roles  photo"
-      "status photo"
-      "lead   photo"
-      "cta    photo"
-      "scroll photo";
+      "lead   photo";
     justify-items: start; text-align: left;
     width: min(1100px, calc(100% - 32px)); margin: 0 auto;
     min-height: min(92vh, 860px); padding: 48px 0 32px;
@@ -319,12 +283,8 @@ html[lang="de"] .lang [data-lang="de"] { background: var(--ink); color: var(--bg
   .hero__hello { grid-area: hello; }
   .hero__name { grid-area: name; font-size: clamp(88px, 9vw, 128px); }
   .hero__title { grid-area: title; }
-  .hero__roles { grid-area: roles; }
-  .hero__status { grid-area: status; }
-  .hero__portrait { grid-area: photo; align-self: center; justify-self: center; width: min(320px, 100%); }
-  .hero__lead { grid-area: lead; margin: 4px 0 28px; }
-  .hero__cta { grid-area: cta; justify-content: flex-start; }
-  .captcha { grid-area: scroll; justify-self: start; margin-top: 56px; } /* room for the sticker above the box */
+      .hero__portrait { grid-area: photo; align-self: center; justify-self: center; width: min(320px, 100%); }
+  .hero__lead { grid-area: lead; margin: 20px 0 0; }
   /* keep the shapes around the edges so they never sit behind the text */
   .shape--sphere { top: -4%; left: -9%; width: 90px; height: 90px; }
   .shape--cube { top: 4%; right: -2%; }
@@ -724,6 +684,8 @@ button.ptile:hover, button.ptile:focus-visible { transform: translateY(-4px) rot
 .ptile--soon { cursor: default; opacity: .55; box-shadow: none; }
 .ptile--soon .ptile__art { filter: grayscale(.6); }
 .ptile--soon .ptile__best { color: var(--ink-soft); }
+.tile__sph { fill: var(--turq); } .tile__cube { fill: var(--orange); } .tile__ring { fill: none; stroke: var(--purple); stroke-width: 6; }
+.tile__tri { fill: var(--lime); stroke: var(--lime); stroke-width: 4; stroke-linejoin: round; } .tile__pill { fill: var(--pink); }
 .tile__bar--a { fill: var(--turq); } .tile__bar--b { fill: var(--orange); } .tile__bar--c { fill: var(--purple); } .tile__bar--d { fill: var(--yellow); }
 .tile__blk--a { fill: var(--blue); } .tile__blk--b { fill: var(--pink); } .tile__blk--c { fill: var(--lime); } .tile__blk--d { fill: var(--orange); }
 .pgame__q { font: 700 34px var(--serif); fill: var(--turq-text); }
@@ -926,42 +888,11 @@ button.ptile:hover, button.ptile:focus-visible { transform: translateY(-4px) rot
 
 /* ============ reSHAPTCHA ============ */
 /* The fake "I'm not a robot" box in the hero */
-.captcha {
-  position: relative;
-  display: inline-flex; align-items: center; gap: 16px; min-width: 320px; padding: 16px 16px 16px 18px; cursor: pointer;
-  border: 1px solid var(--line); border-radius: 8px; background: var(--surface); color: var(--ink);
-  font: 600 18px var(--sans); box-shadow: 0 2px 8px rgba(0, 0, 0, .18); transition: border-color .2s, transform .2s;
-}
-.captcha:hover { border-color: var(--turq); transform: translateY(-2px); }
-.captcha__label { flex: 1; text-align: left; }
-.captcha__box {
-  display: grid; place-items: center; flex: none; width: 34px; height: 34px; border-radius: 4px;
-  border: 2px solid #b8b8c4; background: #fff; transition: background .2s, border-color .2s;
-}
-/* gentle attention pulse until the game is solved */
-.captcha:not(.is-verified) .captcha__box { animation: captcha-pulse 2.6s ease-in-out infinite; }
-@keyframes captcha-pulse {
-  0%, 60%, 100% { box-shadow: 0 0 0 0 rgba(64, 224, 208, 0); }
-  30% { box-shadow: 0 0 0 7px rgba(64, 224, 208, .45); }
-}
-/* the little sticker note */
-.captcha__note {
-  position: absolute; top: -14px; right: -14px; padding: 4px 10px; border-radius: 999px; white-space: nowrap;
-  background: var(--orange); color: #fff; font: 800 12px var(--sans); rotate: 5deg;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, .25); transition: rotate .2s;
-}
-.captcha:hover .captcha__note { rotate: -3deg; }
-.captcha.is-verified .captcha__note { display: none; }
-.captcha:hover .captcha__box { border-color: var(--turq); }
-.captcha.is-verified .captcha__box { background: var(--turq); border-color: var(--turq); }
-.captcha.is-verified .captcha__box::after { content: "✓"; color: #062624; font-weight: 800; }
 .captcha__brand {
   display: inline-flex; flex-direction: column; align-items: center; margin-left: 18px;
   font: 700 9px var(--sans); letter-spacing: .02em; color: var(--ink-soft);
 }
 .captcha__logo { font-size: 24px; line-height: 1; color: var(--turq-text); }
-.captcha .captcha__brand { font-size: 10px; }
-@media (max-width: 700px) { .captcha { min-width: 0; width: 100%; max-width: 400px; } .captcha__note { right: 8px; } }
 /* hint that the floating shapes are clickable too */
 .hero .shape { cursor: pointer; }
 

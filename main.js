@@ -189,14 +189,12 @@ const I18N = {
     skip: "Skip to content",
     "nav.about": "About", "nav.explore": "Research", "nav.projects": "Projects",
     "nav.experience": "Experience", "nav.contact": "Contact", "nav.play": "Play",
-    roles: ["UX/UI Designer", "Unity & C# Developer", "UX Researcher", "Accessibility Advocate", "Workshop Coach"],
     "hero.hello": "Hi, I'm",
     "hero.title": "Interaction Designer &amp; XR Developer",
     "hero.also": "also",
-    "hero.status": "Available now · open to XR, UX/UI and Unity/C# roles",
     cv: "Download CV", "nav.cv": "CV ↓",
     "hero.lead": "I design and build interactive experiences for screens, spaces and all the senses. Creative Technologist from St. Pölten, graduating as Dipl.‑Ing. in Interactive Technologies in February 2027.",
-    "hero.cta1": "See my work", "hero.cta2": "Let's talk",
+   
     "hero.scroll": "scroll down and get to know me",
     "about.title": "About me",
     "about.p1": "I'm a Creative Technologist from St. Pölten, Austria, currently finishing my master's degree in Interactive Technologies (AR/VR). My lectures are done: I hand in my master's thesis in January 2027 and graduate as Dipl.-Ing. in February 2027.",
@@ -289,7 +287,7 @@ const I18N = {
       hints: {
         first: "Curiosity pays off: open something.", video: "Some things are better in motion.",
         all: "Leave no project unopened.", lang: "Sprechen Sie Deutsch?", bottom: "How deep does this page go?",
-        secret: "↑ ↑ ↓ ↓ … you know the rest.", human: "Prove you're not a robot.",
+        secret: "↑ ↑ ↓ ↓ … you know the rest.", human: "Prove you're not a robot (on the Play page).",
         guess: "Play a game in the Play tab.", bullseye: "Guess a number almost exactly.", wizard: "Be really good at guessing."
       },
       first: ["Curious mind", "Opened your first project"],
@@ -494,14 +492,12 @@ const I18N = {
     skip: "Zum Inhalt springen",
     "nav.about": "Über mich", "nav.explore": "Forschung", "nav.projects": "Projekte",
     "nav.experience": "Werdegang", "nav.contact": "Kontakt", "nav.play": "Spielen",
-    roles: ["UX/UI Designer", "Unity- & C#-Entwickler", "UX-Researcher", "Accessibility-Verfechter", "Workshop-Coach"],
     "hero.hello": "Hi, ich bin",
     "hero.title": "Interaction Designer &amp; XR-Entwickler",
     "hero.also": "auch",
-    "hero.status": "Ab sofort verfügbar · offen für XR-, UX/UI- und Unity/C#-Stellen",
     cv: "Lebenslauf herunterladen", "nav.cv": "CV ↓",
     "hero.lead": "Ich gestalte und entwickle interaktive Erlebnisse für Bildschirme, Räume und alle Sinne. Ich bin Creative Technologist aus St. Pölten und schließe im Februar 2027 meinen Master in Interactive Technologies als Dipl.‑Ing. ab.",
-    "hero.cta1": "Meine Arbeiten", "hero.cta2": "Lass uns reden",
+   
     "hero.scroll": "scroll runter und lern mich kennen",
     "about.title": "Über mich",
     "about.p1": "Ich bin Creative Technologist aus St. Pölten und schließe gerade meinen Master in Interactive Technologies (AR/VR) ab. Die Lehrveranstaltungen sind erledigt: Im Jänner 2027 gebe ich meine Masterarbeit ab, im Februar 2027 schließe ich als Dipl.-Ing. ab.",
@@ -594,7 +590,7 @@ const I18N = {
       hints: {
         first: "Neugier zahlt sich aus: öffne etwas.", video: "Manches wirkt in Bewegung besser.",
         all: "Lass kein Projekt ungeöffnet.", lang: "Do you speak English?", bottom: "Wie tief geht diese Seite?",
-        secret: "↑ ↑ ↓ ↓ … den Rest kennst du.", human: "Beweise, dass du kein Roboter bist.",
+        secret: "↑ ↑ ↓ ↓ … den Rest kennst du.", human: "Beweise auf der Spielen-Seite, dass du kein Roboter bist.",
         guess: "Spiel ein Spiel im Spielen-Tab.", bullseye: "Schätze eine Zahl fast genau.", wizard: "Sei richtig gut im Schätzen."
       },
       first: ["Neugierig", "Erstes Projekt geöffnet"],
@@ -818,7 +814,6 @@ function applyLang() {
   document.querySelectorAll("[data-i18n-label]").forEach((el) => {
     el.setAttribute("aria-label", t(el.dataset.i18nLabel));
   });
-  document.getElementById("heroStatus").hidden = !filled(t("hero.status"));
   const cv = CV[lang] || CV.en;
   document.querySelectorAll(".js-cv").forEach((a) => { a.href = cv || "#"; a.hidden = !cv; });
   document.querySelectorAll(".js-cv-item").forEach((li) => { li.hidden = !cv; });
@@ -830,7 +825,6 @@ function applyLang() {
   renderProjects();
   renderStack();
   renderSkills();
-  restartRoles();
   renderTrophies();
   if (typeof renderPlay === "function") renderPlay();
 }
@@ -875,23 +869,44 @@ document.getElementById("navLinks").addEventListener("click", (e) => { if (e.tar
 document.addEventListener("keydown", (e) => { if (e.key === "Escape") setMenu(false); });
 document.addEventListener("click", (e) => { if (!nav.contains(e.target)) setMenu(false); });
 
-/* ============ Rotating roles ============ */
-let roleTimer;
-function restartRoles() {
-  clearInterval(roleTimer);
-  const el = document.getElementById("role");
-  const roles = t("roles");
-  let i = 0;
-  el.textContent = roles[0];
+/* ============ Signature next to the photo ============
+   It writes itself when you hover the photo (mouse), tap it (touch) and once when the photo first scrolls into view. */
+const portrait = document.querySelector(".hero__portrait");
+/* The whole signature is one continuous motion with an ease-out (fast at the start, slowing down at the end).
+   One progress value runs through all four strokes in order (S top, lower curve, long line, dot) by their real lengths. */
+const SIGN_MS = 1200;
+const sigPaths = [...portrait.querySelectorAll(".hero__sig path")];
+const sigLens = sigPaths.map((p) => p.getTotalLength());
+const sigTotal = sigLens.reduce((a, b) => a + b, 0);
+let sigFrame = 0;
+function setSigProgress(progress) { // 0..1 over the whole signature
+  let start = 0;
+  sigPaths.forEach((path, i) => {
+    const f = Math.max(0, Math.min(1, (progress * sigTotal - start) / sigLens[i]));
+    path.style.strokeDashoffset = f <= 0 ? "1.05" : String(1 - f); // 1.05 = fully unwritten, no stray round-cap dot
+    start += sigLens[i];
+  });
+}
+function signNow() {
+  cancelAnimationFrame(sigFrame);
   if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-  roleTimer = setInterval(() => {
-    el.classList.add("is-out");
-    setTimeout(() => {
-      i = (i + 1) % roles.length;
-      el.textContent = roles[i];
-      el.classList.remove("is-out");
-    }, 250);
-  }, 2200);
+  const t0 = performance.now();
+  setSigProgress(0);
+  const frame = (now) => {
+    const t = Math.min(1, (now - t0) / SIGN_MS);
+    setSigProgress(1 - Math.pow(1 - t, 3)); // ease-out (cubic)
+    if (t < 1) sigFrame = requestAnimationFrame(frame);
+    else sigPaths.forEach((p) => p.style.removeProperty("stroke-dashoffset")); // back to the resting, fully written look
+  };
+  sigFrame = requestAnimationFrame(frame);
+}
+portrait.addEventListener("pointerenter", (e) => { if (e.pointerType === "mouse") signNow(); });
+portrait.addEventListener("click", signNow);
+if ("IntersectionObserver" in window) {
+  const once = new IntersectionObserver((entries) => {
+    if (entries.some((e) => e.isIntersecting)) { signNow(); once.disconnect(); }
+  }, { threshold: 0.6 });
+  once.observe(portrait);
 }
 
 /* ============ Projects ============ */
@@ -1562,7 +1577,6 @@ document.getElementById("trophiesReset").addEventListener("click", () => {
   achieved = [];
   openedProjects.clear();
   try { localStorage.removeItem("achievements"); } catch (e) {}
-  document.getElementById("captchaOpen").classList.remove("is-verified");
   renderTrophies();
 });
 function unlock(id) {
@@ -1612,152 +1626,6 @@ function party() {
   document.querySelector(".hero").classList.add("is-party");
   setTimeout(() => { layer.remove(); document.querySelector(".hero").classList.remove("is-party"); }, 4500);
 }
-
-/* ============ reSHAPTCHA – a reCAPTCHA parody with the hero shapes ============ */
-const SHAPES = ["sphere", "cube", "ring", "tri", "pill"];
-const game = document.getElementById("game");
-const gameSlots = document.getElementById("gameSlots");
-const gameTray = document.getElementById("gameTray");
-const gameMsg = document.getElementById("gameMsg");
-const captchaBtn = document.getElementById("captchaOpen");
-const verifyBtn = document.getElementById("gameVerify");
-let picked = null, fails = 0;
-
-const say = (text) => { gameMsg.textContent = text; };
-const shapeName = (s) => t("shapeNames")[s];
-const updateVerify = () => { verifyBtn.disabled = gameSlots.querySelectorAll(".slot.is-filled").length < SHAPES.length; };
-
-function startGame() {
-  fails = 0; picked = null; say("");
-  document.getElementById("gameTitle").textContent = t("captcha.title");
-  document.querySelector(".game__hint").hidden = false;
-  document.getElementById("gameWin").hidden = true;
-  document.getElementById("gamePlay").hidden = false;
-  gameSlots.innerHTML = SHAPES.map((s) =>
-    `<button type="button" class="slot" data-shape="${s}" aria-label="${esc(t("captcha.slot").replace("{s}", shapeName(s)))}">
-       <span class="piece piece--${s} is-ghost" aria-hidden="true"></span></button>`).join("");
-  // Fisher–Yates, re-rolled until no shape sits right under its own slot
-  let shuffled;
-  do {
-    shuffled = [...SHAPES];
-    for (let i = shuffled.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-    }
-  } while (shuffled.some((s, i) => s === SHAPES[i]));
-  gameTray.innerHTML = shuffled.map((s) =>
-    `<button type="button" class="piece-btn" data-shape="${s}" aria-pressed="false" aria-label="${esc(shapeName(s))}">
-       <span class="piece piece--${s}" aria-hidden="true"></span></button>`).join("");
-  updateVerify();
-  if (!game.open) game.showModal();
-}
-
-function pick(btn) {
-  gameTray.querySelectorAll(".piece-btn").forEach((b) => b.setAttribute("aria-pressed", String(b === btn)));
-  picked = btn;
-  say(t("captcha.picked"));
-}
-
-const shake = (el) => { el.classList.remove("is-wrong"); void el.offsetWidth; el.classList.add("is-wrong"); };
-
-// Any shape fits any slot – like a real CAPTCHA, you only find out when you hit "Verify"
-function tryPlace(btn, slot) {
-  btn.style.transform = "";
-  if (!slot) return;
-  if (slot.classList.contains("is-locked")) return shake(btn); // already verified correct
-  if (slot.classList.contains("is-filled")) unplace(slot); // swap: the old piece goes back to the tray
-  slot.querySelector(".is-ghost").hidden = true;
-  slot.appendChild(btn);
-  btn.setAttribute("aria-pressed", "false");
-  slot.classList.add("is-filled");
-  picked = null;
-  say("");
-  updateVerify();
-}
-function unplace(slot) {
-  const btn = slot.querySelector(".piece-btn");
-  if (!btn) return null;
-  gameTray.appendChild(btn);
-  slot.querySelector(".is-ghost").hidden = false;
-  slot.classList.remove("is-filled");
-  updateVerify();
-  return btn;
-}
-
-function verify() {
-  const slots = [...gameSlots.querySelectorAll(".slot")];
-  const wrong = slots.filter((s) => s.querySelector(".piece-btn").dataset.shape !== s.dataset.shape);
-  if (!wrong.length) return win();
-  // correct ones get locked in, wrong ones jump back to the tray
-  slots.filter((s) => !wrong.includes(s)).forEach((s) => s.classList.add("is-locked"));
-  wrong.forEach((s) => { const btn = unplace(s); if (btn) shake(btn); });
-  const lines = t("captcha.fail");
-  say(lines[fails % lines.length] + (fails >= 2 ? " " + t("captcha.tip") : ""));
-  fails++;
-}
-function win() {
-  gameSlots.querySelectorAll(".slot").forEach((s) => s.classList.add("is-locked"));
-  verifyBtn.disabled = true;
-  say(t("captcha.done"));
-  setTimeout(() => {
-    document.getElementById("gamePlay").hidden = true;
-    document.getElementById("gameWin").hidden = false;
-    document.getElementById("gameTitle").textContent = t("captcha.won");
-    document.querySelector(".game__hint").hidden = true;
-    say("");
-    captchaBtn.classList.add("is-verified");
-    unlock("human");
-  }, 800);
-}
-verifyBtn.addEventListener("click", verify);
-
-// Drag with pointer events (mouse + touch); a press without movement counts as a tap
-let drag = null;
-gameTray.addEventListener("pointerdown", (e) => {
-  const btn = e.target.closest(".piece-btn");
-  if (!btn) return;
-  drag = { btn, x: e.clientX, y: e.clientY, moved: false };
-  try { btn.setPointerCapture(e.pointerId); } catch (err) {}
-});
-gameTray.addEventListener("pointermove", (e) => {
-  if (!drag) return;
-  const dx = e.clientX - drag.x, dy = e.clientY - drag.y;
-  if (!drag.moved && Math.hypot(dx, dy) < 6) return;
-  drag.moved = true;
-  drag.btn.classList.add("is-dragging");
-  drag.btn.style.transform = `translate(${dx}px, ${dy}px)`;
-});
-gameTray.addEventListener("pointerup", (e) => {
-  if (!drag) return;
-  const { btn, moved } = drag;
-  drag = null;
-  btn.classList.remove("is-dragging");
-  if (!moved) return pick(btn);
-  btn.style.visibility = "hidden"; // look underneath the dragged piece
-  const slot = document.elementsFromPoint(e.clientX, e.clientY).find((el) => el.classList?.contains("slot"));
-  btn.style.visibility = "";
-  tryPlace(btn, slot);
-});
-gameTray.addEventListener("pointercancel", () => {
-  if (drag) { drag.btn.style.transform = ""; drag.btn.classList.remove("is-dragging"); drag = null; }
-});
-// Keyboard: Enter/Space on a shape picks it (pointer taps are handled above)
-gameTray.addEventListener("click", (e) => {
-  const btn = e.target.closest(".piece-btn");
-  if (btn && e.detail === 0) pick(btn);
-});
-gameSlots.addEventListener("click", (e) => {
-  const slot = e.target.closest(".slot");
-  if (!slot) return;
-  if (picked) tryPlace(picked, slot);
-  else if (slot.classList.contains("is-filled") && !slot.classList.contains("is-locked")) unplace(slot); // take it back out
-});
-
-if (achieved.includes("human")) captchaBtn.classList.add("is-verified"); // solved on an earlier visit
-captchaBtn.addEventListener("click", startGame);
-document.querySelectorAll(".hero .shape").forEach((s) => s.addEventListener("click", startGame)); // the shapes themselves
-document.getElementById("gameClose").addEventListener("click", () => game.close());
-document.getElementById("gameHire").addEventListener("click", () => game.close()); // link then scrolls to #contact
 
 applyLang();
 updateToTop();

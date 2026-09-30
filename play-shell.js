@@ -17,7 +17,8 @@ const SHELL_T = {
       guess: ["Educated guesser", "Finished a round of Guess the Average"],
       bullseye: ["Bullseye", "Guessed within 5% of the real number"],
       wizard: ["Statistics Wizard", "Scored 85% or more in a round"],
-      lang: ["Polyglot", "Switched the language"]
+      lang: ["Polyglot", "Switched the language"],
+      human: ["Certified human", "Passed the reSHAPTCHA"]
     }
   },
   de: {
@@ -27,7 +28,8 @@ const SHELL_T = {
       guess: ["Fundierter Schätzer", "Eine Runde Schätz den Durchschnitt beendet"],
       bullseye: ["Volltreffer", "Bis auf 5% an der echten Zahl"],
       wizard: ["Statistik-Zauberer", "85% oder mehr in einer Runde erreicht"],
-      lang: ["Polyglot", "Sprache gewechselt"]
+      lang: ["Polyglot", "Sprache gewechselt"],
+      human: ["Zertifizierter Mensch", "Das reSHAPTCHA bestanden"]
     }
   }
 };
@@ -64,6 +66,7 @@ document.getElementById("langToggle").addEventListener("click", () => {
   try { localStorage.setItem("lang", lang); } catch (e) {}
   unlock("lang");
   applyShell();
+  if (typeof refreshCaptchaTexts === "function") refreshCaptchaTexts();
   if (typeof renderPlay === "function") renderPlay();
 });
 

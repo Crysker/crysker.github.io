@@ -16,7 +16,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,700;1,9..144,600;1,9..144,700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <script>try { var th = localStorage.getItem("theme"); if (th === "light" || th === "dark") document.documentElement.dataset.theme = th; } catch (e) {}</script>
-  <link rel="stylesheet" href="styles.css?v=64">
+  <link rel="stylesheet" href="styles.css?v=66">
 </head>
 <body>
   <a class="skip" href="#main" data-nav="skip">Skip to content</a>
@@ -54,10 +54,41 @@
     </div>
   </main>
 
+  <!-- reSHAPTCHA minigame: slot the hero shapes, get a meme -->
+  <dialog class="game" id="game" aria-labelledby="gameTitle">
+    <div class="game__head">
+      <p class="game__kicker" data-cap="kicker">Security check</p>
+      <h2 id="gameTitle" data-cap="title">Put every shape into its slot</h2>
+      <p class="game__hint" data-cap="hint">Drag them into the slots (or tap a shape, then a slot) and hit Verify.</p>
+    </div>
+    <div class="game__play" id="gamePlay">
+      <div class="game__slots" id="gameSlots"></div>
+      <div class="game__tray" id="gameTray"></div>
+    </div>
+    <p class="game__msg" id="gameMsg" role="status"></p>
+    <div class="game__win" id="gameWin" hidden>
+      <figure class="meme">
+        <img src="assets/img/meme-success.png" alt="Success Kid meme: You did it!" width="476" height="314" loading="lazy">
+        <figcaption>
+          <span class="meme__bottom" data-cap="memeBottom">Now hire a human</span>
+        </figcaption>
+      </figure>
+      <a class="btn btn--primary" href="index.html#contact" id="gameHire" data-cap="hire">Okay, let's talk →</a>
+    </div>
+    <div class="game__foot">
+      <span class="captcha__brand"><span class="captcha__logo" aria-hidden="true">↻</span>reSHAPTCHA</span>
+      <span class="game__actions">
+        <button class="game__close" id="gameClose" type="button" data-cap="close">Close</button>
+        <button class="game__verify" id="gameVerify" type="button" disabled data-cap="verify">Verify</button>
+      </span>
+    </div>
+  </dialog>
+
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
   <script src="play-shell.js?v=1"></script>
   <script src="guess-data.js?v=3"></script>
-  <script src="play.js?v=18"></script>
+  <script src="captcha.js?v=1"></script>
+  <script src="play.js?v=19"></script>
 </body>
 </html>

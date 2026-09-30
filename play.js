@@ -7,7 +7,7 @@ const PLAY_T = {
     nav: "Play", title: "Play", back: "Back", close: "Close", soundOn: "Turn sound on", soundOff: "Turn sound off",
     intro: "Tiny games, made for fun. More are on the way.",
     g1: ["Guess the Average", "How much beer does an Austrian drink? How many cups of tea a Turk? Guess the number, the closer the more points."],
-    best: "Best: {n}", play: "Play", soon: "Soon", g2: "Tiny Orchestra", g3: "Tower of Babel",
+    best: "Best: {n}", verified: "Verified", robot: "I'm not a robot", play: "Play", soon: "Soon", g2: "Tiny Orchestra", g3: "Tower of Babel",
     more: "Fun fact & source", answers: "Show my answers", q: "Question {i} of {n}", lock: "Lock in", next: "Next", finish: "See result",
     diff: { easy: "Easy", medium: "Medium", hard: "Hard" },
     you: "You", real: "Real", points: "+{n} / 100", off: "{p} off", exact: "Spot on!",
@@ -21,7 +21,7 @@ const PLAY_T = {
     nav: "Spielen", title: "Spielen", back: "Zurück", close: "Schließen", soundOn: "Ton einschalten", soundOff: "Ton ausschalten",
     intro: "Kleine Spiele, nur zum Spaß. Mehr folgt.",
     g1: ["Schätz den Durchschnitt", "Wie viel Bier trinkt ein Österreicher? Wie viele Tassen Tee ein Türke? Schätze die Zahl, je näher, desto mehr Punkte."],
-    best: "Bestwert: {n}", play: "Spielen", soon: "Bald", g2: "Mini-Orchester", g3: "Turmbau zu Babel",
+    best: "Bestwert: {n}", verified: "Verifiziert", robot: "Ich bin kein Roboter", play: "Spielen", soon: "Bald", g2: "Mini-Orchester", g3: "Turmbau zu Babel",
     more: "Fun Fact & Quelle", answers: "Meine Antworten zeigen", q: "Frage {i} von {n}", lock: "Bestätigen", next: "Weiter", finish: "Ergebnis ansehen",
     diff: { easy: "Leicht", medium: "Mittel", hard: "Schwer" },
     you: "Du", real: "Echt", points: "+{n} / 100", off: "{p} daneben", exact: "Volltreffer!",
@@ -154,6 +154,12 @@ const TILE_ART = {
     <line x1="32" y1="56" x2="52" y2="56" class="pgame__gap"/>
     <circle cx="52" cy="56" r="7" class="pgame__real"/>
     <circle cx="32" cy="56" r="7" class="pgame__you"/></svg>`,
+  captcha: `<svg viewBox="0 0 80 80" width="100%" height="100%" focusable="false">
+    <circle cx="22" cy="26" r="11" class="tile__sph"/>
+    <rect x="44" y="15" width="22" height="22" rx="5" class="tile__cube" transform="rotate(16 55 26)"/>
+    <circle cx="25" cy="58" r="9" class="tile__ring"/>
+    <polygon points="44,68 53,50 62,68" class="tile__tri"/>
+    <rect x="62" y="48" width="14" height="22" rx="7" class="tile__pill" transform="rotate(-20 69 59)"/></svg>`,
   orchestra: `<svg viewBox="0 0 80 80" width="100%" height="100%" focusable="false">
     <rect x="16" y="38" width="9" height="26" rx="4.5" class="tile__bar tile__bar--a"/>
     <rect x="29" y="22" width="9" height="42" rx="4.5" class="tile__bar tile__bar--b"/>
@@ -176,6 +182,11 @@ function renderMenu() {
         <span class="ptile__title">${esc(pt("g1")[0])}</span>
         ${best ? `<small class="ptile__best">${esc(pt("best").replace("{n}", fmtNum(best)))}</small>` : ""}
       </button>
+      <button type="button" class="ptile" id="pgameCaptcha">
+        <span class="ptile__art" aria-hidden="true">${TILE_ART.captcha}</span>
+        <span class="ptile__title">reSHAPTCHA</span>
+        <small class="ptile__best">${esc(achieved.includes("human") ? "✓ " + pt("verified") : pt("robot"))}</small>
+      </button>
       <div class="ptile ptile--soon" aria-disabled="true">
         <span class="ptile__art" aria-hidden="true">${TILE_ART.orchestra}</span>
         <span class="ptile__title">${esc(pt("g2"))}</span><small class="ptile__best">${esc(pt("soon"))}</small>
@@ -186,6 +197,7 @@ function renderMenu() {
       </div>
     </div>`;
   document.getElementById("pgameGuess").addEventListener("click", () => { sfx.click(); startGame(); });
+  document.getElementById("pgameCaptcha").addEventListener("click", startCaptcha);
 }
 
 /* One stable screen per question: locking in only fades things in (the real dot slides onto the same line,

@@ -7,6 +7,7 @@ Plain HTML/CSS/JS, no build step. Open `index.html` in a browser to preview.
 - `styles.css` – all styling (colors are variables at the top)
 - `main.js` – **all texts (EN + DE)**, project data, stack cards
 - `assets/thesis/` – thesis screenshots
+- `play.html` + `play.js`, `play-shell.js`, `guess-data.js`, `captcha.js` – the games page (Guess the Average, reSHAPTCHA). Its questions, with sources, are in `guess-data.js`
 
 - `assets/Serkan-Soenmez-CV-EN.pdf`, `…-DE.pdf` – CVs, linked per language via `CV` at the top of `main.js`
 
