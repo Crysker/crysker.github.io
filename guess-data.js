@@ -1,0 +1,85 @@
+/* Guess the Average: question pool.
+   value = the real number in the question's own unit (so "9.16" means 9.16 million people).
+   min/max = slider range (log scale). dec = decimals shown for the answer.
+   Every number has a source and year, shown after each guess. Sources disagree on many "per person"
+   statistics, so only figures with a clear official source are used.
+   cap = hard upper limit for the slider (percentages). min/max are only the base width: play.js shifts the range at random
+   for every question so the real value doesn't always sit in the middle.
+   diff: easy / medium / hard; a game mixes 3 easy, 4 medium and 3 hard ones. */
+const GUESS_Q = [
+  /* ---------- easy ---------- */
+  { id: "beer", diff: "easy", value: 99, min: 20, max: 300, dec: 0,
+    q: { en: "How many litres of beer does the average person in Austria drink per year?", de: "Wie viele Liter Bier trinkt ein Mensch in Österreich im Durchschnitt pro Jahr?" },
+    unit: { en: "litres", de: "Liter" },
+    fact: { en: "That's about 2 litres every single week, babies included.", de: "Das sind etwa 2 Liter pro Woche, Babys mitgerechnet." },
+    src: { name: "Statista / Brewers of Europe", year: 2023, url: "https://www.statista.com/statistics/446028/austria-volume-beer-consumption-per-capita/" } },
+  { id: "at-pop", diff: "easy", value: 9.16, min: 1, max: 40, dec: 2,
+    q: { en: "How many people live in Austria?", de: "Wie viele Menschen leben in Österreich?" },
+    unit: { en: "million people", de: "Mio. Menschen" },
+    fact: { en: "About 2 million of them live in Vienna alone.", de: "Etwa 2 Millionen davon leben allein in Wien." },
+    src: { name: "Statistik Austria", year: 2024, url: "https://www.statistik.at/fileadmin/announcement/2024/02/20240213Bevoelkerungsstand1.1.2024EN.pdf" } },
+  { id: "everest", diff: "easy", value: 8849, min: 2000, max: 30000, dec: 0,
+    q: { en: "How high is Mount Everest?", de: "Wie hoch ist der Mount Everest?" },
+    unit: { en: "metres", de: "Meter" },
+    fact: { en: "Nepal and China agreed on this new figure in 2020, after new measurements.", de: "Nepal und China haben sich 2020 nach neuen Messungen auf diesen Wert geeinigt." },
+    src: { name: "Wikipedia: Mount Everest", year: 2020, url: "https://en.wikipedia.org/wiki/Mount_Everest" } },
+  { id: "bones", diff: "easy", value: 206, min: 50, max: 800, dec: 0,
+    q: { en: "How many bones does an adult human have?", de: "Wie viele Knochen hat ein erwachsener Mensch?" },
+    unit: { en: "bones", de: "Knochen" },
+    fact: { en: "Babies are born with around 270 to 300. Many of them fuse together as you grow.", de: "Babys kommen mit etwa 270 bis 300 zur Welt. Viele verwachsen beim Wachsen." },
+    src: { name: "Wikipedia: Human skeleton", year: 2024, url: "https://en.wikipedia.org/wiki/Human_skeleton" } },
+  { id: "vienna-pop", diff: "easy", value: 2.01, min: 0.3, max: 20, dec: 2,
+    q: { en: "How many people live in Vienna?", de: "Wie viele Menschen leben in Wien?" },
+    unit: { en: "million people", de: "Mio. Menschen" },
+    fact: { en: "Vienna passed the 2 million mark in the third quarter of 2023.", de: "Wien hat im dritten Quartal 2023 die Marke von 2 Millionen überschritten." },
+    src: { name: "Statistik Austria", year: 2024, url: "https://www.statistik.at/fileadmin/announcement/2024/02/20240213Bevoelkerungsstand1.1.2024EN.pdf" } },
+
+  /* ---------- medium ---------- */
+  { id: "steffl-steps", diff: "medium", value: 343, min: 30, max: 3000, dec: 0,
+    q: { en: "How many steps lead up the south tower of St. Stephen's Cathedral in Vienna to the watchman's room?", de: "Wie viele Stufen führen im Südturm des Wiener Stephansdoms zur Türmerstube?" },
+    unit: { en: "steps", de: "Stufen" },
+    fact: { en: "The watchman's room sits at 72 metres, where watchmen once looked out for fires.", de: "Die Türmerstube liegt auf 72 Metern, dort hielten früher Türmer Ausschau nach Bränden." },
+    src: { name: "Wien Tourismus", year: 2024, url: "https://www.wien.info/en/see-do/sights-from-a-to-z/st-stephens-cathedral-359690" } },
+  { id: "tr-pop", diff: "medium", value: 85.7, min: 5, max: 1000, dec: 1,
+    q: { en: "How many people live in Turkey?", de: "Wie viele Menschen leben in der Türkei?" },
+    unit: { en: "million people", de: "Mio. Menschen" },
+    fact: { en: "About 18 percent of them live in Istanbul alone.", de: "Etwa 18 Prozent davon leben allein in Istanbul." },
+    src: { name: "TurkStat, via Daily Sabah", year: 2024, url: "https://www.dailysabah.com/turkiye/turkiyes-population-reaches-86-million-with-family-support-boost/news" } },
+  { id: "steffl-height", diff: "medium", value: 136.4, min: 10, max: 1000, dec: 1,
+    q: { en: "How tall is the south tower of St. Stephen's Cathedral in Vienna?", de: "Wie hoch ist der Südturm des Wiener Stephansdoms?" },
+    unit: { en: "metres", de: "Meter" },
+    fact: { en: "It is the third-tallest Gothic church tower in the world, finished in 1433 after 65 years of building.", de: "Er ist der dritthöchste gotische Kirchturm der Welt und wurde 1433 nach 65 Jahren Bauzeit fertig." },
+    src: { name: "Wien Tourismus", year: 2024, url: "https://www.wien.info/en/see-do/sights-from-a-to-z/st-stephens-cathedral-359690" } },
+  { id: "at-forest", diff: "medium", value: 47.9, min: 1, max: 100, cap: 100, dec: 1,
+    q: { en: "What percent of Austria's land is covered by forest?", de: "Wie viel Prozent der Fläche Österreichs sind Wald?" },
+    unit: { en: "percent", de: "Prozent" },
+    fact: { en: "That's more than 4 million hectares, one of the most forested countries in Europe.", de: "Das sind mehr als 4 Millionen Hektar, eines der waldreichsten Länder Europas." },
+    src: { name: "Österreichische Waldinventur 2016–2021", year: 2021, url: "https://www.bmluk.gv.at/service/publikationen/wald/austrian-forest-report-2023.html" } },
+  { id: "de-cats", diff: "medium", value: 15.7, min: 0.5, max: 200, dec: 1,
+    q: { en: "How many pet cats live in Germany?", de: "Wie viele Hauskatzen leben in Deutschland?" },
+    unit: { en: "million cats", de: "Mio. Katzen" },
+    fact: { en: "Cats beat dogs there: about 10.5 million dogs.", de: "Katzen schlagen Hunde: Es gibt etwa 10,5 Millionen Hunde." },
+    src: { name: "ZZF / IVH (Skopos survey)", year: 2023, url: "https://www.petfoodindustry.com/pet-ownership-statistics/news/15670716/in-germany-cats-remain-the-most-popular-pet" } },
+
+  /* ---------- hard ---------- */
+  { id: "istanbul-pop", diff: "hard", value: 15.7, min: 0.5, max: 200, dec: 1,
+    q: { en: "How many people live in Istanbul?", de: "Wie viele Menschen leben in Istanbul?" },
+    unit: { en: "million people", de: "Mio. Menschen" },
+    fact: { en: "That's about 1.7 times as many people as in all of Austria.", de: "Das sind etwa 1,7-mal so viele Menschen wie in ganz Österreich." },
+    src: { name: "TurkStat (address-based registration)", year: 2024, url: "https://www.turkishminute.com/2025/02/06/population-density-in-istanbul-26-time-higher-than-national-average-turkstat4/" } },
+  { id: "de-pets", diff: "hard", value: 34.3, min: 1, max: 500, dec: 1,
+    q: { en: "How many pets (dogs, cats, small animals and pet birds) live in German households?", de: "Wie viele Heimtiere (Hunde, Katzen, Kleintiere und Ziervögel) leben in deutschen Haushalten?" },
+    unit: { en: "million pets", de: "Mio. Tiere" },
+    fact: { en: "45 percent of all German households have at least one pet.", de: "45 Prozent aller deutschen Haushalte haben mindestens ein Haustier." },
+    src: { name: "ZZF / IVH (Skopos survey)", year: 2023, url: "https://www.petfoodindustry.com/pet-ownership-statistics/news/15670716/in-germany-cats-remain-the-most-popular-pet" } },
+  { id: "tr-tea", diff: "hard", value: 1300, min: 50, max: 30000, dec: 0,
+    q: { en: "How many cups of tea does the average person in Turkey drink per year?", de: "Wie viele Tassen Tee trinkt ein Mensch in der Türkei im Durchschnitt pro Jahr?" },
+    unit: { en: "cups", de: "Tassen" },
+    fact: { en: "That's almost four glasses every day. Turkey has the highest tea consumption per person in the world.", de: "Das sind fast vier Gläser jeden Tag. Die Türkei hat weltweit den höchsten Teekonsum pro Kopf." },
+    src: { name: "FoodNavigator-Asia", year: 2019, url: "https://www.foodnavigator-asia.com/Article/2019/01/16/Turkey-tops-tea-drinking-chart-Each-Turk-drinks-an-average-of-1-300-cups-of-tea-per-year/" } },
+  { id: "tr-hazelnut", diff: "hard", value: 70, min: 1, max: 100, cap: 100, dec: 0,
+    q: { en: "What share of the world's hazelnuts comes from Turkey?", de: "Welcher Anteil der weltweiten Haselnüsse kommt aus der Türkei?" },
+    unit: { en: "percent", de: "Prozent" },
+    fact: { en: "It fluctuates between about 64 and 73 percent depending on the year. Turkey also handles over 80 percent of the world's hazelnut trade.", de: "Je nach Jahr schwankt es zwischen etwa 64 und 73 Prozent. Die Türkei wickelt außerdem über 80 Prozent des weltweiten Haselnusshandels ab." },
+    src: { name: "FAO", year: 2022, url: "https://www.fao.org/4/x4484e/x4484e03.htm" } }
+];

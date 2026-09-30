@@ -22,7 +22,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,700;1,9..144,600;1,9..144,700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <script>try { var th = localStorage.getItem("theme"); if (th === "light" || th === "dark") document.documentElement.dataset.theme = th; } catch (e) {}</script>
-  <link rel="stylesheet" href="styles.css?v=49">
+  <link rel="stylesheet" href="styles.css?v=59">
 </head>
 <body>
   <a class="skip" href="#main" data-i18n="skip">Skip to content</a>
@@ -37,6 +37,7 @@
         <li><a href="#projects" data-i18n="nav.projects">Projects</a></li>
         <li><a href="#experience" data-i18n="nav.experience">Experience</a></li>
         <li><a href="#contact" data-i18n="nav.contact">Contact</a></li>
+        <li><button type="button" class="nav__play" data-play-open data-play-nav>Play</button></li>
         <li class="js-cv-item" hidden><a class="nav__cv js-cv" href="#" target="_blank" rel="noopener" data-i18n="nav.cv">CV ↓</a></li>
       </ul>
     </nav>
@@ -240,6 +241,17 @@
     </div>
   </dialog>
 
+  <!-- Play tab: tiny games -->
+  <dialog class="play" id="playDialog" aria-labelledby="playTitle">
+    <div class="play__bar">
+      <button type="button" class="play__back" id="playBack" hidden aria-label="Back">←</button>
+      <h2 id="playTitle">Play</h2>
+      <button type="button" class="play__back" id="playSound" aria-pressed="true" aria-label="Turn sound off">🔊</button>
+      <button type="button" class="play__close" id="playClose" aria-label="Close">✕</button>
+    </div>
+    <div class="play__body" id="playBody"></div>
+  </dialog>
+
   <!-- Image viewer: click a project image to see it big, zoom and pan -->
   <dialog class="lightbox" id="lightbox" aria-label="Image viewer">
     <div class="lightbox__stage" id="lbStage"><img id="lbImg" alt=""></div>
@@ -266,6 +278,8 @@
   </dialog>
 
   <script src="logos.js?v=2"></script>
-  <script src="main.js?v=62"></script>
+  <script src="main.js?v=63"></script>
+  <script src="guess-data.js?v=3"></script>
+  <script src="play.js?v=13"></script>
 </body>
 </html>
