@@ -7,7 +7,7 @@ const PLAY_T = {
     home: "Home", nav: "Playground", title: "Playground", back: "Back", close: "Close", soundOn: "Turn sound on", soundOff: "Turn sound off",
     intro: "Tiny games, made for fun. More are on the way.",
     g1: ["Guess the Average", "How much beer does an Austrian drink? How many cups of tea a Turk? Guess the number, the closer the more points."],
-    best: "Best: {n}", verified: "Verified", robot: "I'm not a robot", play: "Play", soon: "Soon", g2: "Tiny Orchestra", g3: "Tower of Babel",
+    best: "Best: {n}", verified: "Verified", robot: "I'm not a robot", play: "Play", soon: "Soon", g2: "Tiny Orchestra", g3: "Tower of Babel", g4: "Puzzle Round",
     more: "Fun fact & source", answers: "Show my answers", q: "Question {i} of {n}", lock: "Lock in", next: "Next", finish: "See result",
     diff: { easy: "Easy", medium: "Medium", hard: "Hard" },
     you: "You", real: "Real", points: "+{n} / 100", off: "{p} off", exact: "Spot on!",
@@ -21,7 +21,7 @@ const PLAY_T = {
     home: "Start", nav: "Spielwiese", title: "Spielwiese", back: "Zurück", close: "Schließen", soundOn: "Ton einschalten", soundOff: "Ton ausschalten",
     intro: "Kleine Spiele, nur zum Spaß. Mehr folgt.",
     g1: ["Schätz den Durchschnitt", "Wie viel Bier trinkt ein Österreicher? Wie viele Tassen Tee ein Türke? Schätze die Zahl, je näher, desto mehr Punkte."],
-    best: "Bestwert: {n}", verified: "Verifiziert", robot: "Ich bin kein Roboter", play: "Spielen", soon: "Bald", g2: "Mini-Orchester", g3: "Turmbau zu Babel",
+    best: "Bestwert: {n}", verified: "Verifiziert", robot: "Ich bin kein Roboter", play: "Spielen", soon: "Bald", g2: "Mini-Orchester", g3: "Turmbau zu Babel", g4: "Rätselrunde",
     more: "Fun Fact & Quelle", answers: "Meine Antworten zeigen", q: "Frage {i} von {n}", lock: "Bestätigen", next: "Weiter", finish: "Ergebnis ansehen",
     diff: { easy: "Leicht", medium: "Mittel", hard: "Schwer" },
     you: "Du", real: "Echt", points: "+{n} / 100", off: "{p} daneben", exact: "Volltreffer!",
@@ -145,22 +145,28 @@ function renderPlay() {
   document.getElementById("playCrumbs").innerHTML = "<ol>" +
     `<li><a href="index.html">${esc(pt("home"))}</a></li>` +
     (play.screen === "menu" ? `<li aria-current="page">${esc(pt("title"))}</li>`
-      : `<li><a href="#" data-menu>${esc(pt("title"))}</a></li><li aria-current="page">${esc(play.screen === "orch" ? pt("g2") : play.screen === "tower" ? pt("g3") : pt("g1")[0])}</li>`) + "</ol>";
+      : `<li><a href="#" data-menu>${esc(pt("title"))}</a></li><li aria-current="page">${esc(play.screen === "orch" ? pt("g2") : play.screen === "tower" ? pt("g3") : play.screen === "words" ? pt("g4") : pt("g1")[0])}</li>`) + "</ol>";
   document.querySelector(".play-card").classList.toggle("is-menu", play.screen === "menu");
   document.querySelector(".play-card").classList.toggle("is-wide", play.screen === "orch" || play.screen === "tower"); // the orchestra and the tower use the whole page
-  document.querySelector(".play-card").classList.toggle("is-plain", play.screen === "q" || play.screen === "end"); // the guessing game: one calm column, no card
+  document.querySelector(".play-card").classList.toggle("is-plain", play.screen === "q" || play.screen === "end" || play.screen === "words"); // the guessing game: one calm column, no card
   if (play.screen === "orch") document.getElementById("playTitle").textContent = pt("g2");
   else if (play.screen === "tower") document.getElementById("playTitle").textContent = pt("g3");
+  else if (play.screen === "words") document.getElementById("playTitle").textContent = pt("g4");
   else if (play.screen === "q" || play.screen === "end") document.getElementById("playTitle").textContent = pt("g1")[0];
   if (play.screen === "menu") renderMenu();
   else if (play.screen === "orch") renderOrchestra();
   else if (play.screen === "tower") renderTower();
+  else if (play.screen === "words") renderWords();
   else if (play.screen === "q") renderQuestion();
   else renderEnd();
 }
 
 /* Menu: a neal.fun-style grid, one picture tile per game with just its title; the tile is the button. */
 const TILE_ART = {
+  words: `<svg viewBox="0 0 80 80" width="100%" height="100%" focusable="false">
+    <rect x="9" y="16" width="14" height="14" rx="3" class="tile__w tile__w--g"/><rect x="26" y="16" width="14" height="14" rx="3" class="tile__w tile__w--y"/><rect x="43" y="16" width="14" height="14" rx="3" class="tile__w tile__w--g"/><rect x="60" y="16" width="14" height="14" rx="3" class="tile__w"/>
+    <rect x="9" y="34" width="14" height="14" rx="3" class="tile__w"/><rect x="26" y="34" width="14" height="14" rx="3" class="tile__w tile__w--g"/><rect x="43" y="34" width="14" height="14" rx="3" class="tile__w tile__w--y"/><rect x="60" y="34" width="14" height="14" rx="3" class="tile__w tile__w--g"/>
+    <rect x="9" y="52" width="14" height="14" rx="3" class="tile__w tile__w--g"/><rect x="26" y="52" width="14" height="14" rx="3" class="tile__w tile__w--g"/><rect x="43" y="52" width="14" height="14" rx="3" class="tile__w tile__w--g"/><rect x="60" y="52" width="14" height="14" rx="3" class="tile__w tile__w--g"/></svg>`,
   guess: `<svg viewBox="0 0 80 80" width="100%" height="100%" focusable="false">
     <text x="40" y="36" text-anchor="middle" class="pgame__q">?</text>
     <line x1="14" y1="56" x2="66" y2="56" class="pgame__rail"/>
@@ -209,9 +215,14 @@ function renderMenu() {
         <span class="ptile__art" aria-hidden="true">${TILE_ART.tower}</span>
         <span class="ptile__title">${esc(pt("g3"))}</span><small class="ptile__best">${esc(twBestSaved() ? tt("best") + ": " + twBestSaved() + " m" : tt("toy"))}</small>
       </button>
+      <button type="button" class="ptile" id="pgameWords">
+        <span class="ptile__art" aria-hidden="true">${TILE_ART.words}</span>
+        <span class="ptile__title">${esc(pt("g4"))}</span><small class="ptile__best">${esc(wdDoneToday() ? "✓ " + wt("played") : wt("toy"))}</small>
+      </button>
     </div>`;
   document.getElementById("pgameGuess").addEventListener("click", () => openGame("#guess", () => { sfx.click(); startGame(); }));
   document.getElementById("pgameCaptcha").addEventListener("click", () => openGame("#reshaptcha", startCaptcha));
+  document.getElementById("pgameWords").addEventListener("click", () => openGame("#words", () => { sfx.click(); play = { screen: "words" }; renderPlay(); }));
   document.getElementById("pgameTower").addEventListener("click", () => openGame("#tower", () => { sfx.click(); play = { screen: "tower" }; renderPlay(); }));
   document.getElementById("pgameOrch").addEventListener("click", () => openGame("#orchestra", () => { sfx.click(); play = { screen: "orch" }; renderPlay(); }));
 }
@@ -385,7 +396,7 @@ document.getElementById("playSound").addEventListener("click", () => {
   sfx.click();
 });
 /* ============ Every game has its own address ============
-   play.html#guess, #orchestra, #tower and #reshaptcha open a game directly (handy for sharing), and the browser's
+   play.html#guess, #orchestra, #tower, #words and #reshaptcha open a game directly (handy for sharing), and the browser's
    back button brings you back to the menu, like a real page. */
 let routePushed = false;
 function openGame(hash, begin) {
@@ -402,6 +413,7 @@ function showFromHash() {
   if (dlg.open) dlg.close();
   if (h.startsWith("#orchestra")) play = { screen: "orch" };
   else if (h === "#tower") play = { screen: "tower" };
+  else if (h === "#words") play = { screen: "words" };
   else if (h === "#guess") { if (play.screen !== "q" && play.screen !== "end") { startGame(); return; } }
   else play = { screen: "menu" };
   renderPlay();

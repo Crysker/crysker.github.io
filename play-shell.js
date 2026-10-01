@@ -21,7 +21,8 @@ const SHELL_T = {
       human: ["Certified human", "Passed the reSHAPTCHA"],
       maestro: ["Maestro", "Placed 6 creatures on the Tiny Orchestra stage and pressed play"],
       conductor: ["Conductor", "Found all 8 secret combinations in Tiny Orchestra"],
-      babel: ["Tower builder", "Reached the sky in Tower of Babel"]
+      babel: ["Tower builder", "Reached the sky in Tower of Babel"],
+      riddler: ["Puzzle fan", "Finished a Puzzle Round"]
     }
   },
   de: {
@@ -35,13 +36,14 @@ const SHELL_T = {
       human: ["Zertifizierter Mensch", "Das reSHAPTCHA bestanden"],
       maestro: ["Maestro", "6 Wesen auf die Bühne des Mini-Orchesters gesetzt und Play gedrückt"],
       conductor: ["Dirigent:in", "Alle 8 geheimen Kombinationen im Mini-Orchester gefunden"],
-      babel: ["Turmbauer:in", "Im Turmbau zu Babel den Himmel erreicht"]
+      babel: ["Turmbauer:in", "Im Turmbau zu Babel den Himmel erreicht"],
+      riddler: ["Rätselfuchs", "Eine Rätselrunde beendet"]
     }
   }
 };
 let babelLang = null; // set by the Tower of Babel: for a while the page speaks another language
 const st = (k) => { const b = babelLang && SHELL_T[babelLang]; return b && b[k] !== undefined ? b[k] : SHELL_T[lang][k]; };
-const ACH_TOTAL = 13; // same list as on the portfolio page
+const ACH_TOTAL = 14; // same list as on the portfolio page
 
 function applyShell() {
   document.documentElement.lang = babelLang || lang;
