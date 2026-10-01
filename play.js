@@ -150,8 +150,8 @@ function renderPlay() {
     (play.screen === "menu" ? `<li aria-current="page">${esc(pt("title"))}</li>`
       : `<li><a href="#" data-menu>${esc(pt("title"))}</a></li><li aria-current="page">${esc(reg ? playGameTitle(reg) : play.screen === "orch" ? pt("g2") : play.screen === "tower" ? pt("g3") : play.screen === "words" ? pt("g4") : pt("g1")[0])}</li>`) + "</ol>";
   document.querySelector(".play-card").classList.toggle("is-menu", play.screen === "menu");
-  document.querySelector(".play-card").classList.toggle("is-wide", play.screen === "orch" || play.screen === "tower" || (reg && reg.layout === "wide")); // the orchestra and the tower use the whole page
-  document.querySelector(".play-card").classList.toggle("is-plain", play.screen === "q" || play.screen === "end" || play.screen === "words" || (reg && reg.layout !== "wide")); // the guessing game: one calm column, no card
+  document.querySelector(".play-card").classList.toggle("is-wide", play.screen === "orch" || play.screen === "tower" || !!(reg && reg.layout === "wide")); // !!: toggle() with undefined would flip the class instead of removing it // the orchestra and the tower use the whole page
+  document.querySelector(".play-card").classList.toggle("is-plain", play.screen === "q" || play.screen === "end" || play.screen === "words" || !!(reg && reg.layout !== "wide")); // the guessing game: one calm column, no card
   if (reg) document.getElementById("playTitle").textContent = playGameTitle(reg);
   else if (play.screen === "orch") document.getElementById("playTitle").textContent = pt("g2");
   else if (play.screen === "tower") document.getElementById("playTitle").textContent = pt("g3");
@@ -282,8 +282,8 @@ function renderQuestion() {
   num.addEventListener("input", () => { const v = parseNum(num.value, q); if (v) setGuess(v, true); });
   const lock = () => { const v = parseNum(num.value, q) || play.guess; if (!v) return; play.guess = v; lockIn(); };
   document.getElementById("pqLock").addEventListener("click", lock);
-  num.addEventListener("keydown", (e) => { if (e.key === "Enter") lock(); });
-  slider.addEventListener("keydown", (e) => { if (e.key === "Enter") lock(); });
+  num.addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); if (!e.repeat) lock(); } }); // preventDefault: the Next button that takes the focus must not get this Enter as a click
+  slider.addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); if (!e.repeat) lock(); } });
 }
 
 function lockIn() {

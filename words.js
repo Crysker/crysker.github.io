@@ -13,7 +13,7 @@ const WD_T = {
     start: "Start", doneToday: "You have played today's round.", again: "Play another round", next: "Next", enter: "Enter", submit: "Submit", deselect: "Deselect", shuffle: "Shuffle",
     mistakes: "Mistakes left", oneAway: "One away!", notThis: "Not this time.", word: "The word was", solved: "Solved!", round: "Round {n} of 3", share: "Copy result", copied: "Copied!",
     daily: "Daily", random: "Random round", result: "Result", fact: "Did you know?", toy: "New every day", played: "Played today", tries: "{n}/6", title: "Puzzle Round", finish: "See result",
-    pick: "Pick a letter", correct: "Correct!", wrong: "Not quite.", tooShort: "Not enough letters"
+    pick: "Pick a letter", correct: "Correct!", wrong: "Not quite.", tooShort: "Not enough letters", notWord: "Not in the word list"
   },
   de: {
     intro: "Drei kurze Runden, heute für alle gleich.", names: ["Fünfer", "Vierer", "Wissen"],
@@ -21,7 +21,7 @@ const WD_T = {
     start: "Starten", doneToday: "Du hast die heutige Runde gespielt.", again: "Noch eine Runde", next: "Weiter", enter: "Enter", submit: "Prüfen", deselect: "Abwählen", shuffle: "Mischen",
     mistakes: "Fehler übrig", oneAway: "Fast! Ein Wort passt nicht.", notThis: "Diesmal nicht.", word: "Das Wort war", solved: "Geschafft!", round: "Runde {n} von 3", share: "Ergebnis kopieren", copied: "Kopiert!",
     daily: "Täglich", random: "Zufällige Runde", result: "Ergebnis", fact: "Wusstest du?", toy: "Jeden Tag neu", played: "Heute gespielt", tries: "{n}/6", title: "Rätselrunde", finish: "Ergebnis ansehen",
-    pick: "Buchstabe wählen", correct: "Richtig!", wrong: "Leider nicht.", tooShort: "Zu wenig Buchstaben"
+    pick: "Buchstabe wählen", correct: "Richtig!", wrong: "Leider nicht.", tooShort: "Zu wenig Buchstaben", notWord: "Nicht in der Wortliste"
   }
 };
 const wt = (k) => (WD_T[lang] || WD_T.en)[k];
@@ -71,9 +71,9 @@ function wdFiveHTML() {
     let tiles = "";
     for (let c = 0; c < 5; c++) {
       const ch = g ? g[c] : isCur ? (f.cur[c] || "") : "";
-      tiles += `<span class="wd5__tile${ev ? " is-" + ev[c] : ch ? " is-typed" : ""}">${esc(ch)}</span>`;
+      tiles += `<span class="wd5__tile${ev ? " is-" + ev[c] : ch ? " is-typed" : ""}${ev && r === f.fresh ? " is-flip" : ""}" style="--d:${c * 260}ms">${esc(ch)}</span>`;
     }
-    rows.push(`<div class="wd5__row">${tiles}</div>`);
+    rows.push(`<div class="wd5__row${isCur && f.shake ? " is-shake" : ""}">${tiles}</div>`);
   }
   const status = {};
   f.guesses.forEach((g) => wdEval(g, f.word).forEach((s, i) => { const ch = g[i], rank = { absent: 1, present: 2, correct: 3 }; if (!status[ch] || rank[s] > rank[status[ch]]) status[ch] = s; }));
@@ -84,15 +84,21 @@ function wdFiveHTML() {
     <p class="wd__msg" role="status">${esc(f.msg)}</p>
     ${f.over ? `<div class="wd__actions"><button type="button" class="orch__go" id="wdNext">${esc(wt("next"))}</button></div>` : `<div class="wd5__kb">${kb}</div>`}`;
 }
+const wdValid = {};
+function wdIsWord(w) {
+  const l = wd.lang, set = wdValid[l] || (wdValid[l] = new Set((typeof WORDS_VALID !== "undefined" ? WORDS_VALID[l] : "").split(" ")));
+  return set.size < 100 || set.has(w) || w === wd.five.word; // without the list loaded, anything goes
+}
 function wdFiveKey(k) {
   const f = wd.five;
   if (!f || f.over || wd.screen !== "five") return;
-  f.msg = "";
+  f.msg = ""; f.shake = false; f.fresh = -1;
   if (k === "BACK") f.cur = f.cur.slice(0, -1);
   else if (k === "ENTER") {
-    if (f.cur.length < 5) { f.msg = wt("tooShort"); sfx.pop(); }
+    if (f.cur.length < 5) { f.msg = wt("tooShort"); f.shake = true; sfx.pop(); }
+    else if (!wdIsWord(f.cur)) { f.msg = wt("notWord"); f.shake = true; sfx.pop(); }
     else {
-      f.guesses.push(f.cur);
+      f.guesses.push(f.cur); f.fresh = f.guesses.length - 1;
       if (f.cur === f.word) { f.over = true; f.won = true; f.msg = wt("solved"); }
       else if (f.guesses.length === 6) { f.over = true; f.msg = wt("word") + ": " + f.word; }
       f.cur = "";
@@ -183,7 +189,7 @@ function wdEndHTML() {
 /* ---- screens ---- */
 function wdIntroHTML() {
   const saved = wdSavedToday();
-  return `<p class="wd__intro">${esc(wt("intro"))}</p>
+  return `<p class="wd__roundlabel">${esc(wt("daily"))}</p><p class="wd__intro">${esc(wt("intro"))}</p>
     <ol class="wd__list">${wt("names").map((n, i) => `<li><b>${esc(n)}</b><span>${esc(wt("descs")[i])}</span></li>`).join("")}</ol>
     <div class="wd__actions">${saved ? `<p class="wd__msg">${esc(wt("doneToday"))}</p><button type="button" class="orch__go" id="wdShowSaved">${esc(wt("result"))}</button><button type="button" class="orch__clear" id="wdMore">${esc(wt("again"))}</button>`
       : `<button type="button" class="orch__go" id="wdStart">${esc(wt("start"))}</button>`}</div>`;

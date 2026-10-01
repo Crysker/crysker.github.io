@@ -88,7 +88,7 @@
   let G = null;
   function start() {
     const ak = pick(BASKET, 3), billa = pick(BILLA, 1), cafes = pick(CAFES, 2);
-    const rounds = shuffle([billaRound(billa[0]), basketRound(ak[0]), cafeRound(cafes[0]), cafeRound(cafes[1]), basketRound(ak[1]), basketRound(ak[2])]);
+    const rounds = shuffle([() => billaRound(billa[0]), () => basketRound(ak[0]), () => cafeRound(cafes[0]), () => cafeRound(cafes[1]), () => basketRound(ak[1]), () => basketRound(ak[2])]) // built when shown, so a language switch applies;
     G = { rounds, i: 0, s: 450, revealed: false, pts: 0, last: null, done: false };
   }
   function photoHTML(r) {
@@ -100,7 +100,7 @@
     const body = document.getElementById("playBody");
     if (!G) start();
     if (G.done) { body.innerHTML = endHTML(); bind(); return; }
-    const r = G.rounds[G.i], guess = fromSlider(G.s), target = r.now, hasThen = r.then !== undefined;
+    const r = G.rounds[G.i](), guess = fromSlider(G.s), target = r.now, hasThen = r.then !== undefined;
     const hint = hasThen && !G.revealed ? L("hint").replace("{w}", r.when).replace("{p}", euro(r.then)) : "";
     let result = "";
     if (G.revealed) {
@@ -139,7 +139,7 @@
     if (slider && !slider.disabled) slider.addEventListener("input", () => { G.s = +slider.value; $("prPrice").textContent = euro(fromSlider(G.s)); sfx.tick(G.s / 1000); });
     const set = $("prSet");
     if (set) set.addEventListener("click", () => {
-      const r = G.rounds[G.i], pts = score(fromSlider(G.s), r.now);
+      const r = G.rounds[G.i](), pts = score(fromSlider(G.s), r.now);
       G.last = pts; G.pts += pts; G.revealed = true; sfx.lock(); setTimeout(() => sfx.score(pts), 120); paint();
     });
     const next = $("prNext");
