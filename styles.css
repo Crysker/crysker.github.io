@@ -1494,3 +1494,10 @@ body.view-all .p-card__play, body.view-all .p-card__video { display: none; }
 .orch__bh { position: absolute; right: 0; top: 0; bottom: 0; width: 12px; border-radius: 0 7px 7px 0; cursor: ew-resize; background: rgba(0,0,0,.22);
   background-image: linear-gradient(90deg, transparent 3px, rgba(255,255,255,.85) 3px, rgba(255,255,255,.85) 4.5px, transparent 4.5px, transparent 7px, rgba(255,255,255,.85) 7px, rgba(255,255,255,.85) 8.5px, transparent 8.5px); }
 @media (max-width: 640px) { .orch__stagewrap .orch__notes li { grid-template-columns: 28px 1fr 28px; } .orch__stagewrap .orch__notes li .orch__lane { grid-column: 1 / -1; } }
+
+/* Orchestra on phones (Safari): the squares must never be wider than their share of the stage */
+.orch__stage { grid-template-columns: repeat(8, minmax(0, 1fr)); grid-auto-rows: auto; }
+.orch__cell { min-width: 0; min-height: 0; width: 100%; }
+.orch__cell svg { max-width: 100%; max-height: 100%; }
+.orch__stagewrap, .orch__insp, .orch__det { min-width: 0; max-width: 100%; }
+@media (max-width: 640px) { .orch__stagewrap .orch__notes li .orch__x { grid-column: 3; grid-row: 1; } .orch__stagewrap .orch__notes li { padding: 12px 0; } }
