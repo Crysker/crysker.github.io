@@ -1410,3 +1410,11 @@ body.view-all .p-card__play, body.view-all .p-card__video { display: none; }
 .orch__pitch { flex: 1 1 190px; }
 .orch__cell:not([data-id=""]) { cursor: ew-resize; touch-action: pan-y; }
 .orch__cell[data-len="5"] { --n: 5; } .orch__cell[data-len="6"] { --n: 6; } .orch__cell[data-len="7"] { --n: 7; } .orch__cell[data-len="8"] { --n: 8; }
+
+/* Orchestra: a thick bar for long notes and a handle to pull it */
+.orch__cell:not([data-len="1"])::after { height: 42%; margin-top: 0; transform: translateY(-50%); border-radius: 999px; opacity: .6; }
+.orch__handle { position: absolute; top: 50%; right: -5px; z-index: 2; width: 14px; height: 26px; margin-top: -13px; border-radius: 7px; background: var(--ink); opacity: .35; cursor: ew-resize; transition: opacity .15s, transform .15s;
+  background-image: linear-gradient(90deg, transparent 4px, var(--bg) 4px, var(--bg) 6px, transparent 6px, transparent 8px, var(--bg) 8px, var(--bg) 10px, transparent 10px); }
+.orch__cell:hover .orch__handle { opacity: .9; transform: scaleX(1.1); }
+.orch__cell:not([data-len="1"]) .orch__handle { right: auto; left: calc(100% - 9px + (100% + 7px) * (var(--n, 1) - 1)); opacity: .75; }
+@media (hover: none) { .orch__handle { opacity: .6; } }

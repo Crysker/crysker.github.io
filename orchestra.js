@@ -14,7 +14,7 @@ const ORCH_T = {
     names: { blob: "Blobby", frog: "Froggo", bird: "Pip", ghost: "Boo", robot: "Bleep", octo: "Inky" },
     sounds: { blob: "kick", frog: "bass", bird: "chirp", ghost: "pad", robot: "tick", octo: "pluck" },
     rows: "Rows", rowMore: "Add a row", rowLess: "Remove a row",
-    pitch: "Pitch", kit: "Sound", kits: ["Classic", "8-bit", "Buzz", "Soft"], hint: "Higher rows sound higher. Pull a creature to the right to make its note longer.", len: "Note length",
+    pitch: "Pitch", kit: "Sound", kits: ["Classic", "8-bit", "Buzz", "Soft"], hint: "Higher rows sound higher. Tap a creature to remove it. Pull its handle to the right to make the note longer.", len: "Note length",
     found: "Discoveries", share: "Share my beat", copied: "Link copied", newFound: "Discovered: {n}!", creatures: "Creatures",
     combos: {
       frogs: ["Frog choir", "A choir needs many voices. How many frogs?"],
@@ -34,7 +34,7 @@ const ORCH_T = {
     names: { blob: "Blobby", frog: "Froggo", bird: "Pip", ghost: "Boo", robot: "Bleep", octo: "Inky" },
     sounds: { blob: "Bassdrum", frog: "Bass", bird: "Zwitschern", ghost: "Klangteppich", robot: "Tick", octo: "Zupfen" },
     rows: "Reihen", rowMore: "Reihe hinzufügen", rowLess: "Reihe entfernen",
-    pitch: "Tonhöhe", kit: "Klang", kits: ["Klassisch", "8-Bit", "Brummig", "Weich"], hint: "Höhere Reihen klingen höher. Zieh ein Wesen nach rechts, dann hält sein Ton länger.", len: "Tonlänge",
+    pitch: "Tonhöhe", kit: "Klang", kits: ["Klassisch", "8-Bit", "Brummig", "Weich"], hint: "Höhere Reihen klingen höher. Tippe ein Wesen an, um es zu entfernen. Zieh am Griff nach rechts, dann hält sein Ton länger.", len: "Tonlänge",
     found: "Entdeckungen", share: "Meinen Beat teilen", copied: "Link kopiert", newFound: "Neu entdeckt: {n}!", creatures: "Wesen",
     combos: {
       frogs: ["Froschchor", "Ein Chor braucht viele Stimmen. Wie viele Frösche?"],
@@ -212,10 +212,8 @@ function orchPreview(id) { // pressing a creature in the tray plays its sound, s
 }
 function orchPlace(r, c) {
   const cur = orch.grid[r][c];
-  if (cur === orch.sel) { // tap the same creature again: its note gets longer (1, 2, 4 beats), then it leaves the stage
-    if (orch.len[r][c] >= 4) { orch.grid[r][c] = null; orch.len[r][c] = 1; sfx.pop(); }
-    else { orch.len[r][c] = orch.len[r][c] === 1 ? 2 : 4; if (!playMuted) orchVoice(cur, orchCtx().currentTime + 0.01, ORCH_NOTES[r], orch.len[r][c]); }
-  } else {
+  if (cur === orch.sel) { orch.grid[r][c] = null; orch.len[r][c] = 1; sfx.pop(); } // one tap on the same creature takes it off the stage
+  else {
     orch.grid[r][c] = orch.sel; orch.len[r][c] = 1; orch.placed++;
     if (!playMuted) orchVoice(orch.sel, orchCtx().currentTime + 0.01, ORCH_NOTES[r]); // a little preview
     if (orch.playing && orch.placed >= 6) unlock("maestro");
@@ -263,7 +261,7 @@ function orchPaintStage() {
     el.dataset.len = id ? Math.min(orch.len[r][c], ORCH_COLS - c) : 1; // the tail shows how long the note rings
     if (id) el.style.setProperty("--tail", ORCH_BY_ID[id].color); else el.style.removeProperty("--tail");
     el.classList.toggle("is-dance", dancers.has(r + "," + c));
-    el.innerHTML = id ? creatureSVG(ORCH_BY_ID[id]) : "";
+    el.innerHTML = id ? creatureSVG(ORCH_BY_ID[id]) + `<i class="orch__handle" aria-hidden="true"></i>` : ""; // the little handle shows that the note can be pulled longer
     el.setAttribute("aria-label", `${ot("row")} ${r + 1}, ${ot("beat")} ${c + 1}: ${id ? names[id] + (orch.len[r][c] > 1 ? ", " + ot("len") + " " + orch.len[r][c] : "") : ot("empty")}`);
   });
   orchPaintFound();
