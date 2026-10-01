@@ -1315,7 +1315,7 @@ function renderSkills() {
   const sheet = `
     <section class="sheet" aria-labelledby="sheetTitle">
       <header class="sheet__head">
-        <span class="sheet__avatar"><img src="assets/img/portrait.jpg" alt=""></span>
+        <span class="sheet__avatar"><img src="assets/img/portrait.jpg?v=2" alt=""></span>
         <span>
           <small class="sheet__kicker" id="sheetTitle">${esc(S.title)}</small>
           <b class="sheet__name">Serkan Sönmez</b>
@@ -1332,15 +1332,16 @@ function renderSkills() {
       <p class="sheet__legend">${esc(S.scale)} ${S.levels.map((l, i) =>
         `<span><i class="pips pips--mini" aria-hidden="true">${"<i class=\"pip is-on\"></i>".repeat(i + 1)}</i><b class="sr-only">${i + 1}</b> ${esc(l)}</span>`).join(" ")} <em>${esc(S.max)}</em></p>
     </section>`;
-  const chips = SKILLS.map((g) => `
-    <div class="skill-group">
-      <h3>${esc(G[g.id])}</h3>
-      <ul class="chips">${g.items.map(([label, logo]) => {
-        const text = label.startsWith("@") ? K[label.slice(1)] : esc(label); // K values are trusted and may contain <small>
-        return `<li class="${logo ? "" : "no-logo"}">${logo ? `<img src="${LOGOS[logo]}" alt="">` : ""}${text}</li>`;
-      }).join("")}</ul>
-    </div>`).join("");
-  document.getElementById("skills").innerHTML = sheet + chips;
+  // Perks, inventory and languages share one calm card; the perks fold away on phones (they are the long ones)
+  const chipList = (g) => `<ul class="chips">${g.items.map(([label, logo]) => {
+    const text = label.startsWith("@") ? K[label.slice(1)] : esc(label); // K values are trusted and may contain <small>
+    return `<li class="${logo ? "" : "no-logo"}">${logo ? `<img src="${LOGOS[logo]}" alt="">` : ""}${text}</li>`;
+  }).join("")}</ul>`;
+  const groups = SKILLS.map((g) => g.id === "perks"
+    ? `<details class="skill-group skill-group--fold" data-fold><summary><h3>${esc(G[g.id])} <small>${g.items.length}</small></h3></summary>${chipList(g)}</details>`
+    : `<div class="skill-group"><h3>${esc(G[g.id])}</h3>${chipList(g)}</div>`).join("");
+  document.getElementById("skills").innerHTML = sheet + `<div class="skill-more">${groups}</div>`;
+  document.querySelector("[data-fold]").open = matchMedia("(min-width: 761px)").matches;
 }
 
 
@@ -1437,10 +1438,6 @@ function renderTrophies() {
   const footer = document.getElementById("trophyCount");
   footer.textContent = "🏆 " + count + (n < total ? " · " + A.hint : " 🎉");
   footer.setAttribute("aria-label", A.open + ": " + count);
-  const btn = document.getElementById("trophyBtn");
-  btn.hidden = n === 0; // only for people who already started hunting
-  btn.setAttribute("aria-label", A.open + ": " + count);
-  document.getElementById("trophyMini").textContent = `${n}/${total}`;
 
   // Overview: unlocked ones show what you did, locked ones a hint
   document.getElementById("trophiesTitle").textContent = A.title;
@@ -1462,7 +1459,6 @@ function openTrophies() {
   if (!trophiesDialog.open) trophiesDialog.showModal();
 }
 document.getElementById("trophyCount").addEventListener("click", openTrophies);
-document.getElementById("trophyBtn").addEventListener("click", openTrophies);
 document.getElementById("toast").addEventListener("click", openTrophies);
 document.getElementById("trophiesClose").addEventListener("click", () => trophiesDialog.close());
 trophiesDialog.addEventListener("click", (e) => { if (e.target === trophiesDialog) trophiesDialog.close(); });

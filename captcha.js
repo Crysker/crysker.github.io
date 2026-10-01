@@ -33,7 +33,7 @@ const gameTray = document.getElementById("gameTray");
 const gameMsg = document.getElementById("gameMsg");
 const verifyBtn = document.getElementById("gameVerify");
 let picked = null, fails = 0;
-new Image().src = "assets/img/meme-success.png"; // load the reward early, so it is there the moment you win
+new Image().src = "assets/img/meme-success.jpg"; // load the reward early, so it is there the moment you win
 
 const say = (text) => { gameMsg.textContent = text; };
 const shapeName = (s) => ct("shapeNames")[s];
