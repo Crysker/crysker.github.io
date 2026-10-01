@@ -157,12 +157,13 @@ function orchLoad() {
   orch.len = orchLenFor(orch.grid, null);
   orchSync(null);
   const n = (id, len = 1, pit = 0) => ({ id, len, pit });
-  [[5, 0, [n("blob")]], [5, 3, [n("blob")]], [5, 4, [n("blob")]], [5, 6, [n("blob")]],
+  [[5, 0, [n("blob"), n("frog", 2, -5)]], [5, 3, [n("blob")]], [5, 4, [n("blob")]], [5, 6, [n("blob")]],
     [4, 0, [n("frog", 2)]], [4, 3, [n("frog", 1, 3)]], [3, 6, [n("frog", 2, -2)]],
     [0, 1, [n("robot")]], [0, 3, [n("robot")]], [0, 5, [n("robot")]], [0, 6, [n("robot")]],
     [2, 0, [n("ghost", 4), n("ghost", 4, 7)]], [2, 5, [n("ghost", 3, -2)]],
     [1, 2, [n("octo")]], [2, 4, [n("octo", 1), n("octo", 1, 5)]], [1, 5, [n("octo", 2)]], [0, 7, [n("octo", 1, 2)]]]
     .forEach(([r, c, notes]) => orchSetNotes(r, c, notes));
+  orch.cell = [5, 0]; // a layered square is open, so the note panel shows what layers are
   orch.bpm = 108;
 }
 const orchSync = (saved) => { // per-note pitch (semitones) and extra layers on a square, kept next to the grid
