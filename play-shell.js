@@ -41,6 +41,9 @@ const SHELL_T = {
     }
   }
 };
+/* Games that hook themselves into the menu: { id, hash, title: {en, de}, art (svg), note: () => text, layout: "plain" | "wide", render, stop } */
+const PLAY_GAMES = [];
+const playGameTitle = (g) => g.title[lang] || g.title.en;
 let babelLang = null; // set by the Tower of Babel: for a while the page speaks another language
 const st = (k) => { const b = babelLang && SHELL_T[babelLang]; return b && b[k] !== undefined ? b[k] : SHELL_T[lang][k]; };
 const ACH_TOTAL = 14; // same list as on the portfolio page
@@ -53,7 +56,7 @@ function applyShell() {
 }
 
 /* light / dark (no stored choice = follow the system) */
-const themeBtn = document.getElementById("themeToggle");
+const themeBtns = [...document.querySelectorAll("#themeToggle, #themeToggleMenu")]; // the round button in the bar and the entry in the phone menu
 const systemDark = window.matchMedia("(prefers-color-scheme: dark)");
 function applyMode() {
   const explicit = document.documentElement.dataset.theme;
@@ -62,14 +65,15 @@ function applyMode() {
   const playLink = document.getElementById("playLink");
   playLink.setAttribute("aria-label", st("play"));
   playLink.title = st("play");
-  themeBtn.setAttribute("aria-label", dark ? st("toLight") : st("toDark"));
+  themeBtns.forEach((b) => b.setAttribute("aria-label", dark ? st("toLight") : st("toDark")));
+  document.getElementById("themeLabel").textContent = lang === "en" ? (dark ? "Light mode" : "Dark mode") : (dark ? "Heller Modus" : "Dunkler Modus");
 }
-themeBtn.addEventListener("click", () => {
+themeBtns.forEach((b) => b.addEventListener("click", () => {
   const next = document.documentElement.dataset.mode === "dark" ? "light" : "dark";
   document.documentElement.dataset.theme = next;
   try { localStorage.setItem("theme", next); } catch (e) {}
   applyMode();
-});
+}));
 systemDark.addEventListener("change", applyMode);
 
 /* language */

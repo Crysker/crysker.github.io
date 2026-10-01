@@ -816,7 +816,7 @@ document.getElementById("langToggle").addEventListener("click", () => {
 
 /* ============ Light / dark ============
    No choice yet = follow the system; the button then stores an explicit choice. */
-const themeBtn = document.getElementById("themeToggle");
+const themeBtns = [...document.querySelectorAll("#themeToggle, #themeToggleMenu")]; // the round button in the bar and the entry in the phone menu
 const systemDark = window.matchMedia("(prefers-color-scheme: dark)");
 function applyMode() {
   const explicit = document.documentElement.dataset.theme;
@@ -825,16 +825,16 @@ function applyMode() {
   const playLink = document.getElementById("playLink");
   playLink.setAttribute("aria-label", t("nav.play"));
   playLink.title = t("nav.play");
-  themeBtn.setAttribute("aria-label", lang === "en"
-    ? (dark ? "Switch to light mode" : "Switch to dark mode")
-    : (dark ? "Zum hellen Modus wechseln" : "Zum dunklen Modus wechseln"));
+  const label = lang === "en" ? (dark ? "Switch to light mode" : "Switch to dark mode") : (dark ? "Zum hellen Modus wechseln" : "Zum dunklen Modus wechseln");
+  themeBtns.forEach((b) => b.setAttribute("aria-label", label));
+  document.getElementById("themeLabel").textContent = lang === "en" ? (dark ? "Light mode" : "Dark mode") : (dark ? "Heller Modus" : "Dunkler Modus");
 }
-themeBtn.addEventListener("click", () => {
+themeBtns.forEach((b) => b.addEventListener("click", () => {
   const next = document.documentElement.dataset.mode === "dark" ? "light" : "dark";
   document.documentElement.dataset.theme = next;
   try { localStorage.setItem("theme", next); } catch (e) {}
   applyMode();
-});
+}));
 systemDark.addEventListener("change", applyMode);
 applyMode();
 

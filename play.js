@@ -132,6 +132,8 @@ function startGame() {
 }
 
 function renderPlay() {
+  const reg = PLAY_GAMES.find((g) => g.id === play.screen); // a game from the registry (see play-shell.js)
+  PLAY_GAMES.forEach((g) => { if (g.stop && g.id !== play.screen) g.stop(); });
   if (play.screen !== "orch") orchStop();
   if (play.screen !== "tower") twStop(); // first, so the page speaks your language again before anything is drawn
   document.getElementById("playTitle").textContent = pt("title");
@@ -145,11 +147,12 @@ function renderPlay() {
   document.getElementById("playCrumbs").innerHTML = "<ol>" +
     `<li><a href="index.html">${esc(pt("home"))}</a></li>` +
     (play.screen === "menu" ? `<li aria-current="page">${esc(pt("title"))}</li>`
-      : `<li><a href="#" data-menu>${esc(pt("title"))}</a></li><li aria-current="page">${esc(play.screen === "orch" ? pt("g2") : play.screen === "tower" ? pt("g3") : play.screen === "words" ? pt("g4") : pt("g1")[0])}</li>`) + "</ol>";
+      : `<li><a href="#" data-menu>${esc(pt("title"))}</a></li><li aria-current="page">${esc(reg ? playGameTitle(reg) : play.screen === "orch" ? pt("g2") : play.screen === "tower" ? pt("g3") : play.screen === "words" ? pt("g4") : pt("g1")[0])}</li>`) + "</ol>";
   document.querySelector(".play-card").classList.toggle("is-menu", play.screen === "menu");
-  document.querySelector(".play-card").classList.toggle("is-wide", play.screen === "orch" || play.screen === "tower"); // the orchestra and the tower use the whole page
-  document.querySelector(".play-card").classList.toggle("is-plain", play.screen === "q" || play.screen === "end" || play.screen === "words"); // the guessing game: one calm column, no card
-  if (play.screen === "orch") document.getElementById("playTitle").textContent = pt("g2");
+  document.querySelector(".play-card").classList.toggle("is-wide", play.screen === "orch" || play.screen === "tower" || (reg && reg.layout === "wide")); // the orchestra and the tower use the whole page
+  document.querySelector(".play-card").classList.toggle("is-plain", play.screen === "q" || play.screen === "end" || play.screen === "words" || (reg && reg.layout !== "wide")); // the guessing game: one calm column, no card
+  if (reg) document.getElementById("playTitle").textContent = playGameTitle(reg);
+  else if (play.screen === "orch") document.getElementById("playTitle").textContent = pt("g2");
   else if (play.screen === "tower") document.getElementById("playTitle").textContent = pt("g3");
   else if (play.screen === "words") document.getElementById("playTitle").textContent = pt("g4");
   else if (play.screen === "q" || play.screen === "end") document.getElementById("playTitle").textContent = pt("g1")[0];
@@ -157,6 +160,7 @@ function renderPlay() {
   else if (play.screen === "orch") renderOrchestra();
   else if (play.screen === "tower") renderTower();
   else if (play.screen === "words") renderWords();
+  else if (reg) reg.render();
   else if (play.screen === "q") renderQuestion();
   else renderEnd();
 }
@@ -219,7 +223,12 @@ function renderMenu() {
         <span class="ptile__art" aria-hidden="true">${TILE_ART.words}</span>
         <span class="ptile__title">${esc(pt("g4"))}</span><small class="ptile__best">${esc(wdDoneToday() ? "✓ " + wt("played") : wt("toy"))}</small>
       </button>
+      ${PLAY_GAMES.map((g) => `<button type="button" class="ptile" data-game="${g.id}">
+        <span class="ptile__art" aria-hidden="true">${g.art}</span>
+        <span class="ptile__title">${esc(playGameTitle(g))}</span><small class="ptile__best">${esc(g.note ? g.note() : "")}</small>
+      </button>`).join("")}
     </div>`;
+  PLAY_GAMES.forEach((g) => document.querySelector(`[data-game="${g.id}"]`).addEventListener("click", () => openGame("#" + g.hash, () => { sfx.click(); play = { screen: g.id }; renderPlay(); })));
   document.getElementById("pgameGuess").addEventListener("click", () => openGame("#guess", () => { sfx.click(); startGame(); }));
   document.getElementById("pgameCaptcha").addEventListener("click", () => openGame("#reshaptcha", startCaptcha));
   document.getElementById("pgameWords").addEventListener("click", () => openGame("#words", () => { sfx.click(); play = { screen: "words" }; renderPlay(); }));
@@ -414,6 +423,7 @@ function showFromHash() {
   if (h.startsWith("#orchestra")) play = { screen: "orch" };
   else if (h === "#tower") play = { screen: "tower" };
   else if (h === "#words") play = { screen: "words" };
+  else if (PLAY_GAMES.some((g) => h === "#" + g.hash)) play = { screen: PLAY_GAMES.find((g) => h === "#" + g.hash).id };
   else if (h === "#guess") { if (play.screen !== "q" && play.screen !== "end") { startGame(); return; } }
   else play = { screen: "menu" };
   renderPlay();
