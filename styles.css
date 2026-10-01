@@ -1122,3 +1122,43 @@ body.view-all .p-card__play, body.view-all .p-card__video { display: none; }
 .play-card.is-plain .pq__value span { font-size: 18px; }
 .play-card.is-plain .pq__num { font-size: 18px; padding: 12px 20px; }
 .play-card.is-plain .pq__row { min-height: 52px; }
+
+/* ============ Games page: room to breathe ============ */
+.playpage { padding: 48px 16px 96px; }
+.play-card.is-menu .crumbs, .play-card.is-plain .crumbs, .play-card.is-wide .crumbs { padding: 0 0 18px; }
+.play-card.is-menu .play__bar, .play-card.is-plain .play__bar, .play-card.is-wide .play__bar { padding: 0 0 16px; gap: 14px; }
+.play-card.is-menu .play__intro { margin: 0 0 32px; font-size: 16px; }
+.pgrid { gap: 26px; }
+.ptile { padding: 14px 14px 22px; gap: 14px; border-radius: 26px; }
+.ptile__art { border-radius: 18px; }
+.ptile__title { padding: 0 6px; }
+.ptile__best { padding: 0 6px; }
+/* guessing game */
+.play-card.is-plain .play__body { padding-top: 8px; }
+.play-card.is-plain .pq__bar { margin: 14px 0 34px; }
+.play-card.is-plain .pq__q { margin-bottom: 12px; }
+.play-card.is-plain .pq__value { margin-top: 18px; }
+.play-card.is-plain .pq__track { margin-top: 12px; }
+.play-card.is-plain .pq__scale { margin-bottom: 44px; }
+.play-card.is-plain .pq__row { margin-top: 12px; gap: 14px; }
+.play-card.is-plain .pq__result { margin-top: 28px; }
+.play-card.is-plain .pe__head { margin-bottom: 24px; }
+.play-card.is-plain .pe__details { margin-top: 24px; padding-top: 14px; }
+/* orchestra */
+.orch { gap: 26px 40px; }
+.orch__intro { margin-bottom: 4px; }
+.orch__stage { gap: 9px; padding: 18px; border-radius: 26px; }
+.orch__tray { gap: 12px; }
+.orch__side { gap: 28px; }
+.orch__foundbox { padding: 24px 26px; border-radius: 22px; }
+.orch__foundbox h3 { margin-bottom: 16px; }
+.orch__found { gap: 18px; }
+.orch__bar { gap: 16px; }
+@media (max-width: 520px) {
+  .playpage { padding: 28px 16px 72px; }
+  .orch { gap: 22px; }
+  .orch__stage { gap: 4px; padding: 8px; }
+  .orch__foundbox { padding: 20px; }
+  .pgrid { gap: 18px; }
+  .play-card.is-menu .play__intro { margin-bottom: 24px; }
+}
