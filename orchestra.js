@@ -139,7 +139,7 @@ const orchTrayList = () => ORCH_CREATURES.concat(orchCustom.map((c) => ORCH_BY_I
 function orchCustomVoice(id, t, f) {
   const cu = orchCustom.find((x) => x.id === id), c = orchCtx();
   if (!cu || !cu.buf) { oTone(f, t, 0.16, "square", 0.05); return; } // a shared beat on a device without this sound: a plain blip
-  const src = c.createBufferSource(), g = c.createGain(), stretch = 1 + (oLen - 1) * 0.9, rate = Math.max(0.25, Math.min(4, (f / 261.63) * oMult));
+  const src = c.createBufferSource(), g = c.createGain(), stretch = 1 + (oLen - 1) * 0.9, rate = Math.max(0.25, Math.min(4, oMult)); // your sound plays exactly as you made it, on every row; only the pitch controls (global, per note) change it
   src.buffer = cu.buf; src.playbackRate.value = rate; src.loop = oLen > 1; // a longer note loops the sound
   const dur = Math.max(0.1, Math.min(6, (cu.buf.duration / rate) * (oLen > 1 ? stretch : 1))), vol = 0.7 / Math.sqrt(stretch);
   g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(vol, t + 0.006); g.gain.setValueAtTime(vol, t + dur - 0.05); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
@@ -308,7 +308,7 @@ function orchPaintMine() { // under the tray: change or delete the own sound you
     <button type="button" class="orch__clear" id="orchMineTest"><span aria-hidden="true">▶</span> ${esc(ot("test"))}</button>
     <button type="button" class="orch__clear" id="orchMineDel"><span aria-hidden="true">✕</span> ${esc(ot("del"))}</button></div>`;
   document.getElementById("orchMineEdit").addEventListener("click", () => orchOpenMaker(cu.id));
-  document.getElementById("orchMineTest").addEventListener("click", () => orchHear({ id: cu.id, len: 1, pit: 0 }, 5));
+  document.getElementById("orchMineTest").addEventListener("click", () => orchHear({ id: cu.id, len: 1, pit: 0 }, 2));
   document.getElementById("orchMineDel").addEventListener("click", () => {
     orchRemoveId(cu.id); orchCustom = orchCustom.filter((c) => c.id !== cu.id); Object.assign(ORCH_BY_ID[cu.id], { name: "My sound", emoji: "🎧", img: null });
     orchCustomSave(); orch.sel = "blob"; orchSave(); renderOrchestra();
