@@ -127,7 +127,12 @@ const ORCH_VOICE = {
   blob: (t) => oTone(150, t, 0.2, "sine", 0.4, 42),
   robot: (t) => { oNoise(t, 0.07, 0.07); oTone(2100, t, 0.045, "sine", 0.05, 1500); },
   frog: (t, f) => oTone(f / 2, t, 0.26, "sine", 0.26, f / 3),
-  bird: (t, f) => { oTone(f * 2, t, 0.1, "triangle", 0.07, f * 3); oTone(f * 2.5, t + 0.1, 0.1, "triangle", 0.06, f * 3.5); },
+  bird: (t, f) => { // a longer bar makes Pip sing on: one chirp every quarter second, each a little different
+    const len = oLen, n = Math.max(1, Math.round((len * 30 / orch.bpm) / 0.24));
+    oLen = 1;
+    for (let i = 0; i < n; i++) { const s = t + i * 0.24, k = [1, 1.12, 0.94, 1.2][i % 4]; oTone(f * 2 * k, s, 0.1, "triangle", 0.07, f * 3 * k); oTone(f * 2.5 * k, s + 0.1, 0.1, "triangle", 0.06, f * 3.5 * k); }
+    oLen = len;
+  },
   ghost: (t, f) => { oTone(f, t, 0.7, "sine", 0.08, null, 0.15); oTone(f * 1.005, t, 0.7, "sine", 0.05, null, 0.15); },
   octo: (t, f) => oTone(f, t, 0.32, "triangle", 0.14, f * 0.99),
   mine: (t, f) => orchCustomVoice("mine", t, f), mine2: (t, f) => orchCustomVoice("mine2", t, f), mine3: (t, f) => orchCustomVoice("mine3", t, f)
