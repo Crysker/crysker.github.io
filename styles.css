@@ -125,6 +125,8 @@ html[lang="de"] .lang [data-lang="de"] { background: var(--ink); color: var(--bg
 }
 .theme-btn:hover { background: var(--turq); color: #062624; }
 .theme-btn svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.play-btn { text-decoration: none; }
+.play-btn[aria-current="page"] { background: var(--turq); color: #062624; }
 .theme-btn__sun { display: none; }
 :root[data-mode="dark"] .theme-btn__moon { display: none; }
 :root[data-mode="dark"] .theme-btn__sun { display: block; }
@@ -880,8 +882,6 @@ button.ptile:hover, button.ptile:focus-visible { transform: translateY(-4px) rot
 }
 
 .footer__fun { font-style: italic; }
-.footer__play { font-weight: 700; color: var(--ink); text-decoration: underline; text-underline-offset: 4px; }
-.footer__play:hover { color: var(--turq-text); }
 .footer__trophies {
   padding: 0; border: 0; background: none; cursor: pointer; text-align: left;
   font: 700 14px var(--sans); color: var(--turq-text); text-decoration: underline dotted; text-underline-offset: 4px;

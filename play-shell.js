@@ -50,6 +50,9 @@ function applyMode() {
   const explicit = document.documentElement.dataset.theme;
   const dark = explicit ? explicit === "dark" : systemDark.matches;
   document.documentElement.dataset.mode = dark ? "dark" : "light";
+  const playLink = document.getElementById("playLink");
+  playLink.setAttribute("aria-label", st("play"));
+  playLink.title = st("play");
   themeBtn.setAttribute("aria-label", dark ? st("toLight") : st("toDark"));
 }
 themeBtn.addEventListener("click", () => {
