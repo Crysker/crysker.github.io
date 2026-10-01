@@ -1310,3 +1310,22 @@ body.view-all .p-card__play, body.view-all .p-card__video { display: none; }
 .lq__card.is-locked { opacity: .92; }
 .lq__tries { margin-left: auto; font-size: 13px; color: var(--ink-soft); }
 @media (max-width: 520px) { .lq__card { padding: 12px; } .lq__face { width: 44px; height: 44px; font-size: 26px; } }
+
+/* Price tag for chaos */
+.pr { display: grid; gap: 14px; justify-items: start; width: 100%; }
+.pr__item { display: flex; align-items: center; gap: 16px; }
+.pr__emoji { display: grid; place-items: center; width: 72px; height: 72px; flex: none; border-radius: 20px; background: var(--surface-2); font-size: 44px; }
+.pr__item h3 { margin: 0; font: 700 clamp(20px, 3.2vw, 26px)/1.25 var(--serif); }
+.pr__tag { position: relative; display: inline-flex; align-items: center; padding: 14px 28px 14px 44px; border-radius: 12px 28px 28px 12px; background: var(--yellow); color: #1b1a2a; transform: rotate(-2deg); box-shadow: var(--shadow); }
+.pr__hole { position: absolute; left: 14px; top: 50%; width: 14px; height: 14px; margin-top: -7px; border-radius: 50%; background: var(--surface); }
+.pr__price { font: 800 clamp(30px, 6vw, 42px)/1 var(--serif); font-variant-numeric: tabular-nums; }
+.pr__slider { width: 100%; accent-color: var(--turq); height: 32px; }
+.pr__scale { display: flex; justify-content: space-between; width: 100%; margin-top: -8px; font-size: 12px; color: var(--ink-soft); }
+.pr__result { display: grid; gap: 8px; width: min(420px, 100%); padding: 16px 18px; border-radius: 16px; background: var(--surface); border: 1px solid var(--line); }
+.pr__row { display: flex; justify-content: space-between; align-items: baseline; font-size: 15px; color: var(--ink-soft); }
+.pr__row b { font: 700 22px var(--serif); color: var(--ink); }
+.pr__row--real b { color: var(--turq-text); }
+.pr__off { margin: 0; font-size: 14px; color: var(--ink-soft); }
+.pr__punch { margin: 0; font-size: 16px; font-style: italic; }
+.pr__note { margin: 0; font-size: 12px; color: var(--ink-soft); }
+@media (max-width: 520px) { .pr__emoji { width: 58px; height: 58px; font-size: 36px; } }
