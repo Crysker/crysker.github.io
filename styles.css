@@ -559,11 +559,12 @@ html:has(.case[open]) { overflow: hidden; }
 .play__body { padding: 14px 18px 16px; }
 .play__intro { margin: 0 0 12px; color: var(--ink-soft); font-size: 14px; }
 /* Menu: neal.fun-style tile grid */
-.play-card.is-menu { width: min(880px, 100%); background: none; border: 0; box-shadow: none; overflow: visible; }
-.play-card.is-menu .play__bar { padding: 0 0 6px; border: 0; background: none; }
-.play-card.is-menu .play__bar h1 { font-size: clamp(30px, 5vw, 40px); }
-.play-card.is-menu .play__body { padding: 0; }
-.pgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 16px; }
+.play-card.is-menu, .play-card.is-plain { width: min(1100px, 100%); background: none; border: 0; box-shadow: none; overflow: visible; }
+.play-card.is-plain { width: min(760px, 100%); } /* a game with one column of content: no card, but not stretched either */
+.play-card.is-menu .play__bar, .play-card.is-plain .play__bar { padding: 0 0 6px; border: 0; background: none; }
+.play-card.is-menu .play__bar h1, .play-card.is-plain .play__bar h1 { font-size: clamp(30px, 5vw, 40px); }
+.play-card.is-menu .play__body, .play-card.is-plain .play__body { padding: 0; }
+.pgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 18px; }
 .ptile {
   display: flex; flex-direction: column; gap: 8px; padding: 10px 10px 14px; text-align: left; color: var(--ink); font: inherit;
   border-radius: 22px; border: 1px solid var(--line); background: var(--surface); box-shadow: var(--shadow); cursor: pointer;
@@ -970,7 +971,7 @@ body.view-all #projects.section { padding-top: 110px; padding-bottom: 60px; } /*
 .crumbs--case li:last-child { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 @media (max-width: 560px) { .crumbs--case { display: none; } .case__bar { justify-content: space-between; } } /* small phones: the Back button is enough */
 .play-card .crumbs { padding: 12px 18px 0; margin: 0; }
-.play-card.is-menu .crumbs { padding: 0 0 10px; }
+.play-card.is-menu .crumbs, .play-card.is-plain .crumbs { padding: 0 0 10px; }
 
 /* ============ Touch targets and phone spacing ============
    Things people tap with a thumb are at least 44px tall; the page breathes a little less on small screens. */
@@ -1113,3 +1114,11 @@ body.view-all .p-card__play, body.view-all .p-card__video { display: none; }
   .orch__banner { font-size: 15px; padding: 10px 16px; }
 }
 @media (prefers-reduced-motion: reduce) { .orch__cell.is-hit svg, .orch__face.is-hit, .orch__cell.is-dance svg { animation: none; } }
+
+/* the guessing game on the open page: a little bigger than it was inside the card */
+.play-card.is-plain .play__intro, .play-card.is-plain .pq__top { font-size: 13px; }
+.play-card.is-plain .pq__q { font-size: clamp(24px, 3.6vw, 32px); }
+.play-card.is-plain .pq__value output { font-size: clamp(40px, 7vw, 56px); }
+.play-card.is-plain .pq__value span { font-size: 18px; }
+.play-card.is-plain .pq__num { font-size: 18px; padding: 12px 20px; }
+.play-card.is-plain .pq__row { min-height: 52px; }

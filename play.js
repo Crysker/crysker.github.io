@@ -146,7 +146,9 @@ function renderPlay() {
       : `<li><a href="#" data-menu>${esc(pt("title"))}</a></li><li aria-current="page">${esc(play.screen === "orch" ? pt("g2") : pt("g1")[0])}</li>`) + "</ol>";
   document.querySelector(".play-card").classList.toggle("is-menu", play.screen === "menu");
   document.querySelector(".play-card").classList.toggle("is-wide", play.screen === "orch"); // the orchestra uses the whole page
+  document.querySelector(".play-card").classList.toggle("is-plain", play.screen === "q" || play.screen === "end"); // the guessing game: one calm column, no card
   if (play.screen === "orch") document.getElementById("playTitle").textContent = pt("g2");
+  else if (play.screen === "q" || play.screen === "end") document.getElementById("playTitle").textContent = pt("g1")[0];
   if (play.screen !== "orch") orchStop();
   if (play.screen === "menu") renderMenu();
   else if (play.screen === "orch") renderOrchestra();
