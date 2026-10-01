@@ -1,51 +1,45 @@
 /* ============ Turmbau zu Babel / Tower of Babel ============
-   Build the tower along a blueprint: pieces may only go inside the dashed outline, which narrows towards the sky.
-   You drag the pieces onto the tower yourself and let go where you want them. A piece stays put as long as the centre of
-   mass of everything above it sits over it (wide, grippy pieces are a safe base; slippery ones slide off).
-   Up to 100 m you build with bricks and other basic things; the higher you get, the stranger the material becomes.
-   Above 1000 m the builders no longer understand each other: the page changes its language, and again at 1100 m …
+   A building puzzle. The tower is drawn as a blueprint in 13 sections of 100 m. Every section is a grid that has to be
+   filled completely with the pieces you are given (1x1, 2x1, 2x2, L, T …). You drag the pieces in wherever you like, turn them
+   (R or the button) and pick them up again. When a section is full, the next one opens with other material and, later, stranger shapes.
+   Every puzzle is made by cutting the grid into pieces first, so it can always be solved.
+   From 1000 m the builders no longer understand each other: the page changes its language (again at 1100 m and 1200 m).
    Uses helpers from orchestra.js (sound) and play.js / play-shell.js (esc, lang, babelLang, unlock, sfx, play). */
 
-const TW_W = 480, TW_H = 400, TW_K = 2, TW_GOAL = 2600, TW_GROUND = 34; // stage size, units per metre, goal height (1300 m), ground strip
-const TW_STEP = 300; // the blueprint narrows in steps of this many units
+const TW_ROWS = 3, TW_SECTIONS = 13;
+const twCols = (k) => Math.max(5, 9 - Math.floor(k / 3)); // the blueprint narrows towards the sky: 9, 8, 7, 6, 5 cells wide
 
 /* ---- texts: en/de for the page, tr/fr/es/la for the confusion of tongues (only what the tower screen shows) ---- */
 const TW_T = {
   en: {
-    toy: "A building game", again: "Rebuild", height: "Height", best: "Best", pieces: "Pieces", material: "Material", current: "Selected",
-    drag: "Drag a piece onto the tower", outside: "Outside the blueprint!", wobble: "The tower wobbles … {k} pieces fall.", won: "The tower touches the sky!",
-    unlock: "New material: {n}", tongues: "Confusion of tongues! Everyone speaks differently now.", next: "More material from {m} m",
-    widths: ["narrow", "medium", "wide"], grips: ["slippery", "okay", "grippy"], stage: "Building site"
+    toy: "A building puzzle", again: "Start over", rotate: "Rotate", shuffle: "Reshuffle", height: "Height", best: "Best", section: "Section", left: "Pieces left",
+    hint: "Drag the pieces into the grid. Press R or ↻ to turn one. Pick a placed piece up again to move it.", done: "Section complete!",
+    unlock: "New material: {n}", shapes: "New shapes!", tongues: "Confusion of tongues! Everyone speaks differently now.", won: "The tower touches the sky!", stage: "Building site"
   },
   de: {
-    toy: "Ein Bauspiel", again: "Neu bauen", height: "Höhe", best: "Rekord", pieces: "Teile", material: "Material", current: "Ausgewählt",
-    drag: "Zieh ein Teil auf den Turm", outside: "Außerhalb des Bauplans!", wobble: "Der Turm wankt … {k} Teile fallen.", won: "Der Turm berührt den Himmel!",
-    unlock: "Neues Material: {n}", tongues: "Sprachverwirrung! Alle sprechen jetzt anders.", next: "Mehr Material ab {m} m",
-    widths: ["schmal", "mittel", "breit"], grips: ["rutschig", "okay", "fest"], stage: "Baustelle"
+    toy: "Ein Bauspiel", again: "Von vorn", rotate: "Drehen", shuffle: "Neu verteilen", height: "Höhe", best: "Rekord", section: "Bereich", left: "Teile übrig",
+    hint: "Zieh die Teile ins Raster. R oder ↻ dreht ein Teil. Gesetzte Teile kannst du wieder aufnehmen.", done: "Bereich geschafft!",
+    unlock: "Neues Material: {n}", shapes: "Neue Formen!", tongues: "Sprachverwirrung! Alle sprechen jetzt anders.", won: "Der Turm berührt den Himmel!", stage: "Baustelle"
   },
   tr: {
-    again: "Yeniden kur", height: "Yükseklik", best: "Rekor", pieces: "Parça", material: "Malzeme", current: "Seçili",
-    drag: "Bir parçayı kuleye sürükle", outside: "Planın dışında!", wobble: "Kule sallanıyor … {k} parça düşüyor.", won: "Kule göğe dokunuyor!",
-    unlock: "Yeni malzeme: {n}", tongues: "Dil karışıklığı! Artık herkes farklı konuşuyor.", next: "{m} m'den sonra yeni malzeme",
-    widths: ["dar", "orta", "geniş"], grips: ["kaygan", "idare eder", "sağlam"], stage: "İnşaat alanı"
+    again: "Baştan başla", rotate: "Döndür", shuffle: "Yeniden dağıt", height: "Yükseklik", best: "Rekor", section: "Bölüm", left: "Kalan parça",
+    hint: "Parçaları ızgaraya sürükle. R veya ↻ ile döndür. Yerleştirdiğin parçayı tekrar alabilirsin.", done: "Bölüm tamam!",
+    unlock: "Yeni malzeme: {n}", shapes: "Yeni şekiller!", tongues: "Dil karışıklığı! Artık herkes farklı konuşuyor.", won: "Kule göğe dokunuyor!", stage: "İnşaat alanı"
   },
   fr: {
-    again: "Recommencer", height: "Hauteur", best: "Record", pieces: "Pièces", material: "Matériau", current: "Choisi",
-    drag: "Glisse une pièce sur la tour", outside: "Hors du plan !", wobble: "La tour vacille … {k} pièces tombent.", won: "La tour touche le ciel !",
-    unlock: "Nouveau matériau : {n}", tongues: "Confusion des langues ! Tout le monde parle autrement.", next: "Plus de matériaux dès {m} m",
-    widths: ["étroit", "moyen", "large"], grips: ["glissant", "correct", "adhérent"], stage: "Chantier"
+    again: "Tout recommencer", rotate: "Tourner", shuffle: "Redistribuer", height: "Hauteur", best: "Record", section: "Zone", left: "Pièces restantes",
+    hint: "Glisse les pièces dans la grille. R ou ↻ pour tourner. Reprends une pièce posée pour la déplacer.", done: "Zone terminée !",
+    unlock: "Nouveau matériau : {n}", shapes: "Nouvelles formes !", tongues: "Confusion des langues ! Tout le monde parle autrement.", won: "La tour touche le ciel !", stage: "Chantier"
   },
   es: {
-    again: "Reconstruir", height: "Altura", best: "Récord", pieces: "Piezas", material: "Material", current: "Elegida",
-    drag: "Arrastra una pieza a la torre", outside: "¡Fuera del plano!", wobble: "La torre se tambalea … caen {k} piezas.", won: "¡La torre toca el cielo!",
-    unlock: "Material nuevo: {n}", tongues: "¡Confusión de lenguas! Ahora todos hablan distinto.", next: "Más material desde {m} m",
-    widths: ["estrecho", "medio", "ancho"], grips: ["resbaladizo", "normal", "agarra bien"], stage: "Obra"
+    again: "Empezar de nuevo", rotate: "Girar", shuffle: "Repartir", height: "Altura", best: "Récord", section: "Zona", left: "Piezas restantes",
+    hint: "Arrastra las piezas a la cuadrícula. R o ↻ para girar. Recoge una pieza colocada para moverla.", done: "¡Zona completa!",
+    unlock: "Material nuevo: {n}", shapes: "¡Nuevas formas!", tongues: "¡Confusión de lenguas! Ahora todos hablan distinto.", won: "¡La torre toca el cielo!", stage: "Obra"
   },
   la: {
-    again: "Iterum aedifica", height: "Altitudo", best: "Maximum", pieces: "Partes", material: "Materia", current: "Electum",
-    drag: "Trahe partem ad turrim", outside: "Extra formam!", wobble: "Turris nutat … {k} partes cadunt.", won: "Turris caelum tangit!",
-    unlock: "Nova materia: {n}", tongues: "Confusio linguarum! Iam omnes aliter loquuntur.", next: "Plus materiae ab {m} m",
-    widths: ["angustum", "medium", "latum"], grips: ["lubricum", "tolerabile", "firmum"], stage: "Aedificium"
+    again: "Ab initio", rotate: "Verte", shuffle: "Redistribue", height: "Altitudo", best: "Maximum", section: "Pars", left: "Partes reliquae",
+    hint: "Trahe partes in cratem. R vel ↻ vertit. Partem positam iterum tolle.", done: "Pars perfecta!",
+    unlock: "Nova materia: {n}", shapes: "Novae formae!", tongues: "Confusio linguarum! Iam omnes aliter loquuntur.", won: "Turris caelum tangit!", stage: "Aedificium"
   }
 };
 const tt = (k) => { const b = tw.babel && TW_T[tw.babel]; return b && b[k] !== undefined ? b[k] : (TW_T[lang] || TW_T.en)[k]; };
@@ -68,235 +62,172 @@ function twPatchTexts() { // PLAY_T lives in play.js, which loads after this fil
     la: { home: "Domus", title: "Ludus", g3: "Turris Babel", back: "Redi" }
   });
 }
-const TW_BABEL = [[1000, "tr"], [1100, "fr"], [1200, "es"], [1300, "la"]]; // from this height (m) the page speaks this language
+/* which language the page speaks while you build this section (index 0 is the first 100 m) */
+const twLangFor = (k) => k >= 13 ? "la" : k >= 12 ? "es" : k >= 11 ? "fr" : k >= 10 ? "tr" : null;
 
-/* ---- material: emoji, names [en, de], width, height, grip (1 = sticks, low = slides off) ---- */
-const TW_ITEMS = {
-  brick: { e: "🧱", n: ["Brick", "Ziegel"], w: 90, h: 38, g: .95 },
-  stone: { e: "🪨", n: ["Stone", "Stein"], w: 80, h: 42, g: .9 },
-  wood: { e: "🪵", n: ["Log", "Holzbalken"], w: 110, h: 30, g: .85 },
-  wall: { e: "🧱", n: ["Wall", "Mauer"], w: 150, h: 44, g: 1 },
-  cat: { e: "🐱", n: ["Cat", "Katze"], w: 58, h: 52, g: .6 },
-  cheese: { e: "🧀", n: ["Cheese", "Käse"], w: 80, h: 40, g: .7 },
-  sock: { e: "🧦", n: ["Sock", "Socke"], w: 50, h: 56, g: .55 },
-  cloud: { e: "☁️", n: ["Cloud", "Wolke"], w: 110, h: 40, g: .5 },
-  pizza: { e: "🍕", n: ["Pizza", "Pizza"], w: 96, h: 26, g: .55 },
-  donut: { e: "🍩", n: ["Donut", "Donut"], w: 70, h: 36, g: .6 },
-  duck: { e: "🦆", n: ["Rubber duck", "Quietscheente"], w: 56, h: 50, g: .5 },
-  ufo: { e: "🛸", n: ["UFO", "UFO"], w: 110, h: 40, g: .5 },
-  rocket: { e: "🚀", n: ["Rocket", "Rakete"], w: 50, h: 100, g: .5 },
-  piano: { e: "🎹", n: ["Piano", "Klavier"], w: 120, h: 56, g: .85 },
-  moon: { e: "🌙", n: ["Moon", "Mond"], w: 76, h: 58, g: .5 },
-  planet: { e: "🪐", n: ["Planet", "Planet"], w: 120, h: 62, g: .55 },
-  whale: { e: "🐋", n: ["Whale", "Wal"], w: 140, h: 60, g: .4 },
-  rainbow: { e: "🌈", n: ["Rainbow", "Regenbogen"], w: 140, h: 40, g: .5 },
-  angel: { e: "👼", n: ["Angel", "Engel"], w: 60, h: 56, g: .5 },
-  dragon: { e: "🐉", n: ["Dragon", "Drache"], w: 120, h: 70, g: .6 },
-  castle: { e: "🏰", n: ["Castle", "Burg"], w: 150, h: 110, g: .95 },
-  stairway: { e: "🪜", n: ["Stairway", "Himmelsleiter"], w: 70, h: 130, g: .7 },
-  babelstone: { e: "🗿", n: ["Babel stone", "Babelstein"], w: 124, h: 90, g: 1 },
-  tongue: { e: "👅", n: ["Tongue", "Zunge"], w: 90, h: 34, g: .3 },
-  clown: { e: "🤡", n: ["Clown", "Clown"], w: 56, h: 56, g: .5 },
-  trophy: { e: "🏆", n: ["Trophy", "Pokal"], w: 60, h: 70, g: .8 }
-};
-/* from this height (m) on, these things are available; the higher, the stranger */
-const TW_TIERS = [
-  [0, ["brick", "stone", "wood", "wall"]],
-  [100, ["cat", "cheese", "sock"]],
-  [250, ["cloud", "pizza", "donut", "duck"]],
-  [400, ["ufo", "rocket", "piano"]],
-  [600, ["moon", "planet", "whale"]],
-  [800, ["rainbow", "angel", "dragon"]],
-  [1000, ["castle", "stairway", "babelstone"]],
-  [1100, ["tongue", "clown", "trophy"]]
+/* ---- material per section: the higher you build, the stranger ---- */
+const TW_MAT = [
+  { e: "🧱", n: ["Brick", "Ziegel"] }, { e: "🪨", n: ["Stone", "Stein"] }, { e: "🪵", n: ["Log", "Holz"] },
+  { e: "🐱", n: ["Cat", "Katze"] }, { e: "🧀", n: ["Cheese", "Käse"] }, { e: "🧦", n: ["Sock", "Socke"] },
+  { e: "☁️", n: ["Cloud", "Wolke"] }, { e: "🍕", n: ["Pizza", "Pizza"] }, { e: "🛸", n: ["UFO", "UFO"] },
+  { e: "🌙", n: ["Moon", "Mond"] }, { e: "🌈", n: ["Rainbow", "Regenbogen"] }, { e: "🐉", n: ["Dragon", "Drache"] }, { e: "🤡", n: ["Clown", "Clown"] }
 ];
+/* shapes (row, column); more of them the higher you build */
+const TW_SHAPES = {
+  mono: [[0, 0]], domino: [[0, 0], [0, 1]], i3: [[0, 0], [0, 1], [0, 2]], o: [[0, 0], [0, 1], [1, 0], [1, 1]],
+  l3: [[0, 0], [1, 0], [1, 1]], i4: [[0, 0], [0, 1], [0, 2], [0, 3]], t4: [[0, 0], [0, 1], [0, 2], [1, 1]], l4: [[0, 0], [1, 0], [1, 1], [1, 2]], s4: [[0, 1], [0, 2], [1, 0], [1, 1]]
+};
+const twShapesFor = (k) => k < 3 ? ["mono", "domino", "i3", "o"] : k < 6 ? ["mono", "domino", "i3", "o", "l3"] : Object.keys(TW_SHAPES);
 
-/* ---- state ---- */
-const tw = { best: 0, cur: "brick", tower: [], fired: {}, peak: 0, x: 0, won: false, pressing: false, bannerT: 0, u: 1, babel: null, newest: [] };
+/* ---- small helpers ---- */
+const twNorm = (cells) => { const r0 = Math.min(...cells.map((c) => c[0])), c0 = Math.min(...cells.map((c) => c[1])); return cells.map(([r, c]) => [r - r0, c - c0]); };
+const twRot = (cells, n) => { let out = cells; for (let i = 0; i < ((n % 4) + 4) % 4; i++) out = twNorm(out.map(([r, c]) => [c, -r])); return twNorm(out); };
+const twSize = (cells) => [Math.max(...cells.map((c) => c[0])) + 1, Math.max(...cells.map((c) => c[1])) + 1];
+function twRng(seed) { let a = seed >>> 0; return () => { a = (a + 0x6D2B79F5) >>> 0; let t = a; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
+
+/* ---- the puzzle: cut the grid into pieces first, then hand them out turned around ---- */
+function twTile(cols, rows, k, rng) {
+  const allowed = twShapesFor(k);
+  let best = null;
+  for (let attempt = 0; attempt < 40; attempt++) {
+    const g = Array.from({ length: rows }, () => Array(cols).fill(-1)), pieces = [];
+    for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) {
+      if (g[r][c] !== -1) continue;
+      const opts = [];
+      for (const name of allowed) for (let rot = 0; rot < 4; rot++) {
+        const cells = twRot(TW_SHAPES[name], rot);
+        const [ar, ac] = cells.slice().sort((a, b) => a[0] - b[0] || a[1] - b[1])[0]; // the first cell lands on (r, c)
+        const at = cells.map(([cr, cc]) => [r + cr - ar, c + cc - ac]);
+        if (at.every(([pr, pc]) => pr >= 0 && pr < rows && pc >= 0 && pc < cols && g[pr][pc] === -1)) opts.push({ name, cells, at, w: name === "mono" ? 0.45 : 1 });
+      }
+      const total = opts.reduce((s, o) => s + o.w, 0);
+      let pick = rng() * total, chosen = opts[opts.length - 1];
+      for (const o of opts) { pick -= o.w; if (pick <= 0) { chosen = o; break; } }
+      chosen.at.forEach(([pr, pc]) => { g[pr][pc] = pieces.length; });
+      pieces.push({ name: chosen.name, base: chosen.cells });
+    }
+    const monos = pieces.filter((p) => p.name === "mono").length;
+    if (!best || monos < best.monos) best = { pieces, monos };
+    if (monos <= Math.max(1, pieces.length * 0.2)) break;
+  }
+  return best.pieces;
+}
+const tw = { k: 0, best: 0, sec: null, sel: null, attempt: 0, babel: null, won: false, bannerT: 0, c: 40, drag: null, preview: null };
+function twNewSection() {
+  const k = tw.k, cols = twCols(k), rng = twRng(k * 1009 + tw.attempt * 7919 + 17);
+  const pieces = twTile(cols, TW_ROWS, k, rng).map((p, i) => ({ id: i, name: p.name, base: p.base, rot: Math.floor(rng() * 4), pos: null, hue: Math.floor(rng() * 360) }));
+  for (let i = pieces.length - 1; i > 0; i--) { const j = Math.floor(rng() * (i + 1)); [pieces[i], pieces[j]] = [pieces[j], pieces[i]]; }
+  tw.sec = { k, cols, rows: TW_ROWS, pieces, grid: Array.from({ length: TW_ROWS }, () => Array(cols).fill(null)) };
+  tw.sel = pieces.length ? pieces[0].id : null;
+}
+const twPiece = (id) => tw.sec.pieces.find((p) => p.id === id);
+const twCells = (p) => twRot(p.base, p.rot);
+const twLeft = () => tw.sec.pieces.filter((p) => !p.pos);
+const twFilled = () => tw.sec.grid.flat().filter((v) => v !== null).length;
+const twMeters = () => tw.won ? TW_SECTIONS * 100 : Math.min(TW_SECTIONS * 100, tw.k * 100 + Math.round(twFilled() / (tw.sec.cols * tw.sec.rows) * 100));
+const twMat = (k) => TW_MAT[Math.min(k, TW_MAT.length - 1)];
+const twMatName = (k) => twMat(k).n[tw.babel ? 0 : (lang === "de" ? 1 : 0)];
+function twCanPlace(p, r0, c0) {
+  const s = tw.sec;
+  return twCells(p).every(([r, c]) => { const rr = r0 + r, cc = c0 + c; return rr >= 0 && rr < s.rows && cc >= 0 && cc < s.cols && s.grid[rr][cc] === null; });
+}
+function twPlace(p, r0, c0) { twCells(p).forEach(([r, c]) => { tw.sec.grid[r0 + r][c0 + c] = p.id; }); p.pos = { r: r0, c: c0 }; }
+function twPickUp(p) { if (!p.pos) return; twCells(p).forEach(([r, c]) => { tw.sec.grid[p.pos.r + r][p.pos.c + c] = null; }); p.pos = null; }
+
+/* ---- progress ---- */
+const twSaved = () => { try { return +localStorage.getItem("towerSection") || 0; } catch (e) { return 0; } };
 const twBestSaved = () => { try { return +localStorage.getItem("towerBest") || 0; } catch (e) { return 0; } };
-const twSaveBest = () => { try { localStorage.setItem("towerBest", String(tw.best)); } catch (e) {} };
-const twItem = (id) => TW_ITEMS[id];
-const twName = (id) => TW_ITEMS[id].n[tw.babel ? 0 : (lang === "de" ? 1 : 0)];
-const twClamp = (v, a, b) => Math.min(b, Math.max(a, v));
-const twMeters = () => Math.round(twHeight() / TW_K);
-const twAvailable = () => TW_TIERS.filter(([m]) => m <= tw.peak).flatMap(([, ids]) => ids);
-
-/* ---- the blueprint ---- */
-const twHalfWidth = (y) => Math.max(64, 160 - Math.floor(y / TW_STEP) * 12);
-function twPlanSVG() { // a stepped outline, wider at the bottom, narrower towards the sky
-  const H = TW_GOAL, left = [], right = [];
-  for (let y = 0; y < H; y += TW_STEP) {
-    const w = twHalfWidth(y), top = Math.min(H, y + TW_STEP);
-    left.push([-w, y], [-w, top]); right.push([w, y], [w, top]);
-  }
-  const pt = ([x, y]) => `${x + TW_W / 2},${H - y}`;
-  const d = "M" + left.map(pt).join(" L") + " L" + right.reverse().map(pt).join(" L") + " Z";
-  const ticks = TW_TIERS.filter(([m]) => m > 0).map(([m]) => {
-    const y = H - m * TW_K;
-    return `<line x1="0" x2="${TW_W}" y1="${y}" y2="${y}" class="tw__tick"/><text x="8" y="${y - 6}" class="tw__ticklabel">${m} m</text>`;
-  }).join("");
-  return `<path d="${d}" class="tw__planpath"/>${ticks}<text x="${TW_W / 2}" y="22" text-anchor="middle" class="tw__ticklabel">☁ ${Math.round(H / TW_K)} m ☁</text>`;
+function twSave() { try { localStorage.setItem("towerSection", String(tw.k)); localStorage.setItem("towerBest", String(tw.best)); } catch (e) {} }
+function twComplete() {
+  if (!playMuted) [523, 659, 784, 1047].forEach((f, i) => oTone(f, orchCtx().currentTime + i * 0.08, 0.3, "triangle", 0.11));
+  tw.k++;
+  if (tw.k >= TW_SECTIONS) { tw.won = true; tw.best = TW_SECTIONS * 100; twSave(); unlock("babel"); twSetLanguage(); twBanner(tt("won"), 7000); twPaintAll(); return; }
+  tw.attempt = 0;
+  twNewSection();
+  twSave();
+  const changed = twSetLanguage();
+  const hasNewShapes = tw.k === 3 || tw.k === 6;
+  twBanner(tt("done") + " " + tt("unlock").replace("{n}", twMat(tw.k).e + " " + twMatName(tw.k)) + (hasNewShapes ? " " + tt("shapes") : "") + (changed ? "  " + tt("tongues") : ""), changed ? 6500 : 4200);
+  if (changed && !playMuted) [196, 233, 175, 262].forEach((f, i) => oTone(f, orchCtx().currentTime + 0.4 + i * 0.12, 0.3, "sawtooth", 0.05));
 }
-
-/* ---- the tower ---- */
-const twHeight = () => tw.tower.reduce((s, p) => s + p.h, 0);
-function twStable(list) { // lowest joint that does not hold: returns the index of the support piece, or -1
-  for (let i = 0; i < list.length - 1; i++) {
-    let m = 0, mx = 0;
-    for (let j = i + 1; j < list.length; j++) { m += list[j].m; mx += list[j].m * list[j].x; }
-    if (Math.abs(mx / m - list[i].x) > list[i].w / 2 * list[i].g) return i;
-  }
-  return -1;
-}
-const twFits = (it, x) => Math.abs(x) + it.w / 2 <= twHalfWidth(twHeight()) + 12; // inside the blueprint at this height
-function twDrop() {
-  if (tw.won) return;
-  const it = twItem(tw.cur), top = tw.tower[tw.tower.length - 1], px = Math.round(tw.x);
-  if (!twFits(it, px)) { // the blueprint says no
-    twBanner(tt("outside"), 1800);
-    if (!playMuted) oTone(260, orchCtx().currentTime, 0.2, "sawtooth", 0.05, 150);
-    return;
-  }
-  const piece = { id: tw.cur, x: px, w: it.w, h: it.h, g: it.g, m: it.w * it.h / 1000, e: it.e };
-  if (top && Math.abs(px - top.x) >= (piece.w + top.w) / 2 - 4) { // not even touching the tower
-    twBanner(tt("outside"), 1800);
-    twFall([{ ...piece, y: twHeight() + 40 }]);
-    return;
-  }
-  tw.tower.push(piece);
-  if (!playMuted) { ORCH_VOICE.blob(orchCtx().currentTime + 0.12); oTone(180 + Math.min(300, twHeight() / 8), orchCtx().currentTime + 0.1, 0.1, "triangle", 0.08); }
-  const bad = twStable(tw.tower);
-  if (bad >= 0) {
-    const lost = tw.tower.splice(bad + 1);
-    let y = tw.tower.reduce((s, p) => s + p.h, 0);
-    const falling = lost.map((p) => { const f = { ...p, y }; y += p.h; return f; });
-    twPaintAll(true);
-    setTimeout(() => {
-      twBanner(tt("wobble").replace("{k}", lost.length));
-      if (!playMuted) [300, 240, 190, 140].forEach((f, i) => oTone(f, orchCtx().currentTime + i * 0.09, 0.3, "sawtooth", 0.06, f * 0.6));
-      twFall(falling);
-      twPaintAll();
-      twLanguage();
-    }, 260);
-    return;
-  }
-  twPaintAll(true);
-  const m = twMeters();
-  if (m > tw.peak) tw.peak = m;
-  twUnlock();
-  if (m >= 500 && !tw.fired.cloud) { tw.fired.cloud = true; const c = document.getElementById("twCloud"); if (c) { c.classList.remove("is-on"); void c.offsetWidth; c.classList.add("is-on"); } }
-  if (m > tw.best) { tw.best = m; twSaveBest(); }
-  if (twHeight() >= TW_GOAL) twWin();
-  setTimeout(twLanguage, 380);
-}
-function twUnlock() { // stranger material the higher you get
-  TW_TIERS.forEach(([at, ids], i) => {
-    if (at === 0 || tw.peak < at || tw.fired["t" + i]) return;
-    tw.fired["t" + i] = true;
-    tw.newest = ids;
-    twBanner(tt("unlock").replace("{n}", ids.map((id) => twItem(id).e + " " + twName(id)).join(", ")), 4200);
-    if (!playMuted) [523, 659, 784].forEach((f, k) => oTone(f, orchCtx().currentTime + k * 0.08, 0.25, "triangle", 0.1));
-    twPaintInv();
-  });
-}
-function twLanguage() { // confusion of tongues: the page speaks another language at 1000 m, 1100 m, …
+function twSetLanguage() { // confusion of tongues: the page speaks another language from 1000 m on
   twPatchTexts();
-  let l = null;
-  TW_BABEL.forEach(([at, lg]) => { if (twMeters() >= at) l = lg; });
-  if (l === tw.babel) return;
+  const l = twLangFor(tw.k);
+  if (l === tw.babel) { twPaintAll(); return false; }
   tw.babel = l; babelLang = l;
   applyShell();
   renderPlay();
-  if (l) {
-    twBanner(tt("tongues"), 4200);
-    if (!playMuted) [196, 233, 175, 262].forEach((f, i) => oTone(f, orchCtx().currentTime + i * 0.12, 0.3, "sawtooth", 0.05));
-  }
+  return true;
 }
-function twWin() {
-  tw.won = true;
-  twBanner(tt("won"), 6000);
-  const st = document.getElementById("twStage");
-  if (st) st.classList.add("is-won");
-  if (!playMuted) [262, 330, 392, 523, 659, 784, 1047].forEach((f, i) => oTone(f, orchCtx().currentTime + i * 0.1, 0.5, "triangle", 0.11));
-  unlock("babel");
+function twStop() { // leaving the game: the page speaks your language again
+  twEndDrag();
+  if (tw.babel) { tw.babel = null; babelLang = null; applyShell(); }
+}
+function twStart() { // starting over
+  tw.k = 0; tw.attempt = 0; tw.won = false;
+  twNewSection(); twSave();
+  twSetLanguage();
   twPaintAll();
-}
-function twReset() {
-  tw.tower = []; tw.fired = {}; tw.won = false; tw.peak = 0; tw.cur = "brick"; tw.newest = [];
-  const st = document.getElementById("twStage");
-  if (st) st.classList.remove("is-won");
-  if (tw.babel) { tw.babel = null; babelLang = null; applyShell(); renderPlay(); return; }
-  twPaintAll();
-}
-function twFall(list) { // pieces that slide off tumble away and fade
-  const world = document.getElementById("twTower");
-  if (!world) return;
-  list.forEach((p) => {
-    const el = twPieceEl(p, p.y);
-    el.classList.add("is-falling");
-    el.style.setProperty("--dx", (Math.random() * 160 - 80) * tw.u + "px");
-    el.style.setProperty("--rot", (Math.random() * 120 - 60) + "deg");
-    world.appendChild(el);
-    setTimeout(() => el.remove(), 1300);
-  });
 }
 
-/* ---- drawing: the things themselves, no coloured tiles ---- */
-function twFace(it) { // a wide piece is a row of the same thing, so a wall looks like a wall
-  const n = twClamp(Math.round(it.w / it.h), 1, 5), size = Math.min(it.h * 0.95, it.w / n * 0.95);
-  return `<span style="font-size:${size * tw.u}px">${it.e}</span>`.repeat(n);
-}
-function twPieceEl(p, y) {
-  const el = document.createElement("div"), u = tw.u;
-  el.className = "tw__piece";
-  el.style.cssText = `width:${p.w * u}px;height:${p.h * u}px;left:${(TW_W / 2 + p.x - p.w / 2) * u}px;bottom:${y * u}px`;
-  el.innerHTML = twFace(p);
-  return el;
-}
-const twCamera = () => Math.max(0, twHeight() - 170);
-function twPaintTower(animateTop) {
-  const world = document.getElementById("twTower");
-  if (!world) return;
-  world.querySelectorAll(".tw__piece:not(.is-falling)").forEach((e) => e.remove());
-  let y = 0;
-  tw.tower.forEach((p, i) => {
-    const el = twPieceEl(p, y);
-    if (animateTop && i === tw.tower.length - 1) el.classList.add("is-new");
-    world.appendChild(el);
-    y += p.h;
-  });
-  const worldEl = document.getElementById("twWorld"), plan = document.getElementById("twPlan"), u = tw.u;
-  worldEl.style.bottom = TW_GROUND * u + "px";
-  worldEl.style.transform = `translateY(${twCamera() * u}px)`;
-  plan.style.height = TW_GOAL * u + "px";
-  // sway: the closer a joint is to giving way, the more the tower leans and wobbles
-  let risk = 0;
-  for (let i = 0; i < tw.tower.length - 1; i++) {
-    let m = 0, mx = 0;
-    for (let j = i + 1; j < tw.tower.length; j++) { m += tw.tower[j].m; mx += tw.tower[j].m * tw.tower[j].x; }
-    risk = Math.max(risk, Math.abs(mx / m - tw.tower[i].x) / (tw.tower[i].w / 2 * tw.tower[i].g));
+/* ---- drawing ---- */
+const twCellHTML = (e, hue) => `<span class="tw2__cell is-filled" style="--h:${hue}">${e}</span>`;
+function twCellSize() { const s = document.getElementById("twStage"); return Math.floor(Math.min(56, (s ? s.clientWidth : 540) / 11)); }
+function twPaintStage() {
+  const stage = document.getElementById("twStage"), world = document.getElementById("twWorld");
+  if (!stage) return;
+  const c = tw.c = twCellSize(), W = stage.clientWidth, secH = TW_ROWS * c;
+  stage.style.setProperty("--c", c + "px");
+  stage.style.height = Math.round(c * 8.6) + "px";
+  stage.style.setProperty("--r", Math.min(1, twMeters() / (TW_SECTIONS * 100)).toFixed(3));
+  const current = Math.min(tw.k, TW_SECTIONS - 1);
+  world.style.bottom = Math.round(c * 3.4 - current * secH) + "px"; // the current section sits near the bottom of the stage
+  let html = `<div class="tw2__ground"></div>`;
+  for (let k = 0; k < TW_SECTIONS; k++) {
+    const cols = twCols(k), left = Math.round((W - cols * c) / 2), bottom = k * secH;
+    const style = `left:${left}px;bottom:${bottom}px;width:${cols * c}px;height:${secH}px`;
+    const mat = twMat(k);
+    html += `<span class="tw2__tick" style="bottom:${bottom + secH - 9}px">${(k + 1) * 100} m</span>`;
+    if (k < tw.k) { // finished: solid
+      html += `<div class="tw2__grid is-done" style="${style};--cols:${cols}">${Array.from({ length: cols * TW_ROWS }, () => twCellHTML(mat.e, k * 29 % 360)).join("")}</div>`;
+    } else if (k === tw.k && !tw.won) { // the one you are working on
+      const s = tw.sec;
+      let cells = "";
+      for (let r = 0; r < s.rows; r++) for (let cc = 0; cc < s.cols; cc++) {
+        const id = s.grid[r][cc];
+        cells += id === null ? `<span class="tw2__cell" data-r="${r}" data-c="${cc}"></span>` : `<span class="tw2__cell is-filled" data-r="${r}" data-c="${cc}" data-id="${id}" style="--h:${twPiece(id).hue}">${mat.e}</span>`;
+      }
+      html += `<div class="tw2__grid is-active" id="twGrid" style="${style};--cols:${cols}">${cells}</div>`;
+    } else {
+      html += `<div class="tw2__grid is-future" style="${style}"></div>`;
+    }
   }
-  const stage = document.getElementById("twStage");
-  stage.style.setProperty("--sway", (risk * 2.2 + twHeight() / TW_GOAL * 0.7).toFixed(2) + "deg");
-  stage.style.setProperty("--r", Math.min(1, twHeight() / TW_GOAL).toFixed(3));
+  world.innerHTML = html;
+  twPaintPreview();
+}
+function twPieceHTML(p, size) { // a piece as little cells (tray and drag ghost)
+  const cells = twCells(p), [h, w] = twSize(cells), e = twMat(tw.k).e;
+  let out = `<span class="tw2__shape" style="grid-template-columns:repeat(${w},${size}px);grid-template-rows:repeat(${h},${size}px)">`;
+  for (let r = 0; r < h; r++) for (let c = 0; c < w; c++) out += cells.some(([cr, cc]) => cr === r && cc === c)
+    ? `<span class="tw2__cell is-filled" style="--h:${p.hue};font-size:${size * 0.7}px">${e}</span>` : `<span></span>`;
+  return out + `</span>`;
+}
+function twPaintTray() {
+  const tray = document.getElementById("twTray");
+  if (!tray) return;
+  const left = twLeft();
+  tray.innerHTML = left.map((p) => `<button type="button" class="tw2__piece${p.id === tw.sel ? " is-sel" : ""}" data-id="${p.id}" aria-label="${esc(tt("rotate"))}">${twPieceHTML(p, 26)}</button>`).join("");
+  const cnt = document.getElementById("twLeft");
+  if (cnt) cnt.textContent = `${tt("left")}: ${left.length}`;
 }
 function twPaintHud() {
   const hud = document.getElementById("twHud");
-  if (hud) hud.innerHTML = `<span>${esc(tt("height"))}: <b>${twMeters()} m</b></span><span>${esc(tt("pieces"))}: <b>${tw.tower.length}</b></span><span>${esc(tt("best"))}: <b>${tw.best} m</b></span>`;
-  const cur = twItem(tw.cur), wi = cur.w < 60 ? 0 : cur.w < 100 ? 1 : 2, gi = cur.g < 0.55 ? 0 : cur.g < 0.8 ? 1 : 2;
-  document.getElementById("twCur").innerHTML = `${esc(tt("current"))}: <b>${cur.e} ${esc(twName(tw.cur))}</b> · ${esc(tt("widths")[wi])} · ${esc(tt("grips")[gi])}`;
+  if (!hud) return;
+  const m = twMeters();
+  if (m > tw.best) { tw.best = m; twSave(); }
+  hud.innerHTML = `<span>${esc(tt("height"))}: <b>${m} m</b></span><span>${esc(tt("section"))}: <b>${Math.min(tw.k + 1, TW_SECTIONS)}/${TW_SECTIONS}</b></span><span>${esc(tt("best"))}: <b>${tw.best} m</b></span>`;
 }
-function twPaintInv() {
-  const inv = document.getElementById("twInv");
-  if (!inv) return;
-  const room = (twHalfWidth(twHeight()) + 12) * 2; // what still fits at the current height
-  const next = TW_TIERS.find(([m]) => m > tw.peak);
-  inv.innerHTML = twAvailable().map((id) => {
-    const it = twItem(id);
-    return `<button type="button" class="tw__chip${id === tw.cur ? " is-current" : ""}${tw.newest.includes(id) ? " is-newest" : ""}${it.w > room ? " is-toowide" : ""}" data-id="${id}"><span>${it.e}</span> ${esc(twName(id))}</button>`;
-  }).join("") + (next ? `<p class="tw__next">🔒 ${esc(tt("next").replace("{m}", next[0]))}</p>` : "");
-}
-function twPaintAll(animateTop) { twPaintTower(animateTop); twPaintHud(); twPaintInv(); }
+function twPaintAll() { twPaintStage(); twPaintTray(); twPaintHud(); }
 function twBanner(text, ms = 3200) {
   const b = document.getElementById("twBanner");
   if (!b) return;
@@ -304,122 +235,136 @@ function twBanner(text, ms = 3200) {
   clearTimeout(tw.bannerT); tw.bannerT = setTimeout(() => b.classList.remove("is-on"), ms);
 }
 
-/* ---- placing pieces yourself: drag from the list onto the tower, or press on the stage and slide ---- */
-function twShowPreview(clientX) { // the piece hovers where it would land; red when the blueprint does not allow it
-  const stage = document.getElementById("twStage"), h = document.getElementById("twHover");
-  if (!stage || !h || tw.won) return;
-  const r = stage.getBoundingClientRect(), it = twItem(tw.cur), u = tw.u;
-  tw.x = twClamp((clientX - r.left) / u - TW_W / 2, -(TW_W / 2 - 10), TW_W / 2 - 10);
-  h.style.display = "";
-  h.style.width = it.w * u + "px"; h.style.height = it.h * u + "px";
-  h.innerHTML = twFace(it);
-  h.classList.toggle("is-bad", !twFits(it, tw.x));
-  h.style.transform = `translate(${(TW_W / 2 + tw.x - it.w / 2) * u}px, ${-(TW_GROUND + twHeight() - twCamera() + 6) * u}px)`;
+/* ---- dragging, turning, placing ---- */
+function twPaintPreview() {
+  document.querySelectorAll(".tw2__cell.is-ok, .tw2__cell.is-bad").forEach((el) => el.classList.remove("is-ok", "is-bad"));
+  const pv = tw.preview;
+  if (!pv || !tw.drag) return;
+  twCells(tw.drag.p).forEach(([r, c]) => {
+    const el = document.querySelector(`#twGrid .tw2__cell[data-r="${pv.r + r}"][data-c="${pv.c + c}"]`);
+    if (el) el.classList.add(pv.ok ? "is-ok" : "is-bad");
+  });
 }
-function twHidePreview() { const h = document.getElementById("twHover"); if (h) h.style.display = "none"; }
-const twOverStage = (x, y) => { const r = document.getElementById("twStage").getBoundingClientRect(); return x >= r.left && x <= r.right && y >= r.top && y <= r.bottom; };
-function twStop() { // leaving the game: the page speaks your language again
-  tw.pressing = false;
-  if (tw.babel) { tw.babel = null; babelLang = null; applyShell(); }
+function twGhostSync(x, y) {
+  const d = tw.drag;
+  if (!d || !d.ghost) return;
+  const [h, w] = twSize(twCells(d.p)), c = tw.c;
+  d.ghost.style.left = x - (w * c) / 2 + "px"; d.ghost.style.top = y - (h * c) / 2 + "px";
 }
-function twResize() {
-  const s = document.getElementById("twStage");
-  if (!s) return;
-  tw.u = s.clientWidth / TW_W;
-  twPaintTower();
+function twMoveDrag(x, y) {
+  const d = tw.drag, grid = document.getElementById("twGrid");
+  if (!d || !grid) return;
+  d.x = x; d.y = y;
+  twGhostSync(x, y);
+  const rect = grid.getBoundingClientRect(), [h, w] = twSize(twCells(d.p)), c = tw.c;
+  const over = x > rect.left - c && x < rect.right + c && y > rect.top - c && y < rect.bottom + c;
+  if (!over) { tw.preview = null; twPaintPreview(); return; }
+  const r0 = Math.round((y - rect.top) / c - h / 2), c0 = Math.round((x - rect.left) / c - w / 2);
+  tw.preview = { r: r0, c: c0, ok: twCanPlace(d.p, r0, c0) };
+  twPaintPreview();
 }
-addEventListener("resize", () => { if (document.getElementById("twStage")) twResize(); });
+function twBeginDrag(p, x, y) {
+  twEndDrag();
+  const ghost = document.createElement("div");
+  ghost.className = "tw2__ghost";
+  document.body.appendChild(ghost);
+  tw.drag = { p, ghost, x, y };
+  twRedrawGhost();
+  twMoveDrag(x, y);
+}
+function twRedrawGhost() { const d = tw.drag; if (d) { d.ghost.innerHTML = twPieceHTML(d.p, tw.c); twGhostSync(d.x, d.y); } }
+function twEndDrag() { if (tw.drag && tw.drag.ghost) tw.drag.ghost.remove(); tw.drag = null; tw.preview = null; }
+function twDropDrag() {
+  const d = tw.drag, pv = tw.preview;
+  if (!d) return;
+  const p = d.p;
+  twEndDrag();
+  if (pv && pv.ok) {
+    twPlace(p, pv.r, pv.c);
+    if (!playMuted) oTone(300 + twFilled() * 12, orchCtx().currentTime, 0.1, "triangle", 0.08);
+    twPaintAll();
+    if (!twLeft().length && twFilled() === tw.sec.cols * tw.sec.rows) setTimeout(twComplete, 260);
+  } else {
+    if (pv && !pv.ok && !playMuted) oTone(200, orchCtx().currentTime, 0.12, "sawtooth", 0.04, 140);
+    twPaintAll();
+  }
+}
+function twRotate() { // turn the selected piece (or the one you are holding)
+  const p = tw.drag ? tw.drag.p : (tw.sel !== null && twPiece(tw.sel));
+  if (!p) return;
+  p.rot = (p.rot + 1) % 4;
+  if (!playMuted) oTone(620, orchCtx().currentTime, 0.05, "triangle", 0.06);
+  if (tw.drag) { twRedrawGhost(); twMoveDrag(tw.drag.x, tw.drag.y); }
+  twPaintTray();
+}
+addEventListener("resize", () => { if (document.getElementById("twStage")) twPaintAll(); });
+addEventListener("keydown", (e) => {
+  if (!document.getElementById("twStage") || e.ctrlKey || e.metaKey || e.altKey) return;
+  if (e.key === "r" || e.key === "R") { e.preventDefault(); twRotate(); }
+});
 
 function renderTower() {
   twPatchTexts();
-  if (!tw.best) tw.best = twBestSaved();
+  if (!tw.sec) { tw.k = twSaved(); tw.best = twBestSaved(); tw.won = tw.k >= TW_SECTIONS; if (!tw.won) twNewSection(); else tw.sec = { k: 12, cols: 5, rows: 3, pieces: [], grid: [] }; }
   playBody.innerHTML = `
     <div class="tw">
       <div class="tw__main">
-        <div class="tw__stage" id="twStage" tabindex="0" role="application" aria-label="${esc(tt("stage"))}">
+        <div class="tw__stage" id="twStage" role="application" aria-label="${esc(tt("stage"))}">
           <div class="tw__sky" aria-hidden="true"></div>
-          <div class="tw__world" id="twWorld" style="bottom:0">
-            <svg class="tw__plan" id="twPlan" viewBox="0 0 ${TW_W} ${TW_GOAL}" aria-hidden="true">${twPlanSVG()}</svg>
-            <div class="tw__tower" id="twTower"><div class="tw__ground"></div></div>
-          </div>
-          <div class="tw__cloud" id="twCloud" aria-hidden="true">☁️</div>
-          <div class="tw__piece tw__hover" id="twHover" aria-hidden="true" style="display:none"></div>
+          <div class="tw2__world" id="twWorld"></div>
           <p class="tw__hud" id="twHud"></p>
           <p class="orch__banner tw__banner" id="twBanner" role="status" aria-live="polite"></p>
         </div>
         <div class="tw__bar">
-          <span class="tw__cur" id="twCur"></span>
-          <button type="button" class="orch__clear" id="twReset"><span aria-hidden="true">↺</span> ${esc(tt("again"))}</button>
+          <button type="button" class="orch__go tw2__rotate" id="twRotate"><span aria-hidden="true">↻</span> ${esc(tt("rotate"))}</button>
+          <button type="button" class="orch__clear" id="twShuffle">${esc(tt("shuffle"))}</button>
+          <button type="button" class="orch__clear" id="twAgain"><span aria-hidden="true">↺</span> ${esc(tt("again"))}</button>
         </div>
       </div>
       <div class="tw__side">
-        <h3 class="tw__invtitle">${esc(tt("material"))} <span class="tw__draghint">· ${esc(tt("drag"))}</span></h3>
-        <div class="tw__inv" id="twInv"></div>
+        <p class="tw__hint">${esc(tt("hint"))}</p>
+        <h3 class="tw__invtitle"><span id="twLeft"></span> · ${esc(twMatName(Math.min(tw.k, TW_SECTIONS - 1)))} ${twMat(Math.min(tw.k, TW_SECTIONS - 1)).e}</h3>
+        <div class="tw2__tray" id="twTray"></div>
       </div>
     </div>`;
-  const stage = document.getElementById("twStage");
-  tw.u = stage.clientWidth / TW_W;
   twPaintAll();
-  document.getElementById("twReset").addEventListener("click", () => { sfx.pop(); twReset(); });
+  document.getElementById("twRotate").addEventListener("click", twRotate);
+  document.getElementById("twShuffle").addEventListener("click", () => { if (tw.won) return; sfx.pop(); tw.attempt++; twNewSection(); twPaintAll(); });
+  document.getElementById("twAgain").addEventListener("click", () => { if (tw.k > 0 && !window.confirm(lang === "de" ? "Wirklich von vorn anfangen?" : "Really start over?")) return; sfx.pop(); twStart(); });
 
-  /* the stage: the piece follows the mouse; press and slide on touch screens; let go to place it */
-  stage.addEventListener("pointermove", (e) => { if (!tw.won && (e.pointerType === "mouse" || tw.pressing)) twShowPreview(e.clientX); });
-  stage.addEventListener("pointerleave", () => { if (!tw.pressing) twHidePreview(); });
-  stage.addEventListener("pointerdown", (e) => { if (tw.won) return; tw.pressing = true; if (stage.setPointerCapture) stage.setPointerCapture(e.pointerId); twShowPreview(e.clientX); });
-  stage.addEventListener("pointerup", (e) => {
-    if (!tw.pressing) return;
-    tw.pressing = false;
-    twShowPreview(e.clientX);
-    twDrop();
-    if (e.pointerType !== "mouse") twHidePreview();
-  });
-  stage.addEventListener("pointercancel", () => { tw.pressing = false; twHidePreview(); });
-  stage.addEventListener("keydown", (e) => {
-    if (e.key === "ArrowLeft" || e.key === "ArrowRight") {
-      e.preventDefault();
-      const r = stage.getBoundingClientRect();
-      twShowPreview(r.left + (TW_W / 2 + tw.x + (e.key === "ArrowLeft" ? -14 : 14)) * tw.u);
-    } else if (e.key === " " || e.key === "Enter") {
-      e.preventDefault();
-      if (document.getElementById("twHover").style.display === "none") twShowPreview(stage.getBoundingClientRect().left + stage.clientWidth / 2);
-      twDrop();
-    }
-  });
-
-  /* the list: tap to select; drag a piece onto the stage to build with it */
-  const inv = document.getElementById("twInv");
-  inv.addEventListener("pointerdown", (e) => {
-    const chip = e.target.closest(".tw__chip");
-    if (!chip) return;
-    const id = chip.dataset.id, sx = e.clientX, sy = e.clientY;
-    let ghost = null;
-    const select = () => { tw.cur = id; tw.newest = []; twPaintHud(); twPaintInv(); if (!playMuted) ORCH_VOICE.octo(orchCtx().currentTime + 0.01, 523); };
+  /* tray: tap a piece to select it (tap again to turn it), drag it into the grid */
+  document.getElementById("twTray").addEventListener("pointerdown", (e) => {
+    const btn = e.target.closest(".tw2__piece");
+    if (!btn) return;
+    e.preventDefault();
+    const p = twPiece(+btn.dataset.id), sx = e.clientX, sy = e.clientY, wasSel = tw.sel === p.id;
+    tw.sel = p.id;
+    let moved = false;
     const move = (ev) => {
-      if (!ghost && Math.hypot(ev.clientX - sx, ev.clientY - sy) > 8) {
-        const it = twItem(id);
-        ghost = document.createElement("div");
-        ghost.className = "tw__piece tw__dragghost";
-        ghost.style.cssText = `width:${it.w * tw.u}px;height:${it.h * tw.u}px`;
-        ghost.innerHTML = twFace(it);
-        document.body.appendChild(ghost);
-        select();
-      }
-      if (ghost) {
-        ghost.style.left = ev.clientX + "px"; ghost.style.top = ev.clientY + "px";
-        const over = twOverStage(ev.clientX, ev.clientY);
-        ghost.style.opacity = over ? "0" : ".9"; // over the tower the landing preview takes over
-        if (over) twShowPreview(ev.clientX); else twHidePreview();
-      }
+      if (!moved && Math.hypot(ev.clientX - sx, ev.clientY - sy) > 6) { moved = true; twBeginDrag(p, ev.clientX, ev.clientY); btn.classList.add("is-lifted"); }
+      if (moved) twMoveDrag(ev.clientX, ev.clientY);
     };
-    const up = (ev) => {
+    const up = () => {
       removeEventListener("pointermove", move); removeEventListener("pointerup", up); removeEventListener("pointercancel", up);
-      if (ghost) {
-        ghost.remove();
-        if (twOverStage(ev.clientX, ev.clientY)) { twShowPreview(ev.clientX); twDrop(); if (ev.pointerType !== "mouse") twHidePreview(); }
-        else twHidePreview();
-      } else select(); // a plain tap
+      if (moved) twDropDrag();
+      else { if (wasSel) twRotate(); else if (!playMuted) oTone(520, orchCtx().currentTime, 0.05, "triangle", 0.06); twPaintTray(); }
     };
     addEventListener("pointermove", move); addEventListener("pointerup", up); addEventListener("pointercancel", up);
+    twPaintTray();
   });
-  inv.addEventListener("click", (e) => { const c = e.target.closest(".tw__chip"); if (c && e.detail === 0) { tw.cur = c.dataset.id; tw.newest = []; twPaintHud(); twPaintInv(); } }); // keyboard
+  /* the grid: pick a placed piece up again */
+  document.getElementById("twStage").addEventListener("pointerdown", (e) => {
+    const cell = e.target.closest("#twGrid .tw2__cell.is-filled");
+    if (!cell || tw.won) return;
+    e.preventDefault();
+    const p = twPiece(+cell.dataset.id);
+    twPickUp(p);
+    tw.sel = p.id;
+    twPaintAll();
+    twBeginDrag(p, e.clientX, e.clientY);
+    const move = (ev) => twMoveDrag(ev.clientX, ev.clientY);
+    const up = () => { removeEventListener("pointermove", move); removeEventListener("pointerup", up); removeEventListener("pointercancel", up); twDropDrag(); };
+    addEventListener("pointermove", move); addEventListener("pointerup", up); addEventListener("pointercancel", up);
+  });
+  document.getElementById("twStage").addEventListener("contextmenu", (e) => { if (tw.drag) { e.preventDefault(); twRotate(); } });
 }
