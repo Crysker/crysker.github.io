@@ -8,14 +8,14 @@ const ORCH_NOTES = [523.25, 440, 392, 329.63]; // top row to bottom row: C5 A4 G
 const ORCH_T = {
   en: {
     toy: "A toy", hint: "Pick a creature, then tap the stage. You can also drag them. Tap a placed creature again to remove it.",
-    play: "Play", pause: "Pause", clear: "Clear", tempo: "Tempo", stage: "Stage",
+    play: "Play", pause: "Pause", clear: "Clear all", tempo: "Tempo", stage: "Stage",
     empty: "empty", row: "Row", beat: "beat", pick: "Creature",
     names: { blob: "Blobby", frog: "Froggo", bird: "Pip", ghost: "Boo", robot: "Bleep", octo: "Inky" },
     sounds: { blob: "kick", frog: "bass", bird: "chirp", ghost: "pad", robot: "tick", octo: "pluck" }
   },
   de: {
     toy: "Ein Spielzeug", hint: "Such dir ein Wesen aus und tippe dann auf die Bühne. Ziehen geht auch. Tippe ein gesetztes Wesen noch einmal an, um es zu entfernen.",
-    play: "Abspielen", pause: "Pause", clear: "Leeren", tempo: "Tempo", stage: "Bühne",
+    play: "Abspielen", pause: "Pause", clear: "Alles leeren", tempo: "Tempo", stage: "Bühne",
     empty: "leer", row: "Reihe", beat: "Schlag", pick: "Wesen",
     names: { blob: "Blobby", frog: "Froggo", bird: "Pip", ghost: "Boo", robot: "Bleep", octo: "Inky" },
     sounds: { blob: "Bassdrum", frog: "Bass", bird: "Zwitschern", ghost: "Klangteppich", robot: "Tick", octo: "Zupfen" }
@@ -149,6 +149,8 @@ function orchPlace(r, c) {
   orchPaintStage();
 }
 function orchPaintStage() {
+  const clr = document.getElementById("orchClear");
+  if (clr) clr.disabled = orchCount() === 0;
   const names = ot("names");
   document.querySelectorAll(".orch__cell").forEach((el) => {
     const r = +el.dataset.r, c = +el.dataset.c, id = orch.grid[r][c];
@@ -180,7 +182,7 @@ function renderOrchestra() {
         <button type="button" class="orch__go" id="orchPlay" aria-pressed="false"></button>
         <label class="orch__tempo"><span>${esc(ot("tempo"))}</span>
           <input type="range" id="orchTempo" min="60" max="150" step="5" value="${orch.bpm}"><output id="orchBpm">${orch.bpm}</output></label>
-        <button type="button" class="orch__clear" id="orchClear">${esc(ot("clear"))}</button>
+        <button type="button" class="orch__clear" id="orchClear"><span aria-hidden="true">✕</span> ${esc(ot("clear"))}</button>
       </div>
     </div>`;
   orchPaintStage(); orchPaintTray(); orchSyncButtons();

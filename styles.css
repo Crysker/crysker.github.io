@@ -1060,8 +1060,9 @@ body.view-all .p-card__play, body.view-all .p-card__video { display: none; }
   font: 700 15px var(--sans); border: 2px solid var(--ink); background: transparent; color: var(--ink);
 }
 .orch__go { background: var(--turq); border-color: var(--turq); color: #062624; min-width: 132px; justify-content: center; }
-.orch__clear { border-color: var(--line); color: var(--ink-soft); }
-.orch__clear:hover { border-color: var(--ink-soft); color: var(--ink); }
+.orch__clear { border-color: var(--ink-soft); color: var(--ink); }
+.orch__clear:hover:not(:disabled) { border-color: var(--orange); background: var(--surface-2); }
+.orch__clear:disabled { opacity: .4; cursor: default; }
 .orch__tempo { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 190px; font: 700 13px var(--sans); color: var(--ink-soft); }
 .orch__tempo input { flex: 1; min-width: 80px; accent-color: var(--turq); }
 .orch__tempo output { min-width: 3ch; text-align: right; color: var(--ink); font-variant-numeric: tabular-nums; }
