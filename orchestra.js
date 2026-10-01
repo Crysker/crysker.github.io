@@ -79,7 +79,7 @@ const O_KIT_VOL = [1, 0.45, 0.4, 1];
 function oTone(freq, t, dur, type, vol, slideTo, attack = 0.012) {
   const c = orchCtx(), osc = c.createOscillator(), g = c.createGain();
   freq *= oMult; if (slideTo) slideTo *= oMult;
-  dur *= 1 + (oLen - 1) * 0.9; // a longer note rings on
+  const stretch = 1 + (oLen - 1) * 0.9; dur *= stretch; vol /= Math.sqrt(stretch); // a longer note rings on, but not louder: same energy spread over more time
   if (oKit) { if (O_KIT_TYPE[oKit][type]) type = O_KIT_TYPE[oKit][type]; vol *= O_KIT_VOL[oKit]; }
   osc.type = type;
   osc.frequency.setValueAtTime(freq, t);
