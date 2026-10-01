@@ -283,8 +283,9 @@ function renderQuestion() {
   if (!play.revealed && matchMedia("(pointer: fine)").matches) num.focus({ preventScroll: true }); // with a mouse the number field is ready to type in (not on phones: that would pop up the keyboard)
   if (play.revealed) { applyReveal(false); return; }
   slider.addEventListener("input", () => { setGuess(toVal(+slider.value)); sfx.tick(+slider.value / 1000); });
-  num.addEventListener("input", () => { const v = parseNum(num.value, q); if (v) setGuess(v, true); });
-  const lock = () => { const v = parseNum(num.value, q) || play.guess; if (!v) return; play.guess = v; lockIn(); };
+  num.addEventListener("input", () => { num.value = num.value.replace(/[^\d.,\s]/g, ""); const v = parseNum(num.value, q); if (v) setGuess(v, true); });
+  const lock = () => { if (num.value.trim() && !parseNum(num.value, q)) { num.classList.remove("is-wrong"); void num.offsetWidth; num.classList.add("is-wrong"); return; } // text that is not a number is not an answer
+    const v = parseNum(num.value, q) || play.guess; if (!v) return; play.guess = v; lockIn(); };
   document.getElementById("pqLock").addEventListener("click", lock);
   num.addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); if (!e.repeat) lock(); } }); // preventDefault: the Next button that takes the focus must not get this Enter as a click
   slider.addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); if (!e.repeat) lock(); } });

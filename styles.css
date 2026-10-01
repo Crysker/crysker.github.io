@@ -1397,3 +1397,5 @@ body.view-all .p-card__play, body.view-all .p-card__video { display: none; }
 .lang.is-babel { padding: 4px; }
 .lang__babel { display: inline-flex; align-items: center; padding: 6px 14px; border-radius: 999px; background: var(--ink); color: var(--bg); font: 700 13px var(--sans); }
 .lang__babel .flag { margin-right: 7px; }
+
+.pq__num.is-wrong { animation: wdShake .4s; }
