@@ -202,6 +202,10 @@ function orchSyncButtons() {
   b.innerHTML = `<span aria-hidden="true">${orch.playing ? "❚❚" : "▶"}</span> ${esc(ot(orch.playing ? "pause" : "play"))}`;
   b.setAttribute("aria-pressed", String(orch.playing));
 }
+/* Space always plays or pauses, whatever has the focus (it must not place or remove a creature) */
+const orchSpace = (e) => e.code === "Space" && typeof play !== "undefined" && play.screen === "orch" && !/^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName) && !e.ctrlKey && !e.metaKey && !e.altKey;
+document.addEventListener("keydown", (e) => { if (!orchSpace(e)) return; e.preventDefault(); if (!e.repeat) { if (orch.playing) orchStop(); else orchStart(); } });
+document.addEventListener("keyup", (e) => { if (orchSpace(e)) e.preventDefault(); }); // a button would click on key up
 document.addEventListener("visibilitychange", () => { if (document.hidden) orchStop(); });
 
 /* ---- placing creatures ---- */
