@@ -1399,3 +1399,12 @@ body.view-all .p-card__play, body.view-all .p-card__video { display: none; }
 .lang__babel .flag { margin-right: 7px; }
 
 .pq__num.is-wrong { animation: wdShake .4s; }
+
+/* Orchestra: note names on the left, a tail for longer notes, hint under the creatures */
+.orch__cell[data-note]::before { content: attr(data-note); position: absolute; left: 6px; top: 3px; font: 700 10px var(--sans); color: var(--ink-soft); opacity: .7; pointer-events: none; }
+.orch__cell:not([data-id=""])[data-note]::before { opacity: .45; }
+.orch__cell:not([data-len="1"])::after { content: ""; position: absolute; left: 50%; top: 50%; width: calc((100% + 7px) * (var(--n, 1) - 1)); height: 8px; margin-top: -4px; border-radius: 4px; background: var(--tail); opacity: .55; z-index: 0; pointer-events: none; }
+.orch__cell[data-len="2"] { --n: 2; } .orch__cell[data-len="3"] { --n: 3; } .orch__cell[data-len="4"] { --n: 4; }
+.orch__cell svg { position: relative; z-index: 1; }
+.orch__hint { margin: 0; font-size: 13px; color: var(--ink-soft); }
+.orch__pitch { flex: 1 1 190px; }
