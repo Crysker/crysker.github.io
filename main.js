@@ -271,7 +271,7 @@ const I18N = {
     },
     "footer.top": "Back to top ↑",
     ui: {
-      duration: "Duration", role: "My role", team: "Team",
+      duration: "Duration", role: "My role", team: "Team", solo: "Solo project", more: "More projects",
       challenge: "Challenge", approach: "What we built", approachSolo: "What I built", scan: "Scan to watch it on your phone or in VR", result: "Result", learned: "What I learned",
       open: "View project", close: "Close", next: "Next project", watch: "Watch video", video: "Video", tools: "Tools & tech", when: "When",
       devpost: "Devpost", ggj: "Global Game Jam page", itch: "Play on itch.io",
@@ -301,6 +301,7 @@ const I18N = {
         highlight: "Playable VR prototype built around an accessibility question",
         summary: "Navigate total darkness using echolocation. A sonar pulse reveals the room. Find three hidden keys without ever seeing clearly.",
         duration: "Semester project",
+        team: "With Jakob Mayr",
         role: "Core VR mechanics, level design and puzzles",
         challenge: "How do you experience space without sight? The game lets players navigate a pitch-dark environment the way people with visual impairments rely on sound.",
         approach: "A controller-triggered sonar casts 3–5 rays that bounce off objects and briefly reveal the surroundings, paired with immersive spatial audio.",
@@ -325,6 +326,7 @@ const I18N = {
         highlight: "Real-time fold recognition: a working prototype in 48 hours",
         summary: "A mixed reality origami coach: a YOLO model recognises your current fold in real time, and a 3D animation shows the next step right on your paper.",
         duration: "48 hours",
+        team: "Hackathon team, incl. Xaver",
         role: "UI, plus the Roboflow pipeline: annotating the dataset and training the model",
         challenge: "Folding from a screen is frustrating: you look at a video, then at your paper, then back. Could MR put the next fold right onto the paper? That needs a model that reliably tells which fold step you are on, trained on data we had to collect ourselves within 48 hours, and then wired into a Meta Quest app in Unity.",
         approach: "We photographed every folding step of an origami heart, split across the team: A teammate and I took the pictures of every step and I annotated them in Roboflow, one teammate built the Unity integration, another handled the machine learning, and I designed the UI. When we ran out of Roboflow credits, the two of us trained the model on our own accounts. A YOLO model recognises the current step, and the Quest 3 app plays an animated 3D model of the next fold until it sees that fold on your paper.",
@@ -353,6 +355,7 @@ const I18N = {
         highlight: "Goblins litter, A* carries the trash to the sea, and a mutated shark wants revenge",
         summary: "Goblins and ogres keep dumping straws, bottles and nuclear waste into the rivers. Fish it out in VR before it reaches the ocean. Let too much through and Sigurd the Tainted, a shark mutated by the waste, comes for you. Luckily you have watermelon swords.",
         duration: "2 weeks",
+        team: "LSW-Studios, team of three",
         role: "3D modelling (goblins, huts, straw, bottle, nuclear waste barrel), goblin animation, Unity setup, world design, UI and UI logic",
         challenge: "Make ocean pollution something you feel, not something you read about: small careless acts pile up until they turn into a threat you can't ignore.",
         approach: "Five scenes, from a tutorial room to the beach, a death cell and a victory party. Goblins (fast, little trash) and ogres (slow, lots of trash) walk from their huts to the rivers via NavMesh; the trash then finds its way to the ocean with A* pathfinding. You collect it by hand into a bucket until the boss fight starts, armed with watermelon swords from the Unity Asset Store. Sound and an in-game announcer with Wwise.",
@@ -365,6 +368,7 @@ const I18N = {
         highlight: "Keep the space highway clear for the big transport ships",
         summary: "Space junk is blocking the space highway. As a cleaner, you clear the debris so the huge transport ships can pass without trouble.",
         duration: "Game jam",
+        team: "Team of two",
         role: "Level design, coding and animations (team of two)",
         challenge: "Build a complete, playable XR game in the few days of a game jam, with only two people.",
         approach: "Debris drifts across the highway and has to be cleared before the next transport ship comes through. I built the levels, programmed the gameplay and created the animations; my teammate covered the rest.",
@@ -393,6 +397,7 @@ const I18N = {
         highlight: "Play a church organ at the bottom of the sea, while Cthulhu listens",
         summary: "An underwater VR level: you play a piano with your bare hands, and every key is mapped to a recorded church organ. Sea creatures gather to listen, and in the background Cthulhu manipulates you into playing the notes that set him free.",
         duration: "Semester project",
+        team: "Team of four",
         role: "Mostly level design, plus some coding, 3D modelling and animation (team of four)",
         challenge: "For the 360° Audio & Video course: build an experience where sound is the main character, not just the background.",
         approach: "A piano in front of you, played with hand tracking; each key triggers an original church organ sound. The whole soundscape is ambisonic and built in Wwise, so the organ, the sea creatures and Cthulhu come from where they are around you. I designed the underwater level and helped with scripting, models and animations.",
@@ -447,6 +452,7 @@ const I18N = {
         highlight: "SUS scores mostly above 90 in our user test",
         summary: "A party game for one phone: each player gets a random meme image and writes the funniest caption, the group rates it, and the best one is crowned meme-master.",
         duration: "2 weeks",
+        team: "With Wolfgang",
         role: "App development (~70%) and design (~30%), user tests together with my teammate Wolfgang",
         challenge: "Design a party game anyone can pick up instantly, and prove it with real users, not just our own opinion.",
         approach: "Mockups and a user flow in Figma, then a heuristic evaluation that led to fixes like an exit button and confirmation steps. We wrote hypotheses, a test plan with five tasks, informed consent and a SUS questionnaire, and built the Android app.",
@@ -552,7 +558,7 @@ const I18N = {
     },
     "footer.top": "Nach oben ↑",
     ui: {
-      duration: "Dauer", role: "Meine Rolle", team: "Team",
+      duration: "Dauer", role: "Meine Rolle", team: "Team", solo: "Einzelprojekt", more: "Weitere Projekte",
       challenge: "Herausforderung", approach: "Was wir gebaut haben", approachSolo: "Was ich gebaut habe", scan: "Scannen und am Handy oder in VR ansehen", result: "Ergebnis", learned: "Was ich gelernt habe",
       open: "Projekt ansehen", close: "Schließen", next: "Nächstes Projekt", watch: "Video ansehen", video: "Video", tools: "Tools & Technik", when: "Wann",
       devpost: "Devpost", ggj: "Global-Game-Jam-Seite", itch: "Auf itch.io spielen",
@@ -582,6 +588,7 @@ const I18N = {
         highlight: "Spielbarer VR-Prototyp rund um eine Accessibility-Frage",
         summary: "Orientiere dich in völliger Dunkelheit per Echoortung. Ein Sonar-Impuls macht den Raum sichtbar. Finde drei versteckte Schlüssel.",
         duration: "Semesterprojekt",
+        team: "Mit Jakob Mayr",
         role: "Zentrale VR-Mechaniken, Level Design und Rätsel",
         challenge: "Wie erlebt man Raum ohne Sehen? Das Spiel lässt Spieler:innen eine stockdunkle Umgebung so erkunden, wie Menschen mit Sehbehinderung sich auf Klang verlassen.",
         approach: "Ein Sonar am Controller schießt 3–5 Strahlen, die von Objekten reflektiert werden und die Umgebung kurz sichtbar machen, kombiniert mit immersivem Spatial Audio.",
@@ -606,6 +613,7 @@ const I18N = {
         highlight: "Faltschritt-Erkennung in Echtzeit: funktionierender Prototyp in 48 Stunden",
         summary: "Ein Mixed-Reality-Origami-Coach: Ein YOLO-Modell erkennt deinen aktuellen Faltschritt in Echtzeit, eine 3D-Animation zeigt den nächsten direkt auf deinem Papier.",
         duration: "48 Stunden",
+        team: "Hackathon-Team, u. a. mit Xaver",
         role: "UI sowie die Roboflow-Pipeline: Annotation des Datensatzes und Training des Modells",
         challenge: "Falten nach Bildschirm ist mühsam: Video anschauen, aufs Papier schauen, wieder zurück. Kann MR den nächsten Falz direkt aufs Papier legen? Dafür braucht es ein Modell, das zuverlässig erkennt, bei welchem Schritt man gerade ist, trainiert mit Daten, die wir in 48 Stunden selbst sammeln mussten, und danach in eine Meta-Quest-App in Unity eingebunden.",
         approach: "Wir haben jeden Faltschritt eines Origami-Herzens fotografiert, im Team aufgeteilt: Ein Teamkollege und ich haben jeden Schritt fotografiert und ich habe alles in Roboflow annotiert, ein Teamkollege hat die Unity-Integration gebaut, ein weiterer das Machine Learning übernommen, und ich habe die UI gestaltet. Als uns die Roboflow-Credits ausgingen, haben wir beide das Modell auf unseren eigenen Accounts trainiert. Ein YOLO-Modell erkennt den aktuellen Schritt, und die Quest-3-App spielt ein animiertes 3D-Modell des nächsten Falzes ab, bis sie diesen auf deinem Papier erkennt.",
@@ -634,6 +642,7 @@ const I18N = {
         highlight: "Goblins verschmutzen, A* trägt den Müll ins Meer, und ein mutierter Hai will Rache",
         summary: "Goblins und Oger werfen ständig Strohhalme, Flaschen und Atommüll in die Flüsse. Fisch ihn in VR heraus, bevor er das Meer erreicht. Kommt zu viel durch, holt dich Sigurd der Verseuchte, ein vom Müll mutierter Hai. Zum Glück gibt es Wassermelonen-Schwerter.",
         duration: "2 Wochen",
+        team: "LSW-Studios, Dreierteam",
         role: "3D-Modellierung (Goblins, Hütten, Strohhalm, Flasche, Atommüllfass), Goblin-Animation, Unity-Setup, World Design, UI und UI-Logik",
         challenge: "Meeresverschmutzung spürbar machen statt nur darüber zu lesen: Kleine achtlose Handlungen summieren sich zu einer Bedrohung, die man nicht mehr ignorieren kann.",
         approach: "Fünf Szenen, vom Tutorial-Raum über den Strand bis zur Todeszelle und der Siegesfeier. Goblins (schnell, wenig Müll) und Oger (langsam, viel Müll) laufen per NavMesh von ihren Hütten zu den Flüssen; der Müll findet dann per A*-Pathfinding seinen Weg ins Meer. Man sammelt ihn per Hand in einen Eimer, bis der Bosskampf beginnt, bewaffnet mit Wassermelonen-Schwertern aus dem Unity Asset Store. Sound und ein Ansager im Spiel mit Wwise.",
@@ -646,6 +655,7 @@ const I18N = {
         highlight: "Halte den Space-Highway frei für die großen Transportschiffe",
         summary: "Weltraumschrott blockiert den Space-Highway. Als Reinigungskraft räumst du die Trümmer weg, damit die riesigen Transportschiffe ohne Probleme durchkommen.",
         duration: "Game Jam",
+        team: "Zweierteam",
         role: "Level Design, Programmierung und Animationen (Zweierteam)",
         challenge: "Ein komplettes, spielbares XR-Spiel in den wenigen Tagen eines Game Jams bauen, nur zu zweit.",
         approach: "Trümmer treiben über den Highway und müssen weg, bevor das nächste Transportschiff kommt. Ich habe die Levels gebaut, das Gameplay programmiert und die Animationen erstellt; mein Teamkollege hat den Rest übernommen.",
@@ -674,6 +684,7 @@ const I18N = {
         highlight: "Spiel eine Kirchenorgel am Meeresgrund, während Cthulhu zuhört",
         summary: "Ein Unterwasser-Level in VR: Du spielst ein Klavier mit bloßen Händen, jede Taste ist mit einer aufgenommenen Kirchenorgel belegt. Meerestiere versammeln sich und hören zu, und im Hintergrund manipuliert dich Cthulhu, damit du die Töne spielst, die ihn befreien.",
         duration: "Semesterprojekt",
+        team: "Viererteam",
         role: "Hauptsächlich Level Design, dazu etwas Programmierung, 3D-Modellierung und Animation (Viererteam)",
         challenge: "Für die Lehrveranstaltung 360° Audio & Video: ein Erlebnis bauen, in dem Klang die Hauptrolle spielt und nicht nur Hintergrund ist.",
         approach: "Vor dir steht ein Klavier, gespielt mit Hand Tracking; jede Taste löst einen originalen Kirchenorgel-Klang aus. Die gesamte Klangwelt ist Ambisonics und in Wwise gebaut, sodass Orgel, Meerestiere und Cthulhu von dort kommen, wo sie um dich herum sind. Ich habe das Unterwasser-Level gestaltet und bei Scripts, Modellen und Animationen mitgeholfen.",
@@ -728,6 +739,7 @@ const I18N = {
         highlight: "SUS-Werte im User Test meist über 90",
         summary: "Ein Partyspiel für ein Handy: Jede Person bekommt ein zufälliges Meme-Bild und schreibt die lustigste Caption, die Gruppe bewertet, und die beste Person wird zum Meme-Master gekrönt.",
         duration: "2 Wochen",
+        team: "Mit Wolfgang",
         role: "App-Entwicklung (~70 %) und Design (~30 %), User Tests gemeinsam mit meinem Teamkollegen Wolfgang",
         challenge: "Ein Partyspiel gestalten, das jede Person sofort versteht, und das mit echten Nutzer:innen beweisen, nicht nur mit unserer Meinung.",
         approach: "Mockups und User Flow in Figma, dann eine heuristische Evaluierung, die zu Verbesserungen wie einem Exit-Button und Bestätigungsschritten führte. Wir haben Hypothesen, einen Testplan mit fünf Aufgaben, eine Einverständniserklärung und einen SUS-Fragebogen erstellt und die Android-App gebaut.",
@@ -991,7 +1003,9 @@ function openProject(id, { push = true } = {}) {
   // "Next project" follows the grid order (ORDER), early semester projects come after
   const rankAll = (p) => (ORDER.includes(p.id) ? ORDER.indexOf(p.id) : 50 + PROJECTS.indexOf(p));
   const list = visibleProjects().sort((a, b) => rankAll(a) - rankAll(b));
-  const next = list.length > 1 ? list[(list.findIndex((p) => p.id === id) + 1) % list.length] : null;
+  const at = list.findIndex((p) => p.id === id);
+  const next = list.length > 1 ? list[(at + 1) % list.length] : null;
+  const others = [1, 2].map((d) => list[(at + d) % list.length]).filter((p, i, a) => p.id !== id && a.indexOf(p) === i);
   // Video loads only on click: faster, and no YouTube request for people who don't watch
   const media = pr.video
     ? `<button type="button" class="video__play case__video" data-yt="${pr.video}" data-title="${esc(x.title)}"
@@ -1016,7 +1030,7 @@ function openProject(id, { push = true } = {}) {
       <div class="case__media">${media}</div>
       <div class="case__grid">
         <aside class="case__facts">
-          <dl>${fact(ui.role, x.role)}${fact(ui.when, x.semester)}${fact(ui.duration, x.duration)}</dl>
+          <dl>${fact(ui.role, x.role)}${fact(ui.team, x.team || (pr.solo ? ui.solo : ""))}${fact(ui.when, x.semester)}${fact(ui.duration, x.duration)}</dl>
           <h3>${esc(ui.tools)}</h3>
           <ul class="tags">${pr.tags.map((tg) => `<li>${esc(tg)}</li>`).join("")}</ul>
           ${pr.links.length ? `<div class="case__links">${pr.links.map((l) =>
@@ -1037,10 +1051,13 @@ function openProject(id, { push = true } = {}) {
               : `<video src="${g.video}" poster="${g.poster}" controls muted loop playsinline preload="none"></video>`).join("")}</div>` : ""}
         </div>
       </div>
-      ${next ? `<button type="button" class="case__nextcard" data-id="${next.id}">
-        ${pic(next)}
-        <span><small>${esc(ui.next)}</small><b>${esc(I18N[lang].p[next.id].title)} →</b></span>
-      </button>` : ""}
+      ${others.length ? `<section class="case__more" aria-labelledby="moreTitle">
+        <h3 id="moreTitle">${esc(ui.more)}</h3>
+        <div class="case__morelist">${others.map((o) => `<button type="button" class="case__nextcard" data-id="${o.id}">
+          ${pic(o)}
+          <span><small>${esc(I18N[lang].p[o.id].kicker)}</small><b>${esc(I18N[lang].p[o.id].title)} →</b></span>
+        </button>`).join("")}</div>
+      </section>` : ""}
     </article>`;
   renderCaseCrumbs(x.title);
   caseNext.hidden = !next;
