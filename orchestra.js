@@ -419,6 +419,7 @@ function renderOrchestra() {
             `<button type="button" class="orch__cell${c % 4 === 0 ? " is-beat" : ""}" data-r="${r}" data-c="${c}"${c === 0 ? ` data-note="${ORCH_NAMES[r]}"` : ""}></button>`).join("")).join("")}
         </div>
         <p class="orch__banner" id="orchBanner" role="status" aria-live="polite"></p>
+        <section class="orch__foundbox orch__insp" id="orchInsp" hidden></section>
       </div>
       <div class="orch__side">
         <div class="orch__tray" role="group" aria-label="${esc(ot("creatures"))}">
@@ -427,7 +428,6 @@ function renderOrchestra() {
             <span class="orch__name">${esc(names[c.id])}</span><small>${esc(sounds[c.id])}</small></button>`).join("")}
         </div>
         <p class="orch__hint">${esc(ot("hint"))}</p>
-        <section class="orch__foundbox orch__insp" id="orchInsp" hidden></section>
         <section class="orch__foundbox" aria-labelledby="orchFoundTitle">
           <h3 id="orchFoundTitle">${esc(ot("found"))} <span id="orchFoundCount"></span></h3>
           <ul class="orch__found" id="orchFound"></ul>
