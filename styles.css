@@ -1647,3 +1647,4 @@ body.view-all .p-card__play, body.view-all .p-card__video { display: none; }
 }
 
 @media (max-width: 560px) { .tw__bar button { flex: 1 1 0; min-width: 0; padding: 0 8px; font-size: 14px; white-space: nowrap; justify-content: center; } .tw__bar .tw2__rotate { flex: 1.25 1 0; } }
+.wd__credit { margin: 0; font-size: 13px; color: var(--ink-soft); }

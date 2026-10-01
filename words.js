@@ -8,7 +8,7 @@
 
 const WD_T = {
   en: {
-    intro: "Three short rounds, the same for everyone today.", names: ["Five", "Fours", "Know-how"],
+    intro: "Three short rounds, the same for everyone today.", inspired: "Inspired by Wordle and Connections.", names: ["Five", "Fours", "Know-how"],
     descs: ["Guess the five-letter word in six tries.", "Sort 16 words into four groups. Four mistakes are allowed.", "Three general-knowledge questions."],
     start: "Start", doneToday: "You have played today's round.", again: "Play another round", next: "Next", enter: "Enter", submit: "Submit", deselect: "Deselect", shuffle: "Shuffle",
     mistakes: "Mistakes left", oneAway: "One away!", notThis: "Not this time.", word: "The word was", solved: "Solved!", round: "Round {n} of 3", share: "Copy result", copied: "Copied!",
@@ -16,7 +16,7 @@ const WD_T = {
     pick: "Pick a letter", correct: "Correct!", wrong: "Not quite.", tooShort: "Not enough letters", notWord: "Not in the word list"
   },
   de: {
-    intro: "Drei kurze Runden, heute für alle gleich.", names: ["Fünfer", "Vierer", "Wissen"],
+    intro: "Drei kurze Runden, heute für alle gleich.", inspired: "Inspiriert von Wordle und Connections.", names: ["Fünfer", "Vierer", "Wissen"],
     descs: ["Errate das Wort mit fünf Buchstaben in sechs Versuchen.", "Sortiere 16 Wörter in vier Gruppen. Vier Fehler sind erlaubt.", "Drei Fragen aus dem Allgemeinwissen."],
     start: "Starten", doneToday: "Du hast die heutige Runde gespielt.", again: "Noch eine Runde", next: "Weiter", enter: "Enter", submit: "Prüfen", deselect: "Abwählen", shuffle: "Mischen",
     mistakes: "Fehler übrig", oneAway: "Fast! Ein Wort passt nicht.", notThis: "Diesmal nicht.", word: "Das Wort war", solved: "Geschafft!", round: "Runde {n} von 3", share: "Ergebnis kopieren", copied: "Kopiert!",
@@ -191,6 +191,7 @@ function wdIntroHTML() {
   const saved = wdSavedToday();
   return `<p class="wd__roundlabel">${esc(wt("daily"))}</p><p class="wd__intro">${esc(wt("intro"))}</p>
     <ol class="wd__list">${wt("names").map((n, i) => `<li><b>${esc(n)}</b><span>${esc(wt("descs")[i])}</span></li>`).join("")}</ol>
+    <p class="wd__credit">${esc(wt("inspired"))}</p>
     <div class="wd__actions">${saved ? `<p class="wd__msg">${esc(wt("doneToday"))}</p><button type="button" class="orch__go" id="wdShowSaved">${esc(wt("result"))}</button><button type="button" class="orch__clear" id="wdMore">${esc(wt("again"))}</button>`
       : `<button type="button" class="orch__go" id="wdStart">${esc(wt("start"))}</button>`}</div>`;
 }

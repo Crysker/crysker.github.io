@@ -5,8 +5,7 @@
 const PLAY_T = {
   en: {
     home: "Home", nav: "Playground", title: "Playground", back: "Back", close: "Close", soundOn: "Turn sound on", soundOff: "Turn sound off",
-    intro: "Tiny games, made for fun. More are on the way.",
-    credits: "All games were designed and built by Serkan Sönmez, with Claude Code. The Puzzle Round is inspired by Wordle and Connections.",
+    intro: "Some mini games for the ones that need some distraction from more important stuff :D",
     g1: ["Guess the Average", "How much beer does an Austrian drink? How many cups of tea a Turk? Guess the number, the closer the more points."],
     best: "Best: {n}", verified: "Verified", robot: "I'm not a robot", play: "Play", soon: "Soon", g2: "Tiny Orchestra", g3: "Tower of Babel", g4: "Puzzle Round",
     more: "Fun fact & source", answers: "Show my answers", q: "Question {i} of {n}", lock: "Lock in", next: "Next", finish: "See result",
@@ -20,8 +19,7 @@ const PLAY_T = {
   },
   de: {
     home: "Start", nav: "Spielwiese", title: "Spielwiese", back: "Zurück", close: "Schließen", soundOn: "Ton einschalten", soundOff: "Ton ausschalten",
-    intro: "Kleine Spiele, nur zum Spaß. Mehr folgt.",
-    credits: "Alle Spiele wurden von Serkan Sönmez entworfen und umgesetzt, mit Claude Code. Die Rätselrunde ist von Wordle und Connections inspiriert.",
+    intro: "Ein paar Minispiele für alle, die etwas Ablenkung von wichtigeren Dingen brauchen :D",
     g1: ["Schätz den Durchschnitt", "Wie viel Bier trinkt ein Österreicher? Wie viele Tassen Tee ein Türke? Schätze die Zahl, je näher, desto mehr Punkte."],
     best: "Bestwert: {n}", verified: "Verifiziert", robot: "Ich bin kein Roboter", play: "Spielen", soon: "Bald", g2: "Mini-Orchester", g3: "Turmbau zu Babel", g4: "Rätselrunde",
     more: "Fun Fact & Quelle", answers: "Meine Antworten zeigen", q: "Frage {i} von {n}", lock: "Bestätigen", next: "Weiter", finish: "Ergebnis ansehen",
@@ -234,8 +232,7 @@ function renderMenu() {
         <span class="ptile__art" aria-hidden="true">${g.art}</span>
         <span class="ptile__title">${esc(playGameTitle(g))}</span><small class="ptile__best">${esc(g.note ? g.note() : "")}</small>
       </button>`).join("")}
-    </div>
-    <p class="play__credits">${esc(pt("credits"))}</p>`;
+    </div>`;
   PLAY_GAMES.forEach((g) => document.querySelector(`[data-game="${g.id}"]`).addEventListener("click", () => openGame("#" + g.hash, () => { sfx.click(); play = { screen: g.id }; renderPlay(); })));
   document.getElementById("pgameGuess").addEventListener("click", () => openGame("#guess", () => { sfx.click(); startGame(); }));
   document.getElementById("pgameCaptcha").addEventListener("click", () => openGame("#reshaptcha", startCaptcha));
