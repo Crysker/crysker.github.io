@@ -16,11 +16,11 @@ const ORCH_T = {
     rows: "Rows", rowMore: "Add a row", rowLess: "Remove a row",
     pitch: "Pitch", kit: "Sound", kits: ["Classic", "8-bit", "Buzz", "Soft"], hint: "Tap a creature to select it: change its pitch or length, remove it, or drop another creature on it to layer sounds. Alt-drag copies a square.", len: "Note length",
     pitchNote: "Pitch", lenNote: "Length", remove: "Remove", layer: "Add layer", selected: "Selected",
-    found: "Discoveries", share: "Share my beat", download: "Download", rendering: "Rendering…",
+    found: "Discoveries", download: "Download", rendering: "Rendering…",
     tplBtn: "Template beats", tplTitle: "Template beats", tplHear: "Hear", tplStop: "Stop", tplUse: "Use this beat", tplRender: "…", tplClose: "Close", tplConfirm: "Replace the beat on your stage with this template?",
     copy: "Copy", paste: "Paste", pasteOn: "Click a square to paste (Esc stops)", dup: "Duplicate", vol: "Volume", volShort: "Vol", createOwn: "Create own sound", mkSound: "Sound", mkTitle: "Create your own sound", mkEdit: "Edit your sound", mkName: "Name", mkAvatar: "Avatar", mkUploadImg: "Upload image", mkStart: "Start", mkLen: "Length", mkMax: "max. {n} s", save: "Save", cancel: "Cancel", edit: "Edit", noSample: "Record or upload a sound first.", ownTag: "own sound", mkDefault: "My sound",
     modeFree: "Freestyle", modeLearn: "Learn", level: "Level {n} of 5", next: "Next level", restart: "Restart level", doneTitle: "You know every tool now", doneText: "Creatures, pitch, tempo, shaping notes, layers, kits, rows, sharing: all yours. Time for freestyle!", openFree: "Open freestyle",
-    mineTitle: "Your own sound", rec: "Record", recStop: "Stop", upload: "Upload", test: "Test", del: "Remove", mineNone: "Record up to 2.5 seconds or upload a sound file. Sounds stay on your device, a shared link plays a plain blip instead.", mineHas: "Your sound is ready. Put My sound on the stage.", mineMic: "Could not use the microphone.", mineBad: "That file could not be read.", mineRec: "Recording …", copied: "Link copied", newFound: "Discovered: {n}!", creatures: "Creatures",
+    mineTitle: "Your own sound", rec: "Record", recStop: "Stop", upload: "Upload", test: "Test", del: "Remove", mineNone: "Record up to 2.5 seconds or upload a sound file. Sounds stay on your device.", mineHas: "Your sound is ready. Put My sound on the stage.", mineMic: "Could not use the microphone.", mineBad: "That file could not be read.", mineRec: "Recording …", copied: "Link copied", newFound: "Discovered: {n}!", creatures: "Creatures",
     combos: {
       frogs: ["Frog choir", "A choir needs many voices. How many frogs?"],
       ghosts: ["Witching hour", "With enough ghosts it gets spooky."],
@@ -41,11 +41,11 @@ const ORCH_T = {
     rows: "Reihen", rowMore: "Reihe hinzufügen", rowLess: "Reihe entfernen",
     pitch: "Tonhöhe", kit: "Klang", kits: ["Klassisch", "8-Bit", "Brummig", "Weich"], hint: "Höhere Reihen klingen höher. Tippe ein Wesen an, um es auszuwählen: Tonhöhe oder Länge ändern, entfernen, oder ein weiteres Wesen daraufziehen, um Klänge zu schichten. Alt beim Ziehen kopiert ein Feld.", len: "Tonlänge",
     pitchNote: "Tonhöhe", lenNote: "Länge", remove: "Entfernen", layer: "Schicht hinzufügen", selected: "Ausgewählt",
-    found: "Entdeckungen", share: "Meinen Beat teilen", download: "Herunterladen", rendering: "Wird erstellt …",
+    found: "Entdeckungen", download: "Herunterladen", rendering: "Wird erstellt …",
     tplBtn: "Beispiel-Beats", tplTitle: "Beispiel-Beats", tplHear: "Anhören", tplStop: "Stopp", tplUse: "Diesen Beat nehmen", tplRender: "…", tplClose: "Schließen", tplConfirm: "Das Beat auf deiner Bühne durch dieses Beispiel ersetzen?",
     copy: "Kopieren", paste: "Einfügen", pasteOn: "Feld anklicken zum Einfügen (Esc beendet)", dup: "Duplizieren", vol: "Lautstärke", volShort: "Laut", createOwn: "Eigenen Klang erstellen", mkSound: "Klang", mkTitle: "Erstelle deinen eigenen Klang", mkEdit: "Klang bearbeiten", mkName: "Name", mkAvatar: "Avatar", mkUploadImg: "Bild hochladen", mkStart: "Start", mkLen: "Länge", mkMax: "max. {n} s", save: "Speichern", cancel: "Abbrechen", edit: "Bearbeiten", noSample: "Nimm erst einen Klang auf oder lade einen hoch.", ownTag: "eigener Klang", mkDefault: "Mein Ton",
     modeFree: "Freestyle", modeLearn: "Lernen", level: "Stufe {n} von 5", next: "Nächste Stufe", restart: "Stufe neu starten", doneTitle: "Du kennst jetzt alle Werkzeuge", doneText: "Wesen, Tonhöhe, Tempo, Noten formen, Schichten, Klänge, Reihen, Teilen: alles deins. Zeit für Freestyle!", openFree: "Freestyle öffnen",
-    mineTitle: "Dein eigener Klang", rec: "Aufnehmen", recStop: "Stopp", upload: "Hochladen", test: "Anhören", del: "Entfernen", mineNone: "Nimm bis zu 2,5 Sekunden auf oder lade eine Audiodatei hoch. Der Klang bleibt auf deinem Gerät, ein geteilter Link spielt stattdessen einen einfachen Ton.", mineHas: "Dein Klang ist bereit. Setz „Mein Ton“ auf die Bühne.", mineMic: "Das Mikrofon ließ sich nicht verwenden.", mineBad: "Diese Datei konnte nicht gelesen werden.", mineRec: "Aufnahme läuft …", copied: "Link kopiert", newFound: "Neu entdeckt: {n}!", creatures: "Wesen",
+    mineTitle: "Dein eigener Klang", rec: "Aufnehmen", recStop: "Stopp", upload: "Hochladen", test: "Anhören", del: "Entfernen", mineNone: "Nimm bis zu 2,5 Sekunden auf oder lade eine Audiodatei hoch. Der Klang bleibt auf deinem Gerät.", mineHas: "Dein Klang ist bereit. Setz „Mein Ton“ auf die Bühne.", mineMic: "Das Mikrofon ließ sich nicht verwenden.", mineBad: "Diese Datei konnte nicht gelesen werden.", mineRec: "Aufnahme läuft …", copied: "Link kopiert", newFound: "Neu entdeckt: {n}!", creatures: "Wesen",
     combos: {
       frogs: ["Froschchor", "Ein Chor braucht viele Stimmen. Wie viele Frösche?"],
       ghosts: ["Geisterstunde", "Mit genug Geistern wird es unheimlich."],
@@ -422,13 +422,13 @@ const ORCH_LEARN = [
       { text: { en: "Layer two creatures on one square", de: "Schichte zwei Wesen auf einem Feld" }, ok: () => orch.more.flat().some((a) => a.length > 0) },
       { text: { en: "Drag a creature to another square", de: "Zieh ein Wesen auf ein anderes Feld" }, ok: (f) => !!f.moved },
       { text: { en: "Give a layer its own pitch", de: "Gib einer Schicht eine eigene Tonhöhe" }, ok: () => orch.more.flat(2).some((n) => n.pit !== 0) }] },
-  { feats: ["tempo", "panel", "pitch", "kit", "rows", "share", "download", "found", "mine", "templates"], start: ORCH_GROOVE,
+  { feats: ["tempo", "panel", "pitch", "kit", "rows", "download", "found", "mine", "templates"], start: ORCH_GROOVE,
     title: { en: "Make it yours", de: "Mach es zu deinem" },
-    text: { en: "The Sound button below cycles through the sound kits. Add a row for more notes, then share your beat or download it as MP3.", de: "Der Klang-Knopf unten schaltet durch die Klang-Kits. Füg eine Reihe für mehr Töne hinzu und teile dann dein Beat oder lade es als MP3 herunter." },
+    text: { en: "The Sound button below cycles through the sound kits. Add a row for more notes, then download your beat as MP3.", de: "Der Klang-Knopf unten schaltet durch die Klang-Kits. Füg eine Reihe für mehr Töne hinzu und lade dann dein Beat als MP3 herunter." },
     tasks: [
       { text: { en: "Press the Sound button below to switch to another kit", de: "Drück unten auf den Klang-Knopf, um ein anderes Kit zu wählen" }, ok: (f) => !!f.kit },
       { text: { en: "Press + next to Rows to add a row", de: "Drück das + neben „Reihen“, um eine Reihe hinzuzufügen" }, ok: () => orch.grid.length > orch.base.rows },
-      { text: { en: "Press Share or Download", de: "Drück „Teilen“ oder „Herunterladen“" }, ok: (f) => !!f.shared }] }
+      { text: { en: "Press Download to save your beat as MP3", de: "Drück „Herunterladen“, um dein Beat als MP3 zu speichern" }, ok: (f) => !!f.shared }] }
 ];
 const orchFeat = (k) => orch.mode !== "learn" || orch.level >= ORCH_LEARN.length || ORCH_LEARN[orch.level].feats.includes(k);
 function orchLearnStart() { // the level's own little beat, kept in memory only
@@ -861,29 +861,6 @@ function orchPaintTray() {
 }
 
 /* ---- sharing: the whole beat lives in the address (play.html#orchestra/<32 letters>.<tempo>) ---- */
-const ORCH_IDS = ["blob", "frog", "bird", "ghost", "robot", "octo", "mine", "mine2", "mine3"], ORCH_CODE = "bfpgromnq";
-const orchEncode = () => orch.grid.flat().map((id) => id ? ORCH_CODE[ORCH_IDS.indexOf(id)] : "-").join("");
-const orchEncodeRest = () => "." + orch.bpm + "." + (orch.pitch + 12) + "." + orch.kit + "." + orch.len.flat().join("") // tempo, pitch (+12), kit, note lengths,
-  + "." + orch.pit.flat().map((v) => String.fromCharCode(109 + v)).join("") // pitch of every note (m = 0),
-  + "." + orch.more.map((row, r) => row.map((list, c) => list.map((n) => "" + r + c + ORCH_CODE[ORCH_IDS.indexOf(n.id)] + n.len + String.fromCharCode(109 + n.pit)).join("")).join("")).join(""); // and the layers
-function orchApplyHash() {
-  const m = location.hash.match(/^#orchestra\/([bfpgromnq-]{32,64})\.(\d{2,3})(?:\.(\d{1,2})\.([0-3])\.([1-8]{32,64})(?:\.([a-y]{32,64})\.((?:[0-7]{2}[bfpgromnq][1-8][a-y])*))?)?$/);
-  if (!m || m[1].length % ORCH_COLS) return;
-  const flat = [...m[1]].map((ch) => ch === "-" ? null : ORCH_IDS[ORCH_CODE.indexOf(ch)]);
-  orch.grid = Array.from({ length: flat.length / ORCH_COLS }, (_, r) => flat.slice(r * ORCH_COLS, (r + 1) * ORCH_COLS));
-  orch.bpm = Math.min(150, Math.max(60, +m[2]));
-  orch.pitch = m[3] !== undefined ? Math.max(-12, Math.min(12, +m[3] - 12)) : 0; orch.kit = m[4] !== undefined ? +m[4] : 0;
-  const lens = m[5] && m[5].length === m[1].length ? [...m[5]].map(Number) : null;
-  orch.len = orch.grid.map((row, r) => row.map((_, c) => lens ? lens[r * ORCH_COLS + c] : 1));
-  orchSync(null);
-  if (m[6] && m[6].length === m[1].length) [...m[6]].forEach((ch, i) => { orch.pit[Math.floor(i / ORCH_COLS)][i % ORCH_COLS] = ch.charCodeAt(0) - 109; });
-  for (const l of (m[7] || "").match(/[0-7]{2}[bfpgromnq][1-8][a-y]/g) || []) {
-    const r = +l[0], c = +l[1];
-    if (orch.grid[r] && orch.grid[r][c] && orch.more[r][c].length < 3) orch.more[r][c].push({ id: ORCH_IDS[ORCH_CODE.indexOf(l[2])], len: +l[3], pit: l.charCodeAt(4) - 109 });
-  }
-  orchSave();
-  history.replaceState(null, "", location.pathname + location.search + "#orchestra"); // the shared beat is now yours to change
-}
 /* ---- download: the loop is played into an offline audio context (twice, plus a tail) and saved as MP3, or WAV if the encoder can't be loaded ---- */
 const ORCH_RATE = 44100;
 async function orchRender() {
@@ -1026,13 +1003,6 @@ function orchOpenTemplates() {
   dlg.addEventListener("close", () => { orchTplStop(); dlg.remove(); });
   dlg.showModal();
 }
-function orchShare(btn) {
-  const url = location.origin + location.pathname + "#orchestra/" + orchEncode() + orchEncodeRest();
-  const label = btn.innerHTML;
-  const done = () => { btn.innerHTML = `<span aria-hidden="true">✓</span> ${esc(ot("copied"))}`; setTimeout(() => { btn.innerHTML = label; }, 1900); sfx.pop(); };
-  if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(url).then(done, () => window.prompt(ot("share"), url));
-  else window.prompt(ot("share"), url);
-}
 
 function renderOrchestra() {
   orch.pasting = false;
@@ -1043,8 +1013,6 @@ function renderOrchestra() {
     orch.mode = m; orch.level = lv;
     if (m === "learn") orchLearnStart();
   }
-  if (/^#orchestra\/[bfpgromnq-]/.test(location.hash) && orch.mode === "learn") { orch.mode = "free"; orch.grid = null; orchLoad(); } // a shared beat opens in freestyle
-  orchApplyHash();
   const sounds = ot("sounds");
   playBody.innerHTML = `
     <div class="orch">
@@ -1084,7 +1052,6 @@ function renderOrchestra() {
         <span class="orch__rows" role="group" data-feat="rows" aria-label="${esc(ot("rows"))}"><button type="button" class="orch__rowbtn" id="orchRowLess" aria-label="${esc(ot("rowLess"))}"></button><span>${esc(ot("rows"))}</span><button type="button" class="orch__rowbtn" id="orchRowMore" aria-label="${esc(ot("rowMore"))}"></button></span>
         <button type="button" class="orch__clear" id="orchTemplates" data-feat="templates">${esc(ot("tplBtn"))}</button>
         <button type="button" class="orch__clear" id="orchDownload" data-feat="download"><span aria-hidden="true">⬇</span> ${esc(ot("download"))}</button>
-        <button type="button" class="orch__clear" id="orchShare" data-feat="share"><span aria-hidden="true">↗</span> ${esc(ot("share"))}</button>
         <button type="button" class="orch__clear" id="orchClear"><span aria-hidden="true">✕</span> ${esc(ot("clear"))}</button>
       </div>
     </div>`;
@@ -1172,7 +1139,6 @@ function renderOrchestra() {
   document.getElementById("orchInsp").addEventListener("toggle", (e) => { if (e.target.matches("details")) orch.inspOpen = e.target.open; }, true); // folded up it stays out of the way
   document.getElementById("orchTemplates").addEventListener("click", () => { sfx.click(); orchOpenTemplates(); });
   document.getElementById("orchDownload").addEventListener("click", (e) => { orchFlag("shared"); orchDownload(e.currentTarget); });
-  document.getElementById("orchShare").addEventListener("click", (e) => { orchFlag("shared"); orchShare(e.currentTarget); });
   const rowBtns = () => {
     document.getElementById("orchRowLess").disabled = orch.grid.length <= ORCH_MIN_ROWS;
     document.getElementById("orchRowMore").disabled = orch.grid.length >= ORCH_MAX_ROWS;
