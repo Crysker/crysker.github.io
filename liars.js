@@ -25,7 +25,8 @@
     }
   };
   const lt = (k) => (TXT[lang] || TXT.en)[k];
-  const rand = (n) => Math.floor(Math.random() * n);
+  let rng = Math.random; // seeded for the daily puzzle
+  const rand = (n) => Math.floor(rng() * n);
 
   /* ---- generating puzzles: a statement per animal, then check by brute force that exactly one assignment fits ---- */
   const evalSt = (s, a) => {
@@ -68,14 +69,21 @@
   const SIZES = [3, 3, 4, 4, 5];
   let G = null;
   const best = () => { try { return +localStorage.getItem("liarsBest") || 0; } catch (e) { return 0; } };
-  function start() {
-    G = { round: 0, points: 0, puzzles: SIZES.map((n, i) => genPuzzle(n, i)), guess: [], tries: 0, hinted: [], solved: false, over: false, msg: "", done: false };
+  function start(mode = "endless") {
+    rng = mode === "daily" ? DAILY.rng(DAILY.seed("liars")) : Math.random;
+    G = { mode, round: 0, points: 0, puzzles: SIZES.map((n, i) => genPuzzle(n, i)), guess: [], tries: 0, hinted: [], solved: false, over: false, msg: "", done: false };
+    rng = Math.random;
     G.guess = Array(G.puzzles[0].n).fill(null);
   }
+  const shareText = () => `${lt("title")} #${DAILY.number()} · ${G.points}/15\nhttps://crysker.github.io/play.html#liars`;
+  const choose = () => DAILY.chooser("liars", 5, (mode, saved) => {
+    if (saved) G = { mode: "daily", done: true, points: saved.pts }; else start(mode);
+    paint();
+  });
   const sayText = (p, i) => { const s = p.sts[i]; return TXT[lang].s[s.type]({ j: NAMES[s.j], k: s.k !== undefined && (s.type === "same" || s.type === "diff") ? NAMES[s.k] : s.k }); };
   function paint() {
     const bodyEl = document.getElementById("playBody");
-    if (!G) start();
+    if (!G) { choose(); return; }
     if (G.done) { bodyEl.innerHTML = endHTML(); bind(); return; }
     const p = G.puzzles[G.round];
     const cards = p.sts.map((_, i) => {
@@ -105,7 +113,7 @@
     const p = G.points, rank = lt("ranks")[p >= 14 ? 3 : p >= 10 ? 2 : p >= 6 ? 1 : 0];
     return `<div class="lq"><h2 class="wd__title">${esc(rank)}</h2><p class="wd__desc">${esc(lt("total").replace("{p}", p))}</p>
       <p class="wd__msg">${esc(lt("best").replace("{n}", best()))}</p>
-      <div class="wd__actions"><button type="button" class="orch__go" id="lqAgain">${esc(lt("again"))}</button></div></div>`;
+      ${G.mode === "daily" ? DAILY.extras("liars", G, shareText()) : `<div class="wd__actions"><button type="button" class="orch__go" id="lqAgain">${esc(lt("again"))}</button></div>`}</div>`;
   }
   function roundPoints() { return Math.max(0, 3 - (G.tries - 1) - G.hinted.length); }
   function bind() {
@@ -137,6 +145,7 @@
       sfx.click();
       if (G.round === 4) {
         G.done = true;
+        if (G.mode === "daily") DAILY.record("liars", G.points);
         if (G.points > best()) { try { localStorage.setItem("liarsBest", String(G.points)); } catch (e) {} }
         if (G.points >= 10) unlock("detective");
         paint(); return;
@@ -146,6 +155,7 @@
     });
     const again = $("lqAgain");
     if (again) again.addEventListener("click", () => { sfx.click(); start(); paint(); });
+    DAILY.bindExtras(() => { start("endless"); paint(); });
   }
 
   const art = `<svg viewBox="0 0 80 80" width="100%" height="100%" focusable="false">
@@ -155,8 +165,8 @@
     <text x="25" y="23" text-anchor="middle" style="font:800 12px sans-serif;fill:var(--ink)">?</text><text x="57" y="26" text-anchor="middle" style="font:800 11px sans-serif;fill:var(--ink)">!</text></svg>`;
   PLAY_GAMES.push({
     id: "liars", hash: "liars", title: { en: TXT.en.title, de: TXT.de.title }, art,
-    note: () => (best() ? lt("best").replace("{n}", best()) : lt("toy")), layout: "plain",
-    render: () => { if (!G) start(); paint(); },
+    note: () => (!DAILY.played("liars") ? dt("open") : best() ? lt("best").replace("{n}", best()) : lt("toy")), layout: "plain",
+    render: () => paint(), stop: () => { if (G && G.done) G = null; }, // the next visit starts at the choice again
     state: () => G // for testing
   });
 })();

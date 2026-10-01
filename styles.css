@@ -1501,3 +1501,13 @@ body.view-all .p-card__play, body.view-all .p-card__video { display: none; }
 .orch__cell svg { max-width: 100%; max-height: 100%; }
 .orch__stagewrap, .orch__insp, .orch__det { min-width: 0; max-width: 100%; }
 @media (max-width: 640px) { .orch__stagewrap .orch__notes li .orch__x { grid-column: 3; grid-row: 1; } .orch__stagewrap .orch__notes li { padding: 12px 0; } }
+
+/* daily / endless choice */
+.dly { display: grid; gap: 18px; }
+.dly__cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
+.dly__card { display: grid; gap: 6px; text-align: left; padding: 22px 24px; border-radius: 22px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); cursor: pointer; font: inherit; transition: transform .15s, border-color .15s; }
+.dly__card:hover { transform: translateY(-2px); border-color: var(--turq); }
+.dly__card b { font: 700 22px var(--serif); }
+.dly__card span { color: var(--ink-soft); font-size: 15px; }
+.dly__card small { color: var(--turq-text); font: 800 12px var(--sans); letter-spacing: .06em; text-transform: uppercase; margin-top: 6px; }
+.dly__streak { margin: 0; font: 700 15px var(--sans); color: var(--ink); }

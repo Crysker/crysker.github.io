@@ -415,6 +415,8 @@ document.addEventListener("keydown", (e) => { // Delete takes the selected squar
 });
 function orchPaintTray() {
   document.querySelectorAll(".orch__pick").forEach((el) => el.setAttribute("aria-pressed", String(el.dataset.id === orch.sel)));
+  const add = document.getElementById("orchAddLayer"); // the layer button names the creature that is chosen now
+  if (add) add.textContent = "＋ " + ot("layer") + ": " + ot("names")[orch.sel];
 }
 
 /* ---- sharing: the whole beat lives in the address (play.html#orchestra/<32 letters>.<tempo>) ---- */

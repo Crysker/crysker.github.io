@@ -70,8 +70,8 @@
   const fromSlider = (s) => { const v = MIN * Math.pow(10, (s / 1000) * DECADES); return v < 1 ? Math.round(v * 100) / 100 : v < 10 ? Math.round(v * 20) / 20 : Math.round(v * 10) / 10; };
   const score = (guess, real) => { const r = Math.max(guess, real) / Math.min(guess, real); return r <= 1.06 ? 100 : Math.max(0, Math.round(100 * (1 - Math.log(r) / Math.log(5)))); };
   const best = () => { try { return +localStorage.getItem("priceBest2") || 0; } catch (e) { return 0; } };
-  const shuffle = (a) => { const b = [...a]; for (let i = b.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [b[i], b[j]] = [b[j], b[i]]; } return b; };
-  const pick = (arr, n) => shuffle(arr).slice(0, n);
+  const shuffle = (a, r = Math.random) => { const b = [...a]; for (let i = b.length - 1; i > 0; i--) { const j = Math.floor(r() * (i + 1)); [b[i], b[j]] = [b[j], b[i]]; } return b; };
+  const pick = (arr, n, r) => shuffle(arr, r).slice(0, n);
   const de = () => lang === "de";
 
   /* a round: { mode: "now" | "then", name, unit, emoji, photo, now, then, when, source, kind } */
@@ -86,11 +86,17 @@
       source: de() ? "wienkultur.info, Preise Wiener Melange, Stand 09/2026 und 09/2020 (ohne Gewähr)" : "wienkultur.info, Melange prices, as of 09/2026 and 09/2020 (without guarantee)" };
   }
   let G = null;
-  function start() {
-    const ak = pick(BASKET, 3), billa = pick(BILLA, 1), cafes = pick(CAFES, 2);
-    const rounds = shuffle([() => billaRound(billa[0]), () => basketRound(ak[0]), () => cafeRound(cafes[0]), () => cafeRound(cafes[1]), () => basketRound(ak[1]), () => basketRound(ak[2])]) // built when shown, so a language switch applies;
-    G = { rounds, i: 0, s: 450, revealed: false, pts: 0, last: null, done: false };
+  function start(mode = "endless") {
+    const r = mode === "daily" ? DAILY.rng(DAILY.seed("price")) : Math.random;
+    const ak = pick(BASKET, 3, r), billa = pick(BILLA, 1, r), cafes = pick(CAFES, 2, r);
+    const rounds = shuffle([() => billaRound(billa[0]), () => basketRound(ak[0]), () => cafeRound(cafes[0]), () => cafeRound(cafes[1]), () => basketRound(ak[1]), () => basketRound(ak[2])], r); // built when shown, so a language switch applies
+    G = { mode, rounds, i: 0, s: 450, revealed: false, pts: 0, last: null, done: false };
   }
+  const shareText = () => `${L("title")} #${DAILY.number()} · ${G.pts}/600\nhttps://crysker.github.io/play.html#price`;
+  const choose = () => DAILY.chooser("price", 6, (mode, saved) => {
+    if (saved) G = { mode: "daily", done: true, pts: saved.pts }; else start(mode);
+    paint();
+  });
   function photoHTML(r) {
     if (!r.photo) return `<span class="pr__emoji" aria-hidden="true">${r.emoji}</span>`;
     const c = CREDITS[r.photo];
@@ -98,7 +104,7 @@
   }
   function paint() {
     const body = document.getElementById("playBody");
-    if (!G) start();
+    if (!G) { choose(); return; }
     if (G.done) { body.innerHTML = endHTML(); bind(); return; }
     const r = G.rounds[G.i](), guess = fromSlider(G.s), target = r.now, hasThen = r.then !== undefined;
     const hint = hasThen && !G.revealed ? L("hint").replace("{w}", r.when).replace("{p}", euro(r.then)) : "";
@@ -131,7 +137,7 @@
   function endHTML() {
     const p = G.pts, rank = L("ranks")[p >= 480 ? 3 : p >= 360 ? 2 : p >= 220 ? 1 : 0];
     return `<div class="pr"><h2 class="wd__title">${esc(rank)}</h2><p class="wd__desc">${esc(L("total").replace("{p}", p))}</p><p class="wd__msg">${esc(L("best").replace("{n}", best()))}</p>
-      <div class="wd__actions"><button type="button" class="orch__go" id="prAgain">${esc(L("again"))}</button></div></div>`;
+      ${G.mode === "daily" ? DAILY.extras("price", G, shareText()) : `<div class="wd__actions"><button type="button" class="orch__go" id="prAgain">${esc(L("again"))}</button></div>`}</div>`;
   }
   function bind() {
     const $ = (id) => document.getElementById(id);
@@ -147,6 +153,7 @@
       sfx.click();
       if (G.i === 5) {
         G.done = true;
+        if (G.mode === "daily") DAILY.record("price", G.pts);
         if (G.pts > best()) { try { localStorage.setItem("priceBest2", String(G.pts)); } catch (e) {} }
         if (G.pts >= 450) unlock("haggler");
         paint(); return;
@@ -155,13 +162,14 @@
     });
     const again = $("prAgain");
     if (again) again.addEventListener("click", () => { sfx.click(); start(); paint(); });
+    DAILY.bindExtras(() => { start("endless"); paint(); });
   }
   const art = `<svg viewBox="0 0 80 80" width="100%" height="100%" focusable="false">
     <path d="M14 30l28-14 24 24-22 24-30-8z" style="fill:var(--yellow)"/><circle cx="26" cy="32" r="3.5" style="fill:var(--surface)"/>
     <text x="40" y="49" text-anchor="middle" transform="rotate(-8 40 49)" style="font:800 20px sans-serif;fill:#1b1a2a">€?</text></svg>`;
   PLAY_GAMES.push({
     id: "price", hash: "price", title: { en: T.en.title, de: T.de.title }, art,
-    note: () => (best() ? L("best").replace("{n}", best()) : L("toy")), layout: "plain",
-    render: () => { if (!G) start(); paint(); }, state: () => G
+    note: () => (!DAILY.played("price") ? dt("open") : best() ? L("best").replace("{n}", best()) : L("toy")), layout: "plain",
+    render: () => paint(), stop: () => { if (G && G.done) G = null; }, state: () => G
   });
 })();

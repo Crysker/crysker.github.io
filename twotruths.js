@@ -112,16 +112,24 @@
   };
   const tt2 = (k) => (T[lang] || T.en)[k];
   const best = () => { try { return +localStorage.getItem("truthsBest") || 0; } catch (e) { return 0; } };
-  const shuffle = (a) => { const b = [...a]; for (let i = b.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [b[i], b[j]] = [b[j], b[i]]; } return b; };
+  const shuffle = (a, r = Math.random) => { const b = [...a]; for (let i = b.length - 1; i > 0; i--) { const j = Math.floor(r() * (i + 1)); [b[i], b[j]] = [b[j], b[i]]; } return b; };
   let G = null;
-  function start() { G = { sets: shuffle(SETS).slice(0, 6).map((s) => ({ t: s.t, s: shuffle(s.s) })), i: 0, marks: [null, null, null], revealed: false, pts: 0, last: 0, done: false }; }
+  function start(mode = "endless") {
+    const r = mode === "daily" ? DAILY.rng(DAILY.seed("truths")) : Math.random;
+    G = { mode, sets: shuffle(SETS, r).slice(0, 6).map((s) => ({ t: s.t, s: shuffle(s.s, r) })), i: 0, marks: [null, null, null], revealed: false, pts: 0, last: 0, done: false };
+  }
+  const shareText = () => `${tt2("title")} #${DAILY.number()} · ${G.pts}/18\nhttps://crysker.github.io/play.html#truths`;
+  const choose = () => DAILY.chooser("truths", 6, (mode, saved) => {
+    if (saved) G = { mode: "daily", done: true, pts: saved.pts }; else start(mode);
+    paint();
+  });
   const si = (n) => (lang === "de" ? n.de : n.en);
   const txt = (it) => (lang === "de" ? it[1] : it[2]), why = (it) => (lang === "de" ? it[4] : it[5]);
   const worth = (mark, it) => (mark === null ? 0 : mark === it[3] ? 1 : -1); // right +1, wrong −1, unmarked 0
   const markLabel = (m) => (m === true ? tt2("truth") : m === false ? tt2("lie") : "?");
   function paint() {
     const body = document.getElementById("playBody");
-    if (!G) start();
+    if (!G) { choose(); return; }
     if (G.done) { body.innerHTML = endHTML(); bind(); return; }
     const set = G.sets[G.i], rev = G.revealed;
     const cards = set.s.map((it, k) => {
@@ -144,7 +152,7 @@
   function endHTML() {
     const p = G.pts, rank = tt2("ranks")[p >= 14 ? 3 : p >= 9 ? 2 : p >= 4 ? 1 : 0];
     return `<div class="tl"><h2 class="wd__title">${esc(rank)}</h2><p class="wd__desc">${esc(tt2("total").replace("{p}", p))}</p><p class="wd__msg">${esc(tt2("best").replace("{n}", best()))}</p>
-      <div class="wd__actions"><button type="button" class="orch__go" id="tlAgain">${esc(tt2("again"))}</button></div></div>`;
+      ${G.mode === "daily" ? DAILY.extras("truths", G, shareText()) : `<div class="wd__actions"><button type="button" class="orch__go" id="tlAgain">${esc(tt2("again"))}</button></div>`}</div>`;
   }
   function bind() {
     document.querySelectorAll(".tl__card").forEach((b) => b.addEventListener("click", () => {
@@ -164,6 +172,7 @@
       sfx.click();
       if (G.i === 5) {
         G.done = true;
+        if (G.mode === "daily") DAILY.record("truths", G.pts);
         if (G.pts > best()) { try { localStorage.setItem("truthsBest", String(G.pts)); } catch (e) {} }
         if (G.pts >= 12) unlock("skeptic");
         paint(); return;
@@ -172,13 +181,14 @@
     });
     const again = document.getElementById("tlAgain");
     if (again) again.addEventListener("click", () => { sfx.click(); start(); paint(); });
+    DAILY.bindExtras(() => { start("endless"); paint(); });
   }
   const art = `<svg viewBox="0 0 80 80" width="100%" height="100%" focusable="false">
     <rect x="8" y="12" width="64" height="16" rx="8" style="fill:var(--turq)"/><rect x="8" y="32" width="64" height="16" rx="8" style="fill:var(--orange)"/><rect x="8" y="52" width="64" height="16" rx="8" style="fill:var(--turq)"/>
     <text x="40" y="24" text-anchor="middle" style="font:800 11px sans-serif;fill:#062624">✓</text><text x="40" y="44" text-anchor="middle" style="font:800 11px sans-serif;fill:#2a1200">✗</text><text x="40" y="64" text-anchor="middle" style="font:800 11px sans-serif;fill:#062624">✓</text></svg>`;
   PLAY_GAMES.push({
     id: "truths", hash: "truths", title: { en: T.en.title, de: T.de.title }, art,
-    note: () => (best() ? tt2("best").replace("{n}", best()) : tt2("toy")), layout: "plain",
-    render: () => { if (!G) start(); paint(); }, state: () => G
+    note: () => (!DAILY.played("truths") ? dt("open") : best() ? tt2("best").replace("{n}", best()) : tt2("toy")), layout: "plain",
+    render: () => paint(), stop: () => { if (G && G.done) G = null; }, state: () => G
   });
 })();

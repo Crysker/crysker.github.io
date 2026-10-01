@@ -62,6 +62,58 @@ const FLAG_BODY = {
   tr: '<rect width="30" height="20" fill="#e30a17"/><circle cx="11" cy="10" r="5" fill="#fff"/><circle cx="12.6" cy="10" r="4" fill="#e30a17"/><circle cx="17" cy="10" r="1.6" fill="#fff"/>'
 };
 const flagSVG = (l) => FLAG_BODY[l] ? `<svg class="flag" viewBox="0 0 30 20" aria-hidden="true" focusable="false">${FLAG_BODY[l]}</svg>` : "";
+/* ============ Daily and endless mode, shared by the games ============
+   Daily: the day (your calendar date) is the seed, so everybody gets the same rounds, once a day; the result and a streak live in this browser.
+   Endless: random rounds, as many as you like. */
+const DAILY_EPOCH = 20454; // 1 January 2026 as a day number: puzzle no. 1
+const DAILY = {
+  day() { const d = new Date(); return Math.floor(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()) / 86400000); },
+  number() { return this.day() - DAILY_EPOCH + 1; },
+  rng(seed) { let a = seed >>> 0; return () => { a = (a + 0x6D2B79F5) >>> 0; let t = a; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; },
+  seed(game) { let h = 2166136261; for (const ch of game + ":" + this.day()) { h = Math.imul(h ^ ch.charCodeAt(0), 16777619); } return h >>> 0; },
+  load(game) { try { return JSON.parse(localStorage.getItem("daily-" + game) || "null") || {}; } catch (e) { return {}; } },
+  played(game) { const s = this.load(game); return s.day === this.day() ? s : null; },
+  streak(game) { const s = this.load(game); return s.day === this.day() || s.day === this.day() - 1 ? s.streak || 0 : 0; },
+  record(game, pts) { // the first result of the day counts
+    const s = this.load(game), today = this.day();
+    if (s.day === today) return s.streak || 1;
+    const streak = s.day === today - 1 ? (s.streak || 0) + 1 : 1;
+    try { localStorage.setItem("daily-" + game, JSON.stringify({ day: today, pts, streak })); } catch (e) {}
+    return streak;
+  }
+};
+const DAILY_T = {
+  en: { today: "Today's puzzle", num: "No. {n}, the same for everyone", endless: "Endless", endlessSub: "Random rounds, as many as you like", rounds: "{r} rounds", done: "Done: {p} points", streak: "🔥 {n} {d} in a row", day: "day", days: "days", comeBack: "A new puzzle tomorrow.", share: "Share result", copied: "Copied", playEndless: "Play endless", open: "Daily puzzle" },
+  de: { today: "Das Tagesrätsel", num: "Nr. {n}, für alle gleich", endless: "Endlos", endlessSub: "Zufällige Runden, so viele du willst", rounds: "{r} Runden", done: "Geschafft: {p} Punkte", streak: "🔥 {n} {d} in Folge", day: "Tag", days: "Tage", comeBack: "Morgen gibt es ein neues Rätsel.", share: "Ergebnis teilen", copied: "Kopiert", playEndless: "Endlos spielen", open: "Tagesrätsel" }
+};
+const dt = (k) => (DAILY_T[lang] || DAILY_T.en)[k];
+/* the choice at the start of a game: today's puzzle or endless. onPick(mode, savedResultOrNull) */
+DAILY.chooser = function (game, rounds, onPick) {
+  const saved = this.played(game), streak = this.streak(game);
+  document.getElementById("playBody").innerHTML = `<div class="dly">
+    <div class="dly__cards">
+      <button type="button" class="dly__card" data-mode="daily"><b>${esc(dt("today"))}</b><span>${esc(dt("num").replace("{n}", this.number()))}</span><small>${esc(saved ? "✓ " + dt("done").replace("{p}", saved.pts) : dt("rounds").replace("{r}", rounds))}</small></button>
+      <button type="button" class="dly__card" data-mode="endless"><b>${esc(dt("endless"))}</b><span>${esc(dt("endlessSub"))}</span><small>${esc(dt("rounds").replace("{r}", rounds))}</small></button>
+    </div>
+    ${streak ? `<p class="dly__streak">${esc(dt("streak").replace("{n}", streak).replace("{d}", streak === 1 ? dt("day") : dt("days")))}</p>` : ""}</div>`;
+  document.querySelectorAll(".dly__card").forEach((b) => b.addEventListener("click", () => { sfx.click(); onPick(b.dataset.mode, b.dataset.mode === "daily" ? saved : null); }));
+};
+/* under the result of a daily round: streak, share, and a way into endless */
+DAILY.extras = function (game, G, shareText) {
+  if (G.mode !== "daily") return "";
+  const streak = this.streak(game);
+  return `${streak ? `<p class="dly__streak">${esc(dt("streak").replace("{n}", streak).replace("{d}", streak === 1 ? dt("day") : dt("days")))}</p>` : ""}<p class="wd__msg">${esc(dt("comeBack"))}</p>
+    <div class="wd__actions"><button type="button" class="orch__go" id="dlyShare" data-text="${esc(shareText)}">${esc(dt("share"))}</button><button type="button" class="orch__clear" id="dlyEndless">${esc(dt("playEndless"))}</button></div>`;
+};
+DAILY.bindExtras = function (onEndless) {
+  const share = document.getElementById("dlyShare"), endless = document.getElementById("dlyEndless");
+  if (endless) endless.addEventListener("click", () => { sfx.click(); onEndless(); });
+  if (share) share.addEventListener("click", () => {
+    const text = share.dataset.text, label = share.textContent;
+    const done = () => { share.textContent = "✓ " + dt("copied"); setTimeout(() => { share.textContent = label; }, 1800); sfx.pop(); };
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(done, () => window.prompt("", text)); else window.prompt("", text);
+  });
+};
 const ACH_TOTAL = 17; // same list as on the portfolio page
 
 function applyShell() {
