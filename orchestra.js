@@ -14,10 +14,10 @@ const ORCH_T = {
     names: { blob: "Blobby", frog: "Froggo", bird: "Pip", ghost: "Boo", robot: "Bleep", octo: "Inky", mine: "My sound" },
     sounds: { blob: "kick", frog: "bass", bird: "chirp", ghost: "pad", robot: "tick", octo: "pluck", mine: "your own" },
     rows: "Rows", rowMore: "Add a row", rowLess: "Remove a row",
-    pitch: "Pitch", kit: "Sound", kits: ["Classic", "8-bit", "Buzz", "Soft"], hint: "Tap a creature to select it: change its pitch or length, remove it, or drop another creature on it to layer sounds.", len: "Note length",
+    pitch: "Pitch", kit: "Sound", kits: ["Classic", "8-bit", "Buzz", "Soft"], hint: "Tap a creature to select it: change its pitch or length, remove it, or drop another creature on it to layer sounds. Alt-drag copies a square.", len: "Note length",
     pitchNote: "Pitch", lenNote: "Length", remove: "Remove", layer: "Add layer", selected: "Selected",
     found: "Discoveries", share: "Share my beat", download: "Download", rendering: "Rendering…",
-    vol: "Volume", volShort: "Vol", createOwn: "Create own sound", mkSound: "Sound", mkTitle: "Create your own sound", mkEdit: "Edit your sound", mkName: "Name", mkAvatar: "Avatar", mkUploadImg: "Upload image", mkStart: "Start", mkLen: "Length", mkMax: "max. {n} s", save: "Save", cancel: "Cancel", edit: "Edit", noSample: "Record or upload a sound first.", ownTag: "own sound", mkDefault: "My sound",
+    copy: "Copy", paste: "Paste", pasteOn: "Click a square to paste (Esc stops)", dup: "Duplicate", vol: "Volume", volShort: "Vol", createOwn: "Create own sound", mkSound: "Sound", mkTitle: "Create your own sound", mkEdit: "Edit your sound", mkName: "Name", mkAvatar: "Avatar", mkUploadImg: "Upload image", mkStart: "Start", mkLen: "Length", mkMax: "max. {n} s", save: "Save", cancel: "Cancel", edit: "Edit", noSample: "Record or upload a sound first.", ownTag: "own sound", mkDefault: "My sound",
     modeFree: "Freestyle", modeLearn: "Learn", level: "Level {n} of 5", next: "Next level", restart: "Restart level", doneTitle: "You know every tool now", doneText: "Creatures, pitch, tempo, shaping notes, layers, kits, rows, sharing: all yours. Time for freestyle!", openFree: "Open freestyle",
     mineTitle: "Your own sound", rec: "Record", recStop: "Stop", upload: "Upload", test: "Test", del: "Remove", mineNone: "Record up to 2.5 seconds or upload a sound file. Sounds stay on your device, a shared link plays a plain blip instead.", mineHas: "Your sound is ready. Put My sound on the stage.", mineMic: "Could not use the microphone.", mineBad: "That file could not be read.", mineRec: "Recording …", copied: "Link copied", newFound: "Discovered: {n}!", creatures: "Creatures",
     combos: {
@@ -38,10 +38,10 @@ const ORCH_T = {
     names: { blob: "Blobby", frog: "Froggo", bird: "Pip", ghost: "Boo", robot: "Bleep", octo: "Inky", mine: "Mein Ton" },
     sounds: { blob: "Bassdrum", frog: "Bass", bird: "Zwitschern", ghost: "Klangteppich", robot: "Tick", octo: "Zupfen", mine: "dein Klang" },
     rows: "Reihen", rowMore: "Reihe hinzufügen", rowLess: "Reihe entfernen",
-    pitch: "Tonhöhe", kit: "Klang", kits: ["Klassisch", "8-Bit", "Brummig", "Weich"], hint: "Höhere Reihen klingen höher. Tippe ein Wesen an, um es auszuwählen: Tonhöhe oder Länge ändern, entfernen, oder ein weiteres Wesen daraufziehen, um Klänge zu schichten.", len: "Tonlänge",
+    pitch: "Tonhöhe", kit: "Klang", kits: ["Klassisch", "8-Bit", "Brummig", "Weich"], hint: "Höhere Reihen klingen höher. Tippe ein Wesen an, um es auszuwählen: Tonhöhe oder Länge ändern, entfernen, oder ein weiteres Wesen daraufziehen, um Klänge zu schichten. Alt beim Ziehen kopiert ein Feld.", len: "Tonlänge",
     pitchNote: "Tonhöhe", lenNote: "Länge", remove: "Entfernen", layer: "Schicht hinzufügen", selected: "Ausgewählt",
     found: "Entdeckungen", share: "Meinen Beat teilen", download: "Herunterladen", rendering: "Wird erstellt …",
-    vol: "Lautstärke", volShort: "Laut", createOwn: "Eigenen Klang erstellen", mkSound: "Klang", mkTitle: "Erstelle deinen eigenen Klang", mkEdit: "Klang bearbeiten", mkName: "Name", mkAvatar: "Avatar", mkUploadImg: "Bild hochladen", mkStart: "Start", mkLen: "Länge", mkMax: "max. {n} s", save: "Speichern", cancel: "Abbrechen", edit: "Bearbeiten", noSample: "Nimm erst einen Klang auf oder lade einen hoch.", ownTag: "eigener Klang", mkDefault: "Mein Ton",
+    copy: "Kopieren", paste: "Einfügen", pasteOn: "Feld anklicken zum Einfügen (Esc beendet)", dup: "Duplizieren", vol: "Lautstärke", volShort: "Laut", createOwn: "Eigenen Klang erstellen", mkSound: "Klang", mkTitle: "Erstelle deinen eigenen Klang", mkEdit: "Klang bearbeiten", mkName: "Name", mkAvatar: "Avatar", mkUploadImg: "Bild hochladen", mkStart: "Start", mkLen: "Länge", mkMax: "max. {n} s", save: "Speichern", cancel: "Abbrechen", edit: "Bearbeiten", noSample: "Nimm erst einen Klang auf oder lade einen hoch.", ownTag: "eigener Klang", mkDefault: "Mein Ton",
     modeFree: "Freestyle", modeLearn: "Lernen", level: "Stufe {n} von 5", next: "Nächste Stufe", restart: "Stufe neu starten", doneTitle: "Du kennst jetzt alle Werkzeuge", doneText: "Wesen, Tonhöhe, Tempo, Noten formen, Schichten, Klänge, Reihen, Teilen: alles deins. Zeit für Freestyle!", openFree: "Freestyle öffnen",
     mineTitle: "Dein eigener Klang", rec: "Aufnehmen", recStop: "Stopp", upload: "Hochladen", test: "Anhören", del: "Entfernen", mineNone: "Nimm bis zu 2,5 Sekunden auf oder lade eine Audiodatei hoch. Der Klang bleibt auf deinem Gerät, ein geteilter Link spielt stattdessen einen einfachen Ton.", mineHas: "Dein Klang ist bereit. Setz „Mein Ton“ auf die Bühne.", mineMic: "Das Mikrofon ließ sich nicht verwenden.", mineBad: "Diese Datei konnte nicht gelesen werden.", mineRec: "Aufnahme läuft …", copied: "Link kopiert", newFound: "Neu entdeckt: {n}!", creatures: "Wesen",
     combos: {
@@ -497,7 +497,7 @@ const ORCH_COMBOS = [
 ];
 
 /* ---- the stage and the clock ---- */
-const orch = { bus: null, master: 55, vol: null, mode: null, level: 0, base: null, inspOpen: true, grid: null, len: null, pit: null, more: null, cell: null, pitch: 0, kit: 0, bpm: 100, sel: "blob", playing: false, step: 0, next: 0, timer: null, placed: 0, found: [] };
+const orch = { pasting: false, clip: null, bus: null, master: 55, vol: null, mode: null, level: 0, base: null, inspOpen: true, grid: null, len: null, pit: null, more: null, cell: null, pitch: 0, kit: 0, bpm: 100, sel: "blob", playing: false, step: 0, next: 0, timer: null, placed: 0, found: [] };
 function orchLoad() {
   orchCustomLoad();
   try { const mv = localStorage.getItem("orchMaster"); orch.master = mv === null ? 55 : Math.max(0, Math.min(100, +mv || 0)); } catch (e) {}
@@ -535,6 +535,7 @@ function orchSetNotes(r, c, notes) {
   const [a, ...rest] = notes;
   orch.grid[r][c] = a ? a.id : null; orch.len[r][c] = a ? a.len : 1; orch.pit[r][c] = a ? a.pit : 0; orch.vol[r][c] = a && a.vol !== undefined ? a.vol : 100; orch.more[r][c] = rest;
 }
+const orchHearAll = (notes, r, c) => { if (!playMuted) orchAudition(() => notes.forEach((n) => orchVoice(n.id, orchCtx().currentTime + 0.01, ORCH_NOTES[r], n.len, n.pit, c, n.vol))); }; // all notes of a square together, as one preview
 const orchHear = (n, r, c) => { if (!playMuted) orchAudition(() => orchVoice(n.id, orchCtx().currentTime + 0.01, ORCH_NOTES[r], n.len, n.pit, c, n.vol)); }; // a preview sounds exactly like the note will, length and all
 
 function orchPlayStep(step, when) {
@@ -596,6 +597,7 @@ function orchPreview(id) { // pressing a creature in the tray plays its sound, s
   if (face) { face.classList.remove("is-hit"); void face.offsetWidth; face.classList.add("is-hit"); }
 }
 function orchPlace(r, c, drop) {
+  if (orch.pasting && orch.clip && !drop) { orchPasteInto(r, c, orch.clip); return; } // paste mode: a click pastes
   const notes = orchNotes(r, c);
   if (!notes.length) { // an empty square: the chosen creature steps onto it and is selected
     orchSetNotes(r, c, [orchNew(orch.sel, c)]); orch.placed++; orch.cell = [r, c];
@@ -607,7 +609,7 @@ function orchPlace(r, c, drop) {
   } else { // tapped: select it (tap again to let go), so nothing is deleted by accident
     const same = orch.cell && orch.cell[0] === r && orch.cell[1] === c;
     orch.cell = same ? null : [r, c]; if (!same) orchFlags.selected = true;
-    if (!same) notes.forEach((n) => orchHear(n, r, c));
+    if (!same) orchHearAll(notes, r, c);
   }
   orchSave();
   orchPaintStage();
@@ -636,11 +638,12 @@ function orchMoveDrag(e, cell, r, c) {
     if (!to || to === cell) return;
     const r2 = +to.dataset.r, c2 = +to.dataset.c;
     const mine = orchNotes(r, c), theirs = orchNotes(r2, c2);
+    if (ev.altKey) { orchPasteInto(r2, c2, mine); orchFlag("moved"); return; } // Alt/Option: copy instead of move
     if (theirs.length && mine.length + theirs.length <= 4) { // dropped onto someone: it joins them as a layer
       orchSetNotes(r2, c2, [...theirs, ...mine.map((n) => ({ ...n, len: Math.min(n.len, ORCH_COLS - c2) }))]); orchSetNotes(r, c, []);
     } else { orchSetNotes(r, c, theirs); orchSetNotes(r2, c2, mine); } // no room for layers: they swap places
     orch.cell = [r2, c2]; orchFlag("moved");
-    mine.forEach((n) => orchHear(n, r2, c2));
+    orchHearAll(mine, r2, c2);
     orchSave(); orchPaintStage(); orchCheck();
   };
   addEventListener("pointermove", move); addEventListener("pointerup", up); addEventListener("pointercancel", up);
@@ -726,7 +729,10 @@ function orchPaintInsp() {
       <span class="orch__ctl orch__vctl"><span>${esc(ot("volShort"))}</span><input type="range" class="orch__vslider" min="0" max="100" step="5" data-i="${i}" value="${n.vol === undefined ? 100 : n.vol}" aria-label="${esc(ot("vol"))}"><output>${n.vol === undefined ? 100 : n.vol}</output></span>
       <span class="orch__lane" role="group" aria-label="${esc(ot("lenNote"))}">${Array.from({ length: ORCH_COLS }, (_, k) => `<i class="${k === c ? "is-here" : ""}" style="grid-column:${k + 1};grid-row:1"></i>`).join("")}<span class="orch__nb" tabindex="0" data-i="${i}" role="slider" aria-valuemin="1" aria-valuemax="${ORCH_COLS - c}" aria-valuenow="${n.len}" aria-label="${esc(ot("lenNote"))}" style="grid-column:${c + 1} / span ${n.len};--tail:${ORCH_BY_ID[n.id].color}"><b>${n.len}</b><span class="orch__bh"></span></span></span>
       <button type="button" class="orch__x" data-i="${i}" data-act="del" aria-label="${esc(ot("remove"))}" title="${esc(ot("remove"))}">✕</button></li>`).join("")}</ul>
-    <button type="button" class="orch__clear" id="orchAddLayer"${notes.length >= 4 ? " disabled" : ""}>＋ ${esc(ot("layer"))}: ${esc(orchName(orch.sel))}</button></details>`;
+    <div class="orch__acts"><button type="button" class="orch__clear" id="orchAddLayer"${notes.length >= 4 ? " disabled" : ""}>＋ ${esc(ot("layer"))}: ${esc(orchName(orch.sel))}</button>
+      <button type="button" class="orch__clear" id="orchCopy">${esc(ot("copy"))}</button>
+      <button type="button" class="orch__clear${orch.pasting ? " is-armed" : ""}" id="orchPaste" aria-pressed="${orch.pasting}"${orch.clip ? "" : " disabled"}>${esc(ot("paste"))}</button>
+      <button type="button" class="orch__clear" id="orchDup">${esc(ot("dup"))}</button></div></details>`;
 }
 /* the lane of a note: pull the end of the bar to change its length, drag the bar to put it on another beat */
 function orchLaneDown(e) {
@@ -779,10 +785,44 @@ function orchInspVolume(e, commit) { // a note's own volume: changes while you s
   s.nextElementSibling.textContent = n.vol;
   if (commit) orchHear(n, r, c);
 }
+const orchCopyNotes = (notes, col) => notes.map((n) => ({ ...n, len: Math.min(n.len, ORCH_COLS - col) }));
+function orchCopy() { // the notes of the selected square go on the clipboard
+  if (!orch.cell) return;
+  const notes = orchNotes(orch.cell[0], orch.cell[1]);
+  if (!notes.length) return;
+  orch.clip = notes.map((n) => ({ ...n })); sfx.click(); orchPaintInsp();
+}
+function orchPasteInto(r, c, add) { // an empty square gets the notes, an occupied one takes them as layers while there is room
+  const cur = orchNotes(r, c), list = orchCopyNotes(add, c);
+  orchSetNotes(r, c, cur.length + list.length <= 4 ? [...cur, ...list] : list.slice(0, 4));
+  orch.cell = [r, c]; orchHearAll(list, r, c);
+  orchSave(); orchPaintStage(); orchCheck();
+}
+function orchPaste(off) { // arms paste mode: every square you click gets the copied notes, until Esc or another press of Paste
+  if (!orch.clip) return;
+  orch.pasting = off === false ? false : !orch.pasting;
+  const stage = document.querySelector(".orch__stage"); if (stage) stage.classList.toggle("is-pasting", orch.pasting);
+  const b = document.getElementById("orchBanner");
+  if (b) { if (orch.pasting) { b.textContent = ot("pasteOn"); b.classList.add("is-on"); } else b.classList.remove("is-on"); }
+  orchPaintInsp();
+}
+function orchDuplicate() { // a copy of the square lands on the next free beat of its row, to the right (or from the left if the row is full there)
+  if (!orch.cell) return;
+  const [r, c] = orch.cell, notes = orchNotes(r, c);
+  if (!notes.length) return;
+  let target = -1;
+  for (let k = c + Math.max(1, notes[0].len); k < ORCH_COLS && target < 0; k++) if (!orch.grid[r][k]) target = k;
+  for (let k = 0; k < ORCH_COLS && target < 0; k++) if (k !== c && !orch.grid[r][k]) target = k;
+  if (target < 0) { sfx.pop(); return; }
+  orchPasteInto(r, target, notes);
+}
 function orchInspClick(e) {
   const b = e.target.closest("button");
   if (!b || !orch.cell) return;
   const [r, c] = orch.cell, notes = orchNotes(r, c);
+  if (b.id === "orchCopy") { orchCopy(); return; }
+  if (b.id === "orchPaste") { orchPaste(); return; }
+  if (b.id === "orchDup") { orchDuplicate(); return; }
   if (b.id === "orchAddLayer") {
     if (notes.length >= 4) return;
     notes.push(orchNew(orch.sel, c)); orchSetNotes(r, c, notes); orchHear(notes[notes.length - 1], r, c);
@@ -799,8 +839,15 @@ function orchInspClick(e) {
   }
   orchSave(); orchPaintStage(); orchCheck();
 }
-document.addEventListener("keydown", (e) => { // Delete takes the selected square off the stage, Escape lets go of it
+document.addEventListener("keydown", (e) => { // Delete takes the selected square off the stage, Escape lets go of it, Ctrl/Cmd + C, V, D copy, paste, duplicate
   if (typeof play === "undefined" || play.screen !== "orch" || !orch.cell || /^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName)) return;
+  if ((e.ctrlKey || e.metaKey) && !e.altKey && orchFeat("panel")) {
+    const k = e.key.toLowerCase();
+    if (k === "c") { e.preventDefault(); orchCopy(); return; }
+    if (k === "v") { e.preventDefault(); orchPaste(); return; }
+    if (k === "d") { e.preventDefault(); orchDuplicate(); return; }
+  }
+  if (e.key === "Escape" && orch.pasting) { orchPaste(false); return; }
   if (e.key === "Delete" || e.key === "Backspace") { e.preventDefault(); orchSetNotes(orch.cell[0], orch.cell[1], []); sfx.pop(); orchSave(); orchPaintStage(); }
   else if (e.key === "Escape") { orch.cell = null; orchPaintStage(); }
 });
@@ -900,6 +947,7 @@ function orchShare(btn) {
 }
 
 function renderOrchestra() {
+  orch.pasting = false;
   if (!orch.grid) orchLoad();
   if (orch.mode === null) { // the first time on this page: where did you leave off?
     let m = "free", lv = 0;

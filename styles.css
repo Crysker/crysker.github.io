@@ -1573,3 +1573,10 @@ body.view-all .p-card__play, body.view-all .p-card__video { display: none; }
 .orch__vctl output { min-width: 3ch; text-align: right; }
 .orch__stagewrap .orch__notes li { grid-template-columns: 28px minmax(64px, 100px) 150px 150px minmax(0, 1fr) 28px; }
 @media (max-width: 640px) { .orch__stagewrap .orch__notes li { grid-template-columns: 28px 1fr 28px; } }
+
+.orch__acts { display: flex; flex-wrap: wrap; gap: 8px; }
+.orch__acts .orch__clear { padding: 9px 16px; }
+.orch__acts .orch__clear:disabled { opacity: .45; cursor: default; }
+.orch__det > .orch__acts { margin: 4px 16px 16px; }
+.orch__stage.is-pasting .orch__cell { cursor: copy; }
+.orch__acts .orch__clear.is-armed { border-color: var(--turq); background: var(--turq-soft); }
