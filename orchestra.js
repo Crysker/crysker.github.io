@@ -14,7 +14,7 @@ const ORCH_T = {
     names: { blob: "Blobby", frog: "Froggo", bird: "Pip", ghost: "Boo", robot: "Bleep", octo: "Inky" },
     sounds: { blob: "kick", frog: "bass", bird: "chirp", ghost: "pad", robot: "tick", octo: "pluck" },
     rows: "Rows", rowMore: "Add a row", rowLess: "Remove a row",
-    pitch: "Pitch", kit: "Sound", kits: ["Classic", "8-bit", "Buzz", "Soft"], hint: "Higher rows sound higher. Tap a creature again to make its note longer.", len: "Note length",
+    pitch: "Pitch", kit: "Sound", kits: ["Classic", "8-bit", "Buzz", "Soft"], hint: "Higher rows sound higher. Pull a creature to the right to make its note longer.", len: "Note length",
     found: "Discoveries", share: "Share my beat", copied: "Link copied", newFound: "Discovered: {n}!", creatures: "Creatures",
     combos: {
       frogs: ["Frog choir", "A choir needs many voices. How many frogs?"],
@@ -34,7 +34,7 @@ const ORCH_T = {
     names: { blob: "Blobby", frog: "Froggo", bird: "Pip", ghost: "Boo", robot: "Bleep", octo: "Inky" },
     sounds: { blob: "Bassdrum", frog: "Bass", bird: "Zwitschern", ghost: "Klangteppich", robot: "Tick", octo: "Zupfen" },
     rows: "Reihen", rowMore: "Reihe hinzufügen", rowLess: "Reihe entfernen",
-    pitch: "Tonhöhe", kit: "Klang", kits: ["Klassisch", "8-Bit", "Brummig", "Weich"], hint: "Höhere Reihen klingen höher. Tippe ein Wesen nochmal an, dann hält sein Ton länger.", len: "Tonlänge",
+    pitch: "Tonhöhe", kit: "Klang", kits: ["Klassisch", "8-Bit", "Brummig", "Weich"], hint: "Höhere Reihen klingen höher. Zieh ein Wesen nach rechts, dann hält sein Ton länger.", len: "Tonlänge",
     found: "Entdeckungen", share: "Meinen Beat teilen", copied: "Link kopiert", newFound: "Neu entdeckt: {n}!", creatures: "Wesen",
     combos: {
       frogs: ["Froschchor", "Ein Chor braucht viele Stimmen. Wie viele Frösche?"],
@@ -155,7 +155,7 @@ function orchLoad() {
     .forEach(([r, c, id]) => { orch.grid[r][c] = id; });
   orch.len = orchLenFor(orch.grid, null);
 }
-const orchLenFor = (grid, saved) => grid.map((row, r) => row.map((_, c) => (saved && saved[r] && [1, 2, 4].includes(saved[r][c])) ? saved[r][c] : 1)); // note lengths (1, 2 or 4 beats) next to the grid
+const orchLenFor = (grid, saved) => grid.map((row, r) => row.map((_, c) => (saved && saved[r] && Number.isInteger(saved[r][c]) && saved[r][c] >= 1 && saved[r][c] <= ORCH_COLS) ? saved[r][c] : 1)); // note lengths (1, 2 or 4 beats) next to the grid
 function orchSave() { try { localStorage.setItem("orchestra", JSON.stringify({ g: orch.grid, l: orch.len, p: orch.pitch, k: orch.kit, bpm: orch.bpm })); } catch (e) {} }
 const orchCount = () => orch.grid.flat().filter(Boolean).length;
 
@@ -277,7 +277,7 @@ const ORCH_IDS = ["blob", "frog", "bird", "ghost", "robot", "octo"], ORCH_CODE =
 const orchEncode = () => orch.grid.flat().map((id) => id ? ORCH_CODE[ORCH_IDS.indexOf(id)] : "-").join("");
 const orchEncodeRest = () => "." + orch.bpm + "." + (orch.pitch + 12) + "." + orch.kit + "." + orch.len.flat().join(""); // tempo, pitch (+12), kit, note lengths
 function orchApplyHash() {
-  const m = location.hash.match(/^#orchestra\/([bfpgro-]{32,64})\.(\d{2,3})(?:\.(\d{1,2})\.([0-3])\.([124]{32,64}))?$/);
+  const m = location.hash.match(/^#orchestra\/([bfpgro-]{32,64})\.(\d{2,3})(?:\.(\d{1,2})\.([0-3])\.([1-8]{32,64}))?$/);
   if (!m || m[1].length % ORCH_COLS) return;
   const flat = [...m[1]].map((ch) => ch === "-" ? null : ORCH_IDS[ORCH_CODE.indexOf(ch)]);
   orch.grid = Array.from({ length: flat.length / ORCH_COLS }, (_, r) => flat.slice(r * ORCH_COLS, (r + 1) * ORCH_COLS));
@@ -336,9 +336,30 @@ function renderOrchestra() {
   orchPaintStage(); orchPaintTray(); orchSyncButtons();
 
   const stage = playBody.querySelector(".orch__stage");
+  let dragged = false; // a drag that stretched a note must not count as a tap afterwards
   stage.addEventListener("click", (e) => {
     const cell = e.target.closest(".orch__cell");
+    if (dragged) { dragged = false; return; }
     if (cell) orchPlace(+cell.dataset.r, +cell.dataset.c);
+  });
+  /* press a creature on the stage and pull to the right: its note gets as long as the cells you cover */
+  stage.addEventListener("pointerdown", (e) => {
+    const cell = e.target.closest(".orch__cell");
+    dragged = false;
+    if (!cell || !cell.dataset.id || (e.pointerType === "mouse" && e.button !== 0)) return;
+    const r = +cell.dataset.r, c = +cell.dataset.c, box = cell.getBoundingClientRect(), step = box.width + 7, x0 = e.clientX, len0 = orch.len[r][c];
+    let moved = false;
+    const move = (ev) => {
+      if (!moved && Math.abs(ev.clientX - x0) < 10) return;
+      moved = true; dragged = true;
+      const n = Math.max(1, Math.min(ORCH_COLS - c, len0 + Math.round((ev.clientX - x0) / step)));
+      if (n !== orch.len[r][c]) { orch.len[r][c] = n; orchPaintStage(); if (!playMuted) oTone(300 + n * 60, orchCtx().currentTime, 0.05, "triangle", 0.05); }
+    };
+    const up = () => {
+      removeEventListener("pointermove", move); removeEventListener("pointerup", up); removeEventListener("pointercancel", up);
+      if (moved) { orchSave(); if (!playMuted) orchVoice(orch.grid[r][c], orchCtx().currentTime + 0.01, ORCH_NOTES[r], orch.len[r][c]); }
+    };
+    addEventListener("pointermove", move); addEventListener("pointerup", up); addEventListener("pointercancel", up);
   });
   /* tray: press to hear a creature and choose it, or drag it onto the stage */
   playBody.querySelectorAll(".orch__pick").forEach((pick) => pick.addEventListener("pointerdown", (e) => {
