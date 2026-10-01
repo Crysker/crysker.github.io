@@ -361,9 +361,9 @@ const I18N = {
         team: "Lukas, Wolfgang and Serkan (LSW-Studios)",
         role: "3D modelling (goblins, huts, straw, bottle, nuclear waste barrel), goblin animation, Unity setup, world design, UI and UI logic",
         challenge: "Make ocean pollution something you feel, not something you read about: small careless acts pile up until they turn into a threat you can't ignore.",
-        approach: "Five scenes, from a tutorial room to the beach, a death cell and a victory party. Goblins (fast, little trash) and ogres (slow, lots of trash) walk from their huts to the rivers via NavMesh; the trash then finds its way to the ocean with A* pathfinding. You collect it by hand into a bucket until the boss fight starts, armed with watermelon swords from the Unity Asset Store. Sound and an in-game announcer with Wwise.",
+        approach: "Five scenes, from a tutorial room to the beach, a death cell and a victory party. Goblins (fast, little trash) and ogres (slow, lots of trash) walk from their huts to the rivers via NavMesh; the trash then finds its way to the ocean with A* pathfinding. You collect it by hand into a bucket until the boss fight starts, armed with watermelon swords from the Unity Asset Store. Sound and an in-game announcer with Wwise. The boss runs on an animator with transitions for walking, attacking and dying, and we fine-tuned the fight through a lot of playtesting.",
         result: "A playable Meta Quest game built in two weeks by our team of three (LSW-Studios), with a full boss fight, animations and an easter egg.",
-        learned: "VR interactions get very complex once you really dig into them. How players interact and move through the game changes the level design, from where things are placed to how far they have to reach."
+        learned: "VR interactions get very complex once you really dig into them. How players interact and move through the game changes the level design, from where things are placed to how far they have to reach. Even the UI is a VR problem: it only worked reliably once it followed the player's head."
       },
       deepspace: {
         title: "Deep Space Cleaner Corp",
@@ -651,9 +651,9 @@ const I18N = {
         team: "Lukas, Wolfgang und Serkan (LSW-Studios)",
         role: "3D-Modellierung (Goblins, Hütten, Strohhalm, Flasche, Atommüllfass), Goblin-Animation, Unity-Setup, World Design, UI und UI-Logik",
         challenge: "Meeresverschmutzung spürbar machen statt nur darüber zu lesen: Kleine achtlose Handlungen summieren sich zu einer Bedrohung, die man nicht mehr ignorieren kann.",
-        approach: "Fünf Szenen, vom Tutorial-Raum über den Strand bis zur Todeszelle und der Siegesfeier. Goblins (schnell, wenig Müll) und Oger (langsam, viel Müll) laufen per NavMesh von ihren Hütten zu den Flüssen; der Müll findet dann per A*-Pathfinding seinen Weg ins Meer. Man sammelt ihn per Hand in einen Eimer, bis der Bosskampf beginnt, bewaffnet mit Wassermelonen-Schwertern aus dem Unity Asset Store. Sound und ein Ansager im Spiel mit Wwise.",
+        approach: "Fünf Szenen, vom Tutorial-Raum über den Strand bis zur Todeszelle und der Siegesfeier. Goblins (schnell, wenig Müll) und Oger (langsam, viel Müll) laufen per NavMesh von ihren Hütten zu den Flüssen; der Müll findet dann per A*-Pathfinding seinen Weg ins Meer. Man sammelt ihn per Hand in einen Eimer, bis der Bosskampf beginnt, bewaffnet mit Wassermelonen-Schwertern aus dem Unity Asset Store. Sound und ein Ansager im Spiel mit Wwise. Der Boss läuft über ein Animator-System mit Übergängen für Gehen, Angreifen und Sterben, und den Kampf haben wir durch viele Playtests abgestimmt.",
         result: "Ein spielbares Meta-Quest-Spiel, in zwei Wochen von unserem Dreierteam (LSW-Studios) gebaut, mit komplettem Bosskampf, Animationen und einem Easter Egg.",
-        learned: "VR-Interaktionen werden sehr komplex, sobald man wirklich in die Tiefe geht. Wie Spielende interagieren und sich durchs Spiel bewegen, verändert das Level Design, von der Platzierung der Objekte bis zur Reichweite."
+        learned: "VR-Interaktionen werden sehr komplex, sobald man wirklich in die Tiefe geht. Wie Spielende interagieren und sich durchs Spiel bewegen, verändert das Level Design, von der Platzierung der Objekte bis zur Reichweite. Sogar die UI ist in VR ein Problem: Sie funktionierte erst zuverlässig, als sie dem Kopf der Spielenden folgte."
       },
       deepspace: {
         title: "Deep Space Cleaner Corp",
