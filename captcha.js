@@ -42,7 +42,7 @@ const updateVerify = () => { verifyBtn.disabled = gameSlots.querySelectorAll(".s
 /* the verdict: every failed Verify costs 10% (never worse than 50/50) */
 function renderVerdict() {
   const human = Math.max(50, 100 - 10 * fails), toaster = 100 - human;
-  document.getElementById("gameVerdict").textContent = toaster === 0 ? ct("perfect") : ct("mixed").replace("{h}", human).replace("{t}", toaster);
+  document.getElementById("gameVerdict").textContent = (toaster === 0 ? ct("perfect") : ct("mixed").replace("{h}", human).replace("{t}", toaster)) + (capSecs ? " · " + capSecs + " s" : "");
 }
 
 /* the fixed texts of the window (kicker, hint, buttons …) follow the language */
@@ -52,7 +52,9 @@ function refreshCaptchaTexts() {
   else { document.getElementById("gameTitle").textContent = ct("won"); renderVerdict(); }
 }
 
+let capStart = 0, capSecs = 0;
 function startCaptcha() {
+  capStart = Date.now(); capSecs = 0;
   fails = 0; picked = null; say("");
   refreshCaptchaTexts();
   document.getElementById("gameTitle").textContent = ct("title");
@@ -122,6 +124,7 @@ function verify() {
   fails++;
 }
 function win() {
+  capSecs = Math.round((Date.now() - capStart) / 1000);
   gameSlots.querySelectorAll(".slot").forEach((s) => s.classList.add("is-locked"));
   verifyBtn.disabled = true;
   say(ct("done"));

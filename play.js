@@ -164,6 +164,9 @@ function renderPlay() {
   else if (reg) reg.render();
   else if (play.screen === "q") renderQuestion();
   else renderEnd();
+  // every game opens with the same small teal label
+  const kick = play.screen === "orch" ? ot("toy") : play.screen === "tower" ? tt("toy") : "";
+  if (kick) playBody.insertAdjacentHTML("afterbegin", `<p class="wd__roundlabel play__kicker">${esc(kick)}</p>`);
 }
 
 /* Menu: a neal.fun-style grid, one picture tile per game with just its title; the tile is the button. */

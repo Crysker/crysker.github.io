@@ -1380,3 +1380,4 @@ body.view-all .p-card__play, body.view-all .p-card__video { display: none; }
 @keyframes wdShake { 20%, 60% { transform: translateX(-6px); } 40%, 80% { transform: translateX(6px); } }
 @media (prefers-reduced-motion: reduce) { .wd5__tile.is-flip, .wd5__row.is-shake { animation: none; } }
 .wd5__grid, .wd5__kb { justify-self: center; } /* the letter grid and keyboard sit in the middle of the column */
+.play__kicker { margin: 0 0 12px; }
