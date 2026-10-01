@@ -1521,3 +1521,22 @@ body.view-all .p-card__play, body.view-all .p-card__video { display: none; }
 .orch__clear.is-rec { border-color: #ef4444; color: #ef4444; animation: orchRec 1s ease-in-out infinite; }
 @keyframes orchRec { 50% { background: color-mix(in srgb, #ef4444 14%, transparent); } }
 @media (prefers-reduced-motion: reduce) { .orch__clear.is-rec { animation: none; } }
+
+/* Orchestra: freestyle / learn switch and the lesson card */
+.orch [data-feat][hidden] { display: none !important; }
+.orch__modes { display: inline-flex; padding: 4px; gap: 2px; border-radius: 999px; background: var(--surface-2); margin-bottom: 12px; }
+.orch__modes button { border: 0; background: none; color: var(--ink-soft); font: 700 13px var(--sans); padding: 7px 16px; border-radius: 999px; cursor: pointer; }
+.orch__modes button[aria-pressed="true"] { background: var(--ink); color: var(--bg); }
+.orch__lesson { margin-bottom: 14px; padding: 18px 20px; border-radius: 20px; background: var(--surface); border: 1px solid var(--line); }
+.orch__lesson[hidden] { display: none; }
+.orch__lesson h3 { margin: 6px 0 6px; font: 700 20px var(--serif); }
+.orch__lesson p { margin: 0 0 12px; color: var(--ink-soft); }
+.orch__dots { display: flex; gap: 6px; }
+.orch__dots i { width: 22px; height: 6px; border-radius: 3px; background: var(--line); }
+.orch__dots i.is-done { background: var(--turq); } .orch__dots i.is-now { background: var(--ink); }
+.orch__tasks { list-style: none; margin: 0 0 14px; padding: 0; display: grid; gap: 6px; }
+.orch__tasks li { display: flex; gap: 10px; font: 600 15px var(--sans); color: var(--ink-soft); }
+.orch__tasks li span { width: 18px; text-align: center; font-weight: 800; }
+.orch__tasks li.is-ok { color: var(--ink); } .orch__tasks li.is-ok span { color: var(--turq-text); }
+.orch__lessonbtns { display: flex; flex-wrap: wrap; gap: 10px; }
+.orch__lessonbtns .orch__go:disabled { opacity: .45; cursor: default; }
