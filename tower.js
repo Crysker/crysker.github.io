@@ -3,13 +3,13 @@
    filled completely with the pieces you are given (1x1, 2x1, 2x2, L, T …). You drag the pieces in wherever you like, turn them
    (R or the button) and pick them up again. When a section is full, the next one opens with other material and, later, stranger shapes.
    Every puzzle is made by cutting the grid into pieces first, so it can always be solved.
-   From 1000 m the builders no longer understand each other: the page changes its language (again at 1100 m and 1200 m).
+   From 1000 m the builders no longer understand each other: the page changes its language (again at 1100 m and 1200 m). At the top it is back to normal.
    Uses helpers from orchestra.js (sound) and play.js / play-shell.js (esc, lang, babelLang, unlock, sfx, play). */
 
 const TW_ROWS = 3, TW_SECTIONS = 13;
 const twCols = (k) => Math.max(5, 9 - Math.floor(k / 3)); // the blueprint narrows towards the sky: 9, 8, 7, 6, 5 cells wide
 
-/* ---- texts: en/de for the page, tr/fr/es/la for the confusion of tongues (only what the tower screen shows) ---- */
+/* ---- texts: en/de for the page, tr/fr/es for the confusion of tongues (only what the tower screen shows) ---- */
 const TW_T = {
   en: {
     toy: "A building puzzle", again: "Start over", rotate: "Rotate", shuffle: "Reshuffle", height: "Height", best: "Best", section: "Section", left: "Pieces left",
@@ -35,11 +35,6 @@ const TW_T = {
     again: "Empezar de nuevo", rotate: "Girar", shuffle: "Repartir", height: "Altura", best: "Récord", section: "Zona", left: "Piezas restantes",
     hint: "Arrastra las piezas a la cuadrícula. R o ↻ para girar. Recoge una pieza colocada para moverla.", done: "¡Zona completa!",
     unlock: "Material nuevo: {n}", shapes: "¡Nuevas formas!", tongues: "¡Confusión de lenguas! Ahora todos hablan distinto.", won: "¡La torre toca el cielo!", stage: "Obra"
-  },
-  la: {
-    again: "Ab initio", rotate: "Verte", shuffle: "Redistribue", height: "Altitudo", best: "Maximum", section: "Pars", left: "Partes reliquae",
-    hint: "Trahe partes in cratem. R vel ↻ vertit. Partem positam iterum tolle.", done: "Pars perfecta!",
-    unlock: "Nova materia: {n}", shapes: "Novae formae!", tongues: "Confusio linguarum! Iam omnes aliter loquuntur.", won: "Turris caelum tangit!", stage: "Aedificium"
   }
 };
 const tt = (k) => { const b = tw.babel && TW_T[tw.babel]; return b && b[k] !== undefined ? b[k] : (TW_T[lang] || TW_T.en)[k]; };
@@ -49,8 +44,7 @@ if (typeof SHELL_T !== "undefined") {
   Object.assign(SHELL_T, {
     tr: { projects: "Projeler", experience: "Deneyim", contact: "İletişim", play: "Oyun Bahçesi" },
     fr: { projects: "Projets", experience: "Parcours", contact: "Contact", play: "Terrain de jeu" },
-    es: { projects: "Proyectos", experience: "Trayectoria", contact: "Contacto", play: "Zona de juegos" },
-    la: { projects: "Opera", experience: "Cursus", contact: "Epistula", play: "Ludus" }
+    es: { projects: "Proyectos", experience: "Trayectoria", contact: "Contacto", play: "Zona de juegos" }
   });
 }
 function twPatchTexts() { // PLAY_T lives in play.js, which loads after this file
@@ -58,12 +52,11 @@ function twPatchTexts() { // PLAY_T lives in play.js, which loads after this fil
   Object.assign(PLAY_T, {
     tr: { home: "Ana sayfa", title: "Oyun Bahçesi", g3: "Babil Kulesi", back: "Geri" },
     fr: { home: "Accueil", title: "Terrain de jeu", g3: "La Tour de Babel", back: "Retour" },
-    es: { home: "Inicio", title: "Zona de juegos", g3: "La Torre de Babel", back: "Volver" },
-    la: { home: "Domus", title: "Ludus", g3: "Turris Babel", back: "Redi" }
+    es: { home: "Inicio", title: "Zona de juegos", g3: "La Torre de Babel", back: "Volver" }
   });
 }
-/* which language the page speaks while you build this section (index 0 is the first 100 m) */
-const twLangFor = (k) => k >= 13 ? "la" : k >= 12 ? "es" : k >= 11 ? "fr" : k >= 10 ? "tr" : null;
+/* which language the page speaks while you build this section (index 0 is the first 100 m); once the sky is reached it is yours again */
+const twLangFor = (k) => k >= 13 ? null : k >= 12 ? "es" : k >= 11 ? "fr" : k >= 10 ? "tr" : null; // at the very top everyone understands each other again
 
 /* ---- material per section: the higher you build, the stranger ---- */
 const TW_MAT = [
