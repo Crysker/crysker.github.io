@@ -11,7 +11,7 @@ if (lang !== "de") lang = "en";
 
 const SHELL_T = {
   en: {
-    skip: "Skip to content", menu: "Menu", projects: "Projects", experience: "Experience", contact: "Contact", play: "Play",
+    skip: "Skip to content", menu: "Menu", projects: "Projects", experience: "Experience", contact: "Contact", play: "Playground",
     toLang: "Auf Deutsch umschalten", toDark: "Switch to dark mode", toLight: "Switch to light mode", unlocked: "Achievement unlocked",
     ach: {
       guess: ["Educated guesser", "Finished a round of Guess the Average"],
@@ -22,7 +22,7 @@ const SHELL_T = {
     }
   },
   de: {
-    skip: "Zum Inhalt springen", menu: "Menü", projects: "Projekte", experience: "Werdegang", contact: "Kontakt", play: "Spielen",
+    skip: "Zum Inhalt springen", menu: "Menü", projects: "Projekte", experience: "Werdegang", contact: "Kontakt", play: "Spielwiese",
     toLang: "Switch to English", toDark: "Zum dunklen Modus wechseln", toLight: "Zum hellen Modus wechseln", unlocked: "Erfolg freigeschaltet",
     ach: {
       guess: ["Fundierter Schätzer", "Eine Runde Schätz den Durchschnitt beendet"],

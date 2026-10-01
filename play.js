@@ -1,10 +1,10 @@
-/* ============ Play tab ============
+/* ============ Playground ============
    A small window with tiny games. First game: "Guess the Average" (questions in guess-data.js).
    Runs on play.html. Uses helpers from play-shell.js: lang, esc, unlock. */
 
 const PLAY_T = {
   en: {
-    home: "Home", nav: "Play", title: "Play", back: "Back", close: "Close", soundOn: "Turn sound on", soundOff: "Turn sound off",
+    home: "Home", nav: "Playground", title: "Playground", back: "Back", close: "Close", soundOn: "Turn sound on", soundOff: "Turn sound off",
     intro: "Tiny games, made for fun. More are on the way.",
     g1: ["Guess the Average", "How much beer does an Austrian drink? How many cups of tea a Turk? Guess the number, the closer the more points."],
     best: "Best: {n}", verified: "Verified", robot: "I'm not a robot", play: "Play", soon: "Soon", g2: "Tiny Orchestra", g3: "Tower of Babel",
@@ -18,7 +18,7 @@ const PLAY_T = {
     ask: "Your guess (use the slider or type it)"
   },
   de: {
-    home: "Start", nav: "Spielen", title: "Spielen", back: "Zurück", close: "Schließen", soundOn: "Ton einschalten", soundOff: "Ton ausschalten",
+    home: "Start", nav: "Spielwiese", title: "Spielwiese", back: "Zurück", close: "Schließen", soundOn: "Ton einschalten", soundOff: "Ton ausschalten",
     intro: "Kleine Spiele, nur zum Spaß. Mehr folgt.",
     g1: ["Schätz den Durchschnitt", "Wie viel Bier trinkt ein Österreicher? Wie viele Tassen Tee ein Türke? Schätze die Zahl, je näher, desto mehr Punkte."],
     best: "Bestwert: {n}", verified: "Verifiziert", robot: "Ich bin kein Roboter", play: "Spielen", soon: "Bald", g2: "Mini-Orchester", g3: "Turmbau zu Babel",

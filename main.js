@@ -181,7 +181,7 @@ const I18N = {
   en: {
     skip: "Skip to content",
     "nav.about": "About", "nav.explore": "Research", "nav.projects": "Projects",
-    "nav.experience": "Experience", "nav.contact": "Contact", "nav.play": "Play",
+    "nav.experience": "Experience", "nav.contact": "Contact", "nav.play": "Playground",
     "hero.hello": "Hi, I'm",
     "hero.title": "Interaction Designer &amp; XR Developer",
     "hero.contact": "Get in touch →",
@@ -259,8 +259,8 @@ const I18N = {
       hints: {
         first: "Curiosity pays off: open something.", video: "Some things are better in motion.",
         all: "Leave no project unopened.", lang: "Sprechen Sie Deutsch?", bottom: "How deep does this page go?",
-        secret: "↑ ↑ ↓ ↓ … you know the rest.", human: "Prove you're not a robot (on the Play page).",
-        guess: "Play a game in the Play tab.", bullseye: "Guess a number almost exactly.", wizard: "Be really good at guessing."
+        secret: "↑ ↑ ↓ ↓ … you know the rest.", human: "Prove you're not a robot (on the Playground page).",
+        guess: "Play a game in the Playground.", bullseye: "Guess a number almost exactly.", wizard: "Be really good at guessing."
       },
       first: ["Curious mind", "Opened your first project"],
       video: ["Popcorn time", "Watched a video"],
@@ -472,7 +472,7 @@ const I18N = {
   de: {
     skip: "Zum Inhalt springen",
     "nav.about": "Über mich", "nav.explore": "Forschung", "nav.projects": "Projekte",
-    "nav.experience": "Werdegang", "nav.contact": "Kontakt", "nav.play": "Spielen",
+    "nav.experience": "Werdegang", "nav.contact": "Kontakt", "nav.play": "Spielwiese",
     "hero.hello": "Hi, ich bin",
     "hero.title": "Interaction Designer &amp; XR-Entwickler",
     "hero.contact": "Kontakt aufnehmen →",
@@ -550,8 +550,8 @@ const I18N = {
       hints: {
         first: "Neugier zahlt sich aus: öffne etwas.", video: "Manches wirkt in Bewegung besser.",
         all: "Lass kein Projekt ungeöffnet.", lang: "Do you speak English?", bottom: "Wie tief geht diese Seite?",
-        secret: "↑ ↑ ↓ ↓ … den Rest kennst du.", human: "Beweise auf der Spielen-Seite, dass du kein Roboter bist.",
-        guess: "Spiel ein Spiel im Spielen-Tab.", bullseye: "Schätze eine Zahl fast genau.", wizard: "Sei richtig gut im Schätzen."
+        secret: "↑ ↑ ↓ ↓ … den Rest kennst du.", human: "Beweise auf der Spielwiese, dass du kein Roboter bist.",
+        guess: "Spiel ein Spiel auf der Spielwiese.", bullseye: "Schätze eine Zahl fast genau.", wizard: "Sei richtig gut im Schätzen."
       },
       first: ["Neugierig", "Erstes Projekt geöffnet"],
       video: ["Popcorn-Zeit", "Ein Video angesehen"],
