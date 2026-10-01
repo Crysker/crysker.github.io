@@ -84,7 +84,7 @@ const PROJECTS = [
       IMG + "ocean/water_bottle.webp", IMG + "ocean/nuclear_waste.webp",
       IMG + "ocean/ogres.webp", IMG + "ocean/shark.webp", IMG + "ocean/bucket.webp"
     ],
-    sketches: [IMG + "ocean/sketch-ideas.jpg", IMG + "ocean/sketch-boss.jpg"],
+    sketches: [IMG + "ocean/sketch-ideas.jpg?v=2", IMG + "ocean/sketch-boss.jpg"],
     tags: ["Unity", "C#", "Meta Quest", "Blender", "A* Pathfinding", "NavMesh", "Wwise", "Animation"],
     links: []
   },
