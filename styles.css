@@ -1192,7 +1192,7 @@ body.view-all .p-card__play, body.view-all .p-card__video { display: none; }
 .tw__hud { position: absolute; left: 14px; top: 10px; z-index: 2; margin: 0; display: flex; gap: 16px; flex-wrap: wrap; font: 600 13px var(--sans); color: var(--ink-soft); pointer-events: none; }
 .tw__hud b { color: var(--ink); font-variant-numeric: tabular-nums; }
 .tw__banner { top: 22%; max-width: calc(100% - 32px); white-space: normal; text-align: center; font-size: 16px; z-index: 3; }
-.tw__bar { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-top: 16px; }
+.tw__bar { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-top: 6px; } /* sits right under the pieces */
 .tw2__rotate { min-width: 130px; justify-content: center; }
 .tw__side { display: flex; flex-direction: column; gap: 14px; }
 .tw__hint { margin: 0; font-size: 14px; color: var(--ink-soft); }
@@ -1213,7 +1213,6 @@ body.view-all .p-card__play, body.view-all .p-card__video { display: none; }
   .tw__main { display: contents; }
   .tw__stage { order: 0; }
   .tw__side { order: 1; }
-  .tw__bar { order: 2; margin-top: 0; }
 }
 
 /* ============ Puzzle Round ============ */

@@ -370,16 +370,16 @@ function renderTower() {
           <p class="tw__hud" id="twHud"></p>
           <p class="orch__banner tw__banner" id="twBanner" role="status" aria-live="polite"></p>
         </div>
-        <div class="tw__bar">
-          <button type="button" class="orch__go tw2__rotate" id="twRotate"><span aria-hidden="true">↻</span> ${esc(tt("rotate"))}</button>
-          <button type="button" class="orch__clear" id="twShuffle">${esc(tt("shuffle"))}</button>
-          <button type="button" class="orch__clear" id="twAgain"><span aria-hidden="true">↺</span> ${esc(tt("again"))}</button>
-        </div>
       </div>
       <div class="tw__side">
         <p class="tw__hint">${esc(tt("hint"))}</p>
         <h3 class="tw__invtitle"><span id="twLeft"></span> · ${esc(twMatName(Math.min(tw.k, TW_SECTIONS - 1)))} ${twMat(Math.min(tw.k, TW_SECTIONS - 1)).e}</h3>
         <div class="tw2__tray" id="twTray"></div>
+        <div class="tw__bar">
+        <button type="button" class="orch__go tw2__rotate" id="twRotate"><span aria-hidden="true">↻</span> ${esc(tt("rotate"))}</button>
+        <button type="button" class="orch__clear" id="twShuffle">${esc(tt("shuffle"))}</button>
+        <button type="button" class="orch__clear" id="twAgain"><span aria-hidden="true">↺</span> ${esc(tt("again"))}</button>
+      </div>
       </div>
     </div>`;
   twPaintAll();
