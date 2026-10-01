@@ -84,7 +84,7 @@ function orchCtx() {
   if (audioCtx.state === "suspended") audioCtx.resume();
   return audioCtx;
 }
-let oMult = 1, oLen = 1, oKit = 0; // set around a creature's voice only: pitch factor, note length, sound kit
+let oMult = 1, oLen = 1, oKit = 0, oPrev = true, oCol; // set around a creature's voice only: pitch factor, note length, sound kit, preview?, column // set around a creature's voice only: pitch factor, note length, sound kit
 const O_KIT_TYPE = [null, { sine: "square", triangle: "square", sawtooth: "square" }, { sine: "sawtooth", triangle: "sawtooth" }, { sawtooth: "sine", square: "sine", triangle: "sine" }];
 const O_KIT_VOL = [1, 0.45, 0.4, 1];
 function oTone(freq, t, dur, type, vol, slideTo, attack = 0.012) {
@@ -117,15 +117,22 @@ function oNoise(t, dur, vol) { // a soft, short tick: filtered noise with a tiny
   src.connect(bp).connect(g).connect(c.destination);
   src.start(t); src.stop(t + dur + 0.02);
 }
-function orchVoice(id, t, f, len = 1, pit = 0) { // one creature, with the pitch shift, note length and sound kit chosen on the stage
-  oMult = Math.pow(2, (orch.pitch + pit) / 12); oLen = len; oKit = orch.kit;
-  try { ORCH_VOICE[id](t, f); } finally { oMult = 1; oLen = 1; oKit = 0; }
+function orchVoice(id, t, f, len, pit = 0, col) { // one creature, with the pitch shift, note length and sound kit chosen on the stage
+  // your own sounds ignore the pitch slider of the stage, only their own pitch counts
+  oMult = Math.pow(2, ((ORCH_BY_ID[id] && ORCH_BY_ID[id].custom ? 0 : orch.pitch) + pit) / 12); oLen = len || 1; oKit = orch.kit;
+  oPrev = !len; oCol = col; // a preview plays the whole sound
+  try { ORCH_VOICE[id](t, f); } finally { oMult = 1; oLen = 1; oKit = 0; oPrev = true; oCol = undefined; }
 }
 const ORCH_VOICE = {
   blob: (t) => oTone(150, t, 0.2, "sine", 0.4, 42),
   robot: (t) => { oNoise(t, 0.07, 0.07); oTone(2100, t, 0.045, "sine", 0.05, 1500); },
   frog: (t, f) => oTone(f / 2, t, 0.26, "sine", 0.26, f / 3),
-  bird: (t, f) => { oTone(f * 2, t, 0.1, "triangle", 0.07, f * 3); oTone(f * 2.5, t + 0.1, 0.1, "triangle", 0.06, f * 3.5); },
+  bird: (t, f) => { // a longer bar makes Pip sing on: one chirp every quarter second, each a little different
+    const len = oLen, n = Math.max(1, Math.round((len * 30 / orch.bpm) / 0.24));
+    oLen = 1;
+    for (let i = 0; i < n; i++) { const s = t + i * 0.24, k = [1, 1.12, 0.94, 1.2][i % 4]; oTone(f * 2 * k, s, 0.1, "triangle", 0.07, f * 3 * k); oTone(f * 2.5 * k, s + 0.1, 0.1, "triangle", 0.06, f * 3.5 * k); }
+    oLen = len;
+  },
   ghost: (t, f) => { oTone(f, t, 0.7, "sine", 0.08, null, 0.15); oTone(f * 1.005, t, 0.7, "sine", 0.05, null, 0.15); },
   octo: (t, f) => oTone(f, t, 0.32, "triangle", 0.14, f * 0.99),
   mine: (t, f) => orchCustomVoice("mine", t, f), mine2: (t, f) => orchCustomVoice("mine2", t, f), mine3: (t, f) => orchCustomVoice("mine3", t, f)
@@ -134,14 +141,56 @@ const ORCH_VOICE = {
 const ORCH_EMOJI = ["🎤", "🎸", "🥁", "🎹", "🎺", "🐶", "🐱", "🐮", "🦆", "🐸", "🚗", "🔔", "👏", "🤖", "👻", "🌟"];
 let orchCustom = []; // { id, name, emoji, img, rate, pcm (Int16Array), buf (AudioBuffer) }
 const orchIsCustom = (id) => orchCustom.some((c) => c.id === id);
+const orchSecs = (id) => { const cu = orchCustom.find((c) => c.id === id); return cu && cu.buf ? cu.buf.duration : 0; };
+/* a new note: your own sounds get a bar as long as the sound really lasts (at the current tempo), the others start at one beat */
+const orchNew = (id, c) => ({ id, len: orchSecs(id) ? Math.max(1, Math.min(ORCH_COLS - c, Math.ceil(orchSecs(id) / (30 / orch.bpm) - 0.05))) : 1, pit: 0 });
 const orchName = (id) => (ORCH_BY_ID[id] && ORCH_BY_ID[id].custom ? ORCH_BY_ID[id].name : (ot("names")[id] || id));
 const orchTrayList = () => ORCH_CREATURES.concat(orchCustom.map((c) => ORCH_BY_ID[c.id]));
+/* pitch-preserving time stretch (WSOLA): the sound gets longer without getting lower */
+function orchStretchBuf(buf, factor) {
+  const x = buf.getChannelData(0), sr = buf.sampleRate, N = sr > 30000 ? 2048 : 1024, H = N / 2, S = N / 4;
+  const outLen = Math.round(x.length * factor), out = new Float32Array(outLen + N), norm = new Float32Array(outLen + N), win = new Float32Array(N);
+  for (let i = 0; i < N; i++) win[i] = 0.5 - 0.5 * Math.cos((2 * Math.PI * i) / N);
+  let prev = 0;
+  for (let o = 0, k = 0; o < outLen; o += H, k++) {
+    const ideal = Math.round(o / factor);
+    let pos = ideal;
+    if (k > 0) { // the offset where this grain best continues the last one
+      const want = prev + H; let best = -Infinity;
+      for (let d = -S; d <= S; d += 2) {
+        const q = ideal + d;
+        if (q < 0 || q + N > x.length || want + H > x.length) continue;
+        let s = 0; for (let i = 0; i < H; i += 2) s += x[q + i] * x[want + i];
+        if (s > best) { best = s; pos = q; }
+      }
+    }
+    for (let i = 0; i < N; i++) { const v = pos + i < x.length ? x[pos + i] : 0; out[o + i] += v * win[i]; norm[o + i] += win[i]; }
+    prev = pos;
+  }
+  const res = new Float32Array(outLen);
+  for (let i = 0; i < outLen; i++) res[i] = norm[i] > 0.001 ? out[i] / norm[i] : 0;
+  const nb = new AudioBuffer({ length: outLen, sampleRate: sr, numberOfChannels: 1 });
+  nb.getChannelData(0).set(res);
+  return nb;
+}
+function orchStretched(cu, factor) { // cached per sound and amount
+  cu.st = cu.st || {};
+  const key = Math.round(factor * 20) / 20;
+  return cu.st[key] || (cu.st[key] = orchStretchBuf(cu.buf, key));
+}
 function orchCustomVoice(id, t, f) {
   const cu = orchCustom.find((x) => x.id === id), c = orchCtx();
   if (!cu || !cu.buf) { oTone(f, t, 0.16, "square", 0.05); return; } // a shared beat on a device without this sound: a plain blip
-  const src = c.createBufferSource(), g = c.createGain(), rate = Math.max(0.25, Math.min(4, (f / 261.63) * oMult));
-  src.buffer = cu.buf; src.playbackRate.value = rate; // played once, however long the note bar is
-  const dur = Math.max(0.1, Math.min(6, cu.buf.duration / rate)), vol = 0.7;
+  const src = c.createBufferSource(), g = c.createGain(), rate = Math.max(0.25, Math.min(4, oMult)); // exactly as you made it, on every row; only the pitch controls change it
+  const step = 30 / orch.bpm, natural = cu.buf.duration / rate, natLen = Math.max(1, Math.ceil(natural / step - 0.05));
+  let buf = cu.buf, dur = natural;
+  if (!oPrev) {
+    if (oLen < natLen) dur = oCol !== undefined && oLen >= ORCH_COLS - oCol ? natural : Math.min(natural, oLen * step); // a shorter bar cuts it off (unless the bar already reaches the stage's end)
+    else if (oLen > natLen) { const target = Math.min(6, oLen * step); buf = orchStretched(cu, (target * rate) / cu.buf.duration); dur = target; } // a longer bar stretches it, like Boo
+  }
+  dur = Math.max(0.06, Math.min(6, dur));
+  src.buffer = buf; src.playbackRate.value = rate;
+  const vol = 0.7;
   g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(vol, t + 0.006); g.gain.setValueAtTime(vol, t + dur - 0.05); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
   src.connect(g).connect(c.destination); src.start(t); src.stop(t + dur + 0.02);
 }
@@ -308,7 +357,7 @@ function orchPaintMine() { // under the tray: change or delete the own sound you
     <button type="button" class="orch__clear" id="orchMineTest"><span aria-hidden="true">▶</span> ${esc(ot("test"))}</button>
     <button type="button" class="orch__clear" id="orchMineDel"><span aria-hidden="true">✕</span> ${esc(ot("del"))}</button></div>`;
   document.getElementById("orchMineEdit").addEventListener("click", () => orchOpenMaker(cu.id));
-  document.getElementById("orchMineTest").addEventListener("click", () => orchHear({ id: cu.id, len: 1, pit: 0 }, 5));
+  document.getElementById("orchMineTest").addEventListener("click", () => orchHear({ id: cu.id, len: 1, pit: 0 }, 2));
   document.getElementById("orchMineDel").addEventListener("click", () => {
     orchRemoveId(cu.id); orchCustom = orchCustom.filter((c) => c.id !== cu.id); Object.assign(ORCH_BY_ID[cu.id], { name: "My sound", emoji: "🎧", img: null });
     orchCustomSave(); orch.sel = "blob"; orchSave(); renderOrchestra();
@@ -462,11 +511,11 @@ function orchSetNotes(r, c, notes) {
   const [a, ...rest] = notes;
   orch.grid[r][c] = a ? a.id : null; orch.len[r][c] = a ? a.len : 1; orch.pit[r][c] = a ? a.pit : 0; orch.more[r][c] = rest;
 }
-const orchHear = (n, r) => { if (!playMuted) orchVoice(n.id, orchCtx().currentTime + 0.01, ORCH_NOTES[r], n.len, n.pit); };
+const orchHear = (n, r) => { if (!playMuted) orchVoice(n.id, orchCtx().currentTime + 0.01, ORCH_NOTES[r], orchIsCustom(n.id) ? 0 : n.len, n.pit); }; // a preview of an own sound is always the whole sound
 
 function orchPlayStep(step, when) {
   if (!playMuted) for (let r = 0; r < orch.grid.length; r++) {
-    orchNotes(r, step).forEach((n) => orchVoice(n.id, when, ORCH_NOTES[r], n.len, n.pit));
+    orchNotes(r, step).forEach((n) => orchVoice(n.id, when, ORCH_NOTES[r], n.len, n.pit, step));
   }
   setTimeout(() => { // the visuals follow the audio clock
     if (!orch.playing) return;
@@ -522,11 +571,11 @@ function orchPreview(id) { // pressing a creature in the tray plays its sound, s
 function orchPlace(r, c, drop) {
   const notes = orchNotes(r, c);
   if (!notes.length) { // an empty square: the chosen creature steps onto it and is selected
-    orchSetNotes(r, c, [{ id: orch.sel, len: 1, pit: 0 }]); orch.placed++; orch.cell = [r, c];
+    orchSetNotes(r, c, [orchNew(orch.sel, c)]); orch.placed++; orch.cell = [r, c];
     orchHear(orchNotes(r, c)[0], r);
     if (orch.playing && orch.placed >= 6) unlock("maestro");
   } else if (drop) { // dropped onto someone: a new layer
-    if (notes.length < 4) { notes.push({ id: orch.sel, len: 1, pit: 0 }); orchSetNotes(r, c, notes); orchHear(notes[notes.length - 1], r); } else sfx.pop();
+    if (notes.length < 4) { notes.push(orchNew(orch.sel, c)); orchSetNotes(r, c, notes); orchHear(notes[notes.length - 1], r); } else sfx.pop();
     orch.cell = [r, c];
   } else { // tapped: select it (tap again to let go), so nothing is deleted by accident
     const same = orch.cell && orch.cell[0] === r && orch.cell[1] === c;
@@ -623,6 +672,17 @@ function orchPaintStage() {
   orchPaintFound();
   orchPaintInsp();
   if (orch.mode === "learn") orchLearnPaint();
+  setTimeout(orchPrepStretch, 0);
+}
+function orchPrepStretch() { // an own sound with a long bar: its stretched version is made now, not in the middle of the beat
+  if (!orch.grid) return;
+  const step = 30 / orch.bpm;
+  orch.grid.forEach((row, r) => row.forEach((_, c) => orchNotes(r, c).forEach((n) => {
+    const cu = orchCustom.find((x) => x.id === n.id);
+    if (!cu || !cu.buf) return;
+    const rate = Math.max(0.25, Math.min(4, Math.pow(2, n.pit / 12))), natLen = Math.max(1, Math.ceil(cu.buf.duration / rate / step - 0.05));
+    if (n.len > natLen) orchStretched(cu, (Math.min(6, n.len * step) * rate) / cu.buf.duration);
+  })));
 }
 /* the panel for the selected square: pitch and length of every note in it, remove, add a layer */
 function orchPaintInsp() {
@@ -688,7 +748,7 @@ function orchInspClick(e) {
   const [r, c] = orch.cell, notes = orchNotes(r, c);
   if (b.id === "orchAddLayer") {
     if (notes.length >= 4) return;
-    notes.push({ id: orch.sel, len: 1, pit: 0 }); orchSetNotes(r, c, notes); orchHear(notes[notes.length - 1], r);
+    notes.push(orchNew(orch.sel, c)); orchSetNotes(r, c, notes); orchHear(notes[notes.length - 1], r);
   } else {
     const n = notes[+b.dataset.i];
     if (!n) return;
@@ -747,7 +807,7 @@ async function orchRender() {
   try {
     for (let l = 0; l < loops; l++) for (let s = 0; s < ORCH_COLS; s++) {
       const when = (l * ORCH_COLS + s) * stepDur + 0.05;
-      for (let r = 0; r < orch.grid.length; r++) orchNotes(r, s).forEach((n) => orchVoice(n.id, when, ORCH_NOTES[r], n.len, n.pit));
+      for (let r = 0; r < orch.grid.length; r++) orchNotes(r, s).forEach((n) => orchVoice(n.id, when, ORCH_NOTES[r], n.len, n.pit, s));
     }
     return await off.startRendering();
   } finally { oCtxOverride = null; oNoiseBuf = saveBuf; }
@@ -881,7 +941,7 @@ function renderOrchestra() {
     };
     const up = () => {
       removeEventListener("pointermove", move); removeEventListener("pointerup", up); removeEventListener("pointercancel", up);
-      if (moved) { orchSave(); if (!playMuted) orchVoice(orch.grid[r][c], orchCtx().currentTime + 0.01, ORCH_NOTES[r], orch.len[r][c]); }
+      if (moved) { orchSave(); if (!playMuted) orchVoice(orch.grid[r][c], orchCtx().currentTime + 0.01, ORCH_NOTES[r], orchIsCustom(orch.grid[r][c]) ? 0 : orch.len[r][c]); }
     };
     addEventListener("pointermove", move); addEventListener("pointerup", up); addEventListener("pointercancel", up);
   });
