@@ -37,6 +37,25 @@ const TW_T = {
     unlock: "Material nuevo: {n}", shapes: "¡Nuevas formas!", tongues: "¡Confusión de lenguas! Ahora todos hablan distinto.", won: "¡La torre toca el cielo!", stage: "Obra"
   }
 };
+Object.assign(TW_T, {
+  it: {
+    again: "Ricomincia", rotate: "Ruota", shuffle: "Rimescola", height: "Altezza", best: "Record", section: "Zona", left: "Pezzi rimasti",
+    hint: "Trascina i pezzi nella griglia. R o ↻ per ruotare. Riprendi un pezzo posato per spostarlo.", done: "Zona completata!",
+    unlock: "Nuovo materiale: {n}", shapes: "Nuove forme!", tongues: "Confusione delle lingue! Ora parlano tutti in modo diverso.", won: "La torre tocca il cielo!", stage: "Cantiere"
+  },
+  pt: {
+    again: "Recomeçar", rotate: "Girar", shuffle: "Redistribuir", height: "Altura", best: "Recorde", section: "Zona", left: "Peças restantes",
+    hint: "Arrasta as peças para a grelha. R ou ↻ para rodar. Pega numa peça colocada para a mover.", done: "Zona concluída!",
+    unlock: "Novo material: {n}", shapes: "Novas formas!", tongues: "Confusão de línguas! Agora todos falam de maneira diferente.", won: "A torre toca o céu!", stage: "Obra"
+  },
+  nl: {
+    again: "Opnieuw beginnen", rotate: "Draaien", shuffle: "Opnieuw verdelen", height: "Hoogte", best: "Record", section: "Deel", left: "Stukken over",
+    hint: "Sleep de stukken in het raster. R of ↻ om te draaien. Pak een geplaatst stuk op om het te verplaatsen.", done: "Deel klaar!",
+    unlock: "Nieuw materiaal: {n}", shapes: "Nieuwe vormen!", tongues: "Spraakverwarring! Iedereen praat nu anders.", won: "De toren raakt de hemel!", stage: "Bouwplaats"
+  }
+});
+/* name and greeting of every language the builders can speak */
+const TW_LANGS = { fr: ["Français", "Bonjour !"], tr: ["Türkçe", "Merhaba!"], es: ["Español", "¡Hola!"], it: ["Italiano", "Ciao!"], pt: ["Português", "Olá!"], nl: ["Nederlands", "Hallo!"] };
 const tt = (k) => { const b = tw.babel && TW_T[tw.babel]; return b && b[k] !== undefined ? b[k] : (TW_T[lang] || TW_T.en)[k]; };
 
 /* what the page says in those other languages (menu bar and breadcrumbs) */
@@ -44,7 +63,10 @@ if (typeof SHELL_T !== "undefined") {
   Object.assign(SHELL_T, {
     tr: { projects: "Projeler", experience: "Deneyim", contact: "İletişim", play: "Oyun Bahçesi" },
     fr: { projects: "Projets", experience: "Parcours", contact: "Contact", play: "Terrain de jeu" },
-    es: { projects: "Proyectos", experience: "Trayectoria", contact: "Contacto", play: "Zona de juegos" }
+    es: { projects: "Proyectos", experience: "Trayectoria", contact: "Contacto", play: "Zona de juegos" },
+    it: { projects: "Progetti", experience: "Esperienza", contact: "Contatti", play: "Area giochi" },
+    pt: { projects: "Projetos", experience: "Percurso", contact: "Contacto", play: "Área de jogos" },
+    nl: { projects: "Projecten", experience: "Ervaring", contact: "Contact", play: "Speeltuin" }
   });
 }
 function twPatchTexts() { // PLAY_T lives in play.js, which loads after this file
@@ -52,11 +74,15 @@ function twPatchTexts() { // PLAY_T lives in play.js, which loads after this fil
   Object.assign(PLAY_T, {
     tr: { home: "Ana sayfa", title: "Oyun Bahçesi", g3: "Babil Kulesi", back: "Geri" },
     fr: { home: "Accueil", title: "Terrain de jeu", g3: "La Tour de Babel", back: "Retour" },
-    es: { home: "Inicio", title: "Zona de juegos", g3: "La Torre de Babel", back: "Volver" }
+    es: { home: "Inicio", title: "Zona de juegos", g3: "La Torre de Babel", back: "Volver" },
+    it: { home: "Home", title: "Area giochi", g3: "La Torre di Babele", back: "Indietro" },
+    pt: { home: "Início", title: "Área de jogos", g3: "A Torre de Babel", back: "Voltar" },
+    nl: { home: "Home", title: "Speeltuin", g3: "De Toren van Babel", back: "Terug" }
   });
 }
 /* which language the page speaks while you build this section (index 0 is the first 100 m); once the sky is reached it is yours again */
-const twLangFor = (k) => k >= 13 ? null : k >= 12 ? "es" : k >= 11 ? "fr" : k >= 10 ? "tr" : null; // at the very top everyone understands each other again
+const TW_ORDER = [null, "fr", "tr", "es", "it", "pt", "nl", "tr", "fr", "it", "es", "nl", "pt"]; // a new tongue with every section, no two in a row
+const twLangFor = (k) => k >= 13 ? null : TW_ORDER[k]; // at the very top everyone understands each other again
 
 /* ---- material per section: the higher you build, the stranger ---- */
 const TW_MAT = [
@@ -160,8 +186,23 @@ function twComplete() {
   twSave();
   const changed = twSetLanguage();
   const hasNewShapes = tw.k === 3 || tw.k === 6;
-  twBanner(tt("done") + " " + tt("unlock").replace("{n}", twMat(tw.k).e + " " + twMatName(tw.k)) + (hasNewShapes ? " " + tt("shapes") : "") + (changed ? "  " + tt("tongues") : ""), changed ? 6500 : 4200);
+  twBanner(tt("done") + " " + tt("unlock").replace("{n}", twMat(tw.k).e + " " + twMatName(tw.k)) + (hasNewShapes ? " " + tt("shapes") : "") + (changed ? "  🗣️ " + TW_LANGS[tw.babel][0] + ": " + tt("tongues") : ""), changed ? 6500 : 4200);
+  if (changed && tw.babel) twBubbles();
   if (changed && !playMuted) [196, 233, 175, 262].forEach((f, i) => oTone(f, orchCtx().currentTime + 0.4 + i * 0.12, 0.3, "sawtooth", 0.05));
+}
+/* the Babel meme: everybody greets in their own language and nobody understands anybody */
+function twBubbles() {
+  const stage = document.getElementById("twStage");
+  if (!stage) return;
+  const langs = Object.keys(TW_LANGS), mine = tw.babel;
+  [mine, ...langs.filter((l) => l !== mine).sort(() => Math.random() - 0.5).slice(0, 4)].forEach((l, i) => {
+    const b = document.createElement("span");
+    b.className = "tw2__bubble" + (i === 0 ? " is-main" : "");
+    b.textContent = TW_LANGS[l][1];
+    b.style.cssText = `left:${8 + Math.random() * 70}%;--d:${i * 0.35}s`;
+    stage.appendChild(b);
+    setTimeout(() => b.remove(), 4200 + i * 350);
+  });
 }
 function twSetLanguage() { // confusion of tongues: the page speaks another language from 1000 m on
   twPatchTexts();
