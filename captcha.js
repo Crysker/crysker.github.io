@@ -179,7 +179,7 @@ gameSlots.addEventListener("click", (e) => {
   else if (slot.classList.contains("is-filled") && !slot.classList.contains("is-locked")) unplace(slot); // take it back out
 });
 
-const closeCaptcha = () => { game.close(); if (typeof renderPlay === "function") renderPlay(); }; // the tile shows "verified" once done
+const closeCaptcha = () => game.close();
+game.addEventListener("close", () => { if (location.hash === "#reshaptcha" && typeof leaveGame === "function") leaveGame(); }); // button, Esc key and back all end up here; the menu tile then shows "verified"
 document.getElementById("gameClose").addEventListener("click", closeCaptcha);
-game.addEventListener("close", () => { if (typeof renderPlay === "function") renderPlay(); });
 refreshCaptchaTexts();

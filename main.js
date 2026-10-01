@@ -259,7 +259,7 @@ const I18N = {
         first: "Curiosity pays off: open something.", video: "Some things are better in motion.",
         all: "Leave no project unopened.", lang: "Sprechen Sie Deutsch?", bottom: "How deep does this page go?",
         secret: "↑ ↑ ↓ ↓ … you know the rest.", human: "Prove you're not a robot (on the Playground page).",
-        guess: "Play a game in the Playground.", bullseye: "Guess a number almost exactly.", wizard: "Be really good at guessing."
+        guess: "Play a game in the Playground.", bullseye: "Guess a number almost exactly.", wizard: "Be really good at guessing.", maestro: "Fill the stage in Tiny Orchestra."
       },
       first: ["Curious mind", "Opened your first project"],
       video: ["Popcorn time", "Watched a video"],
@@ -270,7 +270,8 @@ const I18N = {
       human: ["Certified human", "Passed the reSHAPTCHA"],
       guess: ["Educated guesser", "Finished a round of Guess the Average"],
       bullseye: ["Bullseye", "Guessed within 5% of the real number"],
-      wizard: ["Statistics Wizard", "Scored 85% or more in a round"]
+      wizard: ["Statistics Wizard", "Scored 85% or more in a round"],
+      maestro: ["Maestro", "Placed 6 creatures on the Tiny Orchestra stage and pressed play"]
     },
     "footer.top": "Back to top ↑",
     ui: {
@@ -549,7 +550,7 @@ const I18N = {
         first: "Neugier zahlt sich aus: öffne etwas.", video: "Manches wirkt in Bewegung besser.",
         all: "Lass kein Projekt ungeöffnet.", lang: "Do you speak English?", bottom: "Wie tief geht diese Seite?",
         secret: "↑ ↑ ↓ ↓ … den Rest kennst du.", human: "Beweise auf der Spielwiese, dass du kein Roboter bist.",
-        guess: "Spiel ein Spiel auf der Spielwiese.", bullseye: "Schätze eine Zahl fast genau.", wizard: "Sei richtig gut im Schätzen."
+        guess: "Spiel ein Spiel auf der Spielwiese.", bullseye: "Schätze eine Zahl fast genau.", wizard: "Sei richtig gut im Schätzen.", maestro: "Füll die Bühne im Mini-Orchester."
       },
       first: ["Neugierig", "Erstes Projekt geöffnet"],
       video: ["Popcorn-Zeit", "Ein Video angesehen"],
@@ -560,7 +561,8 @@ const I18N = {
       human: ["Zertifizierter Mensch", "Das reSHAPTCHA bestanden"],
       guess: ["Fundierter Schätzer", "Eine Runde Schätz den Durchschnitt beendet"],
       bullseye: ["Volltreffer", "Bis auf 5% an der echten Zahl"],
-      wizard: ["Statistik-Zauberer", "85% oder mehr in einer Runde erreicht"]
+      wizard: ["Statistik-Zauberer", "85% oder mehr in einer Runde erreicht"],
+      maestro: ["Maestro", "6 Wesen auf die Bühne des Mini-Orchesters gesetzt und Play gedrückt"]
     },
     "footer.top": "Nach oben ↑",
     ui: {
@@ -1466,7 +1468,7 @@ copyBtn.addEventListener("click", async () => {
 });
 
 /* ============ Achievements – a small game for curious visitors ============ */
-const ACHIEVEMENTS = ["first", "video", "all", "lang", "bottom", "secret", "human", "guess", "bullseye", "wizard"];
+const ACHIEVEMENTS = ["first", "video", "all", "lang", "bottom", "secret", "human", "guess", "bullseye", "wizard", "maestro"];
 let achieved = [];
 try { achieved = JSON.parse(localStorage.getItem("achievements") || "[]"); } catch (e) {}
 const openedProjects = new Set();

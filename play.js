@@ -143,9 +143,11 @@ function renderPlay() {
   document.getElementById("playCrumbs").innerHTML = "<ol>" +
     `<li><a href="index.html">${esc(pt("home"))}</a></li>` +
     (play.screen === "menu" ? `<li aria-current="page">${esc(pt("title"))}</li>`
-      : `<li><a href="#" data-menu>${esc(pt("title"))}</a></li><li aria-current="page">${esc(pt("g1")[0])}</li>`) + "</ol>";
+      : `<li><a href="#" data-menu>${esc(pt("title"))}</a></li><li aria-current="page">${esc(play.screen === "orch" ? pt("g2") : pt("g1")[0])}</li>`) + "</ol>";
   document.querySelector(".play-card").classList.toggle("is-menu", play.screen === "menu");
+  if (play.screen !== "orch") orchStop();
   if (play.screen === "menu") renderMenu();
+  else if (play.screen === "orch") renderOrchestra();
   else if (play.screen === "q") renderQuestion();
   else renderEnd();
 }
@@ -192,17 +194,18 @@ function renderMenu() {
         <span class="ptile__title">reSHAPTCHA</span>
         <small class="ptile__best">${esc(achieved.includes("human") ? "✓ " + pt("verified") : pt("robot"))}</small>
       </button>
-      <div class="ptile ptile--soon" aria-disabled="true">
+      <button type="button" class="ptile" id="pgameOrch">
         <span class="ptile__art" aria-hidden="true">${TILE_ART.orchestra}</span>
-        <span class="ptile__title">${esc(pt("g2"))}</span><small class="ptile__best">${esc(pt("soon"))}</small>
-      </div>
+        <span class="ptile__title">${esc(pt("g2"))}</span><small class="ptile__best">${esc(ot("toy"))}</small>
+      </button>
       <div class="ptile ptile--soon" aria-disabled="true">
         <span class="ptile__art" aria-hidden="true">${TILE_ART.tower}</span>
         <span class="ptile__title">${esc(pt("g3"))}</span><small class="ptile__best">${esc(pt("soon"))}</small>
       </div>
     </div>`;
-  document.getElementById("pgameGuess").addEventListener("click", () => { sfx.click(); startGame(); });
-  document.getElementById("pgameCaptcha").addEventListener("click", startCaptcha);
+  document.getElementById("pgameGuess").addEventListener("click", () => openGame("#guess", () => { sfx.click(); startGame(); }));
+  document.getElementById("pgameCaptcha").addEventListener("click", () => openGame("#reshaptcha", startCaptcha));
+  document.getElementById("pgameOrch").addEventListener("click", () => openGame("#orchestra", () => { sfx.click(); play = { screen: "orch" }; renderPlay(); }));
 }
 
 /* One stable screen per question: locking in only fades things in (the real dot slides onto the same line,
@@ -347,7 +350,7 @@ function renderEnd() {
           <b>${r.score}</b></li>`).join("")}</ol>
     </details>`;
   document.getElementById("peAgain").addEventListener("click", startGame);
-  document.getElementById("peMenu").addEventListener("click", () => { play.screen = "menu"; renderPlay(); });
+  document.getElementById("peMenu").addEventListener("click", () => { sfx.click(); leaveGame(); });
   document.getElementById("peShare").addEventListener("click", async (e) => {
     const text = `${pt("g1")[0]} 🎯 ${fmtNum(total)}/${fmtNum(max)}\n${squares}\nhttps://crysker.github.io/`;
     try { await navigator.clipboard.writeText(text); } catch (err) {
@@ -364,14 +367,36 @@ document.getElementById("playCrumbs").addEventListener("click", (e) => {
   if (!e.target.closest("a[data-menu]")) return;
   e.preventDefault();
   sfx.click();
-  play.screen = "menu";
-  renderPlay();
+  leaveGame();
 });
-playBack.addEventListener("click", () => { sfx.click(); play.screen = "menu"; renderPlay(); });
+playBack.addEventListener("click", () => { sfx.click(); leaveGame(); });
 document.getElementById("playSound").addEventListener("click", () => {
   playMuted = !playMuted;
   try { localStorage.setItem("playMuted", playMuted ? "1" : "0"); } catch (e) {}
   renderPlay();
   sfx.click();
 });
-renderPlay();
+/* ============ Every game has its own address ============
+   play.html#guess, #orchestra and #reshaptcha open a game directly (handy for sharing), and the browser's
+   back button brings you back to the menu, like a real page. */
+let routePushed = false;
+function openGame(hash, begin) {
+  if (location.hash !== hash) { history.pushState(null, "", hash); routePushed = true; }
+  begin();
+}
+function leaveGame() {
+  if (routePushed) { routePushed = false; history.back(); } // popstate shows the menu
+  else { history.replaceState(null, "", location.pathname + location.search); showFromHash(); }
+}
+function showFromHash() {
+  const h = location.hash, dlg = document.getElementById("game");
+  if (h === "#reshaptcha") { if (!dlg.open) { play = { screen: "menu" }; renderPlay(); startCaptcha(); } return; }
+  if (dlg.open) dlg.close();
+  if (h === "#orchestra") play = { screen: "orch" };
+  else if (h === "#guess") { if (play.screen !== "q" && play.screen !== "end") { startGame(); return; } }
+  else play = { screen: "menu" };
+  renderPlay();
+}
+addEventListener("popstate", showFromHash);
+addEventListener("hashchange", showFromHash);
+showFromHash();

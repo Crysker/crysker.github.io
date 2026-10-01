@@ -939,7 +939,7 @@ button.ptile:hover, button.ptile:focus-visible { transform: translateY(-4px) rot
   .hero__lead { margin: 14px 0 0; font-size: 17px; }
   .hero__portrait { width: min(200px, 100%); }
   #projects.section { padding-top: 24px; }
-  #projects .section__title { margin-bottom: 8px; }
+  #projects .section__title { margin-bottom: 22px; }
   .themes { margin: 0 0 12px; }
   .p-card__body { padding-top: 12px; }
 }
@@ -1023,3 +1023,53 @@ body.view-all .p-card__play, body.view-all .p-card__video { display: none; }
   body.view-all .p-card__more { display: none; }
   body.view-all .p-card__badge { display: none; }
 }
+
+/* ============ Tiny Orchestra ============ */
+.orch__stage {
+  display: grid; grid-template-columns: repeat(8, 1fr); gap: 5px; padding: 8px; border-radius: 18px;
+  background: var(--surface-2); border: 1px solid var(--line);
+}
+.orch__cell {
+  position: relative; aspect-ratio: 1; padding: 3px; border-radius: 12px; cursor: pointer;
+  border: 1.5px dashed var(--line); background: transparent; color: inherit; transition: background .15s, border-color .15s;
+}
+.orch__cell.is-beat { border-color: color-mix(in srgb, var(--ink-soft) 45%, transparent); }
+.orch__cell:hover { border-color: var(--turq); }
+.orch__cell[data-id=""]:hover { background: var(--turq-soft); }
+.orch__cell:not([data-id=""]) { border-style: solid; border-color: transparent; }
+.orch__cell.is-now { background: var(--turq-soft); border-color: var(--turq); }
+.orch__cell svg { display: block; width: 100%; height: 100%; }
+.orch__cell.is-hit svg { animation: orch-hop .22s ease-out; }
+@keyframes orch-hop { 0% { transform: scale(1); } 40% { transform: scale(1.22) translateY(-3px); } 100% { transform: scale(1); } }
+.orch__tray { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; margin-top: 12px; }
+.orch__pick {
+  display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 8px 4px 7px; border-radius: 14px; cursor: grab; touch-action: none;
+  border: 1.5px solid var(--line); background: var(--surface); color: var(--ink); font: inherit; user-select: none;
+  transition: border-color .15s, transform .15s;
+}
+.orch__pick:hover { transform: translateY(-2px); }
+.orch__pick[aria-pressed="true"] { border-color: var(--turq); background: var(--turq-soft); }
+.orch__face { display: block; width: 100%; max-width: 54px; aspect-ratio: 1; }
+.orch__face svg { display: block; width: 100%; height: 100%; }
+.orch__name { font: 700 13px var(--sans); }
+.orch__pick small { font: 600 11px var(--sans); color: var(--ink-soft); }
+.orch__ghost { position: fixed; z-index: 100; width: 56px; height: 56px; margin: -28px 0 0 -28px; pointer-events: none; opacity: .92; filter: drop-shadow(0 6px 10px rgba(0,0,0,.35)); }
+.orch__bar { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-top: 14px; }
+.orch__go, .orch__clear {
+  display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 10px 20px; border-radius: 999px; cursor: pointer;
+  font: 700 15px var(--sans); border: 2px solid var(--ink); background: transparent; color: var(--ink);
+}
+.orch__go { background: var(--turq); border-color: var(--turq); color: #062624; min-width: 132px; justify-content: center; }
+.orch__clear { border-color: var(--line); color: var(--ink-soft); }
+.orch__clear:hover { border-color: var(--ink-soft); color: var(--ink); }
+.orch__tempo { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 190px; font: 700 13px var(--sans); color: var(--ink-soft); }
+.orch__tempo input { flex: 1; min-width: 80px; accent-color: var(--turq); }
+.orch__tempo output { min-width: 3ch; text-align: right; color: var(--ink); font-variant-numeric: tabular-nums; }
+@media (max-width: 520px) {
+  .orch__stage { gap: 3px; padding: 6px; }
+  .orch__cell { border-radius: 9px; padding: 2px; }
+  .orch__tray { gap: 5px; }
+  .orch__name { font-size: 12px; }
+  .orch__pick small { display: none; }
+}
+@media (prefers-reduced-motion: reduce) { .orch__cell.is-hit svg { animation: none; } }

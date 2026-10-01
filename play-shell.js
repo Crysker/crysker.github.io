@@ -18,7 +18,8 @@ const SHELL_T = {
       bullseye: ["Bullseye", "Guessed within 5% of the real number"],
       wizard: ["Statistics Wizard", "Scored 85% or more in a round"],
       lang: ["Polyglot", "Switched the language"],
-      human: ["Certified human", "Passed the reSHAPTCHA"]
+      human: ["Certified human", "Passed the reSHAPTCHA"],
+      maestro: ["Maestro", "Placed 6 creatures on the Tiny Orchestra stage and pressed play"]
     }
   },
   de: {
@@ -29,12 +30,13 @@ const SHELL_T = {
       bullseye: ["Volltreffer", "Bis auf 5% an der echten Zahl"],
       wizard: ["Statistik-Zauberer", "85% oder mehr in einer Runde erreicht"],
       lang: ["Polyglot", "Sprache gewechselt"],
-      human: ["Zertifizierter Mensch", "Das reSHAPTCHA bestanden"]
+      human: ["Zertifizierter Mensch", "Das reSHAPTCHA bestanden"],
+      maestro: ["Maestro", "6 Wesen auf die Bühne des Mini-Orchesters gesetzt und Play gedrückt"]
     }
   }
 };
 const st = (k) => SHELL_T[lang][k];
-const ACH_TOTAL = 10; // same list as on the portfolio page
+const ACH_TOTAL = 11; // same list as on the portfolio page
 
 function applyShell() {
   document.documentElement.lang = lang;
