@@ -282,7 +282,7 @@ function twPaintHud() {
   if (m > tw.best) { tw.best = m; twSave(); }
   hud.innerHTML = `<span>${esc(tt("height"))}: <b>${m} m</b></span><span>${esc(tt("section"))}: <b>${Math.min(tw.k + 1, TW_SECTIONS)}/${TW_SECTIONS}</b></span><span>${esc(tt("best"))}: <b>${tw.best} m</b></span>`;
 }
-function twPaintAll() { twPaintStage(); twPaintTray(); twPaintHud(); }
+function twPaintAll() { twClearGhosts(); twPaintStage(); twPaintTray(); twPaintHud(); }
 function twBanner(text, ms = 3200, flagLang = null) {
   const b = document.getElementById("twBanner");
   if (!b) return;
@@ -319,7 +319,7 @@ function twMoveDrag(x, y) {
   twPaintPreview();
 }
 function twBeginDrag(p, x, y) {
-  twEndDrag();
+  twEndDrag(); twClearGhosts();
   const ghost = document.createElement("div");
   ghost.className = "tw2__ghost";
   document.body.appendChild(ghost);
@@ -328,7 +328,10 @@ function twBeginDrag(p, x, y) {
   twMoveDrag(x, y);
 }
 function twRedrawGhost() { const d = tw.drag; if (d) { d.ghost.innerHTML = twPieceHTML(d.p, tw.c); twGhostSync(d.x, d.y); } }
-function twEndDrag() { if (tw.drag && tw.drag.ghost) tw.drag.ghost.remove(); tw.drag = null; tw.preview = null; }
+function twClearGhosts() { document.querySelectorAll(".tw2__ghost").forEach((g) => { if (!tw.drag || g !== tw.drag.ghost) g.remove(); }); } // no piece may ever be left hanging on the page
+function twEndDrag() { if (tw.drag && tw.drag.ghost) tw.drag.ghost.remove(); tw.drag = null; tw.preview = null; twClearGhosts(); }
+addEventListener("blur", () => { if (tw.drag) { twEndDrag(); if (document.getElementById("twGrid")) twPaintAll(); } }); // the mouse was let go outside the window, or the tab lost the focus
+addEventListener("pointercancel", () => { if (tw.drag) { twEndDrag(); if (document.getElementById("twGrid")) twPaintAll(); } });
 function twDropDrag() {
   const d = tw.drag, pv = tw.preview;
   if (!d) return;
@@ -347,6 +350,16 @@ function twDropDrag() {
 function twRotate() { // turn the selected piece (or the one you are holding)
   const p = tw.drag ? tw.drag.p : (tw.sel !== null && twPiece(tw.sel));
   if (!p) return;
+  if (p.pos && !tw.drag) { // a piece that is already in the tower: lift it, turn it, and put it back where it fits (or leave it as it was)
+    const old = p.pos, rot = p.rot;
+    twPickUp(p); p.rot = (rot + 1) % 4;
+    let spot = null;
+    for (const [dr, dc] of [[0, 0], [0, -1], [-1, 0], [0, 1], [1, 0], [-1, -1], [-1, 1], [1, -1], [1, 1], [0, -2], [0, 2], [-2, 0], [2, 0]]) if (!spot && twCanPlace(p, old.r + dr, old.c + dc)) spot = [old.r + dr, old.c + dc];
+    if (spot) { twPlace(p, spot[0], spot[1]); if (!playMuted) oTone(620, orchCtx().currentTime, 0.05, "triangle", 0.06); }
+    else { p.rot = rot; twPlace(p, old.r, old.c); if (!playMuted) oTone(200, orchCtx().currentTime, 0.12, "sawtooth", 0.04, 140); } // no room to turn it
+    twPaintAll();
+    return;
+  }
   p.rot = (p.rot + 1) % 4;
   if (!playMuted) oTone(620, orchCtx().currentTime, 0.05, "triangle", 0.06);
   if (tw.drag) { twRedrawGhost(); twMoveDrag(tw.drag.x, tw.drag.y); }
