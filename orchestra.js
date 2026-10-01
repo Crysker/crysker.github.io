@@ -8,7 +8,6 @@ const ORCH_NOTES = [523.25, 440, 392, 329.63]; // top row to bottom row: C5 A4 G
 const ORCH_T = {
   en: {
     toy: "A toy",
-    steps: ["Press play and listen to the starter beat.", "Pick a creature (you will hear it) and tap the stage to place it. Tap it again to remove it, or drag it in.", "Find the 8 secret combinations. The riddles are in the Discoveries list."],
     play: "Play", pause: "Pause", clear: "Clear all", tempo: "Tempo", stage: "Stage",
     empty: "empty", row: "Row", beat: "beat", pick: "Creature",
     names: { blob: "Blobby", frog: "Froggo", bird: "Pip", ghost: "Boo", robot: "Bleep", octo: "Inky" },
@@ -27,7 +26,6 @@ const ORCH_T = {
   },
   de: {
     toy: "Ein Spielzeug",
-    steps: ["Drück Abspielen und hör dir den Start-Beat an.", "Such dir ein Wesen aus (du hörst es) und tippe auf die Bühne, um es zu setzen. Noch einmal tippen entfernt es, ziehen geht auch.", "Finde die 8 geheimen Kombinationen. Die Rätsel stehen bei den Entdeckungen."],
     play: "Abspielen", pause: "Pause", clear: "Alles leeren", tempo: "Tempo", stage: "Bühne",
     empty: "leer", row: "Reihe", beat: "Schlag", pick: "Wesen",
     names: { blob: "Blobby", frog: "Froggo", bird: "Pip", ghost: "Boo", robot: "Bleep", octo: "Inky" },
@@ -271,15 +269,12 @@ function orchShare(btn) {
   else window.prompt(ot("share"), url);
 }
 
-const orchSeen = () => { try { return localStorage.getItem("orchSeen") === "1"; } catch (e) { return false; } };
-
 function renderOrchestra() {
   if (!orch.grid) orchLoad();
   orchApplyHash();
   const names = ot("names"), sounds = ot("sounds");
   playBody.innerHTML = `
     <div class="orch">
-      <ol class="orch__steps">${ot("steps").map((t) => `<li>${esc(t)}</li>`).join("")}</ol>
       <div class="orch__stagewrap">
         <div class="orch__stage" role="group" aria-label="${esc(ot("stage"))}">
           ${Array.from({ length: ORCH_ROWS }, (_, r) => Array.from({ length: ORCH_COLS }, (_, c) =>
@@ -299,7 +294,7 @@ function renderOrchestra() {
         </section>
       </div>
       <div class="orch__bar">
-        <button type="button" class="orch__go${orchSeen() ? "" : " is-new"}" id="orchPlay" aria-pressed="false"></button>
+        <button type="button" class="orch__go" id="orchPlay" aria-pressed="false"></button>
         <label class="orch__tempo"><span>${esc(ot("tempo"))}</span>
           <input type="range" id="orchTempo" min="60" max="150" step="5" value="${orch.bpm}"><output id="orchBpm">${orch.bpm}</output></label>
         <button type="button" class="orch__clear" id="orchShare"><span aria-hidden="true">↗</span> ${esc(ot("share"))}</button>
@@ -338,11 +333,7 @@ function renderOrchestra() {
     };
     addEventListener("pointermove", move); addEventListener("pointerup", up); addEventListener("pointercancel", up);
   }));
-  document.getElementById("orchPlay").addEventListener("click", (e) => {
-    e.currentTarget.classList.remove("is-new");
-    try { localStorage.setItem("orchSeen", "1"); } catch (err) {}
-    if (orch.playing) orchStop(); else orchStart();
-  });
+  document.getElementById("orchPlay").addEventListener("click", () => { if (orch.playing) orchStop(); else orchStart(); });
   document.getElementById("orchTempo").addEventListener("input", (e) => {
     orch.bpm = +e.target.value; document.getElementById("orchBpm").textContent = orch.bpm; orchSave();
   });

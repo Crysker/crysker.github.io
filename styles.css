@@ -1034,15 +1034,13 @@ body.view-all .p-card__play, body.view-all .p-card__video { display: none; }
 .play-card.is-wide .crumbs { padding: 0 0 10px; }
 
 .orch { display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; }
-.orch__intro { order: 0; margin: 0; }
 .orch__stagewrap { order: 1; position: relative; }
 .orch__side { display: contents; }
 .orch__tray { order: 2; }
 .orch__bar { order: 3; }
 .orch__foundbox { order: 4; }
 @media (min-width: 900px) {
-  .orch { grid-template-columns: minmax(0, 1fr) 340px; grid-template-areas: "intro intro" "stage side" "bar side"; grid-template-rows: auto auto 1fr; gap: 16px 28px; align-items: start; }
-  .orch__intro { grid-area: intro; }
+  .orch { grid-template-columns: minmax(0, 1fr) 340px; grid-template-areas: "stage side" "bar side"; grid-template-rows: auto 1fr; gap: 16px 28px; align-items: start; }
   .orch__stagewrap { grid-area: stage; }
   .orch__bar { grid-area: bar; }
   .orch__side { grid-area: side; display: flex; flex-direction: column; gap: 18px; }
@@ -1146,7 +1144,6 @@ body.view-all .p-card__play, body.view-all .p-card__video { display: none; }
 .play-card.is-plain .pe__details { margin-top: 24px; padding-top: 14px; }
 /* orchestra */
 .orch { gap: 26px 40px; }
-.orch__intro { margin-bottom: 4px; }
 .orch__stage { gap: 9px; padding: 18px; border-radius: 26px; }
 .orch__tray { gap: 12px; }
 .orch__side { gap: 28px; }
@@ -1162,17 +1159,3 @@ body.view-all .p-card__play, body.view-all .p-card__video { display: none; }
   .pgrid { gap: 18px; }
   .play-card.is-menu .play__intro { margin-bottom: 24px; }
 }
-
-/* three short steps instead of a tutorial */
-.orch__steps { order: 0; margin: 0; padding: 0; list-style: none; counter-reset: step; display: grid; gap: 12px; }
-.orch__steps li { position: relative; padding-left: 40px; color: var(--ink-soft); font-size: 15px; line-height: 1.5; counter-increment: step; }
-.orch__steps li::before {
-  content: counter(step); position: absolute; left: 0; top: -1px; display: grid; place-items: center; width: 28px; height: 28px; border-radius: 50%;
-  background: var(--turq-soft); color: var(--turq-text); font: 800 13px var(--sans);
-}
-@media (min-width: 900px) {
-  .orch__steps { grid-area: intro; grid-template-columns: repeat(3, 1fr); gap: 28px; margin-bottom: 4px; }
-}
-.orch__go.is-new { animation: orch-pulse 1.8s ease-out infinite; }
-@keyframes orch-pulse { 0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--turq) 55%, transparent); } 70%, 100% { box-shadow: 0 0 0 16px transparent; } }
-@media (prefers-reduced-motion: reduce) { .orch__go.is-new { animation: none; } }
