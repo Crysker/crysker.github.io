@@ -273,7 +273,7 @@ const I18N = {
       bullseye: ["Bullseye", "Guessed within 5% of the real number"],
       wizard: ["Statistics Wizard", "Scored 85% or more in a round"]
     },
-    "footer.top": "Back to top ↑",
+    "footer.top": "Back to top ↑", "footer.play": "Playground →",
     ui: {
       duration: "Duration", role: "My role", team: "Team", solo: "Solo project", more: "More projects",
       challenge: "Challenge", approach: "What we built", approachSolo: "What I built", scan: "Scan to watch it on your phone or in VR", result: "Result", learned: "What I learned", sketches: "Early sketches",
@@ -564,7 +564,7 @@ const I18N = {
       bullseye: ["Volltreffer", "Bis auf 5% an der echten Zahl"],
       wizard: ["Statistik-Zauberer", "85% oder mehr in einer Runde erreicht"]
     },
-    "footer.top": "Nach oben ↑",
+    "footer.top": "Nach oben ↑", "footer.play": "Spielwiese →",
     ui: {
       duration: "Dauer", role: "Meine Rolle", team: "Team", solo: "Einzelprojekt", more: "Weitere Projekte",
       challenge: "Herausforderung", approach: "Was wir gebaut haben", approachSolo: "Was ich gebaut habe", scan: "Scannen und am Handy oder in VR ansehen", result: "Ergebnis", learned: "Was ich gelernt habe", sketches: "Erste Skizzen",

@@ -880,6 +880,8 @@ button.ptile:hover, button.ptile:focus-visible { transform: translateY(-4px) rot
 }
 
 .footer__fun { font-style: italic; }
+.footer__play { font-weight: 700; color: var(--ink); text-decoration: underline; text-underline-offset: 4px; }
+.footer__play:hover { color: var(--turq-text); }
 .footer__trophies {
   padding: 0; border: 0; background: none; cursor: pointer; text-align: left;
   font: 700 14px var(--sans); color: var(--turq-text); text-decoration: underline dotted; text-underline-offset: 4px;
