@@ -184,7 +184,7 @@ html[lang="de"] .lang [data-lang="de"] { background: var(--ink); color: var(--bg
 .hero__hello { font: 600 20px var(--sans); color: var(--ink-soft); margin: 0; }
 .hero__name {
   position: relative;
-  font: 700 clamp(64px, 12vw, 148px)/1 var(--serif);
+  font: 700 clamp(38px, 11.5vw, 120px)/1 var(--serif);
   letter-spacing: -.04em;
 }
 /* the signature sits on the corner of the photo and writes itself when you hover or tap the photo */
@@ -243,7 +243,7 @@ html[lang="de"] .lang [data-lang="de"] { background: var(--ink); color: var(--bg
     overflow: visible;
   }
   .hero__hello { grid-area: hello; }
-  .hero__name { grid-area: name; font-size: clamp(88px, 9vw, 128px); }
+  .hero__name { grid-area: name; font-size: clamp(64px, 8vw, 96px); }
   .hero__title { grid-area: title; }
   .hero__portrait { grid-area: photo; align-self: center; justify-self: center; width: min(320px, 100%); }
   .hero__lead { grid-area: lead; margin: 20px 0 0; }
@@ -918,7 +918,7 @@ button.ptile:hover, button.ptile:focus-visible { transform: translateY(-4px) rot
    On a laptop or a 1920x1080 monitor the three featured projects are visible without scrolling. */
 @media (min-width: 960px) {
   .hero { min-height: 0; padding: 44px 0 20px; } /* the top padding clears the sticky menu bar */
-  .hero__name { font-size: clamp(72px, 6.6vw, 104px); }
+  .hero__name { font-size: clamp(60px, 5.2vw, 84px); }
   .hero__title { margin-top: 6px; }
   .hero__lead { margin: 14px 0 0; font-size: 17px; }
   .hero__portrait { width: min(235px, 100%); }
