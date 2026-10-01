@@ -24,7 +24,8 @@ const SHELL_T = {
       babel: ["Tower builder", "Reached the sky in Tower of Babel"],
       riddler: ["Puzzle fan", "Finished a Puzzle Round"],
       detective: ["Lie detector", "Scored 10 points or more in Who's lying?"],
-      haggler: ["Market haggler", "Scored 450 points or more in Price tag for chaos"]
+      haggler: ["Market haggler", "Scored 450 points or more in Price tag for chaos"],
+      skeptic: ["Healthy skeptic", "Scored 12 points or more in Two truths, one lie"]
     }
   },
   de: {
@@ -41,7 +42,8 @@ const SHELL_T = {
       babel: ["Turmbauer:in", "Im Turmbau zu Babel den Himmel erreicht"],
       riddler: ["Rätselfuchs", "Eine Rätselrunde beendet"],
       detective: ["Lügendetektor", "10 Punkte oder mehr bei Wer lügt? geholt"],
-      haggler: ["Marktschreier:in", "450 Punkte oder mehr beim Preisschild fürs Chaos geholt"]
+      haggler: ["Marktschreier:in", "450 Punkte oder mehr beim Preisschild fürs Chaos geholt"],
+      skeptic: ["Gesunde Skepsis", "12 Punkte oder mehr bei Zwei Wahrheiten, eine Lüge geholt"]
     }
   }
 };
@@ -50,7 +52,7 @@ const PLAY_GAMES = [];
 const playGameTitle = (g) => g.title[lang] || g.title.en;
 let babelLang = null; // set by the Tower of Babel: for a while the page speaks another language
 const st = (k) => { const b = babelLang && SHELL_T[babelLang]; return b && b[k] !== undefined ? b[k] : SHELL_T[lang][k]; };
-const ACH_TOTAL = 16; // same list as on the portfolio page
+const ACH_TOTAL = 17; // same list as on the portfolio page
 
 function applyShell() {
   document.documentElement.lang = babelLang || lang;
