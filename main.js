@@ -427,7 +427,7 @@ const I18N = {
         summary: "Sithis, an assassin who fell into a trap, has to survive 60 seconds per level, dodging fireballs until two dragons wait in the boss level.",
         duration: "Project week",
         role: "Solo: game design, coding from scratch in JavaScript, all pixel art and backgrounds",
-        challenge: "My first game without an engine: movement, collision, gravity and levels, all from scratch in one project week.",
+        challenge: "My first game without an engine: movement, collision, gravity and levels, all from scratch in one project week. Physics was the hardest part: my first version squashed the player together so it could not move, and the jump still is not exactly how I imagined it.",
         approach: "An object-oriented JavaScript setup rendered on canvas, with a GameObject base class that the player, hearts and boss inherit from. Two top-down levels, then a side-scrolling boss level with gravity. Every sprite and background hand-drawn in Photoshop.",
         result: "A complete, playable browser game with a story, three levels and an end screen, nearly finished after four days.",
         learned: "Plan the art as carefully as the code: drawing took me longer than programming."
@@ -440,7 +440,7 @@ const I18N = {
         summary: "A trading platform: sign up, list trade offers, browse other people's inventories and chat. Inspired by trading sites for game skins.",
         duration: "10 days",
         role: "Solo: concept, Figma design for desktop and mobile, frontend and backend",
-        challenge: "Build a complete web platform with accounts, database relations, offers and a chat in about ten days.",
+        challenge: "Build a complete web platform with accounts, database relations, offers and a chat in about ten days. The hardest parts were setting the right relations between database tables, and Azure hosting, which worked one day and not the next. The chat only worked about half of the time.",
         approach: "Designed desktop and mobile views in Figma first, got tutor feedback, then built it with Express, EJS and MySQL: register and login with hashed passwords and tokens, inventories, trade offers, profile editing and a chat, hosted on Azure.",
         result: "Everything I planned except the actual item swap: accounts, offers, chat, profiles and a responsive layout.",
         learned: "Something not working tonight doesn't mean it won't work tomorrow. And pacing beats all-nighters."
@@ -455,7 +455,7 @@ const I18N = {
         duration: "2 weeks",
         team: "Serkan and Wolfgang",
         role: "App development (~70%) and design (~30%), user tests together with my teammate Wolfgang",
-        challenge: "Design a party game anyone can pick up instantly, and prove it with real users, not just our own opinion.",
+        challenge: "Design a party game anyone can pick up instantly, and prove it with real users, not just our own opinion. The tooling fought back too: Android Studio kept crashing, and the emulator showed different sizes than a real phone, so the layout had to be adjusted again and again.",
         approach: "Mockups and a user flow in Figma, then a heuristic evaluation that led to fixes like an exit button and confirmation steps. We wrote hypotheses, a test plan with five tasks, informed consent and a SUS questionnaire, and built the Android app.",
         result: "Five participants aged 19–50; SUS scores mostly above 90, the lowest 87.5. Their feedback led to clearer texts, a turn indicator and an app icon.",
         learned: "Five testers aren't statistics, but they find the problems you're blind to."
@@ -715,7 +715,7 @@ const I18N = {
         summary: "Sithis, ein Assassine, der in eine Falle geraten ist, muss pro Level 60 Sekunden überleben und Feuerbällen ausweichen, bis im Boss-Level zwei Drachen warten.",
         duration: "Projektwoche",
         role: "Allein: Game Design, Programmierung von Grund auf in JavaScript, sämtliche Pixel Art und Hintergründe",
-        challenge: "Mein erstes Spiel ohne Engine: Bewegung, Kollision, Schwerkraft und Levels, alles selbst gebaut, in einer Projektwoche.",
+        challenge: "Mein erstes Spiel ohne Engine: Bewegung, Kollision, Schwerkraft und Levels, alles selbst gebaut, in einer Projektwoche. Die Physik war am schwierigsten: In meiner ersten Version wurde die Spielfigur zusammengequetscht und konnte sich nicht bewegen, und der Sprung ist bis heute nicht ganz so, wie ich ihn mir vorgestellt habe.",
         approach: "Ein objektorientiertes JavaScript-Setup, auf dem Canvas gerendert, mit einer GameObject-Basisklasse, von der Spieler, Herzen und Boss erben. Zwei Top-Down-Levels, dann ein Side-Scroller-Bosslevel mit Schwerkraft. Jedes Sprite und jeder Hintergrund in Photoshop von Hand gezeichnet.",
         result: "Ein komplettes, spielbares Browserspiel mit Story, drei Levels und Endscreen, nach vier Tagen fast fertig.",
         learned: "Die Grafik genauso sorgfältig planen wie den Code: Zeichnen hat länger gedauert als Programmieren."
@@ -728,7 +728,7 @@ const I18N = {
         summary: "Eine Tauschplattform: registrieren, Tauschangebote erstellen, Inventare anderer ansehen und chatten. Inspiriert von Tauschseiten für Game-Skins.",
         duration: "10 Tage",
         role: "Allein: Konzept, Figma-Design für Desktop und Mobile, Frontend und Backend",
-        challenge: "Eine komplette Webplattform mit Accounts, Datenbank-Relationen, Angeboten und einem Chat in etwa zehn Tagen.",
+        challenge: "Eine komplette Webplattform mit Accounts, Datenbank-Relationen, Angeboten und einem Chat in etwa zehn Tagen. Am schwierigsten waren die richtigen Beziehungen zwischen den Datenbanktabellen und das Azure-Hosting, das an einem Tag lief und am nächsten nicht. Der Chat funktionierte nur etwa jedes zweite Mal.",
         approach: "Zuerst Desktop- und Mobile-Ansichten in Figma, Feedback vom Tutor, dann umgesetzt mit Express, EJS und MySQL: Registrierung und Login mit gehashten Passwörtern und Tokens, Inventare, Tauschangebote, Profilbearbeitung und ein Chat, gehostet auf Azure.",
         result: "Alles Geplante außer dem eigentlichen Tausch: Accounts, Angebote, Chat, Profile und ein responsives Layout.",
         learned: "Was heute Nacht nicht funktioniert, kann morgen funktionieren. Und ein gutes Tempo schlägt jede Nachtschicht."
@@ -743,7 +743,7 @@ const I18N = {
         duration: "2 Wochen",
         team: "Serkan und Wolfgang",
         role: "App-Entwicklung (~70 %) und Design (~30 %), User Tests gemeinsam mit meinem Teamkollegen Wolfgang",
-        challenge: "Ein Partyspiel gestalten, das jede Person sofort versteht, und das mit echten Nutzer:innen beweisen, nicht nur mit unserer Meinung.",
+        challenge: "Ein Partyspiel gestalten, das jede Person sofort versteht, und das mit echten Nutzer:innen beweisen, nicht nur mit unserer Meinung. Dazu kam das Werkzeug: Android Studio stürzte ständig ab, und der Emulator zeigte andere Größen als ein echtes Handy, sodass das Layout immer wieder angepasst werden musste.",
         approach: "Mockups und User Flow in Figma, dann eine heuristische Evaluierung, die zu Verbesserungen wie einem Exit-Button und Bestätigungsschritten führte. Wir haben Hypothesen, einen Testplan mit fünf Aufgaben, eine Einverständniserklärung und einen SUS-Fragebogen erstellt und die Android-App gebaut.",
         result: "Fünf Teilnehmende zwischen 19 und 50; SUS-Werte meist über 90, der niedrigste 87,5. Ihr Feedback führte zu klareren Texten, einer Anzeige, wer dran ist, und einem App-Icon.",
         learned: "Fünf Testpersonen sind keine Statistik, aber sie finden die Probleme, für die man selbst blind ist."
