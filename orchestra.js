@@ -78,22 +78,24 @@ function oTone(freq, t, dur, type, vol, slideTo, attack = 0.012) {
   osc.start(t); osc.stop(t + dur + 0.03);
 }
 let oNoiseBuf = null;
-function oNoise(t, dur, vol) {
+function oNoise(t, dur, vol) { // a soft, short tick: filtered noise with a tiny fade-in (no hard click) plus a quiet blip
   const c = orchCtx();
   if (!oNoiseBuf) {
     oNoiseBuf = c.createBuffer(1, c.sampleRate * 0.2, c.sampleRate);
     const d = oNoiseBuf.getChannelData(0);
     for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
   }
-  const src = c.createBufferSource(), hp = c.createBiquadFilter(), g = c.createGain();
-  src.buffer = oNoiseBuf; hp.type = "highpass"; hp.frequency.value = 6500;
-  g.gain.setValueAtTime(vol, t); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
-  src.connect(hp).connect(g).connect(c.destination);
+  const src = c.createBufferSource(), bp = c.createBiquadFilter(), g = c.createGain();
+  src.buffer = oNoiseBuf; bp.type = "bandpass"; bp.frequency.value = 4200; bp.Q.value = 0.9;
+  g.gain.setValueAtTime(0.0001, t);
+  g.gain.linearRampToValueAtTime(vol, t + 0.004);
+  g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+  src.connect(bp).connect(g).connect(c.destination);
   src.start(t); src.stop(t + dur + 0.02);
 }
 const ORCH_VOICE = {
   blob: (t) => oTone(150, t, 0.2, "sine", 0.4, 42),
-  robot: (t) => oNoise(t, 0.05, 0.14),
+  robot: (t) => { oNoise(t, 0.07, 0.07); oTone(2100, t, 0.045, "sine", 0.05, 1500); },
   frog: (t, f) => oTone(f / 2, t, 0.26, "sine", 0.26, f / 3),
   bird: (t, f) => { oTone(f * 2, t, 0.1, "triangle", 0.07, f * 3); oTone(f * 2.5, t + 0.1, 0.1, "triangle", 0.06, f * 3.5); },
   ghost: (t, f) => { oTone(f, t, 0.7, "sine", 0.08, null, 0.15); oTone(f * 1.005, t, 0.7, "sine", 0.05, null, 0.15); },
