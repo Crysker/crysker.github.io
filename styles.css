@@ -1418,3 +1418,10 @@ body.view-all .p-card__play, body.view-all .p-card__video { display: none; }
 .orch__cell:hover .orch__handle { opacity: .9; transform: scaleX(1.1); }
 .orch__cell:not([data-len="1"]) .orch__handle { right: auto; left: calc(100% - 9px + (100% + 7px) * (var(--n, 1) - 1)); opacity: .75; }
 @media (hover: none) { .orch__handle { opacity: .6; } }
+
+/* Orchestra, cleaner notes: cells under a bar lose their border, the handle sits inside the bar's end */
+.orch__cell.is-covered { border-color: transparent !important; background: transparent !important; }
+.orch__cell:not([data-len="1"])::after { opacity: .5; }
+.orch__cell:not([data-len="1"]) .orch__handle { left: calc(50% + (100% + 7px) * (var(--n, 1) - 1) - 7px); right: auto; width: 12px; height: 22px; margin-top: -11px; background-color: var(--bg); opacity: .85;
+  background-image: linear-gradient(90deg, transparent 3px, var(--ink) 3px, var(--ink) 4.5px, transparent 4.5px, transparent 7.5px, var(--ink) 7.5px, var(--ink) 9px, transparent 9px); }
+.orch__cell:not([data-len="1"]):hover .orch__handle { opacity: 1; }

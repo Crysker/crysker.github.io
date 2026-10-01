@@ -255,9 +255,12 @@ function orchPaintStage() {
   const clr = document.getElementById("orchClear");
   if (clr) clr.disabled = orchCount() === 0;
   const names = ot("names"), dancers = orchDancers();
+  const covered = new Set(); // cells under a note bar: no dashed border showing through
+  orch.grid.forEach((row, r) => row.forEach((id, c) => { if (id) for (let k = 1; k < Math.min(orch.len[r][c], ORCH_COLS - c); k++) covered.add(r + "," + (c + k)); }));
   document.querySelectorAll(".orch__cell").forEach((el) => {
     const r = +el.dataset.r, c = +el.dataset.c, id = orch.grid[r][c];
     el.dataset.id = id || "";
+    el.classList.toggle("is-covered", covered.has(r + "," + c));
     el.dataset.len = id ? Math.min(orch.len[r][c], ORCH_COLS - c) : 1; // the tail shows how long the note rings
     if (id) el.style.setProperty("--tail", ORCH_BY_ID[id].color); else el.style.removeProperty("--tail");
     el.classList.toggle("is-dance", dancers.has(r + "," + c));
