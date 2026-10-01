@@ -16,7 +16,7 @@ const ORCH_T = {
     rows: "Rows", rowMore: "Add a row", rowLess: "Remove a row",
     pitch: "Pitch", kit: "Sound", kits: ["Classic", "8-bit", "Buzz", "Soft"], hint: "Tap a creature to select it: change its pitch or length, remove it, or drop another creature on it to layer sounds.", len: "Note length",
     pitchNote: "Pitch", lenNote: "Length", remove: "Remove", layer: "Add layer", selected: "Selected",
-    found: "Discoveries", share: "Share my beat", copied: "Link copied", newFound: "Discovered: {n}!", creatures: "Creatures",
+    found: "Discoveries", share: "Share my beat", download: "Download", rendering: "Rendering…", copied: "Link copied", newFound: "Discovered: {n}!", creatures: "Creatures",
     combos: {
       frogs: ["Frog choir", "A choir needs many voices. How many frogs?"],
       ghosts: ["Witching hour", "With enough ghosts it gets spooky."],
@@ -37,7 +37,7 @@ const ORCH_T = {
     rows: "Reihen", rowMore: "Reihe hinzufügen", rowLess: "Reihe entfernen",
     pitch: "Tonhöhe", kit: "Klang", kits: ["Klassisch", "8-Bit", "Brummig", "Weich"], hint: "Höhere Reihen klingen höher. Tippe ein Wesen an, um es auszuwählen: Tonhöhe oder Länge ändern, entfernen, oder ein weiteres Wesen daraufziehen, um Klänge zu schichten.", len: "Tonlänge",
     pitchNote: "Tonhöhe", lenNote: "Länge", remove: "Entfernen", layer: "Schicht hinzufügen", selected: "Ausgewählt",
-    found: "Entdeckungen", share: "Meinen Beat teilen", copied: "Link kopiert", newFound: "Neu entdeckt: {n}!", creatures: "Wesen",
+    found: "Entdeckungen", share: "Meinen Beat teilen", download: "Herunterladen", rendering: "Wird erstellt …", copied: "Link kopiert", newFound: "Neu entdeckt: {n}!", creatures: "Wesen",
     combos: {
       frogs: ["Froschchor", "Ein Chor braucht viele Stimmen. Wie viele Frösche?"],
       ghosts: ["Geisterstunde", "Mit genug Geistern wird es unheimlich."],
@@ -68,7 +68,9 @@ const creatureSVG = (c) => `<svg viewBox="0 0 48 48" width="100%" height="100%" 
   ${c.id === "frog" || c.id === "blob" ? `<path d="M20 33q4 3 8 0" stroke="#1b1a2a" stroke-width="1.6" fill="none" stroke-linecap="round"/>` : ""}</svg>`;
 
 /* ---- sound: one small voice per creature, scheduled on the audio clock ---- */
+let oCtxOverride = null; // while the beat is rendered to a file, the voices play into an offline context
 function orchCtx() {
+  if (oCtxOverride) return oCtxOverride;
   audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
   if (audioCtx.state === "suspended") audioCtx.resume();
   return audioCtx;
@@ -454,6 +456,62 @@ function orchApplyHash() {
   orchSave();
   history.replaceState(null, "", location.pathname + location.search + "#orchestra"); // the shared beat is now yours to change
 }
+/* ---- download: the loop is played into an offline audio context (twice, plus a tail) and saved as MP3, or WAV if the encoder can't be loaded ---- */
+const ORCH_RATE = 44100;
+async function orchRender() {
+  const stepDur = 60 / orch.bpm / 2, loops = 2, tail = 2.2, secs = loops * ORCH_COLS * stepDur + tail;
+  const off = new (window.OfflineAudioContext || window.webkitOfflineAudioContext)(1, Math.ceil(secs * ORCH_RATE), ORCH_RATE);
+  const saveBuf = oNoiseBuf; oNoiseBuf = null; oCtxOverride = off;
+  try {
+    for (let l = 0; l < loops; l++) for (let s = 0; s < ORCH_COLS; s++) {
+      const when = (l * ORCH_COLS + s) * stepDur + 0.05;
+      for (let r = 0; r < orch.grid.length; r++) orchNotes(r, s).forEach((n) => orchVoice(n.id, when, ORCH_NOTES[r], n.len, n.pit));
+    }
+    return await off.startRendering();
+  } finally { oCtxOverride = null; oNoiseBuf = saveBuf; }
+}
+function orchToInt16(buf) {
+  const f = buf.getChannelData(0), out = new Int16Array(f.length);
+  let peak = 0; for (let i = 0; i < f.length; i++) peak = Math.max(peak, Math.abs(f[i]));
+  const gain = peak > 0.95 ? 0.95 / peak : 1; // never clip
+  for (let i = 0; i < f.length; i++) out[i] = Math.max(-32768, Math.min(32767, Math.round(f[i] * gain * 32767)));
+  return out;
+}
+function orchWav(pcm) {
+  const v = new DataView(new ArrayBuffer(44 + pcm.length * 2)), w = (o, s) => { for (let i = 0; i < s.length; i++) v.setUint8(o + i, s.charCodeAt(i)); };
+  w(0, "RIFF"); v.setUint32(4, 36 + pcm.length * 2, true); w(8, "WAVEfmt "); v.setUint32(16, 16, true); v.setUint16(20, 1, true); v.setUint16(22, 1, true);
+  v.setUint32(24, ORCH_RATE, true); v.setUint32(28, ORCH_RATE * 2, true); v.setUint16(32, 2, true); v.setUint16(34, 16, true); w(36, "data"); v.setUint32(40, pcm.length * 2, true);
+  pcm.forEach((s, i) => v.setInt16(44 + i * 2, s, true));
+  return new Blob([v], { type: "audio/wav" });
+}
+function orchLoadLame() { // the MP3 encoder is only fetched when someone presses Download
+  if (window.lamejs) return Promise.resolve();
+  return new Promise((res, rej) => {
+    const s = document.createElement("script");
+    s.src = "https://cdnjs.cloudflare.com/ajax/libs/lamejs/1.2.1/lame.min.js"; s.onload = res; s.onerror = rej;
+    document.head.appendChild(s);
+  });
+}
+async function orchDownload(btn) {
+  const label = btn.innerHTML;
+  btn.disabled = true; btn.textContent = ot("rendering");
+  try {
+    const pcm = orchToInt16(await orchRender());
+    let blob, ext = "mp3";
+    try {
+      await orchLoadLame();
+      const enc = new lamejs.Mp3Encoder(1, ORCH_RATE, 128), parts = [];
+      for (let i = 0; i < pcm.length; i += 1152) { const b = enc.encodeBuffer(pcm.subarray(i, i + 1152)); if (b.length) parts.push(b); }
+      const end = enc.flush(); if (end.length) parts.push(end);
+      blob = new Blob(parts, { type: "audio/mpeg" });
+    } catch (e) { blob = orchWav(pcm); ext = "wav"; }
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob); a.download = "tiny-orchestra." + ext;
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+    sfx.pop();
+  } finally { btn.disabled = false; btn.innerHTML = label; }
+}
 function orchShare(btn) {
   const url = location.origin + location.pathname + "#orchestra/" + orchEncode() + orchEncodeRest();
   const label = btn.innerHTML;
@@ -496,6 +554,7 @@ function renderOrchestra() {
           <input type="range" id="orchPitch" min="-12" max="12" step="1" value="${orch.pitch}"><output id="orchPitchOut">${orch.pitch > 0 ? "+" : ""}${orch.pitch}</output></label>
         <button type="button" class="orch__clear" id="orchKit">${esc(ot("kit"))}: ${esc(ot("kits")[orch.kit])}</button>
         <span class="orch__rows" role="group" aria-label="${esc(ot("rows"))}"><button type="button" class="orch__rowbtn" id="orchRowLess" aria-label="${esc(ot("rowLess"))}"></button><span>${esc(ot("rows"))}</span><button type="button" class="orch__rowbtn" id="orchRowMore" aria-label="${esc(ot("rowMore"))}"></button></span>
+        <button type="button" class="orch__clear" id="orchDownload"><span aria-hidden="true">⬇</span> ${esc(ot("download"))}</button>
         <button type="button" class="orch__clear" id="orchShare"><span aria-hidden="true">↗</span> ${esc(ot("share"))}</button>
         <button type="button" class="orch__clear" id="orchClear"><span aria-hidden="true">✕</span> ${esc(ot("clear"))}</button>
       </div>
@@ -571,6 +630,7 @@ function renderOrchestra() {
   document.getElementById("orchInsp").addEventListener("pointerdown", orchLaneDown);
   document.getElementById("orchInsp").addEventListener("keydown", orchInspKey);
   document.getElementById("orchInsp").addEventListener("toggle", (e) => { if (e.target.matches("details")) orch.inspOpen = e.target.open; }, true); // folded up it stays out of the way
+  document.getElementById("orchDownload").addEventListener("click", (e) => orchDownload(e.currentTarget));
   document.getElementById("orchShare").addEventListener("click", (e) => orchShare(e.currentTarget));
   const rowBtns = () => {
     document.getElementById("orchRowLess").disabled = orch.grid.length <= ORCH_MIN_ROWS;
