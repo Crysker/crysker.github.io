@@ -84,6 +84,7 @@ const PROJECTS = [
       IMG + "ocean/water_bottle.webp", IMG + "ocean/nuclear_waste.webp",
       IMG + "ocean/ogres.webp", IMG + "ocean/shark.webp", IMG + "ocean/bucket.webp"
     ],
+    sketches: [IMG + "ocean/sketch-ideas.jpg", IMG + "ocean/sketch-boss.jpg"],
     tags: ["Unity", "C#", "Meta Quest", "Blender", "A* Pathfinding", "NavMesh", "Wwise", "Animation"],
     links: []
   },
@@ -101,6 +102,7 @@ const PROJECTS = [
     themes: ["sight"], // sound is the main character
     img: IMG + "cthulhu.jpg",
     video: "muGQH67wJ0A",
+    sketches: [IMG + "cthulhu/sketch-creatures.jpg", IMG + "cthulhu/sketch-ruins.jpg"],
     tags: ["Unity", "VR", "Hand Tracking", "Wwise", "Ambisonics", "Level Design", "3D Modelling", "Animation"],
     links: []
   },
@@ -140,6 +142,7 @@ const PROJECTS = [
     early: true,
     img: IMG + "nftrade/best-deals.webp",
     video: "xd62Et5KgWA",
+    sketches: [IMG + "nftrade/sketch-login.jpg", IMG + "nftrade/sketch-register.jpg"],
     gallery: [IMG + "nftrade/inventory.webp", IMG + "nftrade/mobile-figma.webp", IMG + "nftrade/mobile-built.webp"],
     tags: ["Figma", "Node.js", "Express", "EJS", "MySQL", "Azure"],
     links: []
@@ -272,7 +275,7 @@ const I18N = {
     "footer.top": "Back to top ↑",
     ui: {
       duration: "Duration", role: "My role", team: "Team", solo: "Solo project", more: "More projects",
-      challenge: "Challenge", approach: "What we built", approachSolo: "What I built", scan: "Scan to watch it on your phone or in VR", result: "Result", learned: "What I learned",
+      challenge: "Challenge", approach: "What we built", approachSolo: "What I built", scan: "Scan to watch it on your phone or in VR", result: "Result", learned: "What I learned", sketches: "Early sketches",
       open: "View project", close: "Close", next: "Next project", watch: "Watch video", video: "Video", tools: "Tools & tech", when: "When",
       devpost: "Devpost", ggj: "Global Game Jam page", itch: "Play on itch.io",
       award: "Contest winners", vernissage: "USTP Projektvernissage", instagram: "Instagram", tiktok: "TikTok", linkedin: "LinkedIn post", makingof: "Making-of video"
@@ -562,7 +565,7 @@ const I18N = {
     "footer.top": "Nach oben ↑",
     ui: {
       duration: "Dauer", role: "Meine Rolle", team: "Team", solo: "Einzelprojekt", more: "Weitere Projekte",
-      challenge: "Herausforderung", approach: "Was wir gebaut haben", approachSolo: "Was ich gebaut habe", scan: "Scannen und am Handy oder in VR ansehen", result: "Ergebnis", learned: "Was ich gelernt habe",
+      challenge: "Herausforderung", approach: "Was wir gebaut haben", approachSolo: "Was ich gebaut habe", scan: "Scannen und am Handy oder in VR ansehen", result: "Ergebnis", learned: "Was ich gelernt habe", sketches: "Erste Skizzen",
       open: "Projekt ansehen", close: "Schließen", next: "Nächstes Projekt", watch: "Video ansehen", video: "Video", tools: "Tools & Technik", when: "Wann",
       devpost: "Devpost", ggj: "Global-Game-Jam-Seite", itch: "Auf itch.io spielen",
       award: "Gewinner:innen des Wettbewerbs", vernissage: "USTP Projektvernissage", instagram: "Instagram", tiktok: "TikTok", linkedin: "LinkedIn-Beitrag", makingof: "Making-of-Video"
@@ -1050,6 +1053,8 @@ function openProject(id, { push = true } = {}) {
           ${block(pr.solo ? ui.approachSolo : ui.approach, x.approach)}
           ${block(ui.result, x.result)}
           ${block(ui.learned, x.learned)}
+          ${pr.sketches ? `<section class="case__block"><h3>${esc(ui.sketches)}</h3>
+            <div class="case__gallery">${pr.sketches.map((g) => `<img src="${g}" alt="${esc(ui.sketches)}: ${esc(x.title)}" loading="lazy">`).join("")}</div></section>` : ""}
           ${pr.gallery ? `<div class="case__gallery">${pr.gallery.map((g) => !g.video
             ? `<img src="${g}" alt="" loading="lazy">`
             : g.loop // short animation: plays by itself like a GIF
