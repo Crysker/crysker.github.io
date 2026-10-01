@@ -1162,3 +1162,17 @@ body.view-all .p-card__play, body.view-all .p-card__video { display: none; }
   .pgrid { gap: 18px; }
   .play-card.is-menu .play__intro { margin-bottom: 24px; }
 }
+
+/* three short steps instead of a tutorial */
+.orch__steps { order: 0; margin: 0; padding: 0; list-style: none; counter-reset: step; display: grid; gap: 12px; }
+.orch__steps li { position: relative; padding-left: 40px; color: var(--ink-soft); font-size: 15px; line-height: 1.5; counter-increment: step; }
+.orch__steps li::before {
+  content: counter(step); position: absolute; left: 0; top: -1px; display: grid; place-items: center; width: 28px; height: 28px; border-radius: 50%;
+  background: var(--turq-soft); color: var(--turq-text); font: 800 13px var(--sans);
+}
+@media (min-width: 900px) {
+  .orch__steps { grid-area: intro; grid-template-columns: repeat(3, 1fr); gap: 28px; margin-bottom: 4px; }
+}
+.orch__go.is-new { animation: orch-pulse 1.8s ease-out infinite; }
+@keyframes orch-pulse { 0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--turq) 55%, transparent); } 70%, 100% { box-shadow: 0 0 0 16px transparent; } }
+@media (prefers-reduced-motion: reduce) { .orch__go.is-new { animation: none; } }
