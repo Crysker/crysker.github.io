@@ -1347,3 +1347,14 @@ body.view-all .p-card__play, body.view-all .p-card__video { display: none; }
 .tl__why { font-size: 14px; color: var(--ink-soft); }
 .tl__why i { display: block; margin-top: 2px; font-size: 12px; }
 .tl__conf { min-width: 0; }
+
+/* Price game: real photos, then-and-now */
+.pr__photo { margin: 0; flex: none; width: min(46%, 240px); }
+.pr__photo img { display: block; width: 100%; aspect-ratio: 16 / 10; object-fit: cover; border-radius: 16px; background: var(--surface-2); }
+.pr__photo figcaption { margin-top: 4px; font-size: 11px; color: var(--ink-soft); }
+.pr__photo figcaption a { color: inherit; }
+.pr__item { align-items: flex-start; }
+.pr__unit { margin: 4px 0 0; font-size: 14px; color: var(--ink-soft); }
+.pr__change { margin: 0; font-weight: 700; color: var(--orange-text); }
+.pr__src { margin: 2px 0 0; font-size: 12px; color: var(--ink-soft); }
+@media (max-width: 520px) { .pr__item { flex-direction: column; } .pr__photo { width: 100%; } }

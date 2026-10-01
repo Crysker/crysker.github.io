@@ -1,88 +1,137 @@
-/* ============ Preisschild fürs Chaos / Price Tag for Chaos ============
-   A silly estimating game with everyday (and not so everyday) Austrian things. You hang a price tag on each one; the game shows
-   the "chaos value" and a punchline. The values are rough and meant as a joke, not as a price list.
-   Six rounds, up to 100 points each: the closer your price, the more points (log scale, so "twice as much" and "half as much" count the same). */
+/* ============ Was kost' die Welt? / What does it cost? ============
+   Real prices from Vienna, in two kinds of rounds:
+   - "Today": guess what something costs now (supermarket staples, BILLA brands, a Melange in a Viennese coffee house).
+   - "Back then": the price today is shown, you guess what it was in September 2021 (supermarket basket) or September 2020 (Melange).
+   Sources: AK Wien Preismonitor "Warenkorb Wien" (March 2026 and September 2021, cheapest product, average of Billa, Billa Plus, Spar, Interspar, Hofer, Lidl, Penny;
+   licence CC BY-SA 4.0), BILLA Online Shop (1 October 2026, regular price), wienkultur.info "Preise Wiener Melange" (September 2026 and September 2020, without guarantee).
+   Six rounds, up to 100 points each (log scale, so "twice as much" and "half as much" count the same). Photos: Wikimedia Commons, credits in assets/img/price/CREDITS.md. */
 (() => {
-  /* [emoji, price in €, German text, German punchline, English text, English punchline] */
-  const ITEMS = [
-    ["🥖", 4, "Eine Leberkässemmel um 3 Uhr nachts", "Gefühlt unbezahlbar, in Wahrheit ein Vierer. Die Semmel weiß das.", "A Leberkäse roll at 3 a.m.", "Feels priceless, actually about a fiver. The roll knows."],
-    ["🚆", 2500, "Ein ÖBB-Zug, der pünktlich ankommt", "Sammlerstück. Man erzählt sich, es gab mal einen.", "An ÖBB train that arrives on time", "Collector's item. People say there was one once."],
-    ["🅿️", 500, "Ein freier Parkplatz in der Wiener Innenstadt, Samstag um 11", "Wer einen findet, zieht ein.", "A free parking spot in downtown Vienna on a Saturday at 11", "Whoever finds one moves in."],
-    ["🧻", 80, "Ein Packerl Klopapier im Frühjahr 2020", "Im Regal 3 €, im Kopf 80. Die Nerven sind nicht eingerechnet.", "A pack of toilet paper in spring 2020", "3 € on the shelf, 80 in your head. Nerves not included."],
-    ["🍰", 9, "Ein Stück Sachertorte im Touristenlokal", "Mit Schlag. Ohne Schlag wäre es ein Skandal.", "A slice of Sachertorte in a tourist café", "With whipped cream. Without it would be a scandal."],
-    ["🍻", 4, "Ein Seidl am Heurigen-Tisch mit Aussicht", "Der Preis ist egal, die Aussicht zahlt mit.", "A beer at a Heuriger table with a view", "The price hardly matters, the view pays too."],
-    ["🎻", 350, "Eintritt zum Wiener Opernball (ungefähr)", "Dafür bekommst du sehr viel Walzer und sehr wenig Platz.", "Admission to the Vienna Opera Ball (roughly)", "Buys you a lot of waltz and very little space."],
-    ["🏔️", 120, "Ein Foto vom Großglockner ohne eine einzige Wolke", "Wer wartet, gewinnt. Oder erfriert.", "A photo of the Grossglockner without a single cloud", "Those who wait win. Or freeze."],
-    ["⛷️", 75, "Ein Tagesskipass in Kitzbühel in der Hochsaison (ungefähr)", "Für das Geld hättest du auch die Piste kaufen können. Fast.", "A day ski pass in Kitzbühel in high season (roughly)", "For that money you could almost have bought the slope."],
-    ["🥟", 14, "Ein Teller Kasnocken auf der Hütte nach sechs Stunden Wandern", "Der Preis stimmt nicht, aber das Gefühl.", "A plate of Kasnocken at the hut after six hours of hiking", "The price is off, the feeling is right."],
-    ["🚗", 25, "Eine Stunde Stau am Brenner im August", "Die Zeit ist gratis. Die Laune nicht.", "An hour of traffic jam at the Brenner in August", "The time is free. The mood is not."],
-    ["📶", 50, "Handyempfang im Arlbergtunnel", "Wert theoretisch riesig, praktisch null.", "Phone signal inside the Arlberg tunnel", "Worth a fortune in theory, nothing in practice."],
-    ["🌭", 5, "Die letzte Käsekrainer am Würstelstand um 2 Uhr", "Mit Senf und Gewissen, extra scharf.", "The last Käsekrainer at the sausage stand at 2 a.m.", "With mustard and a clear conscience."],
-    ["🎶", 1200, "Ein Platz beim Neujahrskonzert in Wien (Schwarzmarkt, geschätzt)", "Ein Walzer, der teurer ist als dein Urlaub.", "A seat at the New Year's Concert in Vienna (black market, estimated)", "One waltz that costs more than your holiday."],
-    ["🪑", 200, "Der letzte freie Sitzplatz in der U6 um 8 Uhr morgens", "Wer ihn hat, tut so, als würde er schlafen.", "The last free seat on the U6 at 8 a.m.", "Whoever has it pretends to be asleep."],
-    ["📄", 800, "Ein Amtsweg ganz ohne Wartezeit", "Gerüchte sprechen von einem Mythos.", "A trip to the authorities without any waiting", "Rumour has it that it is a myth."],
-    ["☕", 6, "Eine Melange im Kaffeehaus, ohne Zeitdruck", "Man zahlt nicht den Kaffee, sondern den Tisch.", "A Melange in a coffee house, with no rush", "You are not paying for the coffee, you pay for the table."],
-    ["🍫", 1, "Eine Mozartkugel direkt in Salzburg (ungefähr)", "Klein, rund, und trotzdem schwer zu teilen.", "A Mozartkugel right in Salzburg (roughly)", "Small, round, and still hard to share."],
-    ["🍲", 40, "Hirschgulasch von Omas Herd", "Das Rezept ist unauffindbar. Die Zutat heißt Liebe.", "Venison goulash from Grandma's stove", "The recipe cannot be found. The ingredient is love."],
-    ["🍷", 4, "Ein Achterl Grüner Veltliner im Gastgarten", "Ein Achtel Liter, ein ganzer Nachmittag.", "An eighth of a litre of Grüner Veltliner in a beer garden", "An eighth of a litre, a whole afternoon."],
-    ["🚲", 350, "Ein Fahrrad, das auch nach einer Nacht vorm Bahnhof noch da ist", "Selten wie ein Einhorn, aber mit Kettenschloss.", "A bike that is still there after a night in front of the station", "As rare as a unicorn, but with a chain lock."],
-    ["🍳", 22, "Ein Wiener Schnitzel im Beisl, größer als der Teller", "Der Teller schämt sich ein bisschen.", "A Wiener Schnitzel at a Beisl, bigger than the plate", "The plate is a little ashamed."],
-    ["🏠", 900, "Ein Altbauzimmer in Wien, „Charme“ inklusive", "Der Charme: Schiefer Boden, Aussicht auf Hinterhof.", "A room in an old Vienna building, “charm” included", "The charm: a sloping floor and a view of the courtyard."],
-    ["🛋️", 60, "Ein Sonntag ohne einen einzigen Termin", "Selten und kostbar, wie Beeren im Winter.", "A Sunday without a single appointment", "Rare and precious, like berries in winter."],
-    ["🧊", 3, "Ein Eis am Stiel im Hochsommer am Donauinselfest", "Es schmilzt schneller, als du zahlen kannst.", "An ice lolly in midsummer at the Donauinselfest", "It melts faster than you can pay."]
+  const AK = "AK Wien Preismonitor Warenkorb Wien, 03/2026 und 09/2021 (billigstes Produkt, Durchschnitt Wiener Supermärkte und Diskonter), CC BY-SA 4.0";
+  const AK_EN = "AK Vienna price monitor “Warenkorb Wien”, 03/2026 and 09/2021 (cheapest product, average of Viennese supermarkets and discounters), CC BY-SA 4.0";
+  const CREDITS = {"bananen": {"by": "Wilfredor", "lic": "CC0", "page": "https://commons.wikimedia.org/wiki/File:Bunch_of_bananas_on_sale.jpg"}, "tomaten": {"by": "Dietmar Rabich", "lic": "CC BY-SA 4.0", "page": "https://commons.wikimedia.org/wiki/File:Tomaten_--_2021_--_9132.jpg"}, "gurke": {"by": "H. Zell", "lic": "CC BY-SA 3.0", "page": "https://commons.wikimedia.org/wiki/File:Cucumis_sativus_0001.JPG"}, "butter": {"by": "Salicyna", "lic": "CC BY-SA 4.0", "page": "https://commons.wikimedia.org/wiki/File:Block_of_butter_20200928_080207.jpg"}, "gouda": {"by": "Dietmar Rabich", "lic": "CC BY-SA 4.0", "page": "https://commons.wikimedia.org/wiki/File:Winterswijk_(NL),_Wochenmarkt_--_2024_--_4337.jpg"}, "kaffee": {"by": "Julius Schorzman", "lic": "CC BY-SA 2.0", "page": "https://commons.wikimedia.org/wiki/File:A_small_cup_of_coffee.JPG"}, "orangensaft": {"by": "David Adam Kess", "lic": "CC BY-SA 4.0", "page": "https://commons.wikimedia.org/wiki/File:(glass_of_orange_juice_a_banana_a_waffle_Breakfast_cereal_with_milk).jpg"}, "schokolade": {"by": "Ubcule", "lic": "CC BY-SA 4.0", "page": "https://commons.wikimedia.org/wiki/File:Milka_Alpine_Milk_Chocolate_bar_100g.jpg"}, "dosenbier": {"by": "Shuntaro Kawasaki", "lic": "CC0", "page": "https://commons.wikimedia.org/wiki/File:Beer_cans.jpg"}, "semmel": {"by": "E4024", "lic": "CC BY-SA 4.0", "page": "https://commons.wikimedia.org/wiki/File:Kaisersemmel_in_Turkey.jpg"}, "cola": {"by": "Mkoenitzer", "lic": "CC BY-SA 4.0", "page": "https://commons.wikimedia.org/wiki/File:Coca_Cola_Pickup.jpg"}, "nutella": {"by": "-donald-", "lic": "CC BY-SA 3.0", "page": "https://commons.wikimedia.org/wiki/File:Nutella_ak.jpg"}, "manner": {"by": "Mfchris84", "lic": "CC0", "page": "https://commons.wikimedia.org/wiki/File:Wachauer_Schnitte_03.jpg"}, "melange": {"by": "Dr. Bernd Gross", "lic": "CC BY-SA 4.0", "page": "https://commons.wikimedia.org/wiki/File:Wiener_Melange_2.JPG"}, "diglas": {"by": "BambooBeast", "lic": "Public domain", "page": "https://commons.wikimedia.org/wiki/File:CafeDiglas_Front.JPG"}, "pruckel": {"by": "Manfred Werner - Tsui", "lic": "CC BY-SA 3.0", "page": "https://commons.wikimedia.org/wiki/File:Caf%C3%A9_Pr%C3%BCckel_Wien_W%C3%BCrfeluhr_2014_c.jpg"}, "schwarzenberg": {"by": "unknown author", "lic": "Public domain", "page": "https://commons.wikimedia.org/wiki/File:Cafe_Schwarzenberg_Vienna-bef_1900.jpg"}};
+
+  /* AK basket: [id, emoji, photo, name DE, name EN, unit DE, unit EN, price 09/2021, price 03/2026] */
+  const BASKET = [
+    ["kartoffeln", "🥔", null, "Kartoffeln", "Potatoes", "1 kg", "1 kg", 0.56, 0.73], ["aepfel", "🍎", null, "Tafeläpfel", "Apples", "1 kg", "1 kg", 1.24, 1.51],
+    ["bananen", "🍌", "bananen", "Bananen", "Bananas", "1 kg", "1 kg", 1.35, 1.65], ["tomaten", "🍅", "tomaten", "Tomaten", "Tomatoes", "1 kg", "1 kg", 1.58, 2.49],
+    ["gurke", "🥒", "gurke", "Salatgurke", "Cucumber", "1 Stück", "1 piece", 1.02, 1.60], ["wasser", "💧", null, "Mineralwasser mit Kohlensäure", "Sparkling mineral water", "1 L", "1 L", 0.18, 0.27],
+    ["flaschenbier", "🍺", null, "Flaschenbier", "Bottled beer", "0,5 L", "0.5 L", 0.68, 0.76], ["dosenbier", "🍺", "dosenbier", "Dosenbier", "Canned beer", "0,5 L", "0.5 L", 0.46, 0.56],
+    ["orangensaft", "🍊", "orangensaft", "Orangensaft", "Orange juice", "1 L", "1 L", 0.89, 1.86], ["cola", "🥤", "cola", "Cola-Getränk in der PET-Flasche", "Cola in a PET bottle", "1 L", "1 L", 0.24, 0.42],
+    ["weisswein", "🍷", null, "Weißwein in der Glasflasche", "White wine in a glass bottle", "1 L", "1 L", 2.39, 3.42], ["rotwein", "🍷", null, "Rotwein in der Glasflasche", "Red wine in a glass bottle", "1 L", "1 L", 2.39, 3.12],
+    ["vollmilch", "🥛", null, "Vollmilch", "Whole milk", "1 L", "1 L", 1.05, 1.39], ["teebutter", "🧈", "butter", "Teebutter", "Butter", "1 kg", "1 kg", 5.85, 5.96],
+    ["joghurt", "🥣", null, "Fruchtjoghurt", "Fruit yoghurt", "1 kg", "1 kg", 1.66, 2.40], ["gouda", "🧀", "gouda", "Gouda, verpackt", "Gouda, packed", "1 kg", "1 kg", 5.26, 7.27],
+    ["ei", "🥚", null, "Ei, Größe M", "Egg, size M", "1 Stück", "1 piece", 0.16, 0.27], ["brot", "🍞", null, "Mischbrotwecken", "Mixed-grain loaf", "1 kg", "1 kg", 1.23, 1.63],
+    ["reis", "🍚", null, "Langkornreis", "Long-grain rice", "1 kg", "1 kg", 0.79, 1.25], ["mehl", "🌾", null, "Weizenmehl, griffig", "Wheat flour", "1 kg", "1 kg", 0.40, 0.74],
+    ["zucker", "🍬", null, "Feinkristallzucker", "Granulated sugar", "1 kg", "1 kg", 0.78, 0.99], ["schoko", "🍫", "schokolade", "Vollmilchschokolade", "Milk chocolate", "100 g", "100 g", 0.55, 0.89],
+    ["kaffee", "☕", "kaffee", "Bohnenkaffee, gemahlen", "Ground coffee", "1 kg", "1 kg", 4.09, 10.27], ["marille", "🍑", null, "Marillenmarmelade", "Apricot jam", "1 kg", "1 kg", 1.53, 2.65],
+    ["penne", "🍝", null, "Penne", "Penne pasta", "1 kg", "1 kg", 0.78, 1.35], ["passata", "🍅", null, "Passierte Tomaten", "Passata", "1 kg", "1 kg", 0.74, 1.38],
+    ["sonnenblumenoel", "🌻", null, "Sonnenblumenöl", "Sunflower oil", "1 L", "1 L", 1.19, 1.79], ["essig", "🫙", null, "Tafelessig", "Table vinegar", "1 L", "1 L", 0.37, 0.69],
+    ["pizza", "🍕", null, "Tiefkühlpizza Margherita", "Frozen pizza Margherita", "1 kg", "1 kg", 2.72, 4.41], ["fischstaebchen", "🐟", null, "Fischstäbchen, tiefgekühlt", "Fish fingers, frozen", "1 kg", "1 kg", 4.42, 5.82],
+    ["pommes", "🍟", null, "Pommes frites, tiefgekühlt", "French fries, frozen", "1 kg", "1 kg", 1.12, 1.50]
+  ];
+  /* BILLA Online Shop, 1 October 2026: [id, emoji, photo, name DE, name EN, unit DE, unit EN, price] */
+  const BILLA = [
+    ["billa-semmel", "🥖", "semmel", "Ja! Natürlich Bio-Kaisersemmel", "Ja! Natürlich organic Kaisersemmel", "1 Stück (65 g)", "1 roll (65 g)", 0.42],
+    ["billa-cola", "🥤", "cola", "Coca-Cola, 1,5-Liter-Flasche (ohne Pfand)", "Coca-Cola, 1.5 L bottle (excl. deposit)", "1,5 L", "1.5 L", 2.49],
+    ["billa-almdudler", "🥤", null, "Almdudler, 1-Liter-Flasche (ohne Pfand)", "Almdudler, 1 L bottle (excl. deposit)", "1 L", "1 L", 1.99],
+    ["billa-nutella", "🍫", "nutella", "Nutella, 400 g", "Nutella, 400 g", "1 Glas", "1 jar", 4.17],
+    ["billa-manner", "🍫", "manner", "Manner Neapolitaner, 75 g", "Manner Neapolitaner wafers, 75 g", "1 Packung", "1 pack", 1.69],
+    ["billa-butter", "🧈", "butter", "Schärdinger Sommerbutter, 250 g", "Schärdinger summer butter, 250 g", "1 Stück", "1 block", 2.66],
+    ["billa-eier", "🥚", null, "Ja! Natürlich Bio-Eier, Größe L", "Ja! Natürlich organic eggs, size L", "6 Stück", "6 eggs", 3.99],
+    ["billa-milch", "🥛", null, "nöm Vollmilch länger frisch", "nöm whole milk, longer-lasting", "1 L", "1 L", 1.66],
+    ["billa-stiegl", "🍺", "dosenbier", "Stiegl Goldbräu, 12er-Packung (Einweg)", "Stiegl Goldbräu, pack of 12 (single-use)", "12 × 0,33 L", "12 × 0.33 L", 10.32]
+  ];
+  /* Melange in a Viennese coffee house (wienkultur.info): [id, café, address, photo, price 09/2020, price 09/2026] */
+  const CAFES = [
+    ["alt-wien", "Kaffee Alt Wien", "Bäckerstraße 9", null, 3.60, 4.20], ["raimund", "Café Raimund", "Museumstraße 6", null, 3.80, 4.70], ["bellaria", "Café Bellaria", "Bellariastraße 6", null, 3.90, 4.80],
+    ["ministerium", "Café Ministerium", "Georg-Coch-Platz 4", null, 3.60, 4.90], ["pruckel", "Café Prückel", "Stubenring 24", "pruckel", 4.60, 4.90], ["palmenhaus", "Café Palmenhaus", "Burggarten 1", null, 3.90, 5.60],
+    ["korb", "Café Korb", "Brandstätte 9", null, 4.10, 5.60], ["einstein", "Café Einstein", "Rathausplatz 4", null, 3.90, 5.90], ["diglas", "Café Diglas", "Wollzeile 10", "diglas", 4.60, 5.90],
+    ["schwarzenberg", "Café Schwarzenberg", "Kärntner Ring 17", "schwarzenberg", 4.80, 6.90], ["frauenhuber", "Café Frauenhuber", "Himmelpfortgasse 6", null, 4.90, 6.90],
+    ["museum", "Café Museum", "Operngasse 7", null, 5.50, 6.90], ["mozart", "Café Mozart", "Albertinaplatz 2", null, 5.90, 6.90], ["landtmann", "Café Landtmann", "Universitätsring 4", null, 5.90, 6.90]
   ];
   const T = {
     en: {
-      title: "Price tag for chaos", intro: "Hang a price tag on it. How much is it worth?", set: "Hang the tag", next: "Next", finish: "Result", again: "Play again", round: "Round {n} of 6", points: "Points",
-      yours: "Your price", chaos: "Chaos value", off: "{x}× too high", offLow: "{x}× too low", spot: "Spot on!", total: "You scored {p} of 600 points.", best: "Best: {n}", toy: "A silly estimating game",
-      ranks: ["Pays too much", "Market stall regular", "Bargain hunter", "Viennese grouch"], note: "The values are rough and meant as a joke."
+      title: "What does it cost?", toy: "Real prices from Vienna", set: "Set the price", next: "Next", finish: "Result", again: "Play again", round: "Round {n} of 6", points: "Points",
+      today: "Today", then: "Back then ({w})", askNow: "What does it cost today?", askThen: "Today it costs {p}. What did it cost in {w}?", yours: "Your price", real: "Real price", todayLabel: "Today", thenLabel: "Then",
+      off: "{x}× too high", offLow: "{x}× too low", spot: "Spot on!", rise: "{p} % more than in {w}.", fall: "{p} % less than in {w}.", same: "About the same as in {w}.",
+      total: "You scored {p} of 600 points.", best: "Best: {n}", ranks: ["Pays too much", "Market regular", "Bargain hunter", "Price oracle"], src: "Source", photo: "Photo",
+      w21: "September 2021", w20: "September 2020", cafeName: "Melange at {c}", cafeUnit: "1 cup"
     },
     de: {
-      title: "Preisschild fürs Chaos", intro: "Häng ein Preisschild dran. Wie viel ist das wert?", set: "Preisschild anhängen", next: "Weiter", finish: "Ergebnis", again: "Nochmal spielen", round: "Runde {n} von 6", points: "Punkte",
-      yours: "Dein Preis", chaos: "Chaos-Wert", off: "{x}× zu hoch", offLow: "{x}× zu niedrig", spot: "Volltreffer!", total: "Du hast {p} von 600 Punkten.", best: "Bestwert: {n}", toy: "Ein Schätzspiel mit Schmäh",
-      ranks: ["Zahlt immer drauf", "Markt-Stammkund:in", "Schnäppchenjäger:in", "Wiener Grantler:in"], note: "Die Werte sind grob und als Schmäh gemeint."
+      title: "Was kost' die Welt?", toy: "Echte Preise aus Wien", set: "Preis festlegen", next: "Weiter", finish: "Ergebnis", again: "Nochmal spielen", round: "Runde {n} von 6", points: "Punkte",
+      today: "Heute", then: "Damals ({w})", askNow: "Was kostet das heute?", askThen: "Heute kostet es {p}. Was hat es im {w} gekostet?", yours: "Dein Preis", real: "Echter Preis", todayLabel: "Heute", thenLabel: "Damals",
+      off: "{x}× zu hoch", offLow: "{x}× zu niedrig", spot: "Volltreffer!", rise: "{p} % mehr als im {w}.", fall: "{p} % weniger als im {w}.", same: "Etwa gleich viel wie im {w}.",
+      total: "Du hast {p} von 600 Punkten.", best: "Bestwert: {n}", ranks: ["Zahlt immer drauf", "Markt-Stammkund:in", "Schnäppchenjäger:in", "Preis-Orakel"], src: "Quelle", photo: "Foto",
+      w21: "September 2021", w20: "September 2020", cafeName: "Melange im {c}", cafeUnit: "1 Häferl"
     }
   };
-  const pt2 = (k) => (T[lang] || T.en)[k];
-  const MIN = 0.1, MAX = 100000, DECADES = Math.log10(MAX / MIN);
-  const euro = (v) => new Intl.NumberFormat(lang === "de" ? "de-AT" : "en-IE", { style: "currency", currency: "EUR", minimumFractionDigits: v >= 100 ? 0 : 2, maximumFractionDigits: v >= 100 ? 0 : 2 }).format(v);
-  const fromSlider = (s) => { const v = MIN * Math.pow(10, (s / 1000) * DECADES); return v < 10 ? Math.round(v * 20) / 20 : v < 100 ? Math.round(v * 2) / 2 : v < 1000 ? Math.round(v / 5) * 5 : Math.round(v / 50) * 50; };
-  const toSlider = (v) => Math.round(Math.log10(v / MIN) / DECADES * 1000);
-  const score = (guess, real) => { const r = Math.max(guess, real) / Math.min(guess, real); return r <= 1.1 ? 100 : Math.max(0, Math.round(100 * (1 - Math.log(r) / Math.log(20)))); };
-  const best = () => { try { return +localStorage.getItem("priceBest") || 0; } catch (e) { return 0; } };
+  const L = (k) => (T[lang] || T.en)[k];
+  const MIN = 0.05, MAX = 25, DECADES = Math.log10(MAX / MIN);
+  const euro = (v) => new Intl.NumberFormat(lang === "de" ? "de-AT" : "en-IE", { style: "currency", currency: "EUR", minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(v);
+  const fromSlider = (s) => { const v = MIN * Math.pow(10, (s / 1000) * DECADES); return v < 1 ? Math.round(v * 100) / 100 : v < 10 ? Math.round(v * 20) / 20 : Math.round(v * 10) / 10; };
+  const score = (guess, real) => { const r = Math.max(guess, real) / Math.min(guess, real); return r <= 1.06 ? 100 : Math.max(0, Math.round(100 * (1 - Math.log(r) / Math.log(5)))); };
+  const best = () => { try { return +localStorage.getItem("priceBest2") || 0; } catch (e) { return 0; } };
   const shuffle = (a) => { const b = [...a]; for (let i = b.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [b[i], b[j]] = [b[j], b[i]]; } return b; };
+  const pick = (arr, n) => shuffle(arr).slice(0, n);
+  const de = () => lang === "de";
 
+  /* a round: { mode: "now" | "then", name, unit, emoji, photo, now, then, when, source, kind } */
+  function basketRound(it, mode) {
+    return { mode, kind: "ak", emoji: it[1], photo: it[2], name: de() ? it[3] : it[4], unit: de() ? it[5] : it[6], then: it[7], now: it[8], when: L("w21"), source: de() ? AK : AK_EN };
+  }
+  function billaRound(it) {
+    return { mode: "now", kind: "billa", emoji: it[1], photo: it[2], name: de() ? it[3] : it[4], unit: de() ? it[5] : it[6], now: it[7], source: de() ? "BILLA Online Shop, 1. Oktober 2026, regulärer Preis" : "BILLA Online Shop, 1 October 2026, regular price" };
+  }
+  function cafeRound(c, mode) {
+    return { mode, kind: "cafe", emoji: "☕", photo: c[3] || "melange", name: L("cafeName").replace("{c}", c[1]) + " (" + c[2] + ")", unit: L("cafeUnit"), then: c[4], now: c[5], when: L("w20"),
+      source: de() ? "wienkultur.info, Preise Wiener Melange, Stand 09/2026 und 09/2020 (ohne Gewähr)" : "wienkultur.info, Melange prices, as of 09/2026 and 09/2020 (without guarantee)" };
+  }
   let G = null;
-  function start() { G = { items: shuffle(ITEMS).slice(0, 6), i: 0, s: 450, revealed: false, pts: 0, last: null, done: false }; }
-  const itemText = (it) => (lang === "de" ? it[2] : it[4]), itemPunch = (it) => (lang === "de" ? it[3] : it[5]);
+  function start() {
+    const ak = pick(BASKET, 3), billa = pick(BILLA, 1), cafes = pick(CAFES, 2);
+    const rounds = [billaRound(billa[0]), basketRound(ak[0], "then"), cafeRound(cafes[0], "now"), cafeRound(cafes[1], "then"), basketRound(ak[1], "now"), basketRound(ak[2], "then")];
+    G = { rounds, i: 0, s: 450, revealed: false, pts: 0, last: null, done: false };
+  }
+  function photoHTML(r) {
+    if (!r.photo) return `<span class="pr__emoji" aria-hidden="true">${r.emoji}</span>`;
+    const c = CREDITS[r.photo];
+    return `<figure class="pr__photo"><img src="assets/img/price/${r.photo}.jpg" alt="" loading="lazy" width="320" height="200">${c ? `<figcaption>${esc(L("photo"))}: ${esc(c.by)}, ${esc(c.lic)}, <a href="${esc(c.page)}" target="_blank" rel="noopener">Wikimedia Commons</a></figcaption>` : ""}</figure>`;
+  }
   function paint() {
     const body = document.getElementById("playBody");
     if (!G) start();
     if (G.done) { body.innerHTML = endHTML(); bind(); return; }
-    const it = G.items[G.i], guess = fromSlider(G.s);
+    const r = G.rounds[G.i], guess = fromSlider(G.s), target = r.mode === "then" ? r.then : r.now;
+    const ask = r.mode === "then" ? L("askThen").replace("{p}", euro(r.now)).replace("{w}", r.when) : L("askNow");
     let result = "";
     if (G.revealed) {
-      const r = it[1], pts = G.last, ratio = Math.max(guess, r) / Math.min(guess, r);
-      const off = ratio <= 1.1 ? pt2("spot") : (guess > r ? pt2("off") : pt2("offLow")).replace("{x}", ratio < 10 ? ratio.toFixed(1).replace(".", lang === "de" ? "," : ".") : Math.round(ratio));
-      result = `<div class="pr__result"><div class="pr__row"><span>${esc(pt2("yours"))}</span><b>${esc(euro(guess))}</b></div>
-        <div class="pr__row pr__row--real"><span>${esc(pt2("chaos"))}</span><b>${esc(euro(r))}</b></div>
-        <p class="pr__off">${esc(off)} · <b>+${pts}</b></p><p class="pr__punch">${esc(itemPunch(it))}</p></div>`;
+      const ratio = Math.max(guess, target) / Math.min(guess, target);
+      const off = ratio <= 1.06 ? L("spot") : (guess > target ? L("off") : L("offLow")).replace("{x}", ratio < 10 ? ratio.toFixed(1).replace(".", de() ? "," : ".") : Math.round(ratio));
+      let change = "";
+      if (r.mode === "then") {
+        const pct = Math.round((r.now / r.then - 1) * 100);
+        change = `<p class="pr__change">${esc(pct > 1 ? L("rise").replace("{p}", pct) : pct < -1 ? L("fall").replace("{p}", Math.abs(pct)) : L("same")).replace("{w}", esc(r.when))}</p>`;
+      }
+      result = `<div class="pr__result"><div class="pr__row"><span>${esc(L("yours"))}</span><b>${esc(euro(guess))}</b></div>
+        <div class="pr__row pr__row--real"><span>${esc(L("real"))}${r.mode === "then" ? " (" + esc(r.when) + ")" : ""}</span><b>${esc(euro(target))}</b></div>
+        ${r.mode === "then" ? `<div class="pr__row"><span>${esc(L("todayLabel"))}</span><b>${esc(euro(r.now))}</b></div>` : ""}
+        <p class="pr__off">${esc(off)} · <b>+${G.last}</b></p>${change}<p class="pr__src">${esc(L("src"))}: ${esc(r.source)}</p></div>`;
     }
     body.innerHTML = `<div class="pr">
-      <p class="wd__roundlabel">${esc(pt2("round").replace("{n}", G.i + 1))} · ${esc(pt2("points"))}: ${G.pts}</p>
-      <div class="pr__item"><span class="pr__emoji" aria-hidden="true">${it[0]}</span><h3>${esc(itemText(it))}</h3></div>
+      <p class="wd__roundlabel">${esc(L("round").replace("{n}", G.i + 1))} · ${esc(r.mode === "then" ? L("then").replace("{w}", r.when) : L("today"))} · ${esc(L("points"))}: ${G.pts}</p>
+      <div class="pr__item">${photoHTML(r)}<div><h3>${esc(r.name)}</h3><p class="pr__unit">${esc(r.unit)}</p></div></div>
+      <p class="wd__desc">${esc(ask)}</p>
       <div class="pr__tag"><span class="pr__hole" aria-hidden="true"></span><output class="pr__price" id="prPrice">${esc(euro(guess))}</output></div>
-      <input type="range" class="pr__slider" id="prSlider" min="0" max="1000" step="1" value="${G.s}" aria-label="${esc(pt2("intro"))}"${G.revealed ? " disabled" : ""}>
+      <input type="range" class="pr__slider" id="prSlider" min="0" max="1000" step="1" value="${G.s}" aria-label="${esc(ask)}"${G.revealed ? " disabled" : ""}>
       <div class="pr__scale"><span>${esc(euro(MIN))}</span><span>${esc(euro(MAX))}</span></div>
       ${result}
-      <div class="wd__actions">${G.revealed ? `<button type="button" class="orch__go" id="prNext">${esc(pt2(G.i === 5 ? "finish" : "next"))}</button>` : `<button type="button" class="orch__go" id="prSet">${esc(pt2("set"))}</button>`}</div>
-      <p class="pr__note">${esc(pt2("note"))}</p></div>`;
+      <div class="wd__actions">${G.revealed ? `<button type="button" class="orch__go" id="prNext">${esc(L(G.i === 5 ? "finish" : "next"))}</button>` : `<button type="button" class="orch__go" id="prSet">${esc(L("set"))}</button>`}</div></div>`;
     bind();
   }
   function endHTML() {
-    const p = G.pts, rank = pt2("ranks")[p >= 480 ? 3 : p >= 360 ? 2 : p >= 220 ? 1 : 0];
-    return `<div class="pr"><h2 class="wd__title">${esc(rank)}</h2><p class="wd__desc">${esc(pt2("total").replace("{p}", p))}</p><p class="wd__msg">${esc(pt2("best").replace("{n}", best()))}</p>
-      <div class="wd__actions"><button type="button" class="orch__go" id="prAgain">${esc(pt2("again"))}</button></div></div>`;
+    const p = G.pts, rank = L("ranks")[p >= 480 ? 3 : p >= 360 ? 2 : p >= 220 ? 1 : 0];
+    return `<div class="pr"><h2 class="wd__title">${esc(rank)}</h2><p class="wd__desc">${esc(L("total").replace("{p}", p))}</p><p class="wd__msg">${esc(L("best").replace("{n}", best()))}</p>
+      <div class="wd__actions"><button type="button" class="orch__go" id="prAgain">${esc(L("again"))}</button></div></div>`;
   }
   function bind() {
     const $ = (id) => document.getElementById(id);
@@ -90,7 +139,7 @@
     if (slider && !slider.disabled) slider.addEventListener("input", () => { G.s = +slider.value; $("prPrice").textContent = euro(fromSlider(G.s)); sfx.tick(G.s / 1000); });
     const set = $("prSet");
     if (set) set.addEventListener("click", () => {
-      const it = G.items[G.i], pts = score(fromSlider(G.s), it[1]);
+      const r = G.rounds[G.i], pts = score(fromSlider(G.s), r.mode === "then" ? r.then : r.now);
       G.last = pts; G.pts += pts; G.revealed = true; sfx.lock(); setTimeout(() => sfx.score(pts), 120); paint();
     });
     const next = $("prNext");
@@ -98,7 +147,7 @@
       sfx.click();
       if (G.i === 5) {
         G.done = true;
-        if (G.pts > best()) { try { localStorage.setItem("priceBest", String(G.pts)); } catch (e) {} }
+        if (G.pts > best()) { try { localStorage.setItem("priceBest2", String(G.pts)); } catch (e) {} }
         if (G.pts >= 450) unlock("haggler");
         paint(); return;
       }
@@ -112,7 +161,7 @@
     <text x="40" y="49" text-anchor="middle" transform="rotate(-8 40 49)" style="font:800 20px sans-serif;fill:#1b1a2a">€?</text></svg>`;
   PLAY_GAMES.push({
     id: "price", hash: "price", title: { en: T.en.title, de: T.de.title }, art,
-    note: () => (best() ? pt2("best").replace("{n}", best()) : pt2("toy")), layout: "plain",
+    note: () => (best() ? L("best").replace("{n}", best()) : L("toy")), layout: "plain",
     render: () => { if (!G) start(); paint(); }, state: () => G
   });
 })();
