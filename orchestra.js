@@ -146,7 +146,7 @@ const ORCH_COMBOS = [
 ];
 
 /* ---- the stage and the clock ---- */
-const orch = { grid: null, len: null, pit: null, more: null, cell: null, pitch: 0, kit: 0, bpm: 100, sel: "blob", playing: false, step: 0, next: 0, timer: null, placed: 0, found: [] };
+const orch = { inspOpen: true, grid: null, len: null, pit: null, more: null, cell: null, pitch: 0, kit: 0, bpm: 100, sel: "blob", playing: false, step: 0, next: 0, timer: null, placed: 0, found: [] };
 function orchLoad() {
   try { orch.found = JSON.parse(localStorage.getItem("orchFound") || "[]"); } catch (e) { orch.found = []; }
   let saved = null;
@@ -338,13 +338,13 @@ function orchPaintInsp() {
   if (!notes.length) { orch.cell = null; box.hidden = true; box.innerHTML = ""; return; }
   const [r, c] = orch.cell, names = ot("names"), sgn = (n) => (n > 0 ? "+" : "") + n;
   box.hidden = false;
-  box.innerHTML = `<h3>${esc(ot("selected"))}: ${esc(ORCH_NAMES[r])} · ${esc(ot("beat"))} ${c + 1}</h3>
+  box.innerHTML = `<details class="orch__det"${orch.inspOpen ? " open" : ""}><summary><span>${esc(ot("selected"))}: ${esc(ORCH_NAMES[r])} · ${esc(ot("beat"))} ${c + 1}</span><span class="orch__sum">${notes.map((n) => `<i>${creatureSVG(ORCH_BY_ID[n.id])}</i>`).join("")}</span></summary>
     <ul class="orch__notes">${notes.map((n, i) => `<li>
       <span class="orch__mini">${creatureSVG(ORCH_BY_ID[n.id])}</span><b>${esc(names[n.id])}</b>
       <span class="orch__ctl"><span>${esc(ot("pitchNote"))}</span><button type="button" data-i="${i}" data-act="pit-" aria-label="${esc(ot("pitchNote"))} −">−</button><output>${sgn(n.pit)}</output><button type="button" data-i="${i}" data-act="pit+" aria-label="${esc(ot("pitchNote"))} +">+</button></span>
       <span class="orch__ctl"><span>${esc(ot("lenNote"))}</span><button type="button" data-i="${i}" data-act="len-" aria-label="${esc(ot("lenNote"))} −">−</button><output>${n.len}</output><button type="button" data-i="${i}" data-act="len+" aria-label="${esc(ot("lenNote"))} +">+</button></span>
       <button type="button" class="orch__x" data-i="${i}" data-act="del" aria-label="${esc(ot("remove"))}" title="${esc(ot("remove"))}">✕</button></li>`).join("")}</ul>
-    <button type="button" class="orch__clear" id="orchAddLayer"${notes.length >= 4 ? " disabled" : ""}>＋ ${esc(ot("layer"))}: ${esc(names[orch.sel])}</button>`;
+    <button type="button" class="orch__clear" id="orchAddLayer"${notes.length >= 4 ? " disabled" : ""}>＋ ${esc(ot("layer"))}: ${esc(names[orch.sel])}</button></details>`;
 }
 function orchInspClick(e) {
   const b = e.target.closest("button");
@@ -513,6 +513,7 @@ function renderOrchestra() {
     if (!playMuted) orchVoice(orch.sel, orchCtx().currentTime + 0.01, ORCH_NOTES[1]);
   });
   document.getElementById("orchInsp").addEventListener("click", orchInspClick);
+  document.getElementById("orchInsp").addEventListener("toggle", (e) => { if (e.target.matches("details")) orch.inspOpen = e.target.open; }, true); // folded up it stays out of the way
   document.getElementById("orchShare").addEventListener("click", (e) => orchShare(e.currentTarget));
   const rowBtns = () => {
     document.getElementById("orchRowLess").disabled = orch.grid.length <= ORCH_MIN_ROWS;
