@@ -1511,3 +1511,13 @@ body.view-all .p-card__play, body.view-all .p-card__video { display: none; }
 .dly__card span { color: var(--ink-soft); font-size: 15px; }
 .dly__card small { color: var(--turq-text); font: 800 12px var(--sans); letter-spacing: .06em; text-transform: uppercase; margin-top: 6px; }
 .dly__streak { margin: 0; font: 700 15px var(--sans); color: var(--ink); }
+
+/* Orchestra: your own sound */
+.orch__mine h3 { margin: 0 0 12px; font: 800 12px var(--sans); letter-spacing: .06em; text-transform: uppercase; color: var(--turq-text); }
+.orch__mineRow { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; }
+.orch__mineRow .orch__clear { padding: 8px 14px; font-size: 14px; }
+.orch__mine .orch__hint { margin: 0; }
+.orch__file { cursor: pointer; }
+.orch__clear.is-rec { border-color: #ef4444; color: #ef4444; animation: orchRec 1s ease-in-out infinite; }
+@keyframes orchRec { 50% { background: color-mix(in srgb, #ef4444 14%, transparent); } }
+@media (prefers-reduced-motion: reduce) { .orch__clear.is-rec { animation: none; } }
