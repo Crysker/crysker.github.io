@@ -248,7 +248,7 @@ const I18N = {
     "contact.title": "Let's build something<br><em>people remember.</em>",
     "contact.book": "Book a 30-min call",
     "contact.copy": "Copy", "contact.copied": "Email address copied",
-    toTop: "Back to top", "case.back": "All projects",
+    toTop: "Back to top", "case.back": "All projects", "case.goback": "Back",
     lb: { close: "Close", prev: "Previous image", next: "Next image", zin: "Zoom in", zout: "Zoom out", hint: "Scroll, pinch or double-click to zoom · drag to move" },
     "footer.fun": "No game engine was harmed in the making of this site.",
     ach: {
@@ -538,7 +538,7 @@ const I18N = {
     "contact.title": "Lass uns etwas bauen,<br><em>das in Erinnerung bleibt.</em>",
     "contact.book": "30-Min-Call buchen",
     "contact.copy": "Kopieren", "contact.copied": "E-Mail-Adresse kopiert",
-    toTop: "Nach oben", "case.back": "Alle Projekte",
+    toTop: "Nach oben", "case.back": "Alle Projekte", "case.goback": "Zurück",
     lb: { close: "Schließen", prev: "Vorheriges Bild", next: "Nächstes Bild", zin: "Hineinzoomen", zout: "Herauszoomen", hint: "Scrollen, mit zwei Fingern oder Doppelklick zoomen · ziehen zum Verschieben" },
     "footer.fun": "Bei der Erstellung dieser Seite wurde keine Game Engine verletzt.",
     ach: {
@@ -1167,6 +1167,7 @@ function closeProject() {
   finishClose();
   if (location.hash.startsWith("#project-")) history.replaceState(null, "", location.pathname + location.search);
 }
+document.getElementById("caseBack").addEventListener("click", closeProject);
 function renderCaseCrumbs(title) { // Home > Projects (or All projects) > this project
   document.querySelector("#caseCrumbs ol").innerHTML = `
     <li><a href="#" data-go="home">${esc(t("crumb.home"))}</a></li>

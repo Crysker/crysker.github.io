@@ -31,7 +31,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,700;1,9..144,600;1,9..144,700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <script>try { var th = localStorage.getItem("theme"); if (th === "light" || th === "dark") document.documentElement.dataset.theme = th; } catch (e) {}</script>
-  <link rel="stylesheet" href="styles.css?v=103">
+  <link rel="stylesheet" href="styles.css?v=106">
 </head>
 <body>
   <a class="skip" href="#main" data-i18n="skip">Skip to content</a>
@@ -206,6 +206,7 @@
   <!-- Project case study: full-screen view with its own link (#project-<id>) -->
   <dialog class="case" id="projectModal" aria-labelledby="modalTitle">
     <div class="case__bar">
+      <button class="case__back" id="caseBack" type="button"><span aria-hidden="true">←</span> <span data-i18n="case.goback">Back</span></button>
       <nav class="crumbs crumbs--case" id="caseCrumbs" aria-label="Breadcrumb"><ol></ol></nav>
       <button class="case__next" id="caseNext" type="button" hidden></button>
     </div>
@@ -213,6 +214,6 @@
   </dialog>
 
   <script src="logos.js?v=4"></script>
-  <script src="main.js?v=93"></script>
+  <script src="main.js?v=94"></script>
 </body>
 </html>
