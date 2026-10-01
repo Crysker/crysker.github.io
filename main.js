@@ -990,8 +990,11 @@ function syncView() {
   renderThemes();
   renderProjects();
   if (allView) window.scrollTo({ top: 0, behavior: "auto" });
-  else if (h === "#projects") document.getElementById("projects").scrollIntoView({ block: "start" });
-  else window.scrollTo({ top: 0, behavior: "auto" });
+  else { // back on the home page: go to the section that was asked for (#projects, #experience, ...), otherwise to the top
+    const target = h.length > 1 ? document.getElementById(h.slice(1)) : null;
+    if (target) target.scrollIntoView({ block: "start" });
+    else window.scrollTo({ top: 0, behavior: "auto" });
+  }
 }
 addEventListener("hashchange", syncView);
 
@@ -1410,6 +1413,12 @@ addEventListener("resize", updateToTop);
 document.querySelectorAll('a[href="#top"]').forEach((a) => a.addEventListener("click", (e) => {
   e.preventDefault();
   setMenu(false);
+  if (allView) { // from the full list the logo always leads back to the home page
+    history.pushState(null, "", location.pathname + location.search);
+    syncView();
+    document.querySelector(".nav__logo").focus({ preventScroll: true });
+    return;
+  }
   const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
   scrollTo({ top: 0, behavior: reduce ? "auto" : "smooth" });
   document.querySelector(".nav__logo").focus({ preventScroll: true }); // keep keyboard users at the top too
