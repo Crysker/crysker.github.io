@@ -137,6 +137,11 @@ function orchSyncButtons() {
 document.addEventListener("visibilitychange", () => { if (document.hidden) orchStop(); });
 
 /* ---- placing creatures ---- */
+function orchPreview(id) { // pressing a creature in the tray plays its sound, so you know what you are about to place
+  if (!playMuted) ORCH_VOICE[id](orchCtx().currentTime + 0.01, ORCH_NOTES[1]);
+  const face = document.querySelector(`.orch__pick[data-id="${id}"] .orch__face`);
+  if (face) { face.classList.remove("is-hit"); void face.offsetWidth; face.classList.add("is-hit"); }
+}
 function orchPlace(r, c) {
   const cur = orch.grid[r][c];
   if (cur === orch.sel) { orch.grid[r][c] = null; sfx.pop(); }
@@ -196,6 +201,7 @@ function renderOrchestra() {
   playBody.querySelectorAll(".orch__pick").forEach((pick) => pick.addEventListener("pointerdown", (e) => {
     const sx = e.clientX, sy = e.clientY, id = pick.dataset.id;
     let ghost = null;
+    orchPreview(id);
     const move = (ev) => {
       if (!ghost && Math.hypot(ev.clientX - sx, ev.clientY - sy) > 8) {
         ghost = document.createElement("div");
@@ -211,7 +217,7 @@ function renderOrchestra() {
         ghost.remove();
         const cell = document.elementFromPoint(ev.clientX, ev.clientY)?.closest(".orch__cell");
         if (cell) orchPlace(+cell.dataset.r, +cell.dataset.c);
-      } else sfx.click();
+      }
     };
     addEventListener("pointermove", move); addEventListener("pointerup", up); addEventListener("pointercancel", up);
   }));
