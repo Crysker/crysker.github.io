@@ -250,7 +250,7 @@ const I18N = {
     "contact.copy": "Copy", "contact.copied": "Email address copied",
     toTop: "Back to top", "case.back": "All projects", "case.goback": "Back",
     lb: { close: "Close", prev: "Previous image", next: "Next image", zin: "Zoom in", zout: "Zoom out", hint: "Scroll, pinch or double-click to zoom · drag to move" },
-    "footer.fun": "No game engine was harmed in the making of this site.",
+    "footer.fun": "St. Pölten, Austria · Built by hand with HTML, CSS &amp; JavaScript. Last updated on {date}.",
     ach: {
       unlocked: "Achievement unlocked", count: "{n}/{total} achievements found", hint: "Can you find them all?",
       title: "Achievements", locked: "???", reset: "Reset progress", close: "Close", open: "Show achievements",
@@ -542,7 +542,7 @@ const I18N = {
     "contact.copy": "Kopieren", "contact.copied": "E-Mail-Adresse kopiert",
     toTop: "Nach oben", "case.back": "Alle Projekte", "case.goback": "Zurück",
     lb: { close: "Schließen", prev: "Vorheriges Bild", next: "Nächstes Bild", zin: "Hineinzoomen", zout: "Herauszoomen", hint: "Scrollen, mit zwei Fingern oder Doppelklick zoomen · ziehen zum Verschieben" },
-    "footer.fun": "Bei der Erstellung dieser Seite wurde keine Game Engine verletzt.",
+    "footer.fun": "St. Pölten, Österreich · Von Hand gebaut mit HTML, CSS &amp; JavaScript. Zuletzt aktualisiert am {date}.",
     ach: {
       unlocked: "Erfolg freigeschaltet", count: "{n}/{total} Erfolge gefunden", hint: "Findest du alle?",
       title: "Erfolge", locked: "???", reset: "Fortschritt zurücksetzen", close: "Schließen", open: "Erfolge anzeigen",
@@ -776,11 +776,15 @@ const t = (key) => I18N[lang][key] ?? I18N.en[key] ?? key;
    A project whose summary is still a placeholder is left out entirely. */
 const filled = (v) => Array.isArray(v) ? v.length > 0 : Boolean(v) && !String(v).trim().startsWith("[");
 
+/* shown in the footer; update it when you publish changes */
+const LAST_UPDATED = "2026-10-01";
+const lastUpdated = () => new Intl.DateTimeFormat(lang === "de" ? "de-AT" : "en-US", { dateStyle: "long", timeZone: "UTC" }).format(new Date(LAST_UPDATED));
+
 function applyLang() {
   document.documentElement.lang = lang;
   document.querySelectorAll("[data-i18n]").forEach((el) => {
     const text = I18N[lang][el.dataset.i18n] ?? I18N.en[el.dataset.i18n];
-    if (text != null) el.innerHTML = text; // keep the HTML text rather than showing a raw key
+    if (text != null) el.innerHTML = text.replace("{date}", lastUpdated()); // keep the HTML text rather than showing a raw key
   });
   document.querySelectorAll("[data-i18n-label]").forEach((el) => {
     el.setAttribute("aria-label", t(el.dataset.i18nLabel));
