@@ -211,6 +211,9 @@ function orchCustomVoice(id, t, f) {
   src.buffer = buf; src.playbackRate.value = rate;
   const vol = 0.7 * oVol;
   g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(vol, t + 0.006); g.gain.setValueAtTime(vol, t + dur - 0.05); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+  const last = cu.last; // one voice per sound: a new hit cuts off the one still ringing, so the same sound never piles up on itself
+  if (last && last.ctx === c && last.start <= t && last.end > t) { try { last.g.gain.cancelScheduledValues(t); last.g.gain.setTargetAtTime(0, t, 0.006); last.src.stop(t + 0.06); } catch (e) {} }
+  cu.last = { ctx: c, g, src, start: t, end: t + dur };
   src.connect(g).connect(orchOut(c)); src.start(t); src.stop(t + dur + 0.02);
 }
 const orchB64 = (i16) => { let s = ""; const u = new Uint8Array(i16.buffer); for (let i = 0; i < u.length; i += 8192) s += String.fromCharCode.apply(null, u.subarray(i, i + 8192)); return btoa(s); };
