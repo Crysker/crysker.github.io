@@ -1648,3 +1648,18 @@ body.view-all .p-card__play, body.view-all .p-card__video { display: none; }
 
 @media (max-width: 560px) { .tw__bar button { flex: 1 1 0; min-width: 0; padding: 0 8px; font-size: 14px; white-space: nowrap; justify-content: center; } .tw__bar .tw2__rotate { flex: 1.25 1 0; } }
 .wd__credit { margin: 0; font-size: 13px; color: var(--ink-soft); }
+
+/* Connections-style round: a toast above the tiles, shaking tiles, selected tiles that stay selected after a miss */
+.wd4__toastrow { min-height: 42px; display: grid; align-items: center; justify-items: center; width: 100%; }
+.wd4__toast { margin: 0; padding: 8px 16px; border-radius: 999px; font: 800 14px var(--sans); text-align: center; animation: wdToast .25s ease-out; }
+.wd4__toast.is-one { background: #fcd34d; color: #3b2a00; box-shadow: 0 0 0 4px color-mix(in srgb, #fcd34d 30%, transparent); }
+.wd4__toast.is-miss { background: color-mix(in srgb, #ef4444 85%, var(--bg)); color: #fff; }
+.wd4__toast.is-info { background: var(--surface-2); color: var(--ink); }
+.wd4__toast.is-ok { background: #3fae5a; color: #fff; }
+.wd4__toast.is-count { background: transparent; color: var(--ink-soft); font-weight: 700; }
+@keyframes wdToast { from { opacity: 0; transform: translateY(6px) scale(.96); } to { opacity: 1; transform: none; } }
+.wd4__tile.is-shake { animation: wdShake .42s; }
+.wd4__tile.is-sel { transform: translateY(-2px); }
+.wd4__dots i { transition: background .25s, transform .25s; }
+.wd4__dots i:not(.is-on) { transform: scale(.7); }
+@media (prefers-reduced-motion: reduce) { .wd4__toast, .wd4__tile.is-shake { animation: none; } }

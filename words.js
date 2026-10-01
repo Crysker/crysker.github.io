@@ -11,7 +11,7 @@ const WD_T = {
     intro: "Three short rounds, the same for everyone today.", inspired: "Inspired by Wordle and Connections.", names: ["Five", "Fours", "Know-how"],
     descs: ["Guess the five-letter word in six tries.", "Sort 16 words into four groups. Four mistakes are allowed.", "Three general-knowledge questions."],
     start: "Start", doneToday: "You have played today's round.", again: "Play another round", next: "Next", enter: "Enter", submit: "Submit", deselect: "Deselect", shuffle: "Shuffle",
-    mistakes: "Mistakes left", oneAway: "One away!", notThis: "Not this time.", word: "The word was", solved: "Solved!", round: "Round {n} of 3", share: "Copy result", copied: "Copied!",
+    mistakes: "Mistakes left", oneAway: "One away!", missed: "Not a group. Change a word and try again.", tried: "Already tried this combination.", picked: "{n} of 4 selected", notThis: "Not this time.", word: "The word was", solved: "Solved!", round: "Round {n} of 3", share: "Copy result", copied: "Copied!",
     daily: "Daily", random: "Random round", result: "Result", fact: "Did you know?", toy: "New every day", played: "Played today", tries: "{n}/6", title: "Puzzle Round", finish: "See result",
     pick: "Pick a letter", correct: "Correct!", wrong: "Not quite.", tooShort: "Not enough letters", notWord: "Not in the word list"
   },
@@ -19,7 +19,7 @@ const WD_T = {
     intro: "Drei kurze Runden, heute für alle gleich.", inspired: "Inspiriert von Wordle und Connections.", names: ["Fünfer", "Vierer", "Wissen"],
     descs: ["Errate das Wort mit fünf Buchstaben in sechs Versuchen.", "Sortiere 16 Wörter in vier Gruppen. Vier Fehler sind erlaubt.", "Drei Fragen aus dem Allgemeinwissen."],
     start: "Starten", doneToday: "Du hast die heutige Runde gespielt.", again: "Noch eine Runde", next: "Weiter", enter: "Enter", submit: "Prüfen", deselect: "Abwählen", shuffle: "Mischen",
-    mistakes: "Fehler übrig", oneAway: "Fast! Ein Wort passt nicht.", notThis: "Diesmal nicht.", word: "Das Wort war", solved: "Geschafft!", round: "Runde {n} von 3", share: "Ergebnis kopieren", copied: "Kopiert!",
+    mistakes: "Fehler übrig", oneAway: "Fast! Ein Wort passt nicht.", missed: "Keine Gruppe. Tausch ein Wort und versuch es nochmal.", tried: "Diese Kombination hattest du schon.", picked: "{n} von 4 gewählt", notThis: "Diesmal nicht.", word: "Das Wort war", solved: "Geschafft!", round: "Runde {n} von 3", share: "Ergebnis kopieren", copied: "Kopiert!",
     daily: "Täglich", random: "Zufällige Runde", result: "Ergebnis", fact: "Wusstest du?", toy: "Jeden Tag neu", played: "Heute gespielt", tries: "{n}/6", title: "Rätselrunde", finish: "Ergebnis ansehen",
     pick: "Buchstabe wählen", correct: "Richtig!", wrong: "Leider nicht.", tooShort: "Zu wenig Buchstaben", notWord: "Nicht in der Wortliste"
   }
@@ -45,7 +45,7 @@ function wdSetup(mode) {
   wd.five = { word, guesses: [], cur: "", over: false, won: false, msg: "" };
   const puzzle = d.four[idx % d.four.length];
   const words = wdShuffle(puzzle.groups.flatMap((g, gi) => g.w.map((w) => ({ w, g: gi }))));
-  wd.four = { puzzle, tiles: words, sel: [], solved: [], mistakes: 0, hist: [], over: false, won: false, msg: "" };
+  wd.four = { puzzle, tiles: words, sel: [], solved: [], mistakes: 0, hist: [], over: false, won: false, msg: "", kind: "", tried: [], shake: false };
   const start = (idx * 3) % d.quiz.length;
   wd.quiz = { qs: [0, 1, 2].map((i) => d.quiz[(start + i) % d.quiz.length]), i: 0, picked: null, hist: [] };
 }
@@ -113,36 +113,45 @@ function wdFiveKey(k) {
 const WD_COLORS = ["#fcd34d", "#8fd46a", "#60a5fa", "#a78bfa"];
 const WD_SQUARE = ["🟨", "🟩", "🟦", "🟪"];
 function wdFourHTML() {
-  const f = wd.four, g = f.puzzle.groups;
+  const f = wd.four, g = f.puzzle.groups, shake = f.shake;
+  f.shake = false;
   const solved = f.solved.map((gi, order) => `<div class="wd4__group" style="--c:${WD_COLORS[order]}"><b>${esc(g[gi].n)}</b><span>${esc(g[gi].w.join(", "))}</span></div>`).join("");
   const left = f.tiles.filter((t) => !f.solved.includes(t.g));
-  const tiles = left.map((t) => `<button type="button" class="wd4__tile${f.sel.includes(t.w) ? " is-sel" : ""}" data-w="${esc(t.w)}"${f.over ? " disabled" : ""}>${esc(t.w)}</button>`).join("");
+  const tiles = left.map((t) => `<button type="button" class="wd4__tile${f.sel.includes(t.w) ? " is-sel" : ""}${shake && f.sel.includes(t.w) ? " is-shake" : ""}" data-w="${esc(t.w)}" aria-pressed="${f.sel.includes(t.w)}"${f.over ? " disabled" : ""}>${esc(t.w)}</button>`).join("");
   const dots = Array.from({ length: 4 }, (_, i) => `<i class="${i < 4 - f.mistakes ? "is-on" : ""}"></i>`).join("");
+  const toast = f.msg ? `<p class="wd4__toast is-${f.kind || "info"}" role="status">${esc(f.msg)}</p>` : f.sel.length && !f.over ? `<p class="wd4__toast is-count" role="status">${esc(wt("picked").replace("{n}", f.sel.length))}</p>` : "";
   return `<div class="wd4__solved">${solved}</div>
+    <div class="wd4__toastrow">${toast}</div>
     ${left.length ? `<div class="wd4__grid">${tiles}</div>` : ""}
-    <p class="wd__msg" role="status">${esc(f.msg)}</p>
     <p class="wd4__lives">${esc(wt("mistakes"))}: <span class="wd4__dots">${dots}</span></p>
     ${f.over ? `<div class="wd__actions"><button type="button" class="orch__go" id="wdNext">${esc(wt("next"))}</button></div>`
-      : `<div class="wd__actions"><button type="button" class="orch__go" id="wdSubmit"${f.sel.length === 4 ? "" : " disabled"}>${esc(wt("submit"))}</button>
+      : `<div class="wd__actions"><button type="button" class="orch__go" id="wdSubmit"${f.sel.length === 4 ? "" : " disabled"}>${esc(wt("submit"))}${f.sel.length ? " (" + f.sel.length + "/4)" : ""}</button>
          <button type="button" class="orch__clear" id="wdShuffle">${esc(wt("shuffle"))}</button><button type="button" class="orch__clear" id="wdDeselect"${f.sel.length ? "" : " disabled"}>${esc(wt("deselect"))}</button></div>`}`;
 }
 function wdFourSubmit() {
   const f = wd.four, g = f.puzzle.groups;
   if (f.sel.length !== 4 || f.over) return;
+  const key = [...f.sel].sort().join("|");
+  if (f.tried.includes(key)) { // the same four again: no mistake, just a hint
+    f.msg = wt("tried"); f.kind = "info"; f.shake = true; if (!playMuted) oTone(300, orchCtx().currentTime, 0.1, "square", 0.03);
+    wdPaint(); return;
+  }
   const sel = f.tiles.filter((t) => f.sel.includes(t.w));
   const counts = [0, 0, 0, 0];
   sel.forEach((t) => counts[t.g]++);
   const hit = counts.findIndex((c) => c === 4);
   if (hit >= 0) {
-    f.solved.push(hit); f.hist.push(f.solved.length - 1); f.sel = []; f.msg = ""; // colours follow the order you solved the groups in
+    f.solved.push(hit); f.hist.push(f.solved.length - 1); f.sel = []; f.msg = ""; f.kind = ""; // colours follow the order you solved the groups in
     if (!playMuted) [523, 659, 784].forEach((fr, i) => oTone(fr, orchCtx().currentTime + i * 0.07, 0.2, "triangle", 0.1));
-    if (f.solved.length === 4) { f.over = true; f.won = true; f.msg = wt("solved"); }
+    if (f.solved.length === 4) { f.over = true; f.won = true; f.msg = wt("solved"); f.kind = "ok"; }
   } else {
-    f.mistakes++; f.hist.push(-1);
-    f.msg = counts.some((c) => c === 3) ? wt("oneAway") : "";
-    f.sel = [];
-    if (!playMuted) oTone(220, orchCtx().currentTime, 0.2, "sawtooth", 0.05, 150);
-    if (f.mistakes >= 4) { f.over = true; f.msg = wt("notThis"); g.forEach((_, gi) => { if (!f.solved.includes(gi)) f.solved.push(gi); }); }
+    f.mistakes++; f.hist.push(-1); f.tried.push(key);
+    const one = counts.some((c) => c === 3);
+    f.msg = one ? wt("oneAway") : wt("missed"); f.kind = one ? "one" : "miss";
+    f.shake = true; // the four stay selected so you can swap just one word
+    try { if (navigator.vibrate) navigator.vibrate(one ? [40, 40, 40] : 120); } catch (e) {}
+    if (!playMuted) oTone(one ? 330 : 220, orchCtx().currentTime, 0.2, "sawtooth", 0.05, one ? 260 : 150);
+    if (f.mistakes >= 4) { f.over = true; f.sel = []; f.msg = wt("notThis"); f.kind = "miss"; g.forEach((_, gi) => { if (!f.solved.includes(gi)) f.solved.push(gi); }); }
   }
   if (f.over) wd.res.four = { won: f.won, mistakes: f.mistakes, hist: f.hist };
   wdPaint();
@@ -217,11 +226,11 @@ function wdBind() {
     const f = wd.four, w = b.dataset.w;
     if (f.over) return;
     if (f.sel.includes(w)) f.sel = f.sel.filter((x) => x !== w); else if (f.sel.length < 4) f.sel.push(w);
-    f.msg = ""; sfx.click(); wdPaint();
+    f.msg = ""; f.kind = ""; sfx.click(); wdPaint();
   }));
   on("wdSubmit", wdFourSubmit);
-  on("wdDeselect", () => { wd.four.sel = []; wdPaint(); });
-  on("wdShuffle", () => { wd.four.tiles = wdShuffle(wd.four.tiles); sfx.click(); wdPaint(); });
+  on("wdDeselect", () => { wd.four.sel = []; wd.four.msg = ""; wdPaint(); });
+  on("wdShuffle", () => { wd.four.tiles = wdShuffle(wd.four.tiles); wd.four.msg = ""; sfx.click(); wdPaint(); });
   playBody.querySelectorAll(".wdq__opt").forEach((b) => b.addEventListener("click", () => wdQuizPick(+b.dataset.i)));
   on("wdNext", () => {
     sfx.click();
