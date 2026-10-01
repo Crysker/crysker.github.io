@@ -17,6 +17,7 @@ const ORCH_T = {
     pitch: "Pitch", kit: "Sound", kits: ["Classic", "8-bit", "Buzz", "Soft"], hint: "Tap a creature to select it: change its pitch or length, remove it, or drop another creature on it to layer sounds. Alt-drag copies a square.", len: "Note length",
     pitchNote: "Pitch", lenNote: "Length", remove: "Remove", layer: "Add layer", selected: "Selected",
     found: "Discoveries", share: "Share my beat", download: "Download", rendering: "Rendering…",
+    tplBtn: "Template beats", tplTitle: "Template beats", tplHear: "Hear", tplStop: "Stop", tplUse: "Use this beat", tplRender: "…", tplClose: "Close", tplConfirm: "Replace the beat on your stage with this template?",
     copy: "Copy", paste: "Paste", pasteOn: "Click a square to paste (Esc stops)", dup: "Duplicate", vol: "Volume", volShort: "Vol", createOwn: "Create own sound", mkSound: "Sound", mkTitle: "Create your own sound", mkEdit: "Edit your sound", mkName: "Name", mkAvatar: "Avatar", mkUploadImg: "Upload image", mkStart: "Start", mkLen: "Length", mkMax: "max. {n} s", save: "Save", cancel: "Cancel", edit: "Edit", noSample: "Record or upload a sound first.", ownTag: "own sound", mkDefault: "My sound",
     modeFree: "Freestyle", modeLearn: "Learn", level: "Level {n} of 5", next: "Next level", restart: "Restart level", doneTitle: "You know every tool now", doneText: "Creatures, pitch, tempo, shaping notes, layers, kits, rows, sharing: all yours. Time for freestyle!", openFree: "Open freestyle",
     mineTitle: "Your own sound", rec: "Record", recStop: "Stop", upload: "Upload", test: "Test", del: "Remove", mineNone: "Record up to 2.5 seconds or upload a sound file. Sounds stay on your device, a shared link plays a plain blip instead.", mineHas: "Your sound is ready. Put My sound on the stage.", mineMic: "Could not use the microphone.", mineBad: "That file could not be read.", mineRec: "Recording …", copied: "Link copied", newFound: "Discovered: {n}!", creatures: "Creatures",
@@ -41,6 +42,7 @@ const ORCH_T = {
     pitch: "Tonhöhe", kit: "Klang", kits: ["Klassisch", "8-Bit", "Brummig", "Weich"], hint: "Höhere Reihen klingen höher. Tippe ein Wesen an, um es auszuwählen: Tonhöhe oder Länge ändern, entfernen, oder ein weiteres Wesen daraufziehen, um Klänge zu schichten. Alt beim Ziehen kopiert ein Feld.", len: "Tonlänge",
     pitchNote: "Tonhöhe", lenNote: "Länge", remove: "Entfernen", layer: "Schicht hinzufügen", selected: "Ausgewählt",
     found: "Entdeckungen", share: "Meinen Beat teilen", download: "Herunterladen", rendering: "Wird erstellt …",
+    tplBtn: "Beispiel-Beats", tplTitle: "Beispiel-Beats", tplHear: "Anhören", tplStop: "Stopp", tplUse: "Diesen Beat nehmen", tplRender: "…", tplClose: "Schließen", tplConfirm: "Das Beat auf deiner Bühne durch dieses Beispiel ersetzen?",
     copy: "Kopieren", paste: "Einfügen", pasteOn: "Feld anklicken zum Einfügen (Esc beendet)", dup: "Duplizieren", vol: "Lautstärke", volShort: "Laut", createOwn: "Eigenen Klang erstellen", mkSound: "Klang", mkTitle: "Erstelle deinen eigenen Klang", mkEdit: "Klang bearbeiten", mkName: "Name", mkAvatar: "Avatar", mkUploadImg: "Bild hochladen", mkStart: "Start", mkLen: "Länge", mkMax: "max. {n} s", save: "Speichern", cancel: "Abbrechen", edit: "Bearbeiten", noSample: "Nimm erst einen Klang auf oder lade einen hoch.", ownTag: "eigener Klang", mkDefault: "Mein Ton",
     modeFree: "Freestyle", modeLearn: "Lernen", level: "Stufe {n} von 5", next: "Nächste Stufe", restart: "Stufe neu starten", doneTitle: "Du kennst jetzt alle Werkzeuge", doneText: "Wesen, Tonhöhe, Tempo, Noten formen, Schichten, Klänge, Reihen, Teilen: alles deins. Zeit für Freestyle!", openFree: "Freestyle öffnen",
     mineTitle: "Dein eigener Klang", rec: "Aufnehmen", recStop: "Stopp", upload: "Hochladen", test: "Anhören", del: "Entfernen", mineNone: "Nimm bis zu 2,5 Sekunden auf oder lade eine Audiodatei hoch. Der Klang bleibt auf deinem Gerät, ein geteilter Link spielt stattdessen einen einfachen Ton.", mineHas: "Dein Klang ist bereit. Setz „Mein Ton“ auf die Bühne.", mineMic: "Das Mikrofon ließ sich nicht verwenden.", mineBad: "Diese Datei konnte nicht gelesen werden.", mineRec: "Aufnahme läuft …", copied: "Link kopiert", newFound: "Neu entdeckt: {n}!", creatures: "Wesen",
@@ -420,7 +422,7 @@ const ORCH_LEARN = [
       { text: { en: "Layer two creatures on one square", de: "Schichte zwei Wesen auf einem Feld" }, ok: () => orch.more.flat().some((a) => a.length > 0) },
       { text: { en: "Drag a creature to another square", de: "Zieh ein Wesen auf ein anderes Feld" }, ok: (f) => !!f.moved },
       { text: { en: "Give a layer its own pitch", de: "Gib einer Schicht eine eigene Tonhöhe" }, ok: () => orch.more.flat(2).some((n) => n.pit !== 0) }] },
-  { feats: ["tempo", "panel", "pitch", "kit", "rows", "share", "download", "found", "mine"], start: ORCH_GROOVE,
+  { feats: ["tempo", "panel", "pitch", "kit", "rows", "share", "download", "found", "mine", "templates"], start: ORCH_GROOVE,
     title: { en: "Make it yours", de: "Mach es zu deinem" },
     text: { en: "The Sound button below cycles through the sound kits. Add a row for more notes, then share your beat or download it as MP3.", de: "Der Klang-Knopf unten schaltet durch die Klang-Kits. Füg eine Reihe für mehr Töne hinzu und teile dann dein Beat oder lade es als MP3 herunter." },
     tasks: [
@@ -725,7 +727,7 @@ function orchPaintInsp() {
   box.innerHTML = `<details class="orch__det"${orch.inspOpen ? " open" : ""}><summary><span>${esc(ot("selected"))}: ${esc(ORCH_NAMES[r])} · ${esc(ot("beat"))} ${c + 1}</span><span class="orch__sum">${notes.map((n) => `<i>${creatureSVG(ORCH_BY_ID[n.id])}</i>`).join("")}</span></summary>
     <ul class="orch__notes">${notes.map((n, i) => `<li>
       <span class="orch__mini">${creatureSVG(ORCH_BY_ID[n.id])}</span><b>${esc(orchName(n.id))}</b>
-      <span class="orch__ctl"><span>${esc(ot("pitchNote"))}</span><button type="button" data-i="${i}" data-act="pit-" aria-label="${esc(ot("pitchNote"))} −">−</button><output>${sgn(n.pit)}</output><button type="button" data-i="${i}" data-act="pit+" aria-label="${esc(ot("pitchNote"))} +">+</button></span>
+      <span class="orch__ctl orch__pctl"><span>${esc(ot("pitchNote"))}</span><button type="button" data-i="${i}" data-act="pit-" aria-label="${esc(ot("pitchNote"))} −">−</button><output>${sgn(n.pit)}</output><button type="button" data-i="${i}" data-act="pit+" aria-label="${esc(ot("pitchNote"))} +">+</button></span>
       <span class="orch__ctl orch__vctl"><span>${esc(ot("volShort"))}</span><input type="range" class="orch__vslider" min="0" max="100" step="5" data-i="${i}" value="${n.vol === undefined ? 100 : n.vol}" aria-label="${esc(ot("vol"))}"><output>${n.vol === undefined ? 100 : n.vol}</output></span>
       <span class="orch__lane" role="group" aria-label="${esc(ot("lenNote"))}">${Array.from({ length: ORCH_COLS }, (_, k) => `<i class="${k === c ? "is-here" : ""}" style="grid-column:${k + 1};grid-row:1"></i>`).join("")}<span class="orch__nb" tabindex="0" data-i="${i}" role="slider" aria-valuemin="1" aria-valuemax="${ORCH_COLS - c}" aria-valuenow="${n.len}" aria-label="${esc(ot("lenNote"))}" style="grid-column:${c + 1} / span ${n.len};--tail:${ORCH_BY_ID[n.id].color}"><b>${n.len}</b><span class="orch__bh"></span></span></span>
       <button type="button" class="orch__x" data-i="${i}" data-act="del" aria-label="${esc(ot("remove"))}" title="${esc(ot("remove"))}">✕</button></li>`).join("")}</ul>
@@ -938,6 +940,92 @@ async function orchDownload(btn) {
     sfx.pop();
   } finally { btn.disabled = false; btn.innerHTML = label; }
 }
+/* ---- template beats: five examples to hear (rendered on the side, your stage stays as it is) and to take over ---- */
+const ORCH_TPL = [
+  { id: "chill", bpm: 88, kit: 3, rows: 6,
+    name: { en: "Chill groove", de: "Chill-Groove" }, desc: { en: "Soft kit, slow bass and a dreamy pluck tune.", de: "Weicher Klang, ruhiger Bass und eine verträumte Melodie." },
+    notes: [[5, 0, [orchN("blob")]], [5, 5, [orchN("blob")]], [4, 0, [orchN("frog", 2)]], [4, 3, [orchN("frog", 1, 2)]], [3, 6, [orchN("frog", 2, -2)]],
+      [2, 0, [orchN("ghost", 4), { ...orchN("ghost", 4, 7), vol: 55 }]], [2, 4, [{ ...orchN("ghost", 4, -2), vol: 70 }]],
+      [1, 2, [orchN("octo")]], [0, 5, [orchN("octo"), { ...orchN("octo", 1, 5), vol: 60 }]], [1, 7, [orchN("octo")]]] },
+  { id: "floor", bpm: 124, kit: 0, rows: 6,
+    name: { en: "Four on the floor", de: "Vier auf den Boden" }, desc: { en: "A steady dance beat with hats on the off-beats.", de: "Ein gerader Tanzbeat mit Hi-Hats auf den Off-Beats." },
+    notes: [[5, 0, [orchN("blob")]], [5, 2, [orchN("blob")]], [5, 4, [orchN("blob")]], [5, 6, [orchN("blob")]],
+      [0, 1, [orchN("robot")]], [0, 3, [orchN("robot")]], [0, 5, [orchN("robot")]], [0, 7, [orchN("robot")]],
+      [4, 0, [orchN("frog", 2)]], [4, 3, [orchN("frog")]], [4, 6, [orchN("frog", 2, 3)]],
+      [2, 2, [orchN("octo"), { ...orchN("octo", 1, 7), vol: 60 }]], [2, 6, [orchN("octo", 2)]], [1, 4, [orchN("bird")]]] },
+  { id: "pixel", bpm: 140, kit: 1, rows: 5,
+    name: { en: "Pixel adventure", de: "Pixel-Abenteuer" }, desc: { en: "8-bit runs and chirpy birds.", de: "8-Bit-Läufe und zwitschernde Vögel." },
+    notes: [[4, 0, [orchN("octo")]], [3, 1, [orchN("octo")]], [2, 2, [orchN("octo")]], [1, 3, [orchN("octo")]], [0, 4, [orchN("octo")]], [1, 5, [orchN("octo")]], [2, 6, [orchN("octo")]], [3, 7, [orchN("octo")]],
+      [0, 0, [orchN("bird")]], [0, 2, [orchN("bird", 1, 4)]], [1, 6, [orchN("bird")]],
+      [4, 4, [orchN("blob")]], [4, 6, [orchN("blob")]], [1, 0, [orchN("robot")]], [1, 4, [orchN("robot")]]] },
+  { id: "haunted", bpm: 68, kit: 3, rows: 6,
+    name: { en: "Haunted lullaby", de: "Spuk-Schlaflied" }, desc: { en: "Ghost pads that ring long over a slow heartbeat.", de: "Lange Geister-Flächen über einem langsamen Herzschlag." },
+    notes: [[1, 0, [{ ...orchN("ghost", 4), vol: 80 }, { ...orchN("ghost", 4, 5), vol: 50 }]], [2, 4, [orchN("ghost", 4)]], [3, 2, [orchN("ghost", 2, -3)]],
+      [5, 0, [orchN("blob")]], [5, 4, [orchN("blob")]], [4, 2, [orchN("frog", 2, -4)]], [0, 6, [{ ...orchN("bird", 2), vol: 60 }]], [0, 1, [{ ...orchN("octo"), vol: 70 }]]] },
+  { id: "robot", bpm: 112, kit: 2, rows: 6,
+    name: { en: "Robot parade", de: "Roboter-Parade" }, desc: { en: "Buzzy kit, marching robots and a stomping bass.", de: "Brummiges Kit, marschierende Roboter und stampfender Bass." },
+    notes: [[0, 0, [orchN("robot")]], [0, 2, [orchN("robot")]], [0, 4, [orchN("robot")]], [0, 6, [orchN("robot")]], [1, 1, [orchN("robot")]], [1, 3, [orchN("robot")]], [1, 5, [orchN("robot")]], [1, 7, [orchN("robot")]],
+      [5, 0, [orchN("blob")]], [5, 3, [orchN("blob")]], [5, 4, [orchN("blob")]], [5, 7, [orchN("blob")]],
+      [4, 0, [orchN("frog")]], [4, 2, [orchN("frog", 1, 3)]], [4, 4, [orchN("frog")]], [4, 6, [orchN("frog", 1, 3)]],
+      [3, 6, [orchN("octo", 2)]], [2, 0, [{ ...orchN("ghost", 3), vol: 60 }]]] }
+];
+function orchTplApply(tpl) {
+  orch.grid = Array.from({ length: tpl.rows }, () => Array(ORCH_COLS).fill(null));
+  orch.len = orchLenFor(orch.grid, null); orchSync(null);
+  tpl.notes.forEach(([r, c, notes]) => orchSetNotes(r, c, notes.map((n) => ({ vol: 100, ...n }))));
+  orch.bpm = tpl.bpm; orch.kit = tpl.kit; orch.pitch = 0;
+}
+async function orchTplBuffer(tpl) { // rendered off to the side: your own beat on the stage stays untouched
+  if (tpl.buf && tpl.bufMaster === orch.master) return tpl.buf;
+  const keep = JSON.stringify({ g: orch.grid, l: orch.len, pt: orch.pit, v: orch.vol, m: orch.more }), other = { bpm: orch.bpm, kit: orch.kit, pitch: orch.pitch, cell: orch.cell };
+  orchTplApply(tpl);
+  const done = orchRender(); // every note is scheduled right here, before the first await, so the stage can be put back at once
+  const s = JSON.parse(keep); orch.grid = s.g; orch.len = s.l; orch.pit = s.pt; orch.vol = s.v; orch.more = s.m; Object.assign(orch, other);
+  tpl.buf = await done; tpl.bufMaster = orch.master;
+  return tpl.buf;
+}
+let orchTplSrc = null;
+function orchTplStop() {
+  if (!orchTplSrc) return;
+  const { src, g } = orchTplSrc, c = audioCtx;
+  orchTplSrc = null;
+  try { g.gain.setTargetAtTime(0, c.currentTime, 0.02); src.stop(c.currentTime + 0.12); } catch (e) {}
+}
+async function orchTplPlay(tpl, onEnd) {
+  orchStop(); orchTplStop();
+  const buf = await orchTplBuffer(tpl), c = orchCtx(), src = c.createBufferSource(), g = c.createGain();
+  src.buffer = buf; src.connect(g); g.connect(c.destination); // the master volume is already in the rendering
+  src.onended = () => { if (orchTplSrc && orchTplSrc.src === src) orchTplSrc = null; onEnd(); };
+  src.start(); orchTplSrc = { src, g };
+}
+function orchOpenTemplates() {
+  const dlg = document.createElement("dialog");
+  dlg.className = "orch__dlg orch__tpl";
+  dlg.innerHTML = `<h3>${esc(ot("tplTitle"))}</h3><ul class="tpl__list">${ORCH_TPL.map((tpl, i) => `<li class="tpl__item" data-i="${i}">
+      <div class="tpl__txt"><b>${esc(tpl.name[lang] || tpl.name.en)}</b><span>${esc(tpl.desc[lang] || tpl.desc.en)}</span><small>${tpl.bpm} BPM</small></div>
+      <div class="tpl__btns"><button type="button" class="orch__clear" data-act="hear">▶ ${esc(ot("tplHear"))}</button><button type="button" class="orch__go" data-act="use">${esc(ot("tplUse"))}</button></div></li>`).join("")}</ul>
+    <div class="mk__btns"><button type="button" class="orch__clear" id="tplClose">${esc(ot("tplClose"))}</button></div>`;
+  document.body.appendChild(dlg);
+  const playing = { i: -1 };
+  const paint = () => dlg.querySelectorAll(".tpl__item").forEach((li) => { const on = +li.dataset.i === playing.i; li.querySelector('[data-act="hear"]').textContent = on ? "■ " + ot("tplStop") : "▶ " + ot("tplHear"); li.classList.toggle("is-on", on); });
+  dlg.addEventListener("click", async (e) => {
+    const b = e.target.closest("button[data-act]");
+    if (!b) return;
+    const i = +b.closest(".tpl__item").dataset.i, tpl = ORCH_TPL[i];
+    if (b.dataset.act === "hear") {
+      if (playing.i === i) { orchTplStop(); playing.i = -1; paint(); return; }
+      playing.i = i; paint();
+      await orchTplPlay(tpl, () => { if (playing.i === i) { playing.i = -1; paint(); } });
+    } else {
+      if (orchCount() > 0 && !window.confirm(ot("tplConfirm"))) return;
+      orchTplStop(); orchStop(); orchTplApply(tpl); orchSave(); sfx.score(95);
+      dlg.close(); renderOrchestra();
+    }
+  });
+  dlg.querySelector("#tplClose").addEventListener("click", () => dlg.close());
+  dlg.addEventListener("close", () => { orchTplStop(); dlg.remove(); });
+  dlg.showModal();
+}
 function orchShare(btn) {
   const url = location.origin + location.pathname + "#orchestra/" + orchEncode() + orchEncodeRest();
   const label = btn.innerHTML;
@@ -994,6 +1082,7 @@ function renderOrchestra() {
           <input type="range" id="orchPitch" min="-12" max="12" step="1" value="${orch.pitch}"><output id="orchPitchOut">${orch.pitch > 0 ? "+" : ""}${orch.pitch}</output></label>
         <button type="button" class="orch__clear" id="orchKit" data-feat="kit">${esc(ot("kit"))}: ${esc(ot("kits")[orch.kit])}</button>
         <span class="orch__rows" role="group" data-feat="rows" aria-label="${esc(ot("rows"))}"><button type="button" class="orch__rowbtn" id="orchRowLess" aria-label="${esc(ot("rowLess"))}"></button><span>${esc(ot("rows"))}</span><button type="button" class="orch__rowbtn" id="orchRowMore" aria-label="${esc(ot("rowMore"))}"></button></span>
+        <button type="button" class="orch__clear" id="orchTemplates" data-feat="templates">${esc(ot("tplBtn"))}</button>
         <button type="button" class="orch__clear" id="orchDownload" data-feat="download"><span aria-hidden="true">⬇</span> ${esc(ot("download"))}</button>
         <button type="button" class="orch__clear" id="orchShare" data-feat="share"><span aria-hidden="true">↗</span> ${esc(ot("share"))}</button>
         <button type="button" class="orch__clear" id="orchClear"><span aria-hidden="true">✕</span> ${esc(ot("clear"))}</button>
@@ -1081,6 +1170,7 @@ function renderOrchestra() {
   document.getElementById("orchInsp").addEventListener("change", (e) => orchInspVolume(e, true));
   document.getElementById("orchInsp").addEventListener("keydown", orchInspKey);
   document.getElementById("orchInsp").addEventListener("toggle", (e) => { if (e.target.matches("details")) orch.inspOpen = e.target.open; }, true); // folded up it stays out of the way
+  document.getElementById("orchTemplates").addEventListener("click", () => { sfx.click(); orchOpenTemplates(); });
   document.getElementById("orchDownload").addEventListener("click", (e) => { orchFlag("shared"); orchDownload(e.currentTarget); });
   document.getElementById("orchShare").addEventListener("click", (e) => { orchFlag("shared"); orchShare(e.currentTarget); });
   const rowBtns = () => {

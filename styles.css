@@ -1580,3 +1580,31 @@ body.view-all .p-card__play, body.view-all .p-card__video { display: none; }
 .orch__det > .orch__acts { margin: 4px 16px 16px; }
 .orch__stage.is-pasting .orch__cell { cursor: copy; }
 .orch__acts .orch__clear.is-armed { border-color: var(--turq); background: var(--turq-soft); }
+
+/* Orchestra: template beats */
+.orch__tpl { width: min(640px, 94vw); }
+.tpl__list { list-style: none; margin: 0 0 18px; padding: 0; display: grid; gap: 10px; }
+.tpl__item { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; padding: 14px 16px; border-radius: 18px; border: 1px solid var(--line); background: var(--surface-2); }
+.tpl__item.is-on { border-color: var(--turq); }
+.tpl__txt { display: grid; gap: 3px; min-width: 0; flex: 1 1 240px; }
+.tpl__txt b { font: 700 17px var(--serif); }
+.tpl__txt span { color: var(--ink-soft); font-size: 14px; }
+.tpl__txt small { color: var(--turq-text); font: 800 11px var(--sans); letter-spacing: .06em; text-transform: uppercase; }
+.tpl__btns { display: flex; gap: 8px; flex-wrap: wrap; }
+.tpl__btns .orch__clear, .tpl__btns .orch__go { padding: 9px 16px; font-size: 14px; cursor: pointer; }
+
+/* the note panel adapts to the width it really has (not the screen): one row when wide, two when medium, stacked when narrow */
+.orch__insp { container-type: inline-size; container-name: orchinsp; }
+.orch__stagewrap .orch__insp .orch__det .orch__notes li { display: grid; align-items: center; gap: 8px 16px; padding: 10px 0; grid-template-columns: 28px minmax(56px, 96px) 150px 170px minmax(140px, 1fr) 28px; grid-template-areas: "ic nm pc vc ln x"; }
+.orch__stagewrap .orch__insp .orch__det .orch__notes li > .orch__mini { grid-area: ic; }
+.orch__stagewrap .orch__insp .orch__det .orch__notes li > b { grid-area: nm; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.orch__stagewrap .orch__insp .orch__det .orch__notes li > .orch__pctl { grid-area: pc; }
+.orch__stagewrap .orch__insp .orch__det .orch__notes li > .orch__vctl { grid-area: vc; }
+.orch__stagewrap .orch__insp .orch__det .orch__notes li > .orch__lane { grid-area: ln; min-width: 0; }
+.orch__stagewrap .orch__insp .orch__det .orch__notes li > .orch__x { grid-area: x; justify-self: end; margin: 0; }
+@container orchinsp (max-width: 720px) {
+  .orch__stagewrap .orch__insp .orch__det .orch__notes li { grid-template-columns: 28px minmax(40px, 1fr) 150px 170px 28px; grid-template-areas: "ic nm pc vc x" "ln ln ln ln ln"; }
+}
+@container orchinsp (max-width: 560px) {
+  .orch__stagewrap .orch__insp .orch__det .orch__notes li { grid-template-columns: 28px 1fr 28px; grid-template-areas: "ic nm x" "pc pc pc" "vc vc vc" "ln ln ln"; }
+}
