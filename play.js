@@ -82,7 +82,8 @@ let play = { screen: "menu", qs: [], i: 0, results: [], guess: null };
 
 const shuffle = (arr) => { const a = [...arr]; for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
 const fmtNum = (v, dec = 0) => {
-  const d = v >= 1000 ? 0 : v >= 100 ? Math.min(dec, 1) : Math.max(dec, v < 10 ? 1 : 0);
+  const typed = v < 1000 && Math.abs(v * 100 - Math.round(v * 100)) < 1e-7; // a typed value like 202,7 keeps its decimals
+  const d = typed ? 2 : v >= 1000 ? 0 : v >= 100 ? Math.min(dec, 1) : Math.max(dec, v < 10 ? 1 : 0);
   return v.toLocaleString(lang === "de" ? "de-AT" : "en-GB", { maximumFractionDigits: d, minimumFractionDigits: 0 });
 };
 /* "9.618" could mean 9.618 or 9,618: pick the reading that fits the question's range (decimal wins if both fit) */

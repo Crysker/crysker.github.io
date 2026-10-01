@@ -1,18 +1,46 @@
-# Photo credits for the price game
-All photos are from Wikimedia Commons, used under the licences shown. Thumbnails were scaled down; nothing else was changed.
-- `bananen.jpg`: Bunch of bananas on sale.jpg by Wilfredor, CC0, https://commons.wikimedia.org/wiki/File:Bunch_of_bananas_on_sale.jpg
-- `tomaten.jpg`: Tomaten -- 2021 -- 9132.jpg by Dietmar Rabich, CC BY-SA 4.0, https://commons.wikimedia.org/wiki/File:Tomaten_--_2021_--_9132.jpg
-- `gurke.jpg`: Cucumis sativus 0001.JPG by H. Zell, CC BY-SA 3.0, https://commons.wikimedia.org/wiki/File:Cucumis_sativus_0001.JPG
-- `butter.jpg`: Block of butter 20200928 080207.jpg by Salicyna, CC BY-SA 4.0, https://commons.wikimedia.org/wiki/File:Block_of_butter_20200928_080207.jpg
-- `gouda.jpg`: Winterswijk (NL), Wochenmarkt -- 2024 -- 4337.jpg by Dietmar Rabich, CC BY-SA 4.0, https://commons.wikimedia.org/wiki/File:Winterswijk_(NL),_Wochenmarkt_--_2024_--_4337.jpg
-- `kaffee.jpg`: A small cup of coffee.JPG by Julius Schorzman, CC BY-SA 2.0, https://commons.wikimedia.org/wiki/File:A_small_cup_of_coffee.JPG
-- `schokolade.jpg`: Milka Alpine Milk Chocolate bar 100g.jpg by Ubcule, CC BY-SA 4.0, https://commons.wikimedia.org/wiki/File:Milka_Alpine_Milk_Chocolate_bar_100g.jpg
-- `dosenbier.jpg`: Beer cans.jpg by Shuntaro Kawasaki, CC0, https://commons.wikimedia.org/wiki/File:Beer_cans.jpg
-- `semmel.jpg`: Kaisersemmel in Turkey.jpg by E4024, CC BY-SA 4.0, https://commons.wikimedia.org/wiki/File:Kaisersemmel_in_Turkey.jpg
-- `cola.jpg`: Coca Cola Pickup.jpg by Mkoenitzer, CC BY-SA 4.0, https://commons.wikimedia.org/wiki/File:Coca_Cola_Pickup.jpg
-- `nutella.jpg`: Nutella ak.jpg by -donald-, CC BY-SA 3.0, https://commons.wikimedia.org/wiki/File:Nutella_ak.jpg
-- `manner.jpg`: Wachauer Schnitte 03.jpg by Mfchris84, CC0, https://commons.wikimedia.org/wiki/File:Wachauer_Schnitte_03.jpg
-- `melange.jpg`: Wiener Melange 2.JPG by Dr. Bernd Gross, CC BY-SA 4.0, https://commons.wikimedia.org/wiki/File:Wiener_Melange_2.JPG
-- `diglas.jpg`: CafeDiglas Front.JPG by BambooBeast, Public domain, https://commons.wikimedia.org/wiki/File:CafeDiglas_Front.JPG
-- `pruckel.jpg`: Café Prückel Wien Würfeluhr 2014 c.jpg by Manfred Werner - Tsui, CC BY-SA 3.0, https://commons.wikimedia.org/wiki/File:Caf%C3%A9_Pr%C3%BCckel_Wien_W%C3%BCrfeluhr_2014_c.jpg
-- `schwarzenberg.jpg`: Cafe Schwarzenberg Vienna-bef 1900.jpg by unknown author, Public domain, https://commons.wikimedia.org/wiki/File:Cafe_Schwarzenberg_Vienna-bef_1900.jpg
+# Photo credits (price game)
+
+All photos from Wikimedia Commons, shown with author and licence under each photo in the game.
+
+- `kartoffeln.jpg`: Johann Jaritz, CC BY-SA 4.0, https://commons.wikimedia.org/wiki/File:Poertschach_Stillleben_Kraeutersalz_und_Kartoffeln_02022015_9410.jpg
+- `aepfel.jpg`: Abhijit Tembhekar from Mumbai, India, CC BY 2.0, https://commons.wikimedia.org/wiki/File:Red_Apple.jpg
+- `bananen.jpg`: Tim Reckmann from Hamm, Deutschland, CC BY 2.0, https://commons.wikimedia.org/wiki/File:Bananen_(14443890233).jpg
+- `tomaten.jpg`: User:Luigi Chiesa, CC BY-SA 3.0, https://commons.wikimedia.org/wiki/File:Pomodorini_sulla_pianta.jpg
+- `gurke.jpg`: Dr. Jan Hinrichs-Berger, Landwirtschaftliches Technologiezen, CC BY-SA 4.0, https://commons.wikimedia.org/wiki/File:Cucumis_sativus_-_St%C3%A4ngelbrand_-_Stagonosporopsis_cucurbitacearum-1-Hinrichs-Berger.jpg
+- `flaschenbier.jpg`: Scott A. Miller, CC BY 3.0, https://commons.wikimedia.org/wiki/File:Paulaner_Oktoberfest_Marzen_11.2oz_bottle_and_beer_mug.jpg
+- `dosenbier.jpg`: Habib M'henni, CC BY-SA 4.0, https://commons.wikimedia.org/wiki/File:Berber_limited_Edition,_2019.jpg
+- `orangensaft.jpg`: Shixart1985, CC BY 2.0, https://commons.wikimedia.org/wiki/File:Freshly_squeezed_juice_on_a_kitchen_counter_with_a_person_writing_notes_while_surrounded_by_fruit.jpg
+- `weisswein.jpg`: Merlin Bungart, CC BY 2.5, https://commons.wikimedia.org/wiki/File:Whitewine_-_South_Africa.jpg
+- `rotwein.jpg`: congerdesign, CC0, https://commons.wikimedia.org/wiki/File:Bottle_and_glass_of_red_wine.jpg
+- `butter.jpg`: Jacek Halicki, CC BY-SA 4.0, https://commons.wikimedia.org/wiki/File:2023_Mas%C5%82o_w_maselniczce.jpg
+- `gouda.jpg`: Guy Waterval, CC BY-SA 4.0, https://commons.wikimedia.org/wiki/File:Fontal_suisse1.JPG
+- `ei.jpg`: Evan-Amos, Public domain, https://commons.wikimedia.org/wiki/File:6-Pack-Chicken-Eggs.jpg
+- `brot.jpg`: No machine-readable author provided. Rainer Zenz assumed (ba, CC BY-SA 3.0, https://commons.wikimedia.org/wiki/File:Mischbrot-1.jpg
+- `reis.jpg`: cookbookman17, CC BY 2.0, https://commons.wikimedia.org/wiki/File:Basmati_Rice_India,_raw.jpg
+- `mehl.jpg`: Veganbaking.net from USA, CC BY-SA 2.0, https://commons.wikimedia.org/wiki/File:All-Purpose_Flour_(4107895947).jpg
+- `zucker.jpg`: Dietmar Rabich, CC BY-SA 4.0, https://commons.wikimedia.org/wiki/File:W%C3%BCrfelzucker_--_2018_--_3582.jpg
+- `schoko.jpg`: Ubcule, CC BY-SA 4.0, https://commons.wikimedia.org/wiki/File:Milka_Alpine_Milk_Chocolate_bar_100g.jpg
+- `kaffee.jpg`: Christian Schnettelker from Essen, Deutschland, CC BY 2.0, https://commons.wikimedia.org/wiki/File:Coffee_Beans_Kaffeebohnen_II_(11477597236).jpg
+- `penne.jpg`: BPARiedl, CC BY-SA 3.0, https://commons.wikimedia.org/wiki/File:Nudeln_trocken_makro.jpg
+- `passata.jpg`: Tabby, CC0, https://commons.wikimedia.org/wiki/File:Tomato_passata.jpg
+- `sonnenblumenoel.jpg`: torange.biz, CC BY 4.0, https://commons.wikimedia.org/wiki/File:Sunflower_oil_and_sunflower.jpg
+- `pizza.jpg`: Pannet, CC BY-SA 4.0, https://commons.wikimedia.org/wiki/File:Frozen_pizzas_03.jpg
+- `fischstaebchen.jpg`: Superbass, CC BY-SA 4.0, https://commons.wikimedia.org/wiki/File:Fishfinger_classic_frozen_1.jpg
+- `pommes.jpg`: Tony Webster from Minneapolis, Minnesota, United States, CC BY-SA 2.0, https://commons.wikimedia.org/wiki/File:Truffle_oil_french_fries_(33024792848).jpg
+- `semmel.jpg`: Kobako, CC BY-SA 2.5, https://commons.wikimedia.org/wiki/File:Kaisersemmel-.jpg
+- `cola15.jpg`: Shahroozporia, CC0, https://commons.wikimedia.org/wiki/File:Coca-Cola_6_bottle_pack.JPG
+- `almdudler.jpg`: Loimo, CC BY-SA 4.0, https://commons.wikimedia.org/wiki/File:Almdudlerflaschen.jpg
+- `nutella.jpg`: Lenore Edman from Sunnyvale, CA, CC BY 2.0, https://commons.wikimedia.org/wiki/File:Sconic_Sections_toppings_(9124751290).jpg
+- `manner.jpg`: Debbie Tingzon, CC BY 2.0, https://commons.wikimedia.org/wiki/File:Manner_Neapolitaner_(Swiss_Chocolate_Wafers).jpg
+- `stiegl.jpg`: FakirNL, CC BY-SA 4.0, https://commons.wikimedia.org/wiki/File:Stiegl_Gold.jpg
+- `raimund.jpg`: Manfred Werner (Tsui), CC BY-SA 4.0, https://commons.wikimedia.org/wiki/File:Caf%C3%A9_Raimund_2018_Wien.jpg
+- `ministerium.jpg`: ThomasTiroch, CC BY-SA 3.0, https://commons.wikimedia.org/wiki/File:Caf%C3%A9_Ministerium_(Wien_I)_%E2%80%94_Au%C3%9Fenansicht_2013-06-05.jpg
+- `pruckel.jpg`: Andreas Poeschek, viennaphoto.at, CC BY-SA 2.0 at, https://commons.wikimedia.org/wiki/File:Cafe-prueckel-eingang.jpg
+- `palmenhaus.jpg`: Aconcagua, CC BY-SA 3.0, https://commons.wikimedia.org/wiki/File:Wien_Burggarten_Palmenhaus.jpg
+- `korb.jpg`: Invisigoth67, CC BY-SA 3.0, https://commons.wikimedia.org/wiki/File:Wien_Cafe_Korb.jpg
+- `diglas.jpg`: Loimo, CC BY-SA 4.0, https://commons.wikimedia.org/wiki/File:Caf%C3%A9_Diglas,_Wien,_Januar_2018.jpg
+- `schwarzenberg.jpg`: Andreas Faessler, CC BY-SA 4.0, https://commons.wikimedia.org/wiki/File:Cafe_schwarzenberg.jpg
+- `frauenhuber.jpg`: Zyance, CC BY-SA 2.5, https://commons.wikimedia.org/wiki/File:Frauenhuber_z03.JPG
+- `museum.jpg`: Gerd Eichmann, CC BY-SA 4.0, https://commons.wikimedia.org/wiki/File:Wien-Operngasse-02-Nr_7-Cafe_Museum-2007-gje.jpg
+- `mozart.jpg`: Zyance, CC BY-SA 2.5, https://commons.wikimedia.org/wiki/File:CafeMozart_z02.JPG
+- `melange.jpg`: Dr. Bernd Gross, CC BY-SA 4.0, https://commons.wikimedia.org/wiki/File:Wiener_Melange_2.JPG

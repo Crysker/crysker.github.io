@@ -79,7 +79,7 @@ function startCaptcha() {
 }
 
 function pick(btn) {
-  gameTray.querySelectorAll(".piece-btn").forEach((b) => b.setAttribute("aria-pressed", String(b === btn)));
+  game.querySelectorAll(".piece-btn").forEach((b) => b.setAttribute("aria-pressed", String(b === btn)));
   picked = btn;
   say(ct("picked"));
 }
@@ -139,13 +139,13 @@ verifyBtn.addEventListener("click", verify);
 
 // Drag with pointer events (mouse + touch); a press without movement counts as a tap
 let drag = null;
-gameTray.addEventListener("pointerdown", (e) => {
+game.addEventListener("pointerdown", (e) => {
   const btn = e.target.closest(".piece-btn");
-  if (!btn) return;
+  if (!btn || btn.closest(".slot.is-locked")) return; // pieces already in a slot can be dragged out again, unless verified
   drag = { btn, x: e.clientX, y: e.clientY, moved: false };
   try { btn.setPointerCapture(e.pointerId); } catch (err) {}
 });
-gameTray.addEventListener("pointermove", (e) => {
+game.addEventListener("pointermove", (e) => {
   if (!drag) return;
   const dx = e.clientX - drag.x, dy = e.clientY - drag.y;
   if (!drag.moved && Math.hypot(dx, dy) < 6) return;
@@ -153,7 +153,7 @@ gameTray.addEventListener("pointermove", (e) => {
   drag.btn.classList.add("is-dragging");
   drag.btn.style.transform = `translate(${dx}px, ${dy}px)`;
 });
-gameTray.addEventListener("pointerup", (e) => {
+game.addEventListener("pointerup", (e) => {
   if (!drag) return;
   const { btn, moved } = drag;
   drag = null;
@@ -164,18 +164,19 @@ gameTray.addEventListener("pointerup", (e) => {
   btn.style.visibility = "";
   tryPlace(btn, slot);
 });
-gameTray.addEventListener("pointercancel", () => {
+game.addEventListener("pointercancel", () => {
   if (drag) { drag.btn.style.transform = ""; drag.btn.classList.remove("is-dragging"); drag = null; }
 });
 // Keyboard: Enter/Space on a shape picks it (pointer taps are handled above)
-gameTray.addEventListener("click", (e) => {
+game.addEventListener("click", (e) => {
   const btn = e.target.closest(".piece-btn");
   if (btn && e.detail === 0) pick(btn);
 });
 gameSlots.addEventListener("click", (e) => {
   const slot = e.target.closest(".slot");
   if (!slot) return;
-  if (picked) tryPlace(picked, slot);
+  if (picked && slot.contains(picked)) { if (!slot.classList.contains("is-locked")) { unplace(slot); picked = null; say(""); } } // tap a placed piece: take it back
+  else if (picked) tryPlace(picked, slot);
   else if (slot.classList.contains("is-filled") && !slot.classList.contains("is-locked")) unplace(slot); // take it back out
 });
 
