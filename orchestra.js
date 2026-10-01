@@ -118,7 +118,7 @@ function oNoise(t, dur, vol) { // a soft, short tick: filtered noise with a tiny
   src.start(t); src.stop(t + dur + 0.02);
 }
 function orchVoice(id, t, f, len = 1, pit = 0) { // one creature, with the pitch shift, note length and sound kit chosen on the stage
-  oMult = Math.pow(2, (orch.pitch + pit) / 12); oLen = len; oKit = orch.kit;
+  oMult = Math.pow(2, ((ORCH_BY_ID[id] && ORCH_BY_ID[id].custom ? 0 : orch.pitch) + pit) / 12); // your own sounds ignore the pitch slider of the stage, only their own pitch counts oLen = len; oKit = orch.kit;
   try { ORCH_VOICE[id](t, f); } finally { oMult = 1; oLen = 1; oKit = 0; }
 }
 const ORCH_VOICE = {
