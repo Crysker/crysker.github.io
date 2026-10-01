@@ -143,15 +143,18 @@ function renderPlay() {
   document.getElementById("playCrumbs").innerHTML = "<ol>" +
     `<li><a href="index.html">${esc(pt("home"))}</a></li>` +
     (play.screen === "menu" ? `<li aria-current="page">${esc(pt("title"))}</li>`
-      : `<li><a href="#" data-menu>${esc(pt("title"))}</a></li><li aria-current="page">${esc(play.screen === "orch" ? pt("g2") : pt("g1")[0])}</li>`) + "</ol>";
+      : `<li><a href="#" data-menu>${esc(pt("title"))}</a></li><li aria-current="page">${esc(play.screen === "orch" ? pt("g2") : play.screen === "tower" ? pt("g3") : pt("g1")[0])}</li>`) + "</ol>";
   document.querySelector(".play-card").classList.toggle("is-menu", play.screen === "menu");
-  document.querySelector(".play-card").classList.toggle("is-wide", play.screen === "orch"); // the orchestra uses the whole page
+  document.querySelector(".play-card").classList.toggle("is-wide", play.screen === "orch" || play.screen === "tower"); // the orchestra and the tower use the whole page
   document.querySelector(".play-card").classList.toggle("is-plain", play.screen === "q" || play.screen === "end"); // the guessing game: one calm column, no card
   if (play.screen === "orch") document.getElementById("playTitle").textContent = pt("g2");
+  else if (play.screen === "tower") document.getElementById("playTitle").textContent = pt("g3");
   else if (play.screen === "q" || play.screen === "end") document.getElementById("playTitle").textContent = pt("g1")[0];
   if (play.screen !== "orch") orchStop();
+  if (play.screen !== "tower") twStop();
   if (play.screen === "menu") renderMenu();
   else if (play.screen === "orch") renderOrchestra();
+  else if (play.screen === "tower") renderTower();
   else if (play.screen === "q") renderQuestion();
   else renderEnd();
 }
@@ -202,13 +205,14 @@ function renderMenu() {
         <span class="ptile__art" aria-hidden="true">${TILE_ART.orchestra}</span>
         <span class="ptile__title">${esc(pt("g2"))}</span><small class="ptile__best">${esc(ot("toy"))}</small>
       </button>
-      <div class="ptile ptile--soon" aria-disabled="true">
+      <button type="button" class="ptile" id="pgameTower">
         <span class="ptile__art" aria-hidden="true">${TILE_ART.tower}</span>
-        <span class="ptile__title">${esc(pt("g3"))}</span><small class="ptile__best">${esc(pt("soon"))}</small>
-      </div>
+        <span class="ptile__title">${esc(pt("g3"))}</span><small class="ptile__best">${esc(twBestSaved() ? tt("best") + ": " + twBestSaved() + " m" : tt("toy"))}</small>
+      </button>
     </div>`;
   document.getElementById("pgameGuess").addEventListener("click", () => openGame("#guess", () => { sfx.click(); startGame(); }));
   document.getElementById("pgameCaptcha").addEventListener("click", () => openGame("#reshaptcha", startCaptcha));
+  document.getElementById("pgameTower").addEventListener("click", () => openGame("#tower", () => { sfx.click(); play = { screen: "tower" }; renderPlay(); }));
   document.getElementById("pgameOrch").addEventListener("click", () => openGame("#orchestra", () => { sfx.click(); play = { screen: "orch" }; renderPlay(); }));
 }
 
@@ -381,7 +385,7 @@ document.getElementById("playSound").addEventListener("click", () => {
   sfx.click();
 });
 /* ============ Every game has its own address ============
-   play.html#guess, #orchestra and #reshaptcha open a game directly (handy for sharing), and the browser's
+   play.html#guess, #orchestra, #tower and #reshaptcha open a game directly (handy for sharing), and the browser's
    back button brings you back to the menu, like a real page. */
 let routePushed = false;
 function openGame(hash, begin) {
@@ -397,6 +401,7 @@ function showFromHash() {
   if (h === "#reshaptcha") { if (!dlg.open) { play = { screen: "menu" }; renderPlay(); startCaptcha(); } return; }
   if (dlg.open) dlg.close();
   if (h.startsWith("#orchestra")) play = { screen: "orch" };
+  else if (h === "#tower") play = { screen: "tower" };
   else if (h === "#guess") { if (play.screen !== "q" && play.screen !== "end") { startGame(); return; } }
   else play = { screen: "menu" };
   renderPlay();
