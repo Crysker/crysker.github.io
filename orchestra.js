@@ -233,11 +233,11 @@ const ORCH_LEARN = [
       { text: { en: "Give a layer its own pitch", de: "Gib einer Schicht eine eigene Tonhöhe" }, ok: () => orch.more.flat(2).some((n) => n.pit !== 0) }] },
   { feats: ["tempo", "panel", "pitch", "kit", "rows", "share", "download", "found", "mine"], start: ORCH_GROOVE,
     title: { en: "Make it yours", de: "Mach es zu deinem" },
-    text: { en: "Pick another sound kit, add a row for more notes, then share your beat or download it as MP3.", de: "Wähl ein anderes Klang-Kit, füg eine Reihe für mehr Töne hinzu und teile dann dein Beat oder lade es als MP3 herunter." },
+    text: { en: "The Sound button below cycles through the sound kits. Add a row for more notes, then share your beat or download it as MP3.", de: "Der Klang-Knopf unten schaltet durch die Klang-Kits. Füg eine Reihe für mehr Töne hinzu und teile dann dein Beat oder lade es als MP3 herunter." },
     tasks: [
-      { text: { en: "Pick another sound kit", de: "Wähl ein anderes Klang-Kit" }, ok: (f) => !!f.kit },
-      { text: { en: "Add a row to the stage", de: "Füg der Bühne eine Reihe hinzu" }, ok: () => orch.grid.length > orch.base.rows },
-      { text: { en: "Share or download your beat", de: "Teile oder lade dein Beat herunter" }, ok: (f) => !!f.shared }] }
+      { text: { en: "Press the Sound button below to switch to another kit", de: "Drück unten auf den Klang-Knopf, um ein anderes Kit zu wählen" }, ok: (f) => !!f.kit },
+      { text: { en: "Press + next to Rows to add a row", de: "Drück das + neben „Reihen“, um eine Reihe hinzuzufügen" }, ok: () => orch.grid.length > orch.base.rows },
+      { text: { en: "Press Share or Download", de: "Drück „Teilen“ oder „Herunterladen“" }, ok: (f) => !!f.shared }] }
 ];
 const orchFeat = (k) => orch.mode !== "learn" || orch.level >= ORCH_LEARN.length || ORCH_LEARN[orch.level].feats.includes(k);
 function orchLearnStart() { // the level's own little beat, kept in memory only
