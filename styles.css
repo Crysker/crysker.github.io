@@ -1159,3 +1159,10 @@ body.view-all .p-card__play, body.view-all .p-card__video { display: none; }
   .pgrid { gap: 18px; }
   .play-card.is-menu .play__intro { margin-bottom: 24px; }
 }
+
+/* more rows for the orchestra */
+.orch__rows { display: inline-flex; align-items: center; gap: 10px; font: 700 13px var(--sans); color: var(--ink-soft); }
+.orch__rowbtn { display: grid; place-items: center; width: 36px; height: 36px; padding: 0; border-radius: 50%; border: 2px solid var(--ink-soft); background: transparent; color: var(--ink); font: 700 18px var(--sans); cursor: pointer; }
+.orch__rowbtn:hover:not(:disabled) { border-color: var(--turq); background: var(--surface-2); }
+.orch__rowbtn:disabled { opacity: .35; cursor: default; }
+@media (pointer: coarse), (max-width: 760px) { .orch__rowbtn { width: 44px; height: 44px; } }
