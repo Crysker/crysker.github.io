@@ -52,12 +52,25 @@ const PLAY_GAMES = [];
 const playGameTitle = (g) => g.title[lang] || g.title.en;
 let babelLang = null; // set by the Tower of Babel: for a while the page speaks another language
 const st = (k) => { const b = babelLang && SHELL_T[babelLang]; return b && b[k] !== undefined ? b[k] : SHELL_T[lang][k]; };
+/* little flags (drawn, so they look the same everywhere: Windows has no flag emoji) for the languages the Tower of Babel speaks */
+const FLAG_BODY = {
+  fr: '<rect width="10" height="20" fill="#0055a4"/><rect x="10" width="10" height="20" fill="#fff"/><rect x="20" width="10" height="20" fill="#ef4135"/>',
+  it: '<rect width="10" height="20" fill="#009246"/><rect x="10" width="10" height="20" fill="#fff"/><rect x="20" width="10" height="20" fill="#ce2b37"/>',
+  nl: '<rect width="30" height="7" fill="#ae1c28"/><rect y="7" width="30" height="6" fill="#fff"/><rect y="13" width="30" height="7" fill="#21468b"/>',
+  es: '<rect width="30" height="20" fill="#aa151b"/><rect y="5" width="30" height="10" fill="#f1bf00"/>',
+  pt: '<rect width="12" height="20" fill="#006600"/><rect x="12" width="18" height="20" fill="#ff0000"/><circle cx="12" cy="10" r="3.4" fill="#ffcc00"/>',
+  tr: '<rect width="30" height="20" fill="#e30a17"/><circle cx="11" cy="10" r="5" fill="#fff"/><circle cx="12.6" cy="10" r="4" fill="#e30a17"/><circle cx="17" cy="10" r="1.6" fill="#fff"/>'
+};
+const flagSVG = (l) => FLAG_BODY[l] ? `<svg class="flag" viewBox="0 0 30 20" aria-hidden="true" focusable="false">${FLAG_BODY[l]}</svg>` : "";
 const ACH_TOTAL = 17; // same list as on the portfolio page
 
 function applyShell() {
   document.documentElement.lang = babelLang || lang;
   document.querySelectorAll("[data-nav]").forEach((el) => { el.textContent = st(el.dataset.nav); });
-  document.getElementById("langToggle").setAttribute("aria-label", st("toLang"));
+  const tog = document.getElementById("langToggle");
+  tog.setAttribute("aria-label", st("toLang"));
+  tog.classList.toggle("is-babel", !!babelLang); // in the Tower of Babel the switch shows the tongue you are stuck with
+  tog.innerHTML = babelLang ? `<span class="lang__babel">${flagSVG(babelLang)}${babelLang.toUpperCase()}</span>` : '<span data-lang="en">EN</span><span data-lang="de">DE</span>';
   applyMode();
 }
 

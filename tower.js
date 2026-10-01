@@ -186,7 +186,7 @@ function twComplete() {
   twSave();
   const changed = twSetLanguage();
   const hasNewShapes = tw.k === 3 || tw.k === 6;
-  twBanner(tt("done") + " " + tt("unlock").replace("{n}", twMat(tw.k).e + " " + twMatName(tw.k)) + (hasNewShapes ? " " + tt("shapes") : "") + (changed ? "  🗣️ " + TW_LANGS[tw.babel][0] + ": " + tt("tongues") : ""), changed ? 6500 : 4200);
+  twBanner(tt("done") + " " + tt("unlock").replace("{n}", twMat(tw.k).e + " " + twMatName(tw.k)) + (hasNewShapes ? " " + tt("shapes") : "") + (changed ? "  " + TW_LANGS[tw.babel][0] + ": " + tt("tongues") : ""), changed ? 6500 : 4200, changed ? tw.babel : null);
   if (changed && tw.babel) twBubbles();
   if (changed && !playMuted) [196, 233, 175, 262].forEach((f, i) => oTone(f, orchCtx().currentTime + 0.4 + i * 0.12, 0.3, "sawtooth", 0.05));
 }
@@ -198,7 +198,7 @@ function twBubbles() {
   [mine, ...langs.filter((l) => l !== mine).sort(() => Math.random() - 0.5).slice(0, 4)].forEach((l, i) => {
     const b = document.createElement("span");
     b.className = "tw2__bubble" + (i === 0 ? " is-main" : "");
-    b.textContent = TW_LANGS[l][1];
+    b.innerHTML = flagSVG(l) + esc(TW_LANGS[l][1]);
     b.style.cssText = `left:${8 + Math.random() * 70}%;--d:${i * 0.35}s`;
     stage.appendChild(b);
     setTimeout(() => b.remove(), 4200 + i * 350);
@@ -283,10 +283,10 @@ function twPaintHud() {
   hud.innerHTML = `<span>${esc(tt("height"))}: <b>${m} m</b></span><span>${esc(tt("section"))}: <b>${Math.min(tw.k + 1, TW_SECTIONS)}/${TW_SECTIONS}</b></span><span>${esc(tt("best"))}: <b>${tw.best} m</b></span>`;
 }
 function twPaintAll() { twPaintStage(); twPaintTray(); twPaintHud(); }
-function twBanner(text, ms = 3200) {
+function twBanner(text, ms = 3200, flagLang = null) {
   const b = document.getElementById("twBanner");
   if (!b) return;
-  b.textContent = text; b.classList.add("is-on");
+  b.innerHTML = (flagLang ? flagSVG(flagLang) : "") + esc(text); b.classList.add("is-on");
   clearTimeout(tw.bannerT); tw.bannerT = setTimeout(() => b.classList.remove("is-on"), ms);
 }
 

@@ -1393,3 +1393,8 @@ body.view-all .p-card__play, body.view-all .p-card__video { display: none; }
 .tw2__bubble.is-main { font-size: 17px; background: var(--turq); color: #062624; border-color: transparent; }
 @keyframes twBubble { 0% { opacity: 0; transform: translateY(0) scale(.7); } 12% { opacity: 1; transform: translateY(-10px) scale(1); } 80% { opacity: 1; } 100% { opacity: 0; transform: translateY(-120px) rotate(-4deg); } }
 @media (prefers-reduced-motion: reduce) { .tw2__bubble { animation: none; opacity: 1; } }
+
+.flag { width: 20px; height: 14px; border-radius: 3px; vertical-align: -2px; margin-right: 6px; box-shadow: 0 0 0 1px rgba(0,0,0,.18); }
+.lang.is-babel { padding: 4px; }
+.lang__babel { display: inline-flex; align-items: center; padding: 6px 14px; border-radius: 999px; background: var(--ink); color: var(--bg); font: 700 13px var(--sans); }
+.lang__babel .flag { margin-right: 7px; }
