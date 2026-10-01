@@ -270,7 +270,10 @@ function orchMoveDrag(e, cell, r, c) {
     if (!to || to === cell) return;
     const r2 = +to.dataset.r, c2 = +to.dataset.c;
     const mine = orchNotes(r, c), theirs = orchNotes(r2, c2);
-    orchSetNotes(r, c, theirs); orchSetNotes(r2, c2, mine); orch.cell = [r2, c2];
+    if (theirs.length && mine.length + theirs.length <= 4) { // dropped onto someone: it joins them as a layer
+      orchSetNotes(r2, c2, [...theirs, ...mine.map((n) => ({ ...n, len: Math.min(n.len, ORCH_COLS - c2) }))]); orchSetNotes(r, c, []);
+    } else { orchSetNotes(r, c, theirs); orchSetNotes(r2, c2, mine); } // no room for layers: they swap places
+    orch.cell = [r2, c2];
     mine.forEach((n) => orchHear(n, r2));
     orchSave(); orchPaintStage(); orchCheck();
   };
