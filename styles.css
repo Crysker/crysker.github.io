@@ -1381,3 +1381,9 @@ body.view-all .p-card__play, body.view-all .p-card__video { display: none; }
 @media (prefers-reduced-motion: reduce) { .wd5__tile.is-flip, .wd5__row.is-shake { animation: none; } }
 .wd5__grid, .wd5__kb { justify-self: center; } /* the letter grid and keyboard sit in the middle of the column */
 .play__kicker { margin: 0 0 12px; }
+
+/* tower: pillars and windows in the wall that no piece can cover */
+.tw2__cell.is-block { border: 0; box-shadow: none; cursor: not-allowed; }
+.tw2__cell.is-pillar { background: linear-gradient(90deg, color-mix(in srgb, var(--ink) 30%, var(--surface-2)), color-mix(in srgb, var(--ink) 18%, var(--surface-2)) 50%, color-mix(in srgb, var(--ink) 30%, var(--surface-2))); border-radius: 3px; }
+.tw2__cell.is-window { background: color-mix(in srgb, #60a5fa 22%, var(--bg)); box-shadow: inset 0 0 0 3px color-mix(in srgb, var(--ink) 35%, transparent), inset 0 0 0 5px color-mix(in srgb, #60a5fa 18%, transparent); border-radius: 40% 40% 4px 4px / 28% 28% 4px 4px;
+  background-image: linear-gradient(color-mix(in srgb, var(--ink) 35%, transparent), color-mix(in srgb, var(--ink) 35%, transparent)), linear-gradient(color-mix(in srgb, var(--ink) 35%, transparent), color-mix(in srgb, var(--ink) 35%, transparent)); background-size: 3px 100%, 100% 3px; background-position: center, center; background-repeat: no-repeat; }

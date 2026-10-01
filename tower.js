@@ -79,11 +79,29 @@ const twSize = (cells) => [Math.max(...cells.map((c) => c[0])) + 1, Math.max(...
 function twRng(seed) { let a = seed >>> 0; return () => { a = (a + 0x6D2B79F5) >>> 0; let t = a; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
 
 /* ---- the puzzle: cut the grid into pieces first, then hand them out turned around ---- */
+/* obstacles: from the second section on there are pillars and windows in the wall that no piece can cover; they stay the same for a section */
+function twObstacles(k, cols) {
+  if (k < 1) return [];
+  const rng = twRng(k * 313 + 5), want = Math.min(1 + Math.floor((k - 1) / 3), 4), out = [], has = (r, c) => out.some((o) => o.r === r && o.c === c);
+  for (let tries = 0; out.length < want * 2 && tries < 30; tries++) {
+    const c = Math.floor(rng() * cols);
+    if (rng() < 0.5) { // a pillar: two cells on top of each other
+      const r = Math.floor(rng() * (TW_ROWS - 1));
+      if (!has(r, c) && !has(r + 1, c)) { out.push({ r, c, kind: "pillar" }, { r: r + 1, c, kind: "pillar" }); }
+    } else {
+      const r = Math.floor(rng() * TW_ROWS);
+      if (!has(r, c)) out.push({ r, c, kind: "window" });
+    }
+    if (out.length >= want + 1) break;
+  }
+  return out;
+}
 function twTile(cols, rows, k, rng) {
   const allowed = twShapesFor(k);
   let best = null;
   for (let attempt = 0; attempt < 40; attempt++) {
     const g = Array.from({ length: rows }, () => Array(cols).fill(-1)), pieces = [];
+    twObstacles(k, cols).forEach((o) => { g[o.r][o.c] = -2; }); // walls count as already filled
     for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) {
       if (g[r][c] !== -1) continue;
       const opts = [];
@@ -110,13 +128,15 @@ function twNewSection() {
   const k = tw.k, cols = twCols(k), rng = twRng(k * 1009 + tw.attempt * 7919 + 17);
   const pieces = twTile(cols, TW_ROWS, k, rng).map((p, i) => ({ id: i, name: p.name, base: p.base, rot: Math.floor(rng() * 4), pos: null, hue: Math.floor(rng() * 360) }));
   for (let i = pieces.length - 1; i > 0; i--) { const j = Math.floor(rng() * (i + 1)); [pieces[i], pieces[j]] = [pieces[j], pieces[i]]; }
-  tw.sec = { k, cols, rows: TW_ROWS, pieces, grid: Array.from({ length: TW_ROWS }, () => Array(cols).fill(null)) };
+  const grid = Array.from({ length: TW_ROWS }, () => Array(cols).fill(null)), blocks = twObstacles(k, cols);
+  blocks.forEach((o) => { grid[o.r][o.c] = "#"; });
+  tw.sec = { k, cols, rows: TW_ROWS, pieces, grid, blocks };
   tw.sel = pieces.length ? pieces[0].id : null;
 }
 const twPiece = (id) => tw.sec.pieces.find((p) => p.id === id);
 const twCells = (p) => twRot(p.base, p.rot);
 const twLeft = () => tw.sec.pieces.filter((p) => !p.pos);
-const twFilled = () => tw.sec.grid.flat().filter((v) => v !== null).length;
+const twFilled = () => tw.sec.grid.flat().filter((v) => v !== null).length; // walls count as filled
 const twMeters = () => tw.won ? TW_SECTIONS * 100 : Math.min(TW_SECTIONS * 100, tw.k * 100 + Math.round(twFilled() / (tw.sec.cols * tw.sec.rows) * 100));
 const twMat = (k) => TW_MAT[Math.min(k, TW_MAT.length - 1)];
 const twMatName = (k) => twMat(k).n[tw.babel ? 0 : (lang === "de" ? 1 : 0)];
@@ -182,12 +202,13 @@ function twPaintStage() {
     const mat = twMat(k);
     html += `<span class="tw2__tick" style="bottom:${bottom + secH - 9}px">${(k + 1) * 100} m</span>`;
     if (k < tw.k) { // finished: solid
-      html += `<div class="tw2__grid is-done" style="${style};--cols:${cols}">${Array.from({ length: cols * TW_ROWS }, () => twCellHTML(mat.e, k * 29 % 360)).join("")}</div>`;
+      html += `<div class="tw2__grid is-done" style="${style};--cols:${cols}">${Array.from({ length: cols * TW_ROWS }, (_, i) => { const o = twObstacles(k, cols).find((b) => b.r * cols + b.c === i); return o ? `<span class="tw2__cell is-block is-${o.kind}"></span>` : twCellHTML(mat.e, k * 29 % 360); }).join("")}</div>`;
     } else if (k === tw.k && !tw.won) { // the one you are working on
       const s = tw.sec;
       let cells = "";
       for (let r = 0; r < s.rows; r++) for (let cc = 0; cc < s.cols; cc++) {
         const id = s.grid[r][cc];
+        if (id === "#") { const kind = s.blocks.find((o) => o.r === r && o.c === cc).kind; cells += `<span class="tw2__cell is-block is-${kind}" data-r="${r}" data-c="${cc}" aria-hidden="true"></span>`; continue; }
         cells += id === null ? `<span class="tw2__cell" data-r="${r}" data-c="${cc}"></span>` : `<span class="tw2__cell is-filled" data-r="${r}" data-c="${cc}" data-id="${id}" style="--h:${twPiece(id).hue}">${mat.e}</span>`;
       }
       html += `<div class="tw2__grid is-active" id="twGrid" style="${style};--cols:${cols}">${cells}</div>`;
@@ -298,7 +319,7 @@ addEventListener("keydown", (e) => {
 
 function renderTower() {
   twPatchTexts();
-  if (!tw.sec) { tw.k = twSaved(); tw.best = twBestSaved(); tw.won = tw.k >= TW_SECTIONS; if (!tw.won) twNewSection(); else tw.sec = { k: 12, cols: 5, rows: 3, pieces: [], grid: [] }; }
+  if (!tw.sec) { tw.k = twSaved(); tw.best = twBestSaved(); tw.won = tw.k >= TW_SECTIONS; if (!tw.won) twNewSection(); else tw.sec = { k: 12, cols: 5, rows: 3, pieces: [], grid: [], blocks: [] }; }
   playBody.innerHTML = `
     <div class="tw">
       <div class="tw__main">
