@@ -1608,3 +1608,42 @@ body.view-all .p-card__play, body.view-all .p-card__video { display: none; }
 @container orchinsp (max-width: 560px) {
   .orch__stagewrap .orch__insp .orch__det .orch__notes li { grid-template-columns: 28px 1fr 28px; grid-template-areas: "ic nm x" "pc pc pc" "vc vc vc" "ln ln ln"; }
 }
+
+/* ============ phones: the Puzzle Round and the Tower on one screen, with thumb-sized controls ============ */
+.play__credits { margin: 36px 0 0; font-size: 13px; line-height: 1.5; color: var(--ink-soft); text-align: center; }
+.tw2__cell.is-sel { outline: 3px solid var(--turq); outline-offset: -3px; }
+.tw2__cell.is-filled, .tw2__piece, .tw__stage { touch-action: none; -webkit-tap-highlight-color: transparent; }
+.tw__stage { touch-action: pan-y; }
+.wd5__key, .wd4__tile, .wd__actions button { touch-action: manipulation; -webkit-tap-highlight-color: transparent; user-select: none; -webkit-user-select: none; }
+.wd5__key:active { transform: scale(.93); }
+@media (max-width: 560px) {
+  #playCrumbs { display: none; } /* the arrow next to the title already goes back */
+  /* the Puzzle Round, five letters: grid and keyboard together on the screen like in the NYT games */
+  .wd--five { gap: 8px; }
+  .wd--five .wd__desc, .wd--five .wd__roundlabel, .wd--five .wd__title { display: none; }
+  .wd--five .wd5__grid { gap: 5px; margin-top: 2px; --t: clamp(36px, calc((100vh - 420px) / 6), 54px); }
+  @supports (height: 1svh) { .wd--five .wd5__grid { --t: clamp(36px, calc((100svh - 420px) / 6), 54px); } }
+  .wd--five .wd5__row { grid-template-columns: repeat(5, var(--t)); gap: 5px; }
+  .wd--five .wd5__tile { height: var(--t); font-size: calc(var(--t) * .5); border-radius: 8px; }
+  .wd--five .wd__msg { min-height: 20px; text-align: center; justify-self: center; font-size: 14px; }
+  .wd--five .wd5__kb { position: sticky; bottom: 0; width: 100%; max-width: none; margin: 0; padding: 8px 0 max(8px, env(safe-area-inset-bottom)); background: var(--bg); gap: 7px; z-index: 4; }
+  .wd5__kbrow { gap: 5px; }
+  .wd5__key { max-width: none; height: 54px; font-size: 18px; border-radius: 9px; }
+  .wd5__key--wide { flex: 1.55; font-size: 13px; }
+  /* the Tower: the buttons stay in reach under the pieces */
+  .tw__side { gap: 10px; }
+  .tw__bar { position: sticky; bottom: 0; z-index: 4; padding: 10px 0 max(10px, env(safe-area-inset-bottom)); background: var(--bg); gap: 8px; margin-top: 0; }
+  .tw__bar button { min-height: 48px; padding: 0 18px; }
+  .tw2__piece { padding: 6px; }
+}
+
+@media (max-width: 560px) {
+  /* a slimmer header row on the game pages, so the game gets the screen */
+  .play-card.is-plain .play__bar, .play-card.is-wide .play__bar { padding-bottom: 4px; gap: 10px; }
+  .play-card.is-plain .play__bar h1, .play-card.is-wide .play__bar h1 { font-size: 24px; line-height: 1.1; }
+  .play__kicker { display: none; }
+  .tw__hint { display: none; }
+  .tw2__tray { max-height: 170px; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+}
+
+@media (max-width: 560px) { .tw__bar button { flex: 1 1 0; min-width: 0; padding: 0 8px; font-size: 14px; white-space: nowrap; justify-content: center; } .tw__bar .tw2__rotate { flex: 1.25 1 0; } }

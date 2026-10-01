@@ -202,7 +202,7 @@ function wdPaint() {
   else if (s === "four") html = wdHead(1) + wdFourHTML();
   else if (s === "quiz") html = wdHead(2) + wdQuizHTML();
   else html = wdEndHTML();
-  playBody.innerHTML = `<div class="wd">${html}</div>`;
+  playBody.innerHTML = `<div class="wd wd--${s}">${html}</div>`;
   wdBind();
 }
 function wdBind() {

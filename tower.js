@@ -232,10 +232,11 @@ function twPaintStage() {
   if (!stage) return;
   const c = tw.c = twCellSize(), W = stage.clientWidth, secH = TW_ROWS * c;
   stage.style.setProperty("--c", c + "px");
-  stage.style.height = Math.round(c * 8.6) + "px";
+  const phone = innerWidth <= 560;
+  stage.style.height = Math.round(c * (phone ? 6.2 : 8.6) + (phone ? 12 : 0)) + "px";
   stage.style.setProperty("--r", Math.min(1, twMeters() / (TW_SECTIONS * 100)).toFixed(3));
   const current = Math.min(tw.k, TW_SECTIONS - 1);
-  world.style.bottom = Math.round(c * 3.4 - current * secH) + "px"; // the current section sits near the bottom of the stage
+  world.style.bottom = Math.round(c * (phone ? 1.1 : 3.4) - current * secH) + "px"; // the current section sits near the bottom of the stage
   let html = `<div class="tw2__ground"></div>`;
   for (let k = 0; k < TW_SECTIONS; k++) {
     const cols = twCols(k), left = Math.round((W - cols * c) / 2), bottom = k * secH;
@@ -250,7 +251,7 @@ function twPaintStage() {
       for (let r = 0; r < s.rows; r++) for (let cc = 0; cc < s.cols; cc++) {
         const id = s.grid[r][cc];
         if (id === "#") { const kind = s.blocks.find((o) => o.r === r && o.c === cc).kind; cells += `<span class="tw2__cell is-block is-${kind}" data-r="${r}" data-c="${cc}" aria-hidden="true"></span>`; continue; }
-        cells += id === null ? `<span class="tw2__cell" data-r="${r}" data-c="${cc}"></span>` : `<span class="tw2__cell is-filled" data-r="${r}" data-c="${cc}" data-id="${id}" style="--h:${twPiece(id).hue}">${mat.e}</span>`;
+        cells += id === null ? `<span class="tw2__cell" data-r="${r}" data-c="${cc}"></span>` : `<span class="tw2__cell is-filled${id === tw.sel ? " is-sel" : ""}" data-r="${r}" data-c="${cc}" data-id="${id}" style="--h:${twPiece(id).hue}">${mat.e}</span>`;
       }
       html += `<div class="tw2__grid is-active" id="twGrid" style="${style};--cols:${cols}">${cells}</div>`;
     } else {
@@ -425,13 +426,18 @@ function renderTower() {
     const cell = e.target.closest("#twGrid .tw2__cell.is-filled");
     if (!cell || tw.won) return;
     e.preventDefault();
-    const p = twPiece(+cell.dataset.id);
-    twPickUp(p);
-    tw.sel = p.id;
-    twPaintAll();
-    twBeginDrag(p, e.clientX, e.clientY);
-    const move = (ev) => twMoveDrag(ev.clientX, ev.clientY);
-    const up = () => { removeEventListener("pointermove", move); removeEventListener("pointerup", up); removeEventListener("pointercancel", up); twDropDrag(); };
+    const p = twPiece(+cell.dataset.id), sx = e.clientX, sy = e.clientY, wasSel = tw.sel === p.id;
+    let moved = false;
+    const move = (ev) => { // a tap selects the piece where it is, only a real drag lifts it (so a finger can select and turn pieces in the tower)
+      if (!moved && Math.hypot(ev.clientX - sx, ev.clientY - sy) > 8) { moved = true; twPickUp(p); tw.sel = p.id; twPaintAll(); twBeginDrag(p, ev.clientX, ev.clientY); }
+      if (moved) twMoveDrag(ev.clientX, ev.clientY);
+    };
+    const up = () => {
+      removeEventListener("pointermove", move); removeEventListener("pointerup", up); removeEventListener("pointercancel", up);
+      if (moved) twDropDrag();
+      else if (wasSel) twRotate(); // tapped again: turn it
+      else { tw.sel = p.id; twPaintAll(); if (!playMuted) oTone(520, orchCtx().currentTime, 0.05, "triangle", 0.06); }
+    };
     addEventListener("pointermove", move); addEventListener("pointerup", up); addEventListener("pointercancel", up);
   });
   document.getElementById("twStage").addEventListener("contextmenu", (e) => { if (tw.drag) { e.preventDefault(); twRotate(); } });
