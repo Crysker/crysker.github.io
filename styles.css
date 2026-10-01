@@ -1175,7 +1175,7 @@ body.view-all .p-card__play, body.view-all .p-card__video { display: none; }
 @media (min-width: 900px) { .tw { grid-template-columns: minmax(0, 1fr) 340px; gap: 16px 40px; align-items: start; } }
 .tw__stage {
   --r: 0; --sway: 0deg; position: relative; width: 100%; aspect-ratio: 6 / 5; overflow: hidden; border-radius: 26px; cursor: pointer; touch-action: manipulation;
-  border: 1px solid var(--line); background: var(--surface-2); user-select: none; -webkit-user-select: none;
+  border: 1px solid var(--line); background: var(--surface-2); user-select: none; -webkit-user-select: none; touch-action: pan-y;
 }
 .tw__stage:focus-visible { outline-offset: 3px; }
 .tw__sky {
@@ -1232,3 +1232,10 @@ body.view-all .p-card__play, body.view-all .p-card__video { display: none; }
 .tw__chip.is-newest { animation: orch-hop .4s ease-out; border-color: var(--orange); }
 @media (max-width: 520px) { .tw__stage { border-radius: 18px; } .tw__craftbox { padding: 16px; } }
 @media (prefers-reduced-motion: reduce) { .tw__tower, .tw__piece.is-new, .tw__piece.is-falling, .tw__cloud.is-on { animation: none; } .tw__piece.is-falling { opacity: 0; } }
+
+/* dragging pieces yourself */
+.tw__chip { touch-action: none; cursor: grab; }
+.tw__dragghost { position: fixed; z-index: 100; margin: 0; transform: translate(-50%, -50%); pointer-events: none; opacity: .9; }
+.tw__hover { opacity: .78; }
+.tw__draghint { text-transform: none; letter-spacing: 0; font-weight: 600; color: var(--ink-soft); }
+.tw__stage { cursor: crosshair; }
