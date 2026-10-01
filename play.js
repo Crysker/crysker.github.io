@@ -280,6 +280,7 @@ function renderQuestion() {
     if (!fromText) num.value = "";
   };
   setGuess(start);
+  if (!play.revealed && matchMedia("(pointer: fine)").matches) num.focus({ preventScroll: true }); // with a mouse the number field is ready to type in (not on phones: that would pop up the keyboard)
   if (play.revealed) { applyReveal(false); return; }
   slider.addEventListener("input", () => { setGuess(toVal(+slider.value)); sfx.tick(+slider.value / 1000); });
   num.addEventListener("input", () => { const v = parseNum(num.value, q); if (v) setGuess(v, true); });
