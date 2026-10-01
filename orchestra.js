@@ -342,9 +342,51 @@ function orchPaintInsp() {
     <ul class="orch__notes">${notes.map((n, i) => `<li>
       <span class="orch__mini">${creatureSVG(ORCH_BY_ID[n.id])}</span><b>${esc(names[n.id])}</b>
       <span class="orch__ctl"><span>${esc(ot("pitchNote"))}</span><button type="button" data-i="${i}" data-act="pit-" aria-label="${esc(ot("pitchNote"))} −">−</button><output>${sgn(n.pit)}</output><button type="button" data-i="${i}" data-act="pit+" aria-label="${esc(ot("pitchNote"))} +">+</button></span>
-      <span class="orch__ctl"><span>${esc(ot("lenNote"))}</span><button type="button" data-i="${i}" data-act="len-" aria-label="${esc(ot("lenNote"))} −">−</button><output>${n.len}</output><button type="button" data-i="${i}" data-act="len+" aria-label="${esc(ot("lenNote"))} +">+</button></span>
+      <span class="orch__lane" role="group" aria-label="${esc(ot("lenNote"))}">${Array.from({ length: ORCH_COLS }, (_, k) => `<i class="${k === c ? "is-here" : ""}" style="grid-column:${k + 1};grid-row:1"></i>`).join("")}<span class="orch__nb" tabindex="0" data-i="${i}" role="slider" aria-valuemin="1" aria-valuemax="${ORCH_COLS - c}" aria-valuenow="${n.len}" aria-label="${esc(ot("lenNote"))}" style="grid-column:${c + 1} / span ${n.len};--tail:${ORCH_BY_ID[n.id].color}"><b>${n.len}</b><span class="orch__bh"></span></span></span>
       <button type="button" class="orch__x" data-i="${i}" data-act="del" aria-label="${esc(ot("remove"))}" title="${esc(ot("remove"))}">✕</button></li>`).join("")}</ul>
     <button type="button" class="orch__clear" id="orchAddLayer"${notes.length >= 4 ? " disabled" : ""}>＋ ${esc(ot("layer"))}: ${esc(names[orch.sel])}</button></details>`;
+}
+/* the lane of a note: pull the end of the bar to change its length, drag the bar to put it on another beat */
+function orchLaneDown(e) {
+  const bar = e.target.closest(".orch__nb");
+  if (!bar || !orch.cell || (e.pointerType === "mouse" && e.button !== 0)) return;
+  e.preventDefault();
+  const [r, c] = orch.cell, i = +bar.dataset.i, n = orchNotes(r, c)[i];
+  if (!n) return;
+  const step = bar.parentElement.getBoundingClientRect().width / ORCH_COLS, x0 = e.clientX, resize = !!e.target.closest(".orch__bh");
+  let len = n.len, nc = c;
+  const move = (ev) => {
+    const d = Math.round((ev.clientX - x0) / step);
+    if (resize) { len = Math.max(1, Math.min(ORCH_COLS - c, n.len + d)); bar.style.gridColumn = `${c + 1} / span ${len}`; bar.firstChild.textContent = len; }
+    else { nc = Math.max(0, Math.min(ORCH_COLS - n.len, c + d)); bar.style.gridColumn = `${nc + 1} / span ${n.len}`; }
+  };
+  const up = () => {
+    removeEventListener("pointermove", move); removeEventListener("pointerup", up); removeEventListener("pointercancel", up);
+    if (resize && len !== n.len) { const notes = orchNotes(r, c); notes[i].len = len; orchSetNotes(r, c, notes); orchHear(notes[i], r); }
+    else if (!resize && nc !== c) orchMoveNote(r, c, i, nc);
+    orchSave(); orchPaintStage(); orchCheck();
+  };
+  addEventListener("pointermove", move); addEventListener("pointerup", up); addEventListener("pointercancel", up);
+}
+function orchMoveNote(r, c, i, nc) { // a note from this square goes to another beat of the same row (joining whoever is there)
+  const from = orchNotes(r, c), to = orchNotes(r, nc);
+  if (to.length >= 4) return;
+  const [n] = from.splice(i, 1);
+  n.len = Math.min(n.len, ORCH_COLS - nc);
+  to.push(n);
+  orchSetNotes(r, c, from); orchSetNotes(r, nc, to);
+  orch.cell = [r, nc]; orchHear(n, r);
+}
+function orchInspKey(e) { // keyboard: arrows on a bar change its length (Shift moves it)
+  const bar = e.target.closest && e.target.closest(".orch__nb");
+  if (!bar || !orch.cell || (e.key !== "ArrowLeft" && e.key !== "ArrowRight")) return;
+  e.preventDefault();
+  const [r, c] = orch.cell, i = +bar.dataset.i, notes = orchNotes(r, c), n = notes[i], dir = e.key === "ArrowRight" ? 1 : -1;
+  if (!n) return;
+  if (e.shiftKey) { const nc = Math.max(0, Math.min(ORCH_COLS - n.len, c + dir)); if (nc !== c) orchMoveNote(r, c, i, nc); }
+  else { n.len = Math.max(1, Math.min(ORCH_COLS - c, n.len + dir)); orchSetNotes(r, c, notes); orchHear(n, r); }
+  orchSave(); orchPaintStage(); orchCheck();
+  const next = document.querySelector(`.orch__nb[data-i="${i}"]`); if (next) next.focus();
 }
 function orchInspClick(e) {
   const b = e.target.closest("button");
@@ -513,6 +555,8 @@ function renderOrchestra() {
     if (!playMuted) orchVoice(orch.sel, orchCtx().currentTime + 0.01, ORCH_NOTES[1]);
   });
   document.getElementById("orchInsp").addEventListener("click", orchInspClick);
+  document.getElementById("orchInsp").addEventListener("pointerdown", orchLaneDown);
+  document.getElementById("orchInsp").addEventListener("keydown", orchInspKey);
   document.getElementById("orchInsp").addEventListener("toggle", (e) => { if (e.target.matches("details")) orch.inspOpen = e.target.open; }, true); // folded up it stays out of the way
   document.getElementById("orchShare").addEventListener("click", (e) => orchShare(e.currentTarget));
   const rowBtns = () => {

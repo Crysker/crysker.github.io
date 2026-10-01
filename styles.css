@@ -1482,3 +1482,15 @@ body.view-all .p-card__play, body.view-all .p-card__video { display: none; }
   .orch__stagewrap .orch__notes li { grid-template-columns: 28px 1fr 28px; gap: 8px 12px; }
   .orch__stagewrap .orch__notes li .orch__ctl { grid-column: 1 / -1; }
 }
+
+/* note lanes: the note as a bar on eight squares */
+.orch__stagewrap .orch__notes li { grid-template-columns: 28px minmax(64px, 110px) 150px minmax(0, 1fr) 28px; }
+.orch__lane { display: grid; grid-template-columns: repeat(8, 1fr); gap: 3px; position: relative; height: 28px; touch-action: none; user-select: none; }
+.orch__lane > i { border-radius: 6px; border: 1.5px dashed color-mix(in srgb, var(--ink-soft) 35%, transparent); }
+.orch__lane > i.is-here { border-style: solid; border-color: color-mix(in srgb, var(--turq) 70%, transparent); }
+.orch__nb { grid-row: 1; position: relative; display: flex; align-items: center; justify-content: center; border-radius: 7px; background: color-mix(in srgb, var(--tail) 62%, var(--surface-2)); cursor: grab; outline-offset: 2px; }
+.orch__nb:active { cursor: grabbing; }
+.orch__nb > b { font: 800 11px var(--sans); color: #1b1a2a; pointer-events: none; }
+.orch__bh { position: absolute; right: 0; top: 0; bottom: 0; width: 12px; border-radius: 0 7px 7px 0; cursor: ew-resize; background: rgba(0,0,0,.22);
+  background-image: linear-gradient(90deg, transparent 3px, rgba(255,255,255,.85) 3px, rgba(255,255,255,.85) 4.5px, transparent 4.5px, transparent 7px, rgba(255,255,255,.85) 7px, rgba(255,255,255,.85) 8.5px, transparent 8.5px); }
+@media (max-width: 640px) { .orch__stagewrap .orch__notes li { grid-template-columns: 28px 1fr 28px; } .orch__stagewrap .orch__notes li .orch__lane { grid-column: 1 / -1; } }
