@@ -150,13 +150,20 @@ const orch = { inspOpen: true, grid: null, len: null, pit: null, more: null, cel
 function orchLoad() {
   try { orch.found = JSON.parse(localStorage.getItem("orchFound") || "[]"); } catch (e) { orch.found = []; }
   let saved = null;
-  try { saved = JSON.parse(localStorage.getItem("orchestra") || "null"); } catch (e) {}
+  try { saved = JSON.parse(localStorage.getItem("orchestra2") || "null"); } catch (e) {}
   if (saved && Array.isArray(saved.g) && saved.g.length >= ORCH_MIN_ROWS && saved.g.length <= ORCH_MAX_ROWS && saved.g.every((row) => Array.isArray(row) && row.length === ORCH_COLS)) { orch.grid = saved.g; orch.bpm = saved.bpm || 100; orch.pitch = Math.max(-12, Math.min(12, +saved.p || 0)); orch.kit = Math.max(0, Math.min(3, +saved.k || 0)); orch.len = orchLenFor(orch.grid, saved.l); orchSync(saved); return; }
-  orch.grid = Array.from({ length: ORCH_MIN_ROWS }, () => Array(ORCH_COLS).fill(null));
-  [[3, 0, "blob"], [3, 4, "blob"], [0, 2, "robot"], [0, 6, "robot"], [2, 1, "octo"], [1, 3, "octo"], [2, 5, "octo"], [3, 2, "frog"]]
-    .forEach(([r, c, id]) => { orch.grid[r][c] = id; });
+  /* the starter beat: kick, bass, hats, a pad and a little pluck tune with a harmony on top (no secret combination is complete yet) */
+  orch.grid = Array.from({ length: 6 }, () => Array(ORCH_COLS).fill(null));
   orch.len = orchLenFor(orch.grid, null);
   orchSync(null);
+  const n = (id, len = 1, pit = 0) => ({ id, len, pit });
+  [[5, 0, [n("blob")]], [5, 3, [n("blob")]], [5, 4, [n("blob")]], [5, 6, [n("blob")]],
+    [4, 0, [n("frog", 2)]], [4, 3, [n("frog", 1, 3)]], [3, 6, [n("frog", 2, -2)]],
+    [0, 1, [n("robot")]], [0, 3, [n("robot")]], [0, 5, [n("robot")]], [0, 6, [n("robot")]],
+    [2, 0, [n("ghost", 4), n("ghost", 4, 7)]], [2, 5, [n("ghost", 3, -2)]],
+    [1, 2, [n("octo")]], [2, 4, [n("octo", 1), n("octo", 1, 5)]], [1, 5, [n("octo", 2)]], [0, 7, [n("octo", 1, 2)]]]
+    .forEach(([r, c, notes]) => orchSetNotes(r, c, notes));
+  orch.bpm = 108;
 }
 const orchSync = (saved) => { // per-note pitch (semitones) and extra layers on a square, kept next to the grid
   const ok = (v, lo, hi) => Number.isInteger(v) && v >= lo && v <= hi;
@@ -165,7 +172,7 @@ const orchSync = (saved) => { // per-note pitch (semitones) and extra layers on 
   orch.cell = null;
 };
 const orchLenFor = (grid, saved) => grid.map((row, r) => row.map((_, c) => (saved && saved[r] && Number.isInteger(saved[r][c]) && saved[r][c] >= 1 && saved[r][c] <= ORCH_COLS) ? saved[r][c] : 1)); // note lengths (1, 2 or 4 beats) next to the grid
-function orchSave() { try { localStorage.setItem("orchestra", JSON.stringify({ g: orch.grid, l: orch.len, pt: orch.pit, m: orch.more, p: orch.pitch, k: orch.kit, bpm: orch.bpm })); } catch (e) {} }
+function orchSave() { try { localStorage.setItem("orchestra2", JSON.stringify({ g: orch.grid, l: orch.len, pt: orch.pit, m: orch.more, p: orch.pitch, k: orch.kit, bpm: orch.bpm })); } catch (e) {} }
 const orchCount = () => orch.grid.flat().filter(Boolean).length;
 /* a square holds up to four notes: the main creature (kept in grid / len / pit) and the layers on top of it */
 const orchNotes = (r, c) => (orch.grid[r][c] ? [{ id: orch.grid[r][c], len: orch.len[r][c], pit: orch.pit[r][c] }, ...orch.more[r][c]] : []);
