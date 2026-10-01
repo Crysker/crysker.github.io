@@ -1565,3 +1565,11 @@ body.view-all .p-card__play, body.view-all .p-card__video { display: none; }
 .mk__max { color: var(--ink-soft); font-size: 12px; }
 .mk__btns { display: flex; gap: 10px; flex-wrap: wrap; }
 .mk__btns .orch__go:disabled { opacity: .45; cursor: default; }
+
+/* Orchestra: volume */
+.orch__master { flex: 1 1 190px; }
+.orch__vctl { gap: 8px; }
+.orch__vctl input { flex: 1; min-width: 0; accent-color: var(--turq); }
+.orch__vctl output { min-width: 3ch; text-align: right; }
+.orch__stagewrap .orch__notes li { grid-template-columns: 28px minmax(64px, 100px) 150px 150px minmax(0, 1fr) 28px; }
+@media (max-width: 640px) { .orch__stagewrap .orch__notes li { grid-template-columns: 28px 1fr 28px; } }
