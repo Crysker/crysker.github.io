@@ -44,6 +44,7 @@ let audioCtx = null;
 function tone(freq, start, dur, type = "sine", vol = 0.12, slideTo = null) {
   if (playMuted) return;
   try {
+    if (!audioCtx) { try { if (navigator.audioSession) navigator.audioSession.type = "playback"; } catch (e) {} } // iPhone: sound also with the silent switch on
     audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
     if (audioCtx.state === "suspended") audioCtx.resume();
     const t0 = audioCtx.currentTime + start, osc = audioCtx.createOscillator(), g = audioCtx.createGain();

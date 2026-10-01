@@ -96,7 +96,55 @@
     { t: ["Sport 2", "Sport 2"], s: [
       ["⚽", "Ein Fußballfeld hat keine ganz genau festgelegte Größe.", "A football pitch does not have one exactly fixed size.", true, "Die Regeln erlauben Spielraum bei Länge und Breite, üblich sind 105 × 68 Meter.", "The rules allow a range for length and width; 105 × 68 metres is usual.", "IFAB Spielregeln"],
       ["🏓", "Tischtennisbälle sind seit 2000 größer als davor.", "Table tennis balls have been bigger since 2000.", true, "Der Durchmesser wuchs von 38 auf 40 Millimeter, damit der Ball langsamer wird.", "The diameter grew from 38 to 40 millimetres to slow the ball down.", "ITTF"],
-      ["🏃", "Der Marathon ist seit der Antike genau 42,195 km lang.", "The marathon has been exactly 42.195 km since antiquity.", false, "Die Strecke wurde erst 1921 festgelegt, nach den Olympischen Spielen 1908 in London.", "The distance was only fixed in 1921, based on the 1908 London Olympics.", "World Athletics"]] }
+      ["🏃", "Der Marathon ist seit der Antike genau 42,195 km lang.", "The marathon has been exactly 42.195 km since antiquity.", false, "Die Strecke wurde erst 1921 festgelegt, nach den Olympischen Spielen 1908 in London.", "The distance was only fixed in 1921, based on the 1908 London Olympics.", "World Athletics"]] },
+    { t: ["Wien", "Vienna"], s: [
+      ["🍇", "In Wien wird innerhalb der Stadtgrenzen Wein angebaut.", "Wine is grown inside Vienna's city limits.", true, "Rund 600 Hektar Weingärten liegen in der Stadt, etwa in Grinzing und am Nussberg.", "Around 600 hectares of vineyards lie inside the city, for example in Grinzing and on the Nussberg.", "Stadt Wien"],
+      ["🚇", "Die erste Wiener U-Bahn-Strecke (U1) wurde 1978 eröffnet.", "The first Vienna metro line (U1) opened in 1978.", true, "Sie fuhr zuerst von Reumannplatz bis Karlsplatz.", "It first ran from Reumannplatz to Karlsplatz.", "Wiener Linien"],
+      ["⛪", "Der Wiener Stephansdom hat zwei gleich hohe Türme.", "St Stephen's Cathedral in Vienna has two towers of equal height.", false, "Der Südturm misst 136 Meter, der unvollendete Nordturm nur etwa die Hälfte.", "The south tower is 136 metres, the unfinished north tower only about half of that.", "Dombauhütte St. Stephan"]] },
+    { t: ["Österreichisch", "Austrian German"], s: [
+      ["🍅", "In Österreich sagt man „Paradeiser“ zur Tomate.", "In Austria people say “Paradeiser” for a tomato.", true, "Das Wort gilt im österreichischen Standarddeutsch.", "The word belongs to Austrian standard German.", "Österreichisches Wörterbuch"],
+      ["🥛", "„Obers“ ist das österreichische Wort für Schlagsahne.", "“Obers” is the Austrian word for whipping cream.", true, "Man schlägt es zu „Schlagobers“.", "It is whipped into “Schlagobers”.", "Österreichisches Wörterbuch"],
+      ["🛍️", "Ein „Sackerl“ ist in Österreich ein Rucksack.", "A “Sackerl” in Austria is a backpack.", false, "Ein Sackerl ist eine Tüte, zum Beispiel ein Plastiksackerl.", "A Sackerl is a bag, for example a plastic bag.", "Duden"]] },
+    { t: ["Sonnensystem", "Solar system"], s: [
+      ["🪐", "Saturn ist weniger dicht als Wasser.", "Saturn is less dense than water.", true, "Mit etwa 0,69 g/cm³ würde er in einem riesigen Ozean schwimmen.", "At about 0.69 g/cm³ it would float in a big enough ocean.", "NASA"],
+      ["☀️", "Die Sonne macht mehr als 99 Prozent der Masse des Sonnensystems aus.", "The Sun makes up more than 99 percent of the Solar System's mass.", true, "Alle Planeten zusammen sind dagegen winzig.", "All the planets together are tiny in comparison.", "NASA"],
+      ["🌙", "Von der Erde aus sieht man beide Seiten des Mondes.", "From Earth you can see both sides of the Moon.", false, "Der Mond zeigt uns immer dieselbe Seite, die andere heißt die „Rückseite“.", "The Moon always shows us the same face; the other is the “far side”.", "NASA"]] },
+    { t: ["Tiere 2", "Animals 2"], s: [
+      ["🐨", "Wombats produzieren würfelförmigen Kot.", "Wombats produce cube-shaped droppings.", true, "Ihr Darm formt die Würfel; sie markieren damit ihr Revier.", "Their gut shapes the cubes, and they use them to mark territory.", "Georgia Tech, 2018"],
+      ["🐬", "Delfine schlafen mit nur einer Gehirnhälfte.", "Dolphins sleep with only one half of their brain.", true, "Die andere Hälfte bleibt wach, damit sie weiter auftauchen und atmen können.", "The other half stays awake so they can keep surfacing to breathe.", "NOAA"],
+      ["🐟", "Goldfische haben nur ein Gedächtnis von drei Sekunden.", "Goldfish only have a memory of three seconds.", false, "Sie können sich über Monate an Dinge wie Futterzeiten erinnern.", "They can remember things like feeding times for months.", "Plymouth University"]] },
+    { t: ["Mensch", "Humans"], s: [
+      ["👅", "Der Mensch hat mehr als fünf Sinne.", "Humans have more than five senses.", true, "Dazu zählen unter anderem Gleichgewicht, Temperatur- und Schmerzempfinden.", "These include balance, temperature and pain, among others.", "Britannica"],
+      ["🧠", "Das Gehirn eines Erwachsenen macht nur etwa 2 Prozent des Körpergewichts aus, braucht aber rund 20 Prozent der Energie.", "An adult's brain is only about 2 percent of body weight but uses around 20 percent of the energy.", true, "Denken ist anstrengend, auch wenn man still sitzt.", "Thinking is costly, even when you sit still.", "Scientific American"],
+      ["💡", "Wir nutzen nur zehn Prozent unseres Gehirns.", "We only use ten percent of our brain.", false, "Bildgebende Verfahren zeigen: Über den Tag gesehen sind praktisch alle Bereiche aktiv.", "Imaging shows that over a day practically every area is active.", "Scientific American"]] },
+    { t: ["Zahlen", "Numbers"], s: [
+      ["⏱️", "Eine Million Sekunden sind etwa 11,5 Tage.", "A million seconds are about 11.5 days.", true, "Eine Milliarde Sekunden sind dagegen rund 31,7 Jahre.", "A billion seconds, by contrast, are about 31.7 years.", "Rechnung"],
+      ["0️⃣", "Null ist eine gerade Zahl.", "Zero is an even number.", true, "Sie lässt sich ohne Rest durch 2 teilen.", "It divides by 2 without a remainder.", "Britannica"],
+      ["🥧", "Die Zahl Pi ist genau 22/7.", "The number pi is exactly 22/7.", false, "22/7 ist nur eine gute Näherung. Pi hat unendlich viele Nachkommastellen ohne Muster.", "22/7 is just a good approximation. Pi has infinitely many decimals without a pattern.", "Britannica"]] },
+    { t: ["Geografie", "Geography"], s: [
+      ["🕐", "Russland hat elf Zeitzonen.", "Russia has eleven time zones.", true, "Von Kaliningrad bis Kamtschatka liegen zehn Stunden dazwischen.", "From Kaliningrad to Kamchatka there are ten hours of difference.", "Britannica"],
+      ["⛪", "Der Vatikan ist der kleinste Staat der Welt.", "Vatican City is the smallest state in the world.", true, "Er ist nur etwa 0,44 Quadratkilometer groß.", "It covers only about 0.44 square kilometres.", "Britannica"],
+      ["🌊", "Der Nil mündet ins Rote Meer.", "The Nile flows into the Red Sea.", false, "Er mündet im Mittelmeer, in einem großen Delta in Ägypten.", "It flows into the Mediterranean in a large delta in Egypt.", "Britannica"]] },
+    { t: ["Musik", "Music"], s: [
+      ["🎼", "Beethoven komponierte seine 9. Sinfonie, als er fast taub war.", "Beethoven composed his 9th Symphony when he was almost deaf.", true, "Bei der Uraufführung 1824 hörte er den Applaus nicht und musste umgedreht werden.", "At the 1824 premiere he did not hear the applause and had to be turned around.", "Britannica"],
+      ["🎻", "Mozart wurde in Salzburg geboren.", "Mozart was born in Salzburg.", true, "Sein Geburtshaus steht in der Getreidegasse.", "His birthplace stands in the Getreidegasse.", "Britannica"],
+      ["🥁", "Den Radetzky-Marsch komponierte Johann Strauss (Sohn).", "The Radetzky March was composed by Johann Strauss the Younger.", false, "Er stammt von seinem Vater, Johann Strauss (Vater), und ist von 1848.", "It is by his father, Johann Strauss the Elder, and dates from 1848.", "Wiener Philharmoniker"]] },
+    { t: ["Internet", "Internet"], s: [
+      ["💬", "Die erste SMS der Welt wurde 1992 gesendet.", "The world's first text message was sent in 1992.", true, "Der Text war „Merry Christmas“.", "The text was “Merry Christmas”.", "Vodafone"],
+      ["🎙️", "„Podcast“ ist aus „iPod“ und „Broadcast“ zusammengesetzt.", "“Podcast” is a blend of “iPod” and “broadcast”.", true, "Das Wort tauchte 2004 erstmals auf.", "The word first appeared in 2004.", "Merriam-Webster"],
+      ["🌐", "Die erste Webseite ging 1999 online.", "The first website went online in 1999.", false, "Tim Berners-Lee schaltete die erste Seite 1991 am CERN frei.", "Tim Berners-Lee put the first page online in 1991 at CERN.", "CERN"]] },
+    { t: ["Natur 2", "Nature 2"], s: [
+      ["🎋", "Manche Bambusarten wachsen an einem Tag fast einen Meter.", "Some bamboo species grow almost a metre in one day.", true, "Der Rekord liegt bei rund 91 Zentimetern pro Tag.", "The record is about 91 centimetres per day.", "Guinness World Records"],
+      ["🧊", "Wasser ist bei etwa 4 °C am dichtesten.", "Water is densest at about 4 °C.", true, "Deshalb schwimmt Eis oben und Seen frieren von oben zu.", "That's why ice floats and lakes freeze from the top.", "Britannica"],
+      ["🏜️", "Die größte Wüste der Erde ist die Sahara.", "The largest desert on Earth is the Sahara.", false, "Die größte Wüste ist die Antarktis, die Sahara ist nur die größte Hitzewüste.", "The largest desert is Antarctica; the Sahara is only the largest hot desert.", "Britannica"]] },
+    { t: ["Geschichte 2", "History 2"], s: [
+      ["🏰", "Die Wiener Hofburg war jahrhundertelang Residenz der Habsburger.", "The Hofburg in Vienna was the Habsburgs' residence for centuries.", true, "Heute sitzt dort unter anderem der Bundespräsident.", "Today the Federal President has an office there, among others.", "Hofburg Wien"],
+      ["🇪🇺", "Österreich ist seit 1995 Mitglied der EU.", "Austria has been a member of the EU since 1995.", true, "Gemeinsam mit Schweden und Finnland.", "Together with Sweden and Finland.", "Europäische Union"],
+      ["🇺🇳", "Österreich ist seit 1945 Mitglied der Vereinten Nationen.", "Austria has been a member of the United Nations since 1945.", false, "Der Beitritt war erst 1955, nach dem Staatsvertrag.", "It only joined in 1955, after the State Treaty.", "Vereinte Nationen"]] },
+    { t: ["Essen 2", "Food 2"], s: [
+      ["🍯", "Honig kann tausende Jahre haltbar bleiben.", "Honey can stay edible for thousands of years.", true, "In ägyptischen Gräbern wurden essbare Honigreste gefunden.", "Edible honey has been found in ancient Egyptian tombs.", "Smithsonian Magazine"],
+      ["🥜", "Cashewkerne wachsen außen an einer Frucht, dem Cashewapfel.", "Cashew nuts grow on the outside of a fruit, the cashew apple.", true, "Die Frucht wird vor Ort gegessen, die Nuss muss aufwendig geschält werden.", "The fruit is eaten locally, the nut needs a lot of processing.", "Britannica"],
+      ["🌶️", "Schwarzer Pfeffer und Chili sind botanisch eng verwandt.", "Black pepper and chili are closely related botanically.", false, "Pfeffer gehört zu den Pfeffergewächsen, Chili zu den Nachtschattengewächsen.", "Pepper is a pepper plant, chili is a nightshade.", "Britannica"]] }
   ];
   const T = {
     en: {

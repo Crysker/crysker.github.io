@@ -1602,7 +1602,7 @@ body.view-all .p-card__play, body.view-all .p-card__video { display: none; }
 .orch__stagewrap .orch__insp .orch__det .orch__notes li > .orch__vctl { grid-area: vc; }
 .orch__stagewrap .orch__insp .orch__det .orch__notes li > .orch__lane { grid-area: ln; min-width: 0; }
 .orch__stagewrap .orch__insp .orch__det .orch__notes li > .orch__x { grid-area: x; justify-self: end; margin: 0; }
-@container orchinsp (max-width: 720px) {
+@container orchinsp (max-width: 800px) {
   .orch__stagewrap .orch__insp .orch__det .orch__notes li { grid-template-columns: 28px minmax(40px, 1fr) 150px 170px 28px; grid-template-areas: "ic nm pc vc x" "ln ln ln ln ln"; }
 }
 @container orchinsp (max-width: 560px) {

@@ -82,9 +82,19 @@ const creatureSVG = (c) => c.custom ? orchCustomSVG(c) : `<svg viewBox="0 0 48 4
 let oCtxOverride = null; // while the beat is rendered to a file, the voices play into an offline context
 function orchCtx() {
   if (oCtxOverride) return oCtxOverride;
-  audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
-  if (audioCtx.state === "suspended") audioCtx.resume();
+  if (!audioCtx) {
+    try { if (navigator.audioSession) navigator.audioSession.type = "playback"; } catch (e) {} // iPhone: sound plays even with the silent switch on (Safari 16.4+)
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  }
+  if (audioCtx.state === "suspended" || audioCtx.state === "interrupted") audioCtx.resume(); // "interrupted" is Safari's state after a call or the screen lock
   return audioCtx;
+}
+/* Safari without the AudioBuffer constructor, and Safari's older callback-style decodeAudioData */
+function orchNewBuffer(length, rate) {
+  try { return new AudioBuffer({ length, sampleRate: rate, numberOfChannels: 1 }); } catch (e) { return orchCtx().createBuffer(1, length, rate); }
+}
+function orchDecode(ab) {
+  return new Promise((res, rej) => { const p = orchCtx().decodeAudioData(ab, res, rej); if (p && p.then) p.then(res, rej); });
 }
 let oVol = 1; // volume of the note being played (0 to 1)
 const oOuts = new WeakMap();
@@ -148,12 +158,13 @@ const ORCH_VOICE = {
   blob: (t) => oTone(150, t, 0.2, "sine", 0.4, 42),
   robot: (t) => { oNoise(t, 0.07, 0.07); oTone(2100, t, 0.045, "sine", 0.05, 1500); },
   frog: (t, f) => oTone(f / 2, t, 0.26, "sine", 0.26, f / 3),
-  bird: (t, f) => { // a longer bar makes Pip sing on: one chirp every quarter second, each a little different
-    const len = oLen, n = Math.max(1, Math.round((len * 30 / orch.bpm) / 0.24));
+  bird: (t, f) => { // a longer bar stretches Pip's chirp in time (slower glides, same pitch), it does not repeat it
+    const len = oLen, S = len > 1 ? Math.max(1, (len * 30 / orch.bpm) / 0.2) : 1;
     oLen = 1;
-    for (let i = 0; i < n; i++) { const s = t + i * 0.24, k = [1, 1.12, 0.94, 1.2][i % 4]; oTone(f * 2 * k, s, 0.1, "triangle", 0.07, f * 3 * k); oTone(f * 2.5 * k, s + 0.1, 0.1, "triangle", 0.06, f * 3.5 * k); }
+    oTone(f * 2, t, 0.1 * S, "triangle", 0.07, f * 3); oTone(f * 2.5, t + 0.1 * S, 0.1 * S, "triangle", 0.06, f * 3.5);
     oLen = len;
   },
+
   ghost: (t, f) => { oTone(f, t, 0.7, "sine", 0.08, null, 0.15); oTone(f * 1.005, t, 0.7, "sine", 0.05, null, 0.15); },
   octo: (t, f) => oTone(f, t, 0.32, "triangle", 0.14, f * 0.99),
   mine: (t, f) => orchCustomVoice("mine", t, f), mine2: (t, f) => orchCustomVoice("mine2", t, f), mine3: (t, f) => orchCustomVoice("mine3", t, f)
@@ -190,7 +201,7 @@ function orchStretchBuf(buf, factor) {
   }
   const res = new Float32Array(outLen);
   for (let i = 0; i < outLen; i++) res[i] = norm[i] > 0.001 ? out[i] / norm[i] : 0;
-  const nb = new AudioBuffer({ length: outLen, sampleRate: sr, numberOfChannels: 1 });
+  const nb = orchNewBuffer(outLen, sr);
   nb.getChannelData(0).set(res);
   return nb;
 }
@@ -221,7 +232,7 @@ function orchCustomVoice(id, t, f) {
 const orchB64 = (i16) => { let s = ""; const u = new Uint8Array(i16.buffer); for (let i = 0; i < u.length; i += 8192) s += String.fromCharCode.apply(null, u.subarray(i, i + 8192)); return btoa(s); };
 const orchFromB64 = (b64) => { const bin = atob(b64), u = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) u[i] = bin.charCodeAt(i); return new Int16Array(u.buffer); };
 function orchBufFrom(pcm, rate) {
-  const buf = new AudioBuffer({ length: pcm.length, sampleRate: rate, numberOfChannels: 1 }), ch = buf.getChannelData(0);
+  const buf = orchNewBuffer(pcm.length, rate), ch = buf.getChannelData(0);
   for (let i = 0; i < pcm.length; i++) ch[i] = pcm[i] / 32768;
   return buf;
 }
@@ -319,7 +330,7 @@ function orchOpenMaker(editId) {
   };
   async function load(ab) {
     try {
-      const prep = orchPrep(await orchCtx().decodeAudioData(ab));
+      const prep = orchPrep(await orchDecode(ab));
       if (!prep) { say(ot("mineBad")); return; }
       mk.f32 = prep.f32; mk.rate = prep.rate; mk.start = 0; mk.len = ORCH_LIMIT; say(""); sync();
     } catch (e) { say(ot("mineBad")); }
