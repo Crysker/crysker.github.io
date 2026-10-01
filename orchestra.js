@@ -86,10 +86,20 @@ function orchCtx() {
 }
 let oVol = 1; // volume of the note being played (0 to 1)
 const oOuts = new WeakMap();
+let oDest = null; // while a preview or the running beat is played, its voices go to their own volume node so they can be faded out at once
+let oPrevGain = null;
 function orchOut(c) { // everything goes through one master volume per audio context
+  if (oDest) return oDest;
   let g = oOuts.get(c);
   if (!g) { g = c.createGain(); g.gain.value = Math.pow(orch.master / 100, 2); g.connect(c.destination); oOuts.set(c, g); }
   return g;
+}
+function orchAudition(fn) { // one preview at a time: a new one fades the old one out, so fast clicking and sliding never piles sounds up
+  const c = orchCtx(), master = orchOut(c);
+  if (oPrevGain) { const old = oPrevGain; old.gain.cancelScheduledValues(c.currentTime); old.gain.setTargetAtTime(0, c.currentTime, 0.012); setTimeout(() => { try { old.disconnect(); } catch (e) {} }, 500); }
+  oPrevGain = c.createGain(); oPrevGain.connect(master);
+  oDest = oPrevGain;
+  try { fn(); } finally { oDest = null; }
 }
 let oMult = 1, oLen = 1, oKit = 0, oPrev = true, oCol; // set around a creature's voice only: pitch factor, note length, sound kit, preview?, column // set around a creature's voice only: pitch factor, note length, sound kit
 const O_KIT_TYPE = [null, { sine: "square", triangle: "square", sawtooth: "square" }, { sine: "sawtooth", triangle: "sawtooth" }, { sawtooth: "sine", square: "sine", triangle: "sine" }];
@@ -484,7 +494,7 @@ const ORCH_COMBOS = [
 ];
 
 /* ---- the stage and the clock ---- */
-const orch = { master: 55, vol: null, mode: null, level: 0, base: null, inspOpen: true, grid: null, len: null, pit: null, more: null, cell: null, pitch: 0, kit: 0, bpm: 100, sel: "blob", playing: false, step: 0, next: 0, timer: null, placed: 0, found: [] };
+const orch = { bus: null, master: 55, vol: null, mode: null, level: 0, base: null, inspOpen: true, grid: null, len: null, pit: null, more: null, cell: null, pitch: 0, kit: 0, bpm: 100, sel: "blob", playing: false, step: 0, next: 0, timer: null, placed: 0, found: [] };
 function orchLoad() {
   orchCustomLoad();
   try { const mv = localStorage.getItem("orchMaster"); orch.master = mv === null ? 55 : Math.max(0, Math.min(100, +mv || 0)); } catch (e) {}
@@ -522,11 +532,12 @@ function orchSetNotes(r, c, notes) {
   const [a, ...rest] = notes;
   orch.grid[r][c] = a ? a.id : null; orch.len[r][c] = a ? a.len : 1; orch.pit[r][c] = a ? a.pit : 0; orch.vol[r][c] = a && a.vol !== undefined ? a.vol : 100; orch.more[r][c] = rest;
 }
-const orchHear = (n, r, c) => { if (!playMuted) orchVoice(n.id, orchCtx().currentTime + 0.01, ORCH_NOTES[r], n.len, n.pit, c, n.vol); }; // a preview sounds exactly like the note will, length and all
+const orchHear = (n, r, c) => { if (!playMuted) orchAudition(() => orchVoice(n.id, orchCtx().currentTime + 0.01, ORCH_NOTES[r], n.len, n.pit, c, n.vol)); }; // a preview sounds exactly like the note will, length and all
 
 function orchPlayStep(step, when) {
-  if (!playMuted) for (let r = 0; r < orch.grid.length; r++) {
-    orchNotes(r, step).forEach((n) => orchVoice(n.id, when, ORCH_NOTES[r], n.len, n.pit, step, n.vol));
+  if (!playMuted) {
+    oDest = orch.bus || null;
+    try { for (let r = 0; r < orch.grid.length; r++) orchNotes(r, step).forEach((n) => orchVoice(n.id, when, ORCH_NOTES[r], n.len, n.pit, step, n.vol)); } finally { oDest = null; }
   }
   setTimeout(() => { // the visuals follow the audio clock
     if (!orch.playing) return;
@@ -548,6 +559,7 @@ function orchTick() {
 function orchStart() {
   const c = orchCtx();
   orch.playing = true; orch.step = 0; orch.next = c.currentTime + 0.06; orchFlag("played");
+  orch.bus = c.createGain(); orch.bus.connect(orchOut(c));
   orchTick();
   orch.timer = setInterval(orchTick, 25);
   if (orch.placed >= 6) unlock("maestro");
@@ -557,6 +569,7 @@ function orchStop() {
   if (!orch.playing && !orch.timer) return;
   orch.playing = false;
   clearInterval(orch.timer); orch.timer = null;
+  if (orch.bus) { const b = orch.bus, c = audioCtx; orch.bus = null; b.gain.setTargetAtTime(0, c.currentTime, 0.02); setTimeout(() => { try { b.disconnect(); } catch (e) {} }, 600); } // sounds still ringing stop now
   document.querySelectorAll(".orch__cell.is-now").forEach((el) => el.classList.remove("is-now"));
   orchSyncButtons();
 }
@@ -575,7 +588,7 @@ document.addEventListener("visibilitychange", () => { if (document.hidden) orchS
 /* ---- placing creatures ---- */
 function orchPreview(id) { // pressing a creature in the tray plays its sound, so you know what you are about to place
   orchFlag("heard");
-  if (!playMuted) orchVoice(id, orchCtx().currentTime + 0.01, ORCH_NOTES[1]);
+  if (!playMuted) orchAudition(() => orchVoice(id, orchCtx().currentTime + 0.01, ORCH_NOTES[1]));
   const face = document.querySelector(`.orch__pick[data-id="${id}"] .orch__face`);
   if (face) { face.classList.remove("is-hit"); void face.offsetWidth; face.classList.add("is-hit"); }
 }
@@ -964,7 +977,7 @@ function renderOrchestra() {
     };
     const up = () => {
       removeEventListener("pointermove", move); removeEventListener("pointerup", up); removeEventListener("pointercancel", up);
-      if (moved) { orchSave(); if (!playMuted) orchVoice(orch.grid[r][c], orchCtx().currentTime + 0.01, ORCH_NOTES[r], orch.len[r][c], orch.pit[r][c], c, orch.vol[r][c]); }
+      if (moved) { orchSave(); if (!playMuted) orchAudition(() => orchVoice(orch.grid[r][c], orchCtx().currentTime + 0.01, ORCH_NOTES[r], orch.len[r][c], orch.pit[r][c], c, orch.vol[r][c])); }
     };
     addEventListener("pointermove", move); addEventListener("pointerup", up); addEventListener("pointercancel", up);
   });
@@ -1004,12 +1017,12 @@ function renderOrchestra() {
   });
   document.getElementById("orchPitch").addEventListener("input", (e) => {
     orch.pitch = +e.target.value; document.getElementById("orchPitchOut").textContent = (orch.pitch > 0 ? "+" : "") + orch.pitch; orchSave();
-    if (!playMuted && !orch.playing) orchVoice(orch.sel, orchCtx().currentTime + 0.01, ORCH_NOTES[1]);
+    if (!playMuted && !orch.playing) orchAudition(() => orchVoice(orch.sel, orchCtx().currentTime + 0.01, ORCH_NOTES[1]));
   });
   document.getElementById("orchKit").addEventListener("click", (e) => {
     orch.kit = (orch.kit + 1) % ot("kits").length; orchSave(); orchFlag("kit");
     e.currentTarget.textContent = ot("kit") + ": " + ot("kits")[orch.kit];
-    if (!playMuted) orchVoice(orch.sel, orchCtx().currentTime + 0.01, ORCH_NOTES[1]);
+    if (!playMuted) orchAudition(() => orchVoice(orch.sel, orchCtx().currentTime + 0.01, ORCH_NOTES[1]));
   });
   document.getElementById("orchInsp").addEventListener("click", orchInspClick);
   document.getElementById("orchInsp").addEventListener("pointerdown", orchLaneDown);
