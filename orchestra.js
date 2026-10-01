@@ -17,6 +17,7 @@ const ORCH_T = {
     pitch: "Pitch", kit: "Sound", kits: ["Classic", "8-bit", "Buzz", "Soft"], hint: "Tap a creature to select it: change its pitch or length, remove it, or drop another creature on it to layer sounds.", len: "Note length",
     pitchNote: "Pitch", lenNote: "Length", remove: "Remove", layer: "Add layer", selected: "Selected",
     found: "Discoveries", share: "Share my beat", download: "Download", rendering: "Rendering…",
+    createOwn: "Create own sound", mkSound: "Sound", mkTitle: "Create your own sound", mkEdit: "Edit your sound", mkName: "Name", mkAvatar: "Avatar", mkUploadImg: "Upload image", mkStart: "Start", mkLen: "Length", mkMax: "max. {n} s", save: "Save", cancel: "Cancel", edit: "Edit", noSample: "Record or upload a sound first.", ownTag: "own sound", mkDefault: "My sound",
     modeFree: "Freestyle", modeLearn: "Learn", level: "Level {n} of 5", next: "Next level", restart: "Restart level", doneTitle: "You know every tool now", doneText: "Creatures, pitch, tempo, shaping notes, layers, kits, rows, sharing: all yours. Time for freestyle!", openFree: "Open freestyle",
     mineTitle: "Your own sound", rec: "Record", recStop: "Stop", upload: "Upload", test: "Test", del: "Remove", mineNone: "Record up to 2.5 seconds or upload a sound file. Sounds stay on your device, a shared link plays a plain blip instead.", mineHas: "Your sound is ready. Put My sound on the stage.", mineMic: "Could not use the microphone.", mineBad: "That file could not be read.", mineRec: "Recording …", copied: "Link copied", newFound: "Discovered: {n}!", creatures: "Creatures",
     combos: {
@@ -40,6 +41,7 @@ const ORCH_T = {
     pitch: "Tonhöhe", kit: "Klang", kits: ["Klassisch", "8-Bit", "Brummig", "Weich"], hint: "Höhere Reihen klingen höher. Tippe ein Wesen an, um es auszuwählen: Tonhöhe oder Länge ändern, entfernen, oder ein weiteres Wesen daraufziehen, um Klänge zu schichten.", len: "Tonlänge",
     pitchNote: "Tonhöhe", lenNote: "Länge", remove: "Entfernen", layer: "Schicht hinzufügen", selected: "Ausgewählt",
     found: "Entdeckungen", share: "Meinen Beat teilen", download: "Herunterladen", rendering: "Wird erstellt …",
+    createOwn: "Eigenen Klang erstellen", mkSound: "Klang", mkTitle: "Erstelle deinen eigenen Klang", mkEdit: "Klang bearbeiten", mkName: "Name", mkAvatar: "Avatar", mkUploadImg: "Bild hochladen", mkStart: "Start", mkLen: "Länge", mkMax: "max. {n} s", save: "Speichern", cancel: "Abbrechen", edit: "Bearbeiten", noSample: "Nimm erst einen Klang auf oder lade einen hoch.", ownTag: "eigener Klang", mkDefault: "Mein Ton",
     modeFree: "Freestyle", modeLearn: "Lernen", level: "Stufe {n} von 5", next: "Nächste Stufe", restart: "Stufe neu starten", doneTitle: "Du kennst jetzt alle Werkzeuge", doneText: "Wesen, Tonhöhe, Tempo, Noten formen, Schichten, Klänge, Reihen, Teilen: alles deins. Zeit für Freestyle!", openFree: "Freestyle öffnen",
     mineTitle: "Dein eigener Klang", rec: "Aufnehmen", recStop: "Stopp", upload: "Hochladen", test: "Anhören", del: "Entfernen", mineNone: "Nimm bis zu 2,5 Sekunden auf oder lade eine Audiodatei hoch. Der Klang bleibt auf deinem Gerät, ein geteilter Link spielt stattdessen einen einfachen Ton.", mineHas: "Dein Klang ist bereit. Setz „Mein Ton“ auf die Bühne.", mineMic: "Das Mikrofon ließ sich nicht verwenden.", mineBad: "Diese Datei konnte nicht gelesen werden.", mineRec: "Aufnahme läuft …", copied: "Link kopiert", newFound: "Neu entdeckt: {n}!", creatures: "Wesen",
     combos: {
@@ -64,10 +66,12 @@ const ORCH_CREATURES = [
   { id: "ghost", color: "#c4b5fd", body: `<path d="M9 40V24a15 15 0 0 1 30 0v16l-5-4-5 4-5-4-5 4-5-4z"/>`, eyes: [[19, 24], [29, 24]] },
   { id: "robot", color: "#ff9a56", body: `<rect x="9" y="17" width="30" height="24" rx="7"/><path d="M24 17v-6" stroke="#ff9a56" stroke-width="3" stroke-linecap="round"/><circle cx="24" cy="9" r="3.2"/>`, eyes: [[18, 28], [30, 28]] },
   { id: "octo", color: "#f472b6", body: `<circle cx="24" cy="21" r="14"/><path d="M12 30c-3 5-3 9-6 10M19 34c-1 4-1 6-3 8M29 34c1 4 1 6 3 8M36 30c3 5 3 9 6 10" stroke="#f472b6" stroke-width="4" stroke-linecap="round" fill="none"/>`, eyes: [[19, 21], [29, 21]] },
-  { id: "mine", color: "#fb7185", body: `<ellipse cx="24" cy="29" rx="15" ry="13"/><rect x="5" y="23" width="7" height="14" rx="3.5"/><rect x="36" y="23" width="7" height="14" rx="3.5"/><path d="M9 25a15 15 0 0 1 30 0" stroke="#fb7185" stroke-width="3" fill="none" stroke-linecap="round"/>`, eyes: [[18, 27], [30, 27]] }
 ];
 const ORCH_BY_ID = Object.fromEntries(ORCH_CREATURES.map((c) => [c.id, c]));
-const creatureSVG = (c) => `<svg viewBox="0 0 48 48" width="100%" height="100%" focusable="false" aria-hidden="true">
+const ORCH_CUSTOM_IDS = ["mine", "mine2", "mine3"], ORCH_LIMIT = 2.5; // up to three own sounds, each at most 2.5 seconds
+ORCH_CUSTOM_IDS.forEach((id) => { ORCH_BY_ID[id] = { id, custom: true, color: "#fb7185", name: "My sound", emoji: "🎧", img: null }; });
+const orchCustomSVG = (c) => `<svg viewBox="0 0 48 48" width="100%" height="100%" focusable="false" aria-hidden="true"><circle cx="24" cy="24" r="21" fill="${c.color}"/>${c.img ? `<image href="${c.img}" x="5" y="5" width="38" height="38"/>` : `<text x="24" y="33" text-anchor="middle" font-size="24">${c.emoji}</text>`}</svg>`;
+const creatureSVG = (c) => c.custom ? orchCustomSVG(c) : `<svg viewBox="0 0 48 48" width="100%" height="100%" focusable="false" aria-hidden="true">
   <g fill="${c.color}">${c.body}</g>
   ${c.eyes.map(([x, y]) => `<circle cx="${x}" cy="${y}" r="2.6" fill="#1b1a2a"/><circle cx="${x + .8}" cy="${y - .8}" r=".8" fill="#fff"/>`).join("")}
   ${c.id === "frog" || c.id === "blob" ? `<path d="M20 33q4 3 8 0" stroke="#1b1a2a" stroke-width="1.6" fill="none" stroke-linecap="round"/>` : ""}</svg>`;
@@ -124,77 +128,191 @@ const ORCH_VOICE = {
   bird: (t, f) => { oTone(f * 2, t, 0.1, "triangle", 0.07, f * 3); oTone(f * 2.5, t + 0.1, 0.1, "triangle", 0.06, f * 3.5); },
   ghost: (t, f) => { oTone(f, t, 0.7, "sine", 0.08, null, 0.15); oTone(f * 1.005, t, 0.7, "sine", 0.05, null, 0.15); },
   octo: (t, f) => oTone(f, t, 0.32, "triangle", 0.14, f * 0.99),
-  mine: (t, f) => orchMineVoice(t, f)
+  mine: (t, f) => orchCustomVoice("mine", t, f), mine2: (t, f) => orchCustomVoice("mine2", t, f), mine3: (t, f) => orchCustomVoice("mine3", t, f)
 };
-/* ---- your own sound: a short recording or file, played faster or slower for the higher or lower rows ---- */
-const orchMine = { buf: null, rec: null, msg: "" };
-function orchMineVoice(t, f) {
-  const c = orchCtx(), buf = orchMine.buf;
-  if (!buf) { oTone(f, t, 0.16, "square", 0.05); return; } // no sound on this device (a shared beat): a plain blip
+/* ---- your own sounds: name them, give them an avatar, record or upload a sound and slide out the part you want (at most 2.5 seconds) ---- */
+const ORCH_EMOJI = ["🎤", "🎸", "🥁", "🎹", "🎺", "🐶", "🐱", "🐮", "🦆", "🐸", "🚗", "🔔", "👏", "🤖", "👻", "🌟"];
+let orchCustom = []; // { id, name, emoji, img, rate, pcm (Int16Array), buf (AudioBuffer) }
+const orchIsCustom = (id) => orchCustom.some((c) => c.id === id);
+const orchName = (id) => (ORCH_BY_ID[id] && ORCH_BY_ID[id].custom ? ORCH_BY_ID[id].name : (ot("names")[id] || id));
+const orchTrayList = () => ORCH_CREATURES.concat(orchCustom.map((c) => ORCH_BY_ID[c.id]));
+function orchCustomVoice(id, t, f) {
+  const cu = orchCustom.find((x) => x.id === id), c = orchCtx();
+  if (!cu || !cu.buf) { oTone(f, t, 0.16, "square", 0.05); return; } // a shared beat on a device without this sound: a plain blip
   const src = c.createBufferSource(), g = c.createGain(), stretch = 1 + (oLen - 1) * 0.9, rate = Math.max(0.25, Math.min(4, (f / 261.63) * oMult));
-  src.buffer = buf; src.playbackRate.value = rate; src.loop = oLen > 1; // a longer note loops the sound
-  const dur = Math.max(0.1, Math.min(6, (buf.duration / rate) * (oLen > 1 ? stretch : 1))), vol = 0.7 / Math.sqrt(stretch);
+  src.buffer = cu.buf; src.playbackRate.value = rate; src.loop = oLen > 1; // a longer note loops the sound
+  const dur = Math.max(0.1, Math.min(6, (cu.buf.duration / rate) * (oLen > 1 ? stretch : 1))), vol = 0.7 / Math.sqrt(stretch);
   g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(vol, t + 0.006); g.gain.setValueAtTime(vol, t + dur - 0.05); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
   src.connect(g).connect(c.destination); src.start(t); src.stop(t + dur + 0.02);
 }
 const orchB64 = (i16) => { let s = ""; const u = new Uint8Array(i16.buffer); for (let i = 0; i < u.length; i += 8192) s += String.fromCharCode.apply(null, u.subarray(i, i + 8192)); return btoa(s); };
-function orchMineSet(f32, rate) { // keep it small: mono, trimmed, normalised, at most 2.5 seconds, saved on this device
-  let start = 0; while (start < f32.length && Math.abs(f32[start]) < 0.02) start++;
-  let data = f32.subarray(start, start + Math.floor(rate * 2.5));
-  if (rate >= 32000) { const h = new Float32Array(Math.floor(data.length / 2)); for (let i = 0; i < h.length; i++) h[i] = (data[2 * i] + data[2 * i + 1]) / 2; data = h; rate = Math.round(rate / 2); }
-  let peak = 0; for (let i = 0; i < data.length; i++) peak = Math.max(peak, Math.abs(data[i]));
-  if (peak < 0.003 || data.length < rate * 0.05) return false;
-  const i16 = new Int16Array(data.length); for (let i = 0; i < data.length; i++) i16[i] = Math.round(Math.max(-1, Math.min(1, (data[i] / peak) * 0.9)) * 32767);
-  orchMineFrom(i16, rate);
-  try { localStorage.setItem("orchMine", JSON.stringify({ rate, data: orchB64(i16) })); } catch (e) {}
-  return true;
+const orchFromB64 = (b64) => { const bin = atob(b64), u = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) u[i] = bin.charCodeAt(i); return new Int16Array(u.buffer); };
+function orchBufFrom(pcm, rate) {
+  const buf = new AudioBuffer({ length: pcm.length, sampleRate: rate, numberOfChannels: 1 }), ch = buf.getChannelData(0);
+  for (let i = 0; i < pcm.length; i++) ch[i] = pcm[i] / 32768;
+  return buf;
 }
-function orchMineFrom(i16, rate) {
-  const buf = new AudioBuffer({ length: i16.length, sampleRate: rate, numberOfChannels: 1 }), ch = buf.getChannelData(0);
-  for (let i = 0; i < i16.length; i++) ch[i] = i16[i] / 32768;
-  orchMine.buf = buf;
+function orchCustomApply(cu) { cu.buf = orchBufFrom(cu.pcm, cu.rate); Object.assign(ORCH_BY_ID[cu.id], { name: cu.name, emoji: cu.emoji, img: cu.img }); }
+function orchCustomSave() {
+  try { localStorage.setItem("orchCustom", JSON.stringify(orchCustom.map((c) => ({ id: c.id, name: c.name, emoji: c.emoji, img: c.img, rate: c.rate, data: orchB64(c.pcm) })))); } catch (e) {}
 }
-function orchMineLoad() {
+function orchCustomLoad() {
+  orchCustom = [];
   try {
-    const s = JSON.parse(localStorage.getItem("orchMine") || "null");
-    if (!s || !s.data) return;
-    const bin = atob(s.data), u = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) u[i] = bin.charCodeAt(i);
-    orchMineFrom(new Int16Array(u.buffer), s.rate);
+    let list = JSON.parse(localStorage.getItem("orchCustom") || "null");
+    if (!list) { // the single "my sound" of the first version moves over
+      const old = JSON.parse(localStorage.getItem("orchMine") || "null");
+      list = old && old.data ? [{ id: "mine", name: ot("mkDefault"), emoji: "🎧", img: null, rate: old.rate, data: old.data }] : [];
+    }
+    list.forEach((s) => { if (ORCH_CUSTOM_IDS.includes(s.id) && s.data) { const cu = { id: s.id, name: s.name || "My sound", emoji: s.emoji || "🎧", img: s.img || null, rate: s.rate, pcm: orchFromB64(s.data) }; orchCustomApply(cu); orchCustom.push(cu); } });
   } catch (e) {}
 }
-async function orchMineDecode(arrayBuffer) {
-  try {
-    const dec = await orchCtx().decodeAudioData(arrayBuffer), n = dec.numberOfChannels, f = new Float32Array(dec.length);
-    for (let c = 0; c < n; c++) { const d = dec.getChannelData(c); for (let i = 0; i < f.length; i++) f[i] += d[i] / n; }
-    if (!orchMineSet(f, dec.sampleRate)) throw new Error("silent");
-    orchMine.msg = ot("mineHas"); orch.sel = "mine"; orchPaintTray(); orchPaintMine();
-    orchHear({ id: "mine", len: 1, pit: 0 }, 5);
-  } catch (e) { orchMine.msg = ot("mineBad"); orchPaintMine(); }
+function orchRemoveId(id) { // taking a sound away also takes its creatures off the stage
+  orch.grid.forEach((row, r) => row.forEach((_, c) => { const notes = orchNotes(r, c); if (notes.some((n) => n.id === id)) orchSetNotes(r, c, notes.filter((n) => n.id !== id)); }));
 }
-async function orchMineRecord() {
-  if (orchMine.rec) { orchMine.rec.stop(); return; }
-  try {
-    const stream = await navigator.mediaDevices.getUserMedia({ audio: true }), rec = new MediaRecorder(stream), chunks = [];
-    rec.ondataavailable = (e) => chunks.push(e.data);
-    rec.onstop = async () => { stream.getTracks().forEach((tr) => tr.stop()); orchMine.rec = null; clearTimeout(orchMine.recT); orchPaintMine(); await orchMineDecode(await new Blob(chunks).arrayBuffer()); };
-    rec.start(); orchMine.rec = rec; orchMine.msg = ot("mineRec"); orchPaintMine();
-    orchMine.recT = setTimeout(() => { if (orchMine.rec) orchMine.rec.stop(); }, 2500);
-  } catch (e) { orchMine.rec = null; orchMine.msg = ot("mineMic"); orchPaintMine(); }
+/* raw audio to a small mono sample: at most 12 seconds, half the sample rate when it is high, normalised */
+function orchPrep(dec) {
+  const n = dec.numberOfChannels, len = Math.min(dec.length, Math.floor(dec.sampleRate * 12)), f = new Float32Array(len);
+  for (let c = 0; c < n; c++) { const d = dec.getChannelData(c); for (let i = 0; i < len; i++) f[i] += d[i] / n; }
+  let out = f, rate = dec.sampleRate;
+  if (rate >= 32000) { out = new Float32Array(Math.floor(len / 2)); for (let i = 0; i < out.length; i++) out[i] = (f[2 * i] + f[2 * i + 1]) / 2; rate = Math.round(rate / 2); }
+  let peak = 0; for (let i = 0; i < out.length; i++) peak = Math.max(peak, Math.abs(out[i]));
+  if (peak < 0.003) return null;
+  for (let i = 0; i < out.length; i++) out[i] /= peak;
+  return { f32: out, rate };
 }
-function orchPaintMine() {
+function orchOpenMaker(editId) {
+  const cu = editId ? orchCustom.find((x) => x.id === editId) : null;
+  if (!cu && orchCustom.length >= ORCH_CUSTOM_IDS.length) return;
+  const mk = { name: cu ? cu.name : "", emoji: cu ? cu.emoji : "🎤", img: cu ? cu.img : null, f32: cu ? Float32Array.from(cu.pcm, (v) => v / 32768) : null, rate: cu ? cu.rate : 0, start: 0, len: ORCH_LIMIT, rec: null, msg: "" };
+  const dlg = document.createElement("dialog");
+  dlg.className = "orch__dlg";
+  dlg.innerHTML = `<h3>${esc(ot(cu ? "mkEdit" : "mkTitle"))}</h3>
+    <label class="mk__field"><span>${esc(ot("mkName"))}</span><input id="mkName" maxlength="14" autocomplete="off" value="${esc(mk.name)}" placeholder="${esc(ot("mkDefault"))}"></label>
+    <div class="mk__field"><span>${esc(ot("mkAvatar"))}</span>
+      <div class="mk__avatar" id="mkAvatar">${ORCH_EMOJI.map((e) => `<button type="button" class="mk__emo" data-e="${e}" aria-label="${e}">${e}</button>`).join("")}
+        <label class="orch__clear mk__upimg">${esc(ot("mkUploadImg"))}<input type="file" id="mkImg" accept="image/*" hidden></label></div>
+      <span class="mk__prev" id="mkPrev" aria-hidden="true"></span></div>
+    <div class="mk__field"><span>${esc(ot("mkSound"))}</span>
+      <div class="mk__row"><button type="button" class="orch__clear" id="mkRec"></button>
+        <label class="orch__clear"><span aria-hidden="true">⬆</span> ${esc(ot("upload"))}<input type="file" id="mkFile" accept="audio/*" hidden></label>
+        <button type="button" class="orch__clear" id="mkTest"><span aria-hidden="true">▶</span> ${esc(ot("test"))}</button></div>
+      <canvas id="mkWave" width="520" height="84" aria-hidden="true"></canvas>
+      <label class="mk__slide"><span>${esc(ot("mkStart"))}</span><input type="range" id="mkStart" min="0" max="0" step="0.01" value="0"><output id="mkStartOut"></output></label>
+      <label class="mk__slide"><span>${esc(ot("mkLen"))}</span><input type="range" id="mkLen" min="0.1" max="${ORCH_LIMIT}" step="0.05" value="${ORCH_LIMIT}"><output id="mkLenOut"></output></label>
+      <small class="mk__max">${esc(ot("mkMax").replace("{n}", ORCH_LIMIT))}</small></div>
+    <p class="orch__hint" id="mkMsg" role="status"></p>
+    <div class="mk__btns"><button type="button" class="orch__go" id="mkSave">${esc(ot("save"))}</button><button type="button" class="orch__clear" id="mkCancel">${esc(ot("cancel"))}</button></div>`;
+  document.body.appendChild(dlg);
+  const $ = (id) => dlg.querySelector("#" + id), dur = () => (mk.f32 ? mk.f32.length / mk.rate : 0);
+  const say = (m) => { mk.msg = m; $("mkMsg").textContent = m; };
+  function draw() {
+    const cv = $("mkWave"), g = cv.getContext("2d"), W = cv.width, H = cv.height;
+    g.clearRect(0, 0, W, H);
+    const ink = getComputedStyle(dlg).getPropertyValue("--ink-soft") || "#999", turq = getComputedStyle(dlg).getPropertyValue("--turq") || "#40e0d0";
+    if (!mk.f32) return;
+    const d = dur(), x0 = (mk.start / d) * W, x1 = ((mk.start + mk.len) / d) * W, step = mk.f32.length / W;
+    g.fillStyle = "rgba(64,224,208,.16)"; g.fillRect(x0, 0, x1 - x0, H);
+    for (let x = 0; x < W; x++) {
+      let m = 0; for (let i = Math.floor(x * step); i < Math.floor((x + 1) * step) && i < mk.f32.length; i += Math.max(1, Math.floor(step / 8))) m = Math.max(m, Math.abs(mk.f32[i]));
+      g.fillStyle = x >= x0 && x <= x1 ? turq.trim() || "#40e0d0" : ink.trim() || "#999";
+      g.globalAlpha = x >= x0 && x <= x1 ? 1 : 0.45; g.fillRect(x, H / 2 - m * H * 0.45, 1, Math.max(1, m * H * 0.9));
+    }
+    g.globalAlpha = 1;
+  }
+  function sync() {
+    const d = dur(), has = !!mk.f32, maxLen = Math.min(ORCH_LIMIT, d || ORCH_LIMIT);
+    mk.len = Math.max(Math.min(0.1, maxLen), Math.min(mk.len, maxLen));
+    mk.start = Math.max(0, Math.min(mk.start, Math.max(0, d - mk.len)));
+    const sl = $("mkLen"), ss = $("mkStart");
+    sl.max = maxLen; sl.value = mk.len; ss.max = Math.max(0, d - mk.len); ss.value = mk.start;
+    sl.disabled = !has; ss.disabled = !has || d - mk.len < 0.01;
+    $("mkLenOut").textContent = mk.len.toFixed(2) + " s"; $("mkStartOut").textContent = mk.start.toFixed(2) + " s";
+    $("mkTest").disabled = !has; $("mkSave").disabled = !has;
+    $("mkRec").innerHTML = mk.rec ? `<span aria-hidden="true">■</span> ${esc(ot("recStop"))}` : `<span aria-hidden="true">●</span> ${esc(ot("rec"))}`;
+    $("mkRec").classList.toggle("is-rec", !!mk.rec);
+    draw();
+  }
+  function preview() {
+    const prev = $("mkPrev");
+    prev.innerHTML = creatureSVG({ custom: true, color: "#fb7185", emoji: mk.emoji || "🎧", img: mk.img });
+    dlg.querySelectorAll(".mk__emo").forEach((b) => b.classList.toggle("is-on", !mk.img && b.dataset.e === mk.emoji));
+  }
+  const windowPcm = () => {
+    const a = Math.floor(mk.start * mk.rate), b = Math.min(mk.f32.length, Math.floor((mk.start + mk.len) * mk.rate)), w = mk.f32.subarray(a, b), out = new Int16Array(w.length);
+    let peak = 0; for (let i = 0; i < w.length; i++) peak = Math.max(peak, Math.abs(w[i]));
+    for (let i = 0; i < w.length; i++) out[i] = Math.round(Math.max(-1, Math.min(1, (w[i] / (peak || 1)) * 0.9)) * 32767);
+    return out;
+  };
+  async function load(ab) {
+    try {
+      const prep = orchPrep(await orchCtx().decodeAudioData(ab));
+      if (!prep) { say(ot("mineBad")); return; }
+      mk.f32 = prep.f32; mk.rate = prep.rate; mk.start = 0; mk.len = ORCH_LIMIT; say(""); sync();
+    } catch (e) { say(ot("mineBad")); }
+  }
+  async function record() {
+    if (mk.rec) { mk.rec.stop(); return; }
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true }), rec = new MediaRecorder(stream), chunks = [];
+      rec.ondataavailable = (e) => chunks.push(e.data);
+      rec.onstop = async () => { stream.getTracks().forEach((tr) => tr.stop()); clearTimeout(mk.recT); mk.rec = null; say(""); sync(); await load(await new Blob(chunks).arrayBuffer()); };
+      rec.start(); mk.rec = rec; say(ot("mineRec")); sync();
+      mk.recT = setTimeout(() => { if (mk.rec) mk.rec.stop(); }, 8000);
+    } catch (e) { mk.rec = null; say(ot("mineMic")); sync(); }
+  }
+  dlg.querySelectorAll(".mk__emo").forEach((b) => b.addEventListener("click", () => { mk.emoji = b.dataset.e; mk.img = null; preview(); sfx.click(); }));
+  $("mkImg").addEventListener("change", (e) => { // a round 96 px avatar cropped from the middle of the picture
+    const f = e.target.files[0];
+    if (!f) return;
+    const img = new Image();
+    img.onload = () => {
+      const cv = document.createElement("canvas"), s = Math.min(img.width, img.height); cv.width = cv.height = 96;
+      const g = cv.getContext("2d"); g.beginPath(); g.arc(48, 48, 48, 0, Math.PI * 2); g.clip();
+      g.drawImage(img, (img.width - s) / 2, (img.height - s) / 2, s, s, 0, 0, 96, 96);
+      mk.img = cv.toDataURL("image/png"); URL.revokeObjectURL(img.src); preview();
+    };
+    img.onerror = () => say(ot("mineBad"));
+    img.src = URL.createObjectURL(f);
+  });
+  $("mkFile").addEventListener("change", async (e) => { const f = e.target.files[0]; if (f) await load(await f.arrayBuffer()); });
+  $("mkRec").addEventListener("click", record);
+  $("mkTest").addEventListener("click", () => {
+    if (!mk.f32) return;
+    const pcm = windowPcm(), c = orchCtx(), src = c.createBufferSource(); src.buffer = orchBufFrom(pcm, mk.rate); src.connect(c.destination); src.start();
+  });
+  $("mkStart").addEventListener("input", (e) => { mk.start = +e.target.value; sync(); });
+  $("mkLen").addEventListener("input", (e) => { mk.len = +e.target.value; sync(); });
+  $("mkSave").addEventListener("click", () => {
+    if (!mk.f32) { say(ot("noSample")); return; }
+    const id = cu ? cu.id : ORCH_CUSTOM_IDS.find((x) => !orchIsCustom(x)), entry = { id, name: ($("mkName").value.trim() || ot("mkDefault")).slice(0, 14), emoji: mk.emoji || "🎧", img: mk.img, rate: mk.rate, pcm: windowPcm() };
+    orchApplyCustom(entry); orchCustomSave(); orch.sel = id;
+    dlg.close(); sfx.score(95); renderOrchestra();
+  });
+  $("mkCancel").addEventListener("click", () => dlg.close());
+  dlg.addEventListener("close", () => { if (mk.rec) { mk.rec.onstop = null; mk.rec.stop(); } dlg.remove(); });
+  preview(); sync(); dlg.showModal(); $("mkName").focus();
+}
+function orchApplyCustom(entry) {
+  const i = orchCustom.findIndex((c) => c.id === entry.id);
+  orchCustomApply(entry);
+  if (i >= 0) orchCustom[i] = entry; else orchCustom.push(entry);
+}
+function orchPaintMine() { // under the tray: change or delete the own sound you have selected
   const box = document.getElementById("orchMine");
   if (!box) return;
-  const has = !!orchMine.buf, recording = !!orchMine.rec;
-  box.innerHTML = `<h3>${esc(ot("mineTitle"))}</h3>
-    <div class="orch__mineRow"><button type="button" class="orch__clear${recording ? " is-rec" : ""}" id="orchRec"><span aria-hidden="true">${recording ? "■" : "●"}</span> ${esc(ot(recording ? "recStop" : "rec"))}</button>
-      <label class="orch__clear orch__file"><span aria-hidden="true">⬆</span> ${esc(ot("upload"))}<input type="file" id="orchFile" accept="audio/*" hidden></label>
-      <button type="button" class="orch__clear" id="orchMineTest"${has ? "" : " disabled"}><span aria-hidden="true">▶</span> ${esc(ot("test"))}</button>
-      <button type="button" class="orch__clear" id="orchMineDel"${has ? "" : " disabled"}><span aria-hidden="true">✕</span> ${esc(ot("del"))}</button></div>
-    <p class="orch__hint" role="status">${esc(orchMine.msg || ot(has ? "mineHas" : "mineNone"))}</p>`;
-  document.getElementById("orchRec").addEventListener("click", orchMineRecord);
-  document.getElementById("orchFile").addEventListener("change", async (e) => { const f = e.target.files[0]; if (f) { orchMine.msg = ""; await orchMineDecode(await f.arrayBuffer()); } });
-  document.getElementById("orchMineTest").addEventListener("click", () => orchHear({ id: "mine", len: 1, pit: 0 }, 5));
-  document.getElementById("orchMineDel").addEventListener("click", () => { orchMine.buf = null; orchMine.msg = ""; try { localStorage.removeItem("orchMine"); } catch (e) {} orchPaintMine(); });
+  const cu = orchCustom.find((c) => c.id === orch.sel);
+  if (!cu) { box.hidden = true; box.innerHTML = ""; return; }
+  box.hidden = !orchFeat("mine");
+  box.innerHTML = `<h3>${esc(cu.name)}</h3><div class="orch__mineRow"><button type="button" class="orch__clear" id="orchMineEdit"><span aria-hidden="true">✎</span> ${esc(ot("edit"))}</button>
+    <button type="button" class="orch__clear" id="orchMineTest"><span aria-hidden="true">▶</span> ${esc(ot("test"))}</button>
+    <button type="button" class="orch__clear" id="orchMineDel"><span aria-hidden="true">✕</span> ${esc(ot("del"))}</button></div>`;
+  document.getElementById("orchMineEdit").addEventListener("click", () => orchOpenMaker(cu.id));
+  document.getElementById("orchMineTest").addEventListener("click", () => orchHear({ id: cu.id, len: 1, pit: 0 }, 5));
+  document.getElementById("orchMineDel").addEventListener("click", () => {
+    orchRemoveId(cu.id); orchCustom = orchCustom.filter((c) => c.id !== cu.id); Object.assign(ORCH_BY_ID[cu.id], { name: "My sound", emoji: "🎧", img: null });
+    orchCustomSave(); orch.sel = "blob"; orchSave(); renderOrchestra();
+  });
 }
 
 /* ---- learn mode: five short levels, each with a little starting beat and three things to try ---- */
@@ -303,14 +421,14 @@ const ORCH_COMBOS = [
     }
     return null; } },
   { id: "floor", notes: [131, 165, 196, 262], find: (g) => [0, 2, 4, 6].every((c) => g[g.length - 1][c] === "blob") ? [0, 2, 4, 6].map((c) => [g.length - 1, c]) : null },
-  { id: "all", notes: [262, 330, 392, 523, 659, 784], find: (g) => new Set(g.flat().filter((id) => id && id !== "mine")).size === 6 /* the six creatures, not your own sound */ ? orchFilled(g) : null },
+  { id: "all", notes: [262, 330, 392, 523, 659, 784], find: (g) => new Set(g.flat().filter((id) => id && !ORCH_CUSTOM_IDS.includes(id))).size === 6 /* the six creatures, not your own sound */ ? orchFilled(g) : null },
   { id: "wall", notes: [262, 392, 523, 659, 784, 1047], find: (g) => g.flat().every(Boolean) ? orchFilled(g) : null }
 ];
 
 /* ---- the stage and the clock ---- */
 const orch = { mode: null, level: 0, base: null, inspOpen: true, grid: null, len: null, pit: null, more: null, cell: null, pitch: 0, kit: 0, bpm: 100, sel: "blob", playing: false, step: 0, next: 0, timer: null, placed: 0, found: [] };
 function orchLoad() {
-  orchMineLoad();
+  orchCustomLoad();
   try { orch.found = JSON.parse(localStorage.getItem("orchFound") || "[]"); } catch (e) { orch.found = []; }
   let saved = null;
   try { saved = JSON.parse(localStorage.getItem("orchestra2") || "null"); } catch (e) {}
@@ -485,7 +603,7 @@ function orchDancers() { // cells that belong to a discovered combination and ar
 function orchPaintStage() {
   const clr = document.getElementById("orchClear");
   if (clr) clr.disabled = orchCount() === 0;
-  const names = ot("names"), dancers = orchDancers();
+  const dancers = orchDancers();
   const covered = new Set(); // cells under a note bar: no dashed border showing through
   orch.grid.forEach((row, r) => row.forEach((id, c) => { if (id) for (let k = 1; k < Math.min(orch.len[r][c], ORCH_COLS - c); k++) covered.add(r + "," + (c + k)); }));
   document.querySelectorAll(".orch__cell").forEach((el) => {
@@ -500,7 +618,7 @@ function orchPaintStage() {
       + (pit ? `<b class="orch__pit">${pit > 0 ? "+" : ""}${pit}</b>` : "")
       + (more.length ? `<span class="orch__layers">${more.map((n) => `<span>${creatureSVG(ORCH_BY_ID[n.id])}</span>`).join("")}</span>` : "") : "";
     el.classList.toggle("is-selected", !!orch.cell && orch.cell[0] === r && orch.cell[1] === c);
-    el.setAttribute("aria-label", `${ot("row")} ${r + 1}, ${ot("beat")} ${c + 1}: ${id ? names[id] + (orch.len[r][c] > 1 ? ", " + ot("len") + " " + orch.len[r][c] : "") : ot("empty")}`);
+    el.setAttribute("aria-label", `${ot("row")} ${r + 1}, ${ot("beat")} ${c + 1}: ${id ? orchName(id) + (orch.len[r][c] > 1 ? ", " + ot("len") + " " + orch.len[r][c] : "") : ot("empty")}`);
   });
   orchPaintFound();
   orchPaintInsp();
@@ -512,15 +630,15 @@ function orchPaintInsp() {
   if (!box) return;
   const notes = orch.cell && orchFeat("panel") ? orchNotes(orch.cell[0], orch.cell[1]) : [];
   if (!notes.length) { orch.cell = null; box.hidden = true; box.innerHTML = ""; return; }
-  const [r, c] = orch.cell, names = ot("names"), sgn = (n) => (n > 0 ? "+" : "") + n;
+  const [r, c] = orch.cell, sgn = (n) => (n > 0 ? "+" : "") + n;
   box.hidden = false;
   box.innerHTML = `<details class="orch__det"${orch.inspOpen ? " open" : ""}><summary><span>${esc(ot("selected"))}: ${esc(ORCH_NAMES[r])} · ${esc(ot("beat"))} ${c + 1}</span><span class="orch__sum">${notes.map((n) => `<i>${creatureSVG(ORCH_BY_ID[n.id])}</i>`).join("")}</span></summary>
     <ul class="orch__notes">${notes.map((n, i) => `<li>
-      <span class="orch__mini">${creatureSVG(ORCH_BY_ID[n.id])}</span><b>${esc(names[n.id])}</b>
+      <span class="orch__mini">${creatureSVG(ORCH_BY_ID[n.id])}</span><b>${esc(orchName(n.id))}</b>
       <span class="orch__ctl"><span>${esc(ot("pitchNote"))}</span><button type="button" data-i="${i}" data-act="pit-" aria-label="${esc(ot("pitchNote"))} −">−</button><output>${sgn(n.pit)}</output><button type="button" data-i="${i}" data-act="pit+" aria-label="${esc(ot("pitchNote"))} +">+</button></span>
       <span class="orch__lane" role="group" aria-label="${esc(ot("lenNote"))}">${Array.from({ length: ORCH_COLS }, (_, k) => `<i class="${k === c ? "is-here" : ""}" style="grid-column:${k + 1};grid-row:1"></i>`).join("")}<span class="orch__nb" tabindex="0" data-i="${i}" role="slider" aria-valuemin="1" aria-valuemax="${ORCH_COLS - c}" aria-valuenow="${n.len}" aria-label="${esc(ot("lenNote"))}" style="grid-column:${c + 1} / span ${n.len};--tail:${ORCH_BY_ID[n.id].color}"><b>${n.len}</b><span class="orch__bh"></span></span></span>
       <button type="button" class="orch__x" data-i="${i}" data-act="del" aria-label="${esc(ot("remove"))}" title="${esc(ot("remove"))}">✕</button></li>`).join("")}</ul>
-    <button type="button" class="orch__clear" id="orchAddLayer"${notes.length >= 4 ? " disabled" : ""}>＋ ${esc(ot("layer"))}: ${esc(names[orch.sel])}</button></details>`;
+    <button type="button" class="orch__clear" id="orchAddLayer"${notes.length >= 4 ? " disabled" : ""}>＋ ${esc(ot("layer"))}: ${esc(orchName(orch.sel))}</button></details>`;
 }
 /* the lane of a note: pull the end of the bar to change its length, drag the bar to put it on another beat */
 function orchLaneDown(e) {
@@ -591,18 +709,19 @@ document.addEventListener("keydown", (e) => { // Delete takes the selected squar
 });
 function orchPaintTray() {
   document.querySelectorAll(".orch__pick").forEach((el) => el.setAttribute("aria-pressed", String(el.dataset.id === orch.sel)));
+  orchPaintMine();
   const add = document.getElementById("orchAddLayer"); // the layer button names the creature that is chosen now
-  if (add) add.textContent = "＋ " + ot("layer") + ": " + ot("names")[orch.sel];
+  if (add) add.textContent = "＋ " + ot("layer") + ": " + orchName(orch.sel);
 }
 
 /* ---- sharing: the whole beat lives in the address (play.html#orchestra/<32 letters>.<tempo>) ---- */
-const ORCH_IDS = ["blob", "frog", "bird", "ghost", "robot", "octo", "mine"], ORCH_CODE = "bfpgrom";
+const ORCH_IDS = ["blob", "frog", "bird", "ghost", "robot", "octo", "mine", "mine2", "mine3"], ORCH_CODE = "bfpgromnq";
 const orchEncode = () => orch.grid.flat().map((id) => id ? ORCH_CODE[ORCH_IDS.indexOf(id)] : "-").join("");
 const orchEncodeRest = () => "." + orch.bpm + "." + (orch.pitch + 12) + "." + orch.kit + "." + orch.len.flat().join("") // tempo, pitch (+12), kit, note lengths,
   + "." + orch.pit.flat().map((v) => String.fromCharCode(109 + v)).join("") // pitch of every note (m = 0),
   + "." + orch.more.map((row, r) => row.map((list, c) => list.map((n) => "" + r + c + ORCH_CODE[ORCH_IDS.indexOf(n.id)] + n.len + String.fromCharCode(109 + n.pit)).join("")).join("")).join(""); // and the layers
 function orchApplyHash() {
-  const m = location.hash.match(/^#orchestra\/([bfpgrom-]{32,64})\.(\d{2,3})(?:\.(\d{1,2})\.([0-3])\.([1-8]{32,64})(?:\.([a-y]{32,64})\.((?:[0-7]{2}[bfpgrom][1-8][a-y])*))?)?$/);
+  const m = location.hash.match(/^#orchestra\/([bfpgromnq-]{32,64})\.(\d{2,3})(?:\.(\d{1,2})\.([0-3])\.([1-8]{32,64})(?:\.([a-y]{32,64})\.((?:[0-7]{2}[bfpgromnq][1-8][a-y])*))?)?$/);
   if (!m || m[1].length % ORCH_COLS) return;
   const flat = [...m[1]].map((ch) => ch === "-" ? null : ORCH_IDS[ORCH_CODE.indexOf(ch)]);
   orch.grid = Array.from({ length: flat.length / ORCH_COLS }, (_, r) => flat.slice(r * ORCH_COLS, (r + 1) * ORCH_COLS));
@@ -612,7 +731,7 @@ function orchApplyHash() {
   orch.len = orch.grid.map((row, r) => row.map((_, c) => lens ? lens[r * ORCH_COLS + c] : 1));
   orchSync(null);
   if (m[6] && m[6].length === m[1].length) [...m[6]].forEach((ch, i) => { orch.pit[Math.floor(i / ORCH_COLS)][i % ORCH_COLS] = ch.charCodeAt(0) - 109; });
-  for (const l of (m[7] || "").match(/[0-7]{2}[bfpgrom][1-8][a-y]/g) || []) {
+  for (const l of (m[7] || "").match(/[0-7]{2}[bfpgromnq][1-8][a-y]/g) || []) {
     const r = +l[0], c = +l[1];
     if (orch.grid[r] && orch.grid[r][c] && orch.more[r][c].length < 3) orch.more[r][c].push({ id: ORCH_IDS[ORCH_CODE.indexOf(l[2])], len: +l[3], pit: l.charCodeAt(4) - 109 });
   }
@@ -691,9 +810,9 @@ function renderOrchestra() {
     orch.mode = m; orch.level = lv;
     if (m === "learn") orchLearnStart();
   }
-  if (/^#orchestra\/[bfpgrom-]/.test(location.hash) && orch.mode === "learn") { orch.mode = "free"; orch.grid = null; orchLoad(); } // a shared beat opens in freestyle
+  if (/^#orchestra\/[bfpgromnq-]/.test(location.hash) && orch.mode === "learn") { orch.mode = "free"; orch.grid = null; orchLoad(); } // a shared beat opens in freestyle
   orchApplyHash();
-  const names = ot("names"), sounds = ot("sounds");
+  const sounds = ot("sounds");
   playBody.innerHTML = `
     <div class="orch">
       <div class="orch__stagewrap">
@@ -708,9 +827,10 @@ function renderOrchestra() {
       </div>
       <div class="orch__side">
         <div class="orch__tray" role="group" aria-label="${esc(ot("creatures"))}">
-          ${ORCH_CREATURES.map((c) => `<button type="button" class="orch__pick" data-id="${c.id}" aria-pressed="false">
+          ${orchTrayList().map((c) => `<button type="button" class="orch__pick" data-id="${c.id}" aria-pressed="false">
             <span class="orch__face">${creatureSVG(c)}</span>
-            <span class="orch__name">${esc(names[c.id])}</span><small>${esc(sounds[c.id])}</small></button>`).join("")}
+            <span class="orch__name">${esc(orchName(c.id))}</span><small>${esc(c.custom ? ot("ownTag") : sounds[c.id])}</small></button>`).join("")}
+          ${orchCustom.length < ORCH_CUSTOM_IDS.length ? `<button type="button" class="orch__make" id="orchMake" data-feat="mine"><span aria-hidden="true">＋</span> ${esc(ot("createOwn"))}</button>` : ""}
         </div>
         <p class="orch__hint">${esc(ot("hint"))}</p>
         <section class="orch__foundbox orch__mine" id="orchMine" data-feat="mine"></section>
@@ -734,6 +854,8 @@ function renderOrchestra() {
     </div>`;
   playBody.querySelectorAll("[data-feat]").forEach((el) => { el.hidden = !orchFeat(el.dataset.feat); });
   playBody.querySelectorAll(".orch__modes button").forEach((b) => b.addEventListener("click", () => { sfx.click(); orchSetMode(b.dataset.mode); }));
+  const make = document.getElementById("orchMake");
+  if (make) make.addEventListener("click", () => { sfx.click(); orchOpenMaker(null); });
   orchPaintStage(); orchPaintTray(); orchSyncButtons(); orchPaintMine(); orchLearnPaint();
 
   const stage = playBody.querySelector(".orch__stage");
