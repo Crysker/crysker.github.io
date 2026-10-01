@@ -335,15 +335,23 @@ function orchOpenMaker(editId) {
       mk.f32 = prep.f32; mk.rate = prep.rate; mk.start = 0; mk.len = ORCH_LIMIT; say(""); sync();
     } catch (e) { say(ot("mineBad")); }
   }
+  const session = (type) => { try { if (navigator.audioSession) navigator.audioSession.type = type; } catch (e) {} }; // iPhone: recording needs "play-and-record", playing back "playback"
   async function record() {
     if (mk.rec) { mk.rec.stop(); return; }
     try {
+      session("play-and-record");
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true }), rec = new MediaRecorder(stream), chunks = [];
-      rec.ondataavailable = (e) => chunks.push(e.data);
-      rec.onstop = async () => { stream.getTracks().forEach((tr) => tr.stop()); clearTimeout(mk.recT); mk.rec = null; say(""); sync(); await load(await new Blob(chunks).arrayBuffer()); };
+      rec.ondataavailable = (e) => { if (e.data && e.data.size) chunks.push(e.data); };
+      rec.onstop = async () => {
+        stream.getTracks().forEach((tr) => tr.stop()); clearTimeout(mk.recT); mk.rec = null; session("playback"); say(""); sync();
+        const blob = new Blob(chunks, { type: (chunks[0] && chunks[0].type) || rec.mimeType || "audio/mp4" });
+        if (!blob.size) { say(ot("mineMic") + " (empty)"); return; }
+        const ab = await new Promise((res, rej) => { if (blob.arrayBuffer) blob.arrayBuffer().then(res, rej); else { const fr = new FileReader(); fr.onload = () => res(fr.result); fr.onerror = rej; fr.readAsArrayBuffer(blob); } });
+        await load(ab);
+      };
       rec.start(); mk.rec = rec; say(ot("mineRec")); sync();
       mk.recT = setTimeout(() => { if (mk.rec) mk.rec.stop(); }, 8000);
-    } catch (e) { mk.rec = null; say(ot("mineMic")); sync(); }
+    } catch (e) { mk.rec = null; session("playback"); say(ot("mineMic") + " (" + (e && e.name ? e.name : "error") + ")"); sync(); }
   }
   dlg.querySelectorAll(".mk__emo").forEach((b) => b.addEventListener("click", () => { mk.emoji = b.dataset.e; mk.img = null; preview(); sfx.click(); }));
   $("mkImg").addEventListener("change", (e) => { // a round 96 px avatar cropped from the middle of the picture
