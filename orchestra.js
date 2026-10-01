@@ -222,6 +222,37 @@ function orchPlace(r, c) {
   orchPaintStage();
   orchCheck();
 }
+/* drag a placed creature to another square (a creature already there swaps places with it) */
+function orchMoveDrag(e, cell, r, c) {
+  const sx = e.clientX, sy = e.clientY, id = orch.grid[r][c];
+  let ghost = null;
+  const move = (ev) => {
+    if (!ghost && Math.hypot(ev.clientX - sx, ev.clientY - sy) > 8) {
+      dragFlag(true);
+      ghost = document.createElement("div");
+      ghost.className = "orch__ghost"; ghost.innerHTML = creatureSVG(ORCH_BY_ID[id]);
+      document.body.appendChild(ghost);
+      cell.classList.add("is-lifted");
+    }
+    if (ghost) { ghost.style.left = ev.clientX + "px"; ghost.style.top = ev.clientY + "px"; }
+  };
+  const up = (ev) => {
+    removeEventListener("pointermove", move); removeEventListener("pointerup", up); removeEventListener("pointercancel", up);
+    cell.classList.remove("is-lifted");
+    if (!ghost) return;
+    ghost.remove();
+    const hit = document.elementFromPoint(ev.clientX, ev.clientY), to = hit && hit.closest(".orch__cell");
+    if (!to || to === cell) return;
+    const r2 = +to.dataset.r, c2 = +to.dataset.c;
+    [orch.grid[r][c], orch.grid[r2][c2]] = [orch.grid[r2][c2], orch.grid[r][c]];
+    [orch.len[r][c], orch.len[r2][c2]] = [orch.len[r2][c2], orch.len[r][c]];
+    if (!playMuted) orchVoice(orch.grid[r2][c2], orchCtx().currentTime + 0.01, ORCH_NOTES[r2], orch.len[r2][c2]);
+    orchSave(); orchPaintStage(); orchCheck();
+  };
+  addEventListener("pointermove", move); addEventListener("pointerup", up); addEventListener("pointercancel", up);
+}
+let orchDragFlag = false; // set after a drag so the click that follows is ignored
+const dragFlag = (v) => { orchDragFlag = v; };
 function orchCheck() { // did this placement complete a combination nobody has found yet?
   for (const cb of ORCH_COMBOS) {
     if (orch.found.includes(cb.id) || !cb.find(orch.grid)) continue;
@@ -340,15 +371,16 @@ function renderOrchestra() {
   let dragged = false; // a drag that stretched a note must not count as a tap afterwards
   stage.addEventListener("click", (e) => {
     const cell = e.target.closest(".orch__cell");
-    if (dragged) { dragged = false; return; }
+    if (dragged || orchDragFlag) { dragged = false; orchDragFlag = false; return; }
     if (cell) orchPlace(+cell.dataset.r, +cell.dataset.c);
   });
   /* press a creature on the stage and pull to the right: its note gets as long as the cells you cover */
   stage.addEventListener("pointerdown", (e) => {
     const cell = e.target.closest(".orch__cell");
-    dragged = false;
+    dragged = false; orchDragFlag = false;
     if (!cell || !cell.dataset.id || (e.pointerType === "mouse" && e.button !== 0)) return;
     const r = +cell.dataset.r, c = +cell.dataset.c, box = cell.getBoundingClientRect(), step = box.width + 7, x0 = e.clientX, len0 = orch.len[r][c];
+    if (!e.target.closest(".orch__handle")) { orchMoveDrag(e, cell, r, c); return; } // the creature itself moves, only the handle stretches
     let moved = false;
     const move = (ev) => {
       if (!moved && Math.abs(ev.clientX - x0) < 10) return;

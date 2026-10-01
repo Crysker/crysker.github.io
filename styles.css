@@ -1428,3 +1428,8 @@ body.view-all .p-card__play, body.view-all .p-card__video { display: none; }
 /* the squares stay visible: the bar is a slimmer band laid over them */
 .orch__cell:not([data-len="1"]) { z-index: 1; }
 .orch__cell:not([data-len="1"])::after { height: 30%; opacity: .9; background: color-mix(in srgb, var(--tail) 62%, var(--surface-2)); }
+
+.orch__cell.is-lifted svg, .orch__cell.is-lifted .orch__handle { opacity: .25; }
+.orch__cell:not([data-id=""]) { cursor: grab; }
+.orch__handle { cursor: ew-resize; }
+.orch__cell:not([data-id=""]) { touch-action: none; }
