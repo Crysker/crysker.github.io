@@ -134,6 +134,9 @@ const ORCH_VOICE = {
 const ORCH_EMOJI = ["🎤", "🎸", "🥁", "🎹", "🎺", "🐶", "🐱", "🐮", "🦆", "🐸", "🚗", "🔔", "👏", "🤖", "👻", "🌟"];
 let orchCustom = []; // { id, name, emoji, img, rate, pcm (Int16Array), buf (AudioBuffer) }
 const orchIsCustom = (id) => orchCustom.some((c) => c.id === id);
+const orchSecs = (id) => { const cu = orchCustom.find((c) => c.id === id); return cu && cu.buf ? cu.buf.duration : 0; };
+/* a new note: your own sounds get a bar as long as the sound really lasts (at the current tempo), the others start at one beat */
+const orchNew = (id, c) => ({ id, len: orchSecs(id) ? Math.max(1, Math.min(ORCH_COLS - c, Math.ceil(orchSecs(id) / (30 / orch.bpm) - 0.05))) : 1, pit: 0 });
 const orchName = (id) => (ORCH_BY_ID[id] && ORCH_BY_ID[id].custom ? ORCH_BY_ID[id].name : (ot("names")[id] || id));
 const orchTrayList = () => ORCH_CREATURES.concat(orchCustom.map((c) => ORCH_BY_ID[c.id]));
 function orchCustomVoice(id, t, f) {
@@ -522,11 +525,11 @@ function orchPreview(id) { // pressing a creature in the tray plays its sound, s
 function orchPlace(r, c, drop) {
   const notes = orchNotes(r, c);
   if (!notes.length) { // an empty square: the chosen creature steps onto it and is selected
-    orchSetNotes(r, c, [{ id: orch.sel, len: 1, pit: 0 }]); orch.placed++; orch.cell = [r, c];
+    orchSetNotes(r, c, [orchNew(orch.sel, c)]); orch.placed++; orch.cell = [r, c];
     orchHear(orchNotes(r, c)[0], r);
     if (orch.playing && orch.placed >= 6) unlock("maestro");
   } else if (drop) { // dropped onto someone: a new layer
-    if (notes.length < 4) { notes.push({ id: orch.sel, len: 1, pit: 0 }); orchSetNotes(r, c, notes); orchHear(notes[notes.length - 1], r); } else sfx.pop();
+    if (notes.length < 4) { notes.push(orchNew(orch.sel, c)); orchSetNotes(r, c, notes); orchHear(notes[notes.length - 1], r); } else sfx.pop();
     orch.cell = [r, c];
   } else { // tapped: select it (tap again to let go), so nothing is deleted by accident
     const same = orch.cell && orch.cell[0] === r && orch.cell[1] === c;
@@ -636,7 +639,7 @@ function orchPaintInsp() {
     <ul class="orch__notes">${notes.map((n, i) => `<li>
       <span class="orch__mini">${creatureSVG(ORCH_BY_ID[n.id])}</span><b>${esc(orchName(n.id))}</b>
       <span class="orch__ctl"><span>${esc(ot("pitchNote"))}</span><button type="button" data-i="${i}" data-act="pit-" aria-label="${esc(ot("pitchNote"))} −">−</button><output>${sgn(n.pit)}</output><button type="button" data-i="${i}" data-act="pit+" aria-label="${esc(ot("pitchNote"))} +">+</button></span>
-      <span class="orch__lane" role="group" aria-label="${esc(ot("lenNote"))}">${Array.from({ length: ORCH_COLS }, (_, k) => `<i class="${k === c ? "is-here" : ""}" style="grid-column:${k + 1};grid-row:1"></i>`).join("")}<span class="orch__nb" tabindex="0" data-i="${i}" role="slider" aria-valuemin="1" aria-valuemax="${ORCH_COLS - c}" aria-valuenow="${n.len}" aria-label="${esc(ot("lenNote"))}" style="grid-column:${c + 1} / span ${n.len};--tail:${ORCH_BY_ID[n.id].color}"><b>${n.len}</b><span class="orch__bh"></span></span></span>
+      <span class="orch__lane" role="group" aria-label="${esc(ot("lenNote"))}">${Array.from({ length: ORCH_COLS }, (_, k) => `<i class="${k === c ? "is-here" : ""}" style="grid-column:${k + 1};grid-row:1"></i>`).join("")}<span class="orch__nb" tabindex="0" data-i="${i}" role="slider" aria-valuemin="1" aria-valuemax="${ORCH_COLS - c}" aria-valuenow="${n.len}" aria-label="${esc(ot("lenNote"))}" style="grid-column:${c + 1} / span ${n.len};--tail:${ORCH_BY_ID[n.id].color}"><b>${orchSecs(n.id) ? orchSecs(n.id).toFixed(1) + " s" : n.len}</b><span class="orch__bh"></span></span></span>
       <button type="button" class="orch__x" data-i="${i}" data-act="del" aria-label="${esc(ot("remove"))}" title="${esc(ot("remove"))}">✕</button></li>`).join("")}</ul>
     <button type="button" class="orch__clear" id="orchAddLayer"${notes.length >= 4 ? " disabled" : ""}>＋ ${esc(ot("layer"))}: ${esc(orchName(orch.sel))}</button></details>`;
 }
@@ -688,7 +691,7 @@ function orchInspClick(e) {
   const [r, c] = orch.cell, notes = orchNotes(r, c);
   if (b.id === "orchAddLayer") {
     if (notes.length >= 4) return;
-    notes.push({ id: orch.sel, len: 1, pit: 0 }); orchSetNotes(r, c, notes); orchHear(notes[notes.length - 1], r);
+    notes.push(orchNew(orch.sel, c)); orchSetNotes(r, c, notes); orchHear(notes[notes.length - 1], r);
   } else {
     const n = notes[+b.dataset.i];
     if (!n) return;
