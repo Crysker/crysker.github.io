@@ -250,7 +250,7 @@ const I18N = {
     "contact.copy": "Copy", "contact.copied": "Email address copied",
     toTop: "Back to top", "case.back": "All projects", "case.goback": "Back",
     lb: { close: "Close", prev: "Previous image", next: "Next image", zin: "Zoom in", zout: "Zoom out", hint: "Scroll, pinch or double-click to zoom · drag to move" },
-    "footer.fun": "St. Pölten, Austria · Built by hand with HTML, CSS &amp; JavaScript. Last updated on {date}.",
+    "footer.fun": "St. Pölten, Austria · Designed with Figma &amp; Claude Code, written in plain HTML, CSS &amp; JavaScript. Last updated on {date}.",
     ach: {
       unlocked: "Achievement unlocked", count: "{n}/{total} achievements found", hint: "Can you find them all?",
       title: "Achievements", locked: "???", reset: "Reset progress", close: "Close", open: "Show achievements",
@@ -542,7 +542,7 @@ const I18N = {
     "contact.copy": "Kopieren", "contact.copied": "E-Mail-Adresse kopiert",
     toTop: "Nach oben", "case.back": "Alle Projekte", "case.goback": "Zurück",
     lb: { close: "Schließen", prev: "Vorheriges Bild", next: "Nächstes Bild", zin: "Hineinzoomen", zout: "Herauszoomen", hint: "Scrollen, mit zwei Fingern oder Doppelklick zoomen · ziehen zum Verschieben" },
-    "footer.fun": "St. Pölten, Österreich · Von Hand gebaut mit HTML, CSS &amp; JavaScript. Zuletzt aktualisiert am {date}.",
+    "footer.fun": "St. Pölten, Österreich · Designt mit Figma &amp; Claude Code, geschrieben in purem HTML, CSS &amp; JavaScript. Zuletzt aktualisiert am {date}.",
     ach: {
       unlocked: "Erfolg freigeschaltet", count: "{n}/{total} Erfolge gefunden", hint: "Findest du alle?",
       title: "Erfolge", locked: "???", reset: "Fortschritt zurücksetzen", close: "Schließen", open: "Erfolge anzeigen",
