@@ -1,6 +1,7 @@
 /* ============ Zwei Wahrheiten, eine Lüge / Two truths, one lie ============
-   Three statements on a theme: two are true, one is made up (or a famous myth). Find the lie, then say how sure you are.
-   Points: right = your confidence (1 to 3), wrong = minus (confidence − 1). Six rounds. Everything is hand-written with a source. */
+   Three statements on a theme: two are true, one is made up (or a famous myth). Tap a statement to mark it: green = true, red = lie, a third tap
+   clears it again ("no idea"). Press reveal when you are done. Points per statement: right +1, wrong −1, unmarked 0. Six rounds, 18 points at most.
+   Everything is hand-written with a source. */
 (() => {
   /* each statement: [emoji, German, English, true?, explanation DE, explanation EN, source] */
   const SETS = [
@@ -71,13 +72,13 @@
   ];
   const T = {
     en: {
-      title: "Two truths, one lie", intro: "Two of these are true, one is a lie. Which one?", sure: "How sure are you?", sures: ["Gut feeling", "Fairly sure", "100 %"], next: "Next", finish: "Result", again: "Play again",
-      round: "Round {n} of 6", pts: "Points", right: "Right!", wrong: "That was a truth. The lie was another one.", truth: "True", lie: "Lie", total: "You got {p} points (max. 18).", best: "Best: {n}", toy: "Find the lie",
+      title: "Two truths, one lie", intro: "Two of these are true, one is a lie. Tap once for green (true), twice for red (lie), a third time to clear it if you have no idea.", reveal: "Reveal", next: "Next", finish: "Result", again: "Play again",
+      round: "Round {n} of 6", pts: "Points", truth: "True", lie: "Lie", got: "{n} points this round.", total: "You got {p} points (max. 18).", best: "Best: {n}", toy: "Find the lie", mark: "Mark",
       ranks: ["Easy to fool", "Careful reader", "Sharp nose", "Lie detector"], src: "Source"
     },
     de: {
-      title: "Zwei Wahrheiten, eine Lüge", intro: "Zwei davon stimmen, eine ist gelogen. Welche?", sure: "Wie sicher bist du?", sures: ["Bauchgefühl", "Ziemlich sicher", "100 %"], next: "Weiter", finish: "Ergebnis", again: "Nochmal spielen",
-      round: "Runde {n} von 6", pts: "Punkte", right: "Richtig!", wrong: "Das war eine Wahrheit. Die Lüge war eine andere.", truth: "Wahr", lie: "Lüge", total: "Du hast {p} Punkte (max. 18).", best: "Bestwert: {n}", toy: "Finde die Lüge",
+      title: "Zwei Wahrheiten, eine Lüge", intro: "Zwei davon stimmen, eine ist gelogen. Einmal tippen ist grün (wahr), zweimal rot (Lüge), ein drittes Mal löscht die Markierung, wenn du keine Ahnung hast.", reveal: "Auflösen", next: "Weiter", finish: "Ergebnis", again: "Nochmal spielen",
+      round: "Runde {n} von 6", pts: "Punkte", truth: "Wahr", lie: "Lüge", got: "{n} Punkte in dieser Runde.", total: "Du hast {p} Punkte (max. 18).", best: "Bestwert: {n}", toy: "Finde die Lüge", mark: "Markieren",
       ranks: ["Leicht zu täuschen", "Aufmerksame:r Leser:in", "Feine Nase", "Lügendetektor"], src: "Quelle"
     }
   };
@@ -85,30 +86,28 @@
   const best = () => { try { return +localStorage.getItem("truthsBest") || 0; } catch (e) { return 0; } };
   const shuffle = (a) => { const b = [...a]; for (let i = b.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [b[i], b[j]] = [b[j], b[i]]; } return b; };
   let G = null;
-  function start() { G = { sets: shuffle(SETS).slice(0, 6).map((s) => ({ t: s.t, s: shuffle(s.s) })), i: 0, pick: null, conf: null, pts: 0, last: 0, done: false }; }
+  function start() { G = { sets: shuffle(SETS).slice(0, 6).map((s) => ({ t: s.t, s: shuffle(s.s) })), i: 0, marks: [null, null, null], revealed: false, pts: 0, last: 0, done: false }; }
   const si = (n) => (lang === "de" ? n.de : n.en);
   const txt = (it) => (lang === "de" ? it[1] : it[2]), why = (it) => (lang === "de" ? it[4] : it[5]);
+  const worth = (mark, it) => (mark === null ? 0 : mark === it[3] ? 1 : -1); // right +1, wrong −1, unmarked 0
+  const markLabel = (m) => (m === true ? tt2("truth") : m === false ? tt2("lie") : "?");
   function paint() {
     const body = document.getElementById("playBody");
     if (!G) start();
     if (G.done) { body.innerHTML = endHTML(); bind(); return; }
-    const set = G.sets[G.i], revealed = G.conf !== null;
+    const set = G.sets[G.i], rev = G.revealed;
     const cards = set.s.map((it, k) => {
-      const isLie = !it[3];
-      const cls = revealed ? (isLie ? " is-lie" : " is-true") + (k === G.pick ? " is-picked" : "") : k === G.pick ? " is-picked" : "";
-      return `<button type="button" class="tl__card${cls}" data-k="${k}"${revealed ? " disabled" : ""}>
+      const m = G.marks[k], v = worth(m, it);
+      const cls = (m === true ? " is-mark-true" : m === false ? " is-mark-false" : "") + (rev ? (it[3] ? " is-true" : " is-lie") : "");
+      return `<button type="button" class="tl__card${cls}" data-k="${k}"${rev ? " disabled" : ""} aria-label="${esc(tt2("mark"))}: ${esc(markLabel(m))}">
         <span class="tl__emoji" aria-hidden="true">${it[0]}</span>
         <span class="tl__body"><span class="tl__text">${esc(txt(it))}</span>
-        ${revealed ? `<span class="tl__badge">${esc(isLie ? tt2("lie") : tt2("truth"))}</span><span class="tl__why">${esc(why(it))} <i>${esc(tt2("src"))}: ${esc(it[6])}</i></span>` : ""}</span></button>`;
+        ${rev ? `<span class="tl__badge">${esc(it[3] ? tt2("truth") : tt2("lie"))}</span><span class="tl__why">${esc(why(it))} <i>${esc(tt2("src"))}: ${esc(it[6])}</i></span>` : ""}</span>
+        <span class="tl__mark${m === true ? " is-true" : m === false ? " is-false" : ""}" aria-hidden="true">${rev && m !== null ? (v > 0 ? "✓" : "✗") : m === true ? "✓" : m === false ? "✗" : ""}</span></button>`;
     }).join("");
-    let foot = "";
-    if (revealed) {
-      const ok = !set.s[G.pick][3];
-      foot = `<p class="wd__msg"><b>${esc(ok ? tt2("right") : tt2("wrong"))}</b> ${G.last >= 0 ? "+" : "−"}${Math.abs(G.last)}</p>
-        <div class="wd__actions"><button type="button" class="orch__go" id="tlNext">${esc(tt2(G.i === 5 ? "finish" : "next"))}</button></div>`;
-    } else if (G.pick !== null) {
-      foot = `<p class="wd__desc">${esc(tt2("sure"))}</p><div class="wd__actions">${[0, 1, 2].map((c) => `<button type="button" class="orch__clear tl__conf" data-c="${c + 1}">${esc(tt2("sures")[c])} · ${c + 1}</button>`).join("")}</div>`;
-    }
+    const foot = rev
+      ? `<p class="wd__msg"><b>${esc(tt2("got").replace("{n}", (G.last > 0 ? "+" : "") + G.last))}</b></p><div class="wd__actions"><button type="button" class="orch__go" id="tlNext">${esc(tt2(G.i === 5 ? "finish" : "next"))}</button></div>`
+      : `<div class="wd__actions"><button type="button" class="orch__go" id="tlReveal">${esc(tt2("reveal"))}</button></div>`;
     body.innerHTML = `<div class="tl"><p class="wd__roundlabel">${esc(tt2("round").replace("{n}", G.i + 1))} · ${esc(tt2("pts"))}: ${G.pts}</p>
       <h2 class="wd__title">${esc(si({ de: set.t[0], en: set.t[1] }))}</h2><p class="wd__desc">${esc(tt2("intro"))}</p>
       <div class="tl__cards">${cards}</div>${foot}</div>`;
@@ -120,12 +119,18 @@
       <div class="wd__actions"><button type="button" class="orch__go" id="tlAgain">${esc(tt2("again"))}</button></div></div>`;
   }
   function bind() {
-    document.querySelectorAll(".tl__card").forEach((b) => b.addEventListener("click", () => { G.pick = +b.dataset.k; sfx.click(); paint(); }));
-    document.querySelectorAll(".tl__conf").forEach((b) => b.addEventListener("click", () => {
-      const c = +b.dataset.c, set = G.sets[G.i], ok = !set.s[G.pick][3];
-      G.last = ok ? c : -(c - 1); G.pts += G.last; G.conf = c;
-      sfx.lock(); setTimeout(() => sfx.score(ok ? 95 : 10), 120); paint();
+    document.querySelectorAll(".tl__card").forEach((b) => b.addEventListener("click", () => {
+      const k = +b.dataset.k, m = G.marks[k];
+      G.marks[k] = m === null ? true : m === true ? false : null; // neutral, then true, then lie, then neutral again
+      sfx.click(); paint();
     }));
+    const reveal = document.getElementById("tlReveal");
+    if (reveal) reveal.addEventListener("click", () => {
+      const set = G.sets[G.i];
+      G.last = set.s.reduce((s, it, k) => s + worth(G.marks[k], it), 0);
+      G.pts += G.last; G.revealed = true;
+      sfx.lock(); setTimeout(() => sfx.score(G.last >= 2 ? 95 : G.last >= 1 ? 60 : 10), 120); paint();
+    });
     const next = document.getElementById("tlNext");
     if (next) next.addEventListener("click", () => {
       sfx.click();
@@ -135,7 +140,7 @@
         if (G.pts >= 12) unlock("skeptic");
         paint(); return;
       }
-      G.i++; G.pick = null; G.conf = null; G.last = 0; paint();
+      G.i++; G.marks = [null, null, null]; G.revealed = false; G.last = 0; paint();
     });
     const again = document.getElementById("tlAgain");
     if (again) again.addEventListener("click", () => { sfx.click(); start(); paint(); });

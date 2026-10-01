@@ -6,7 +6,6 @@ All photos are from Wikimedia Commons, used under the licences shown. Thumbnails
 - `butter.jpg`: Block of butter 20200928 080207.jpg by Salicyna, CC BY-SA 4.0, https://commons.wikimedia.org/wiki/File:Block_of_butter_20200928_080207.jpg
 - `gouda.jpg`: Winterswijk (NL), Wochenmarkt -- 2024 -- 4337.jpg by Dietmar Rabich, CC BY-SA 4.0, https://commons.wikimedia.org/wiki/File:Winterswijk_(NL),_Wochenmarkt_--_2024_--_4337.jpg
 - `kaffee.jpg`: A small cup of coffee.JPG by Julius Schorzman, CC BY-SA 2.0, https://commons.wikimedia.org/wiki/File:A_small_cup_of_coffee.JPG
-- `orangensaft.jpg`: (glass of orange juice a banana a waffle Breakfast cereal with milk).jpg by David Adam Kess, CC BY-SA 4.0, https://commons.wikimedia.org/wiki/File:(glass_of_orange_juice_a_banana_a_waffle_Breakfast_cereal_with_milk).jpg
 - `schokolade.jpg`: Milka Alpine Milk Chocolate bar 100g.jpg by Ubcule, CC BY-SA 4.0, https://commons.wikimedia.org/wiki/File:Milka_Alpine_Milk_Chocolate_bar_100g.jpg
 - `dosenbier.jpg`: Beer cans.jpg by Shuntaro Kawasaki, CC0, https://commons.wikimedia.org/wiki/File:Beer_cans.jpg
 - `semmel.jpg`: Kaisersemmel in Turkey.jpg by E4024, CC BY-SA 4.0, https://commons.wikimedia.org/wiki/File:Kaisersemmel_in_Turkey.jpg

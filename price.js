@@ -1,14 +1,13 @@
 /* ============ Was kost' die Welt? / What does it cost? ============
-   Real prices from Vienna, in two kinds of rounds:
-   - "Today": guess what something costs now (supermarket staples, BILLA brands, a Melange in a Viennese coffee house).
-   - "Back then": the price today is shown, you guess what it was in September 2021 (supermarket basket) or September 2020 (Melange).
+   Real prices from Vienna. You guess what something costs today; where we know the price from a few years ago, it is shown as a hint
+   ("In September 2021 it cost …"), and after your guess you see how much prices have risen.
    Sources: AK Wien Preismonitor "Warenkorb Wien" (March 2026 and September 2021, cheapest product, average of Billa, Billa Plus, Spar, Interspar, Hofer, Lidl, Penny;
    licence CC BY-SA 4.0), BILLA Online Shop (1 October 2026, regular price), wienkultur.info "Preise Wiener Melange" (September 2026 and September 2020, without guarantee).
    Six rounds, up to 100 points each (log scale, so "twice as much" and "half as much" count the same). Photos: Wikimedia Commons, credits in assets/img/price/CREDITS.md. */
 (() => {
   const AK = "AK Wien Preismonitor Warenkorb Wien, 03/2026 und 09/2021 (billigstes Produkt, Durchschnitt Wiener Supermärkte und Diskonter), CC BY-SA 4.0";
   const AK_EN = "AK Vienna price monitor “Warenkorb Wien”, 03/2026 and 09/2021 (cheapest product, average of Viennese supermarkets and discounters), CC BY-SA 4.0";
-  const CREDITS = {"bananen": {"by": "Wilfredor", "lic": "CC0", "page": "https://commons.wikimedia.org/wiki/File:Bunch_of_bananas_on_sale.jpg"}, "tomaten": {"by": "Dietmar Rabich", "lic": "CC BY-SA 4.0", "page": "https://commons.wikimedia.org/wiki/File:Tomaten_--_2021_--_9132.jpg"}, "gurke": {"by": "H. Zell", "lic": "CC BY-SA 3.0", "page": "https://commons.wikimedia.org/wiki/File:Cucumis_sativus_0001.JPG"}, "butter": {"by": "Salicyna", "lic": "CC BY-SA 4.0", "page": "https://commons.wikimedia.org/wiki/File:Block_of_butter_20200928_080207.jpg"}, "gouda": {"by": "Dietmar Rabich", "lic": "CC BY-SA 4.0", "page": "https://commons.wikimedia.org/wiki/File:Winterswijk_(NL),_Wochenmarkt_--_2024_--_4337.jpg"}, "kaffee": {"by": "Julius Schorzman", "lic": "CC BY-SA 2.0", "page": "https://commons.wikimedia.org/wiki/File:A_small_cup_of_coffee.JPG"}, "orangensaft": {"by": "David Adam Kess", "lic": "CC BY-SA 4.0", "page": "https://commons.wikimedia.org/wiki/File:(glass_of_orange_juice_a_banana_a_waffle_Breakfast_cereal_with_milk).jpg"}, "schokolade": {"by": "Ubcule", "lic": "CC BY-SA 4.0", "page": "https://commons.wikimedia.org/wiki/File:Milka_Alpine_Milk_Chocolate_bar_100g.jpg"}, "dosenbier": {"by": "Shuntaro Kawasaki", "lic": "CC0", "page": "https://commons.wikimedia.org/wiki/File:Beer_cans.jpg"}, "semmel": {"by": "E4024", "lic": "CC BY-SA 4.0", "page": "https://commons.wikimedia.org/wiki/File:Kaisersemmel_in_Turkey.jpg"}, "cola": {"by": "Mkoenitzer", "lic": "CC BY-SA 4.0", "page": "https://commons.wikimedia.org/wiki/File:Coca_Cola_Pickup.jpg"}, "nutella": {"by": "-donald-", "lic": "CC BY-SA 3.0", "page": "https://commons.wikimedia.org/wiki/File:Nutella_ak.jpg"}, "manner": {"by": "Mfchris84", "lic": "CC0", "page": "https://commons.wikimedia.org/wiki/File:Wachauer_Schnitte_03.jpg"}, "melange": {"by": "Dr. Bernd Gross", "lic": "CC BY-SA 4.0", "page": "https://commons.wikimedia.org/wiki/File:Wiener_Melange_2.JPG"}, "diglas": {"by": "BambooBeast", "lic": "Public domain", "page": "https://commons.wikimedia.org/wiki/File:CafeDiglas_Front.JPG"}, "pruckel": {"by": "Manfred Werner - Tsui", "lic": "CC BY-SA 3.0", "page": "https://commons.wikimedia.org/wiki/File:Caf%C3%A9_Pr%C3%BCckel_Wien_W%C3%BCrfeluhr_2014_c.jpg"}, "schwarzenberg": {"by": "unknown author", "lic": "Public domain", "page": "https://commons.wikimedia.org/wiki/File:Cafe_Schwarzenberg_Vienna-bef_1900.jpg"}};
+  const CREDITS = {"bananen": {"by": "Wilfredor", "lic": "CC0", "page": "https://commons.wikimedia.org/wiki/File:Bunch_of_bananas_on_sale.jpg"}, "tomaten": {"by": "Dietmar Rabich", "lic": "CC BY-SA 4.0", "page": "https://commons.wikimedia.org/wiki/File:Tomaten_--_2021_--_9132.jpg"}, "gurke": {"by": "H. Zell", "lic": "CC BY-SA 3.0", "page": "https://commons.wikimedia.org/wiki/File:Cucumis_sativus_0001.JPG"}, "butter": {"by": "Salicyna", "lic": "CC BY-SA 4.0", "page": "https://commons.wikimedia.org/wiki/File:Block_of_butter_20200928_080207.jpg"}, "gouda": {"by": "Dietmar Rabich", "lic": "CC BY-SA 4.0", "page": "https://commons.wikimedia.org/wiki/File:Winterswijk_(NL),_Wochenmarkt_--_2024_--_4337.jpg"}, "kaffee": {"by": "Julius Schorzman", "lic": "CC BY-SA 2.0", "page": "https://commons.wikimedia.org/wiki/File:A_small_cup_of_coffee.JPG"}, "schokolade": {"by": "Ubcule", "lic": "CC BY-SA 4.0", "page": "https://commons.wikimedia.org/wiki/File:Milka_Alpine_Milk_Chocolate_bar_100g.jpg"}, "dosenbier": {"by": "Shuntaro Kawasaki", "lic": "CC0", "page": "https://commons.wikimedia.org/wiki/File:Beer_cans.jpg"}, "semmel": {"by": "E4024", "lic": "CC BY-SA 4.0", "page": "https://commons.wikimedia.org/wiki/File:Kaisersemmel_in_Turkey.jpg"}, "cola": {"by": "Mkoenitzer", "lic": "CC BY-SA 4.0", "page": "https://commons.wikimedia.org/wiki/File:Coca_Cola_Pickup.jpg"}, "nutella": {"by": "-donald-", "lic": "CC BY-SA 3.0", "page": "https://commons.wikimedia.org/wiki/File:Nutella_ak.jpg"}, "manner": {"by": "Mfchris84", "lic": "CC0", "page": "https://commons.wikimedia.org/wiki/File:Wachauer_Schnitte_03.jpg"}, "melange": {"by": "Dr. Bernd Gross", "lic": "CC BY-SA 4.0", "page": "https://commons.wikimedia.org/wiki/File:Wiener_Melange_2.JPG"}, "diglas": {"by": "BambooBeast", "lic": "Public domain", "page": "https://commons.wikimedia.org/wiki/File:CafeDiglas_Front.JPG"}, "pruckel": {"by": "Manfred Werner - Tsui", "lic": "CC BY-SA 3.0", "page": "https://commons.wikimedia.org/wiki/File:Caf%C3%A9_Pr%C3%BCckel_Wien_W%C3%BCrfeluhr_2014_c.jpg"}, "schwarzenberg": {"by": "unknown author", "lic": "Public domain", "page": "https://commons.wikimedia.org/wiki/File:Cafe_Schwarzenberg_Vienna-bef_1900.jpg"}};
 
   /* AK basket: [id, emoji, photo, name DE, name EN, unit DE, unit EN, price 09/2021, price 03/2026] */
   const BASKET = [
@@ -16,7 +15,7 @@
     ["bananen", "🍌", "bananen", "Bananen", "Bananas", "1 kg", "1 kg", 1.35, 1.65], ["tomaten", "🍅", "tomaten", "Tomaten", "Tomatoes", "1 kg", "1 kg", 1.58, 2.49],
     ["gurke", "🥒", "gurke", "Salatgurke", "Cucumber", "1 Stück", "1 piece", 1.02, 1.60], ["wasser", "💧", null, "Mineralwasser mit Kohlensäure", "Sparkling mineral water", "1 L", "1 L", 0.18, 0.27],
     ["flaschenbier", "🍺", null, "Flaschenbier", "Bottled beer", "0,5 L", "0.5 L", 0.68, 0.76], ["dosenbier", "🍺", "dosenbier", "Dosenbier", "Canned beer", "0,5 L", "0.5 L", 0.46, 0.56],
-    ["orangensaft", "🍊", "orangensaft", "Orangensaft", "Orange juice", "1 L", "1 L", 0.89, 1.86], ["cola", "🥤", "cola", "Cola-Getränk in der PET-Flasche", "Cola in a PET bottle", "1 L", "1 L", 0.24, 0.42],
+    ["orangensaft", "🍊", null, "Orangensaft", "Orange juice", "1 L", "1 L", 0.89, 1.86], ["cola", "🥤", "cola", "Cola-Getränk in der PET-Flasche", "Cola in a PET bottle", "1 L", "1 L", 0.24, 0.42],
     ["weisswein", "🍷", null, "Weißwein in der Glasflasche", "White wine in a glass bottle", "1 L", "1 L", 2.39, 3.42], ["rotwein", "🍷", null, "Rotwein in der Glasflasche", "Red wine in a glass bottle", "1 L", "1 L", 2.39, 3.12],
     ["vollmilch", "🥛", null, "Vollmilch", "Whole milk", "1 L", "1 L", 1.05, 1.39], ["teebutter", "🧈", "butter", "Teebutter", "Butter", "1 kg", "1 kg", 5.85, 5.96],
     ["joghurt", "🥣", null, "Fruchtjoghurt", "Fruit yoghurt", "1 kg", "1 kg", 1.66, 2.40], ["gouda", "🧀", "gouda", "Gouda, verpackt", "Gouda, packed", "1 kg", "1 kg", 5.26, 7.27],
@@ -52,14 +51,14 @@
   const T = {
     en: {
       title: "What does it cost?", toy: "Real prices from Vienna", set: "Set the price", next: "Next", finish: "Result", again: "Play again", round: "Round {n} of 6", points: "Points",
-      today: "Today", then: "Back then ({w})", askNow: "What does it cost today?", askThen: "Today it costs {p}. What did it cost in {w}?", yours: "Your price", real: "Real price", todayLabel: "Today", thenLabel: "Then",
+      ask: "What does it cost today?", hint: "To help you: in {w} it cost {p}.", yours: "Your price", real: "Real price today", thenLabel: "In {w}",
       off: "{x}× too high", offLow: "{x}× too low", spot: "Spot on!", rise: "{p} % more than in {w}.", fall: "{p} % less than in {w}.", same: "About the same as in {w}.",
       total: "You scored {p} of 600 points.", best: "Best: {n}", ranks: ["Pays too much", "Market regular", "Bargain hunter", "Price oracle"], src: "Source", photo: "Photo",
       w21: "September 2021", w20: "September 2020", cafeName: "Melange at {c}", cafeUnit: "1 cup"
     },
     de: {
       title: "Was kost' die Welt?", toy: "Echte Preise aus Wien", set: "Preis festlegen", next: "Weiter", finish: "Ergebnis", again: "Nochmal spielen", round: "Runde {n} von 6", points: "Punkte",
-      today: "Heute", then: "Damals ({w})", askNow: "Was kostet das heute?", askThen: "Heute kostet es {p}. Was hat es im {w} gekostet?", yours: "Dein Preis", real: "Echter Preis", todayLabel: "Heute", thenLabel: "Damals",
+      ask: "Was kostet das heute?", hint: "Zur Orientierung: Im {w} hat es {p} gekostet.", yours: "Dein Preis", real: "Echter Preis heute", thenLabel: "Im {w}",
       off: "{x}× zu hoch", offLow: "{x}× zu niedrig", spot: "Volltreffer!", rise: "{p} % mehr als im {w}.", fall: "{p} % weniger als im {w}.", same: "Etwa gleich viel wie im {w}.",
       total: "Du hast {p} von 600 Punkten.", best: "Bestwert: {n}", ranks: ["Zahlt immer drauf", "Markt-Stammkund:in", "Schnäppchenjäger:in", "Preis-Orakel"], src: "Quelle", photo: "Foto",
       w21: "September 2021", w20: "September 2020", cafeName: "Melange im {c}", cafeUnit: "1 Häferl"
@@ -76,20 +75,20 @@
   const de = () => lang === "de";
 
   /* a round: { mode: "now" | "then", name, unit, emoji, photo, now, then, when, source, kind } */
-  function basketRound(it, mode) {
-    return { mode, kind: "ak", emoji: it[1], photo: it[2], name: de() ? it[3] : it[4], unit: de() ? it[5] : it[6], then: it[7], now: it[8], when: L("w21"), source: de() ? AK : AK_EN };
+  function basketRound(it) {
+    return { kind: "ak", emoji: it[1], photo: it[2], name: de() ? it[3] : it[4], unit: de() ? it[5] : it[6], then: it[7], now: it[8], when: L("w21"), source: de() ? AK : AK_EN };
   }
   function billaRound(it) {
-    return { mode: "now", kind: "billa", emoji: it[1], photo: it[2], name: de() ? it[3] : it[4], unit: de() ? it[5] : it[6], now: it[7], source: de() ? "BILLA Online Shop, 1. Oktober 2026, regulärer Preis" : "BILLA Online Shop, 1 October 2026, regular price" };
+    return { kind: "billa", emoji: it[1], photo: it[2], name: de() ? it[3] : it[4], unit: de() ? it[5] : it[6], now: it[7], source: de() ? "BILLA Online Shop, 1. Oktober 2026, regulärer Preis" : "BILLA Online Shop, 1 October 2026, regular price" };
   }
-  function cafeRound(c, mode) {
-    return { mode, kind: "cafe", emoji: "☕", photo: c[3] || "melange", name: L("cafeName").replace("{c}", c[1]) + " (" + c[2] + ")", unit: L("cafeUnit"), then: c[4], now: c[5], when: L("w20"),
+  function cafeRound(c) {
+    return { kind: "cafe", emoji: "☕", photo: c[3] || "melange", name: L("cafeName").replace("{c}", c[1]) + " (" + c[2] + ")", unit: L("cafeUnit"), then: c[4], now: c[5], when: L("w20"),
       source: de() ? "wienkultur.info, Preise Wiener Melange, Stand 09/2026 und 09/2020 (ohne Gewähr)" : "wienkultur.info, Melange prices, as of 09/2026 and 09/2020 (without guarantee)" };
   }
   let G = null;
   function start() {
     const ak = pick(BASKET, 3), billa = pick(BILLA, 1), cafes = pick(CAFES, 2);
-    const rounds = [billaRound(billa[0]), basketRound(ak[0], "then"), cafeRound(cafes[0], "now"), cafeRound(cafes[1], "then"), basketRound(ak[1], "now"), basketRound(ak[2], "then")];
+    const rounds = shuffle([billaRound(billa[0]), basketRound(ak[0]), cafeRound(cafes[0]), cafeRound(cafes[1]), basketRound(ak[1]), basketRound(ak[2])]);
     G = { rounds, i: 0, s: 450, revealed: false, pts: 0, last: null, done: false };
   }
   function photoHTML(r) {
@@ -101,28 +100,29 @@
     const body = document.getElementById("playBody");
     if (!G) start();
     if (G.done) { body.innerHTML = endHTML(); bind(); return; }
-    const r = G.rounds[G.i], guess = fromSlider(G.s), target = r.mode === "then" ? r.then : r.now;
-    const ask = r.mode === "then" ? L("askThen").replace("{p}", euro(r.now)).replace("{w}", r.when) : L("askNow");
+    const r = G.rounds[G.i], guess = fromSlider(G.s), target = r.now, hasThen = r.then !== undefined;
+    const hint = hasThen && !G.revealed ? L("hint").replace("{w}", r.when).replace("{p}", euro(r.then)) : "";
     let result = "";
     if (G.revealed) {
       const ratio = Math.max(guess, target) / Math.min(guess, target);
       const off = ratio <= 1.06 ? L("spot") : (guess > target ? L("off") : L("offLow")).replace("{x}", ratio < 10 ? ratio.toFixed(1).replace(".", de() ? "," : ".") : Math.round(ratio));
       let change = "";
-      if (r.mode === "then") {
+      if (hasThen) {
         const pct = Math.round((r.now / r.then - 1) * 100);
         change = `<p class="pr__change">${esc(pct > 1 ? L("rise").replace("{p}", pct) : pct < -1 ? L("fall").replace("{p}", Math.abs(pct)) : L("same")).replace("{w}", esc(r.when))}</p>`;
       }
       result = `<div class="pr__result"><div class="pr__row"><span>${esc(L("yours"))}</span><b>${esc(euro(guess))}</b></div>
-        <div class="pr__row pr__row--real"><span>${esc(L("real"))}${r.mode === "then" ? " (" + esc(r.when) + ")" : ""}</span><b>${esc(euro(target))}</b></div>
-        ${r.mode === "then" ? `<div class="pr__row"><span>${esc(L("todayLabel"))}</span><b>${esc(euro(r.now))}</b></div>` : ""}
+        <div class="pr__row pr__row--real"><span>${esc(L("real"))}</span><b>${esc(euro(target))}</b></div>
+        ${hasThen ? `<div class="pr__row"><span>${esc(L("thenLabel").replace("{w}", r.when))}</span><b>${esc(euro(r.then))}</b></div>` : ""}
         <p class="pr__off">${esc(off)} · <b>+${G.last}</b></p>${change}<p class="pr__src">${esc(L("src"))}: ${esc(r.source)}</p></div>`;
     }
     body.innerHTML = `<div class="pr">
-      <p class="wd__roundlabel">${esc(L("round").replace("{n}", G.i + 1))} · ${esc(r.mode === "then" ? L("then").replace("{w}", r.when) : L("today"))} · ${esc(L("points"))}: ${G.pts}</p>
+      <p class="wd__roundlabel">${esc(L("round").replace("{n}", G.i + 1))} · ${esc(L("points"))}: ${G.pts}</p>
       <div class="pr__item">${photoHTML(r)}<div><h3>${esc(r.name)}</h3><p class="pr__unit">${esc(r.unit)}</p></div></div>
-      <p class="wd__desc">${esc(ask)}</p>
+      <p class="wd__desc">${esc(L("ask"))}</p>
+      ${hint ? `<p class="pr__hint">💡 ${esc(hint)}</p>` : ""}
       <div class="pr__tag"><span class="pr__hole" aria-hidden="true"></span><output class="pr__price" id="prPrice">${esc(euro(guess))}</output></div>
-      <input type="range" class="pr__slider" id="prSlider" min="0" max="1000" step="1" value="${G.s}" aria-label="${esc(ask)}"${G.revealed ? " disabled" : ""}>
+      <input type="range" class="pr__slider" id="prSlider" min="0" max="1000" step="1" value="${G.s}" aria-label="${esc(L("ask"))}"${G.revealed ? " disabled" : ""}>
       <div class="pr__scale"><span>${esc(euro(MIN))}</span><span>${esc(euro(MAX))}</span></div>
       ${result}
       <div class="wd__actions">${G.revealed ? `<button type="button" class="orch__go" id="prNext">${esc(L(G.i === 5 ? "finish" : "next"))}</button>` : `<button type="button" class="orch__go" id="prSet">${esc(L("set"))}</button>`}</div></div>`;
@@ -139,7 +139,7 @@
     if (slider && !slider.disabled) slider.addEventListener("input", () => { G.s = +slider.value; $("prPrice").textContent = euro(fromSlider(G.s)); sfx.tick(G.s / 1000); });
     const set = $("prSet");
     if (set) set.addEventListener("click", () => {
-      const r = G.rounds[G.i], pts = score(fromSlider(G.s), r.mode === "then" ? r.then : r.now);
+      const r = G.rounds[G.i], pts = score(fromSlider(G.s), r.now);
       G.last = pts; G.pts += pts; G.revealed = true; sfx.lock(); setTimeout(() => sfx.score(pts), 120); paint();
     });
     const next = $("prNext");

@@ -1358,3 +1358,12 @@ body.view-all .p-card__play, body.view-all .p-card__video { display: none; }
 .pr__change { margin: 0; font-weight: 700; color: var(--orange-text); }
 .pr__src { margin: 2px 0 0; font-size: 12px; color: var(--ink-soft); }
 @media (max-width: 520px) { .pr__item { flex-direction: column; } .pr__photo { width: 100%; } }
+
+.pr__hint { margin: 0; padding: 8px 14px; border-radius: 12px; background: var(--surface); border: 1px solid var(--line); font-size: 15px; }
+
+/* Two truths: tap to cycle green / red / neutral */
+.tl__card { grid-template-columns: auto 1fr auto; }
+.tl__card.is-mark-true { border-color: #3fae5a; background: color-mix(in srgb, #3fae5a 16%, var(--surface)); }
+.tl__card.is-mark-false { border-color: #ef4444; background: color-mix(in srgb, #ef4444 14%, var(--surface)); }
+.tl__mark { align-self: center; display: grid; place-items: center; width: 34px; height: 34px; border-radius: 50%; border: 2px dashed var(--line); font: 800 16px var(--sans); color: transparent; }
+.tl__mark.is-true { background: #3fae5a; border: 0; color: #fff; } .tl__mark.is-false { background: #ef4444; border: 0; color: #fff; }
