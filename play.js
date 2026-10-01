@@ -32,7 +32,7 @@ const PLAY_T = {
     ask: "Dein Tipp (Regler oder Zahl eingeben)"
   }
 };
-const pt = (k) => (PLAY_T[lang] || PLAY_T.en)[k];
+const pt = (k) => { const b = typeof babelLang !== "undefined" && babelLang && PLAY_T[babelLang]; return b && b[k] !== undefined ? b[k] : (PLAY_T[lang] || PLAY_T.en)[k]; };
 const PLAY_ROUNDS = { easy: 3, medium: 4, hard: 3 };
 const PLAY_EMOJI = (s) => s >= 90 ? "🟩" : s >= 65 ? "🟨" : s >= 35 ? "🟧" : "🟥";
 
@@ -132,6 +132,8 @@ function startGame() {
 }
 
 function renderPlay() {
+  if (play.screen !== "orch") orchStop();
+  if (play.screen !== "tower") twStop(); // first, so the page speaks your language again before anything is drawn
   document.getElementById("playTitle").textContent = pt("title");
   playBack.setAttribute("aria-label", pt("back"));
   const snd = document.getElementById("playSound");
@@ -150,8 +152,6 @@ function renderPlay() {
   if (play.screen === "orch") document.getElementById("playTitle").textContent = pt("g2");
   else if (play.screen === "tower") document.getElementById("playTitle").textContent = pt("g3");
   else if (play.screen === "q" || play.screen === "end") document.getElementById("playTitle").textContent = pt("g1")[0];
-  if (play.screen !== "orch") orchStop();
-  if (play.screen !== "tower") twStop();
   if (play.screen === "menu") renderMenu();
   else if (play.screen === "orch") renderOrchestra();
   else if (play.screen === "tower") renderTower();

@@ -1,157 +1,141 @@
 /* ============ Turmbau zu Babel / Tower of Babel ============
-   Combine two things to craft a new one (Infinite Craft style, but with hand-written recipes and a name-mashing
-   fallback, so no combination is ever a dead end), then stack your finds into a tower that reaches for the sky.
-   You drag the pieces onto the tower yourself and let go where you want them. Heavy, wide and grippy pieces make a safe base,
-   slippery ones are risky. The physics is a simple balance check: a joint holds when the centre of mass of everything
-   above it sits over the piece below. Uses helpers from orchestra.js (sound) and play.js / play-shell.js. */
+   Build the tower along a blueprint: pieces may only go inside the dashed outline, which narrows towards the sky.
+   You drag the pieces onto the tower yourself and let go where you want them. A piece stays put as long as the centre of
+   mass of everything above it sits over it (wide, grippy pieces are a safe base; slippery ones slide off).
+   Up to 100 m you build with bricks and other basic things; the higher you get, the stranger the material becomes.
+   Above 1000 m the builders no longer understand each other: the page changes its language, and again at 1100 m …
+   Uses helpers from orchestra.js (sound) and play.js / play-shell.js (esc, lang, babelLang, unlock, sfx, play). */
 
-const TW_W = 480, TW_H = 400, TW_GOAL = 1000, TW_GROUND = 34; // stage size and goal height, in "units" (10 units = 1 m)
+const TW_W = 480, TW_H = 400, TW_K = 2, TW_GOAL = 2600, TW_GROUND = 34; // stage size, units per metre, goal height (1300 m), ground strip
+const TW_STEP = 300; // the blueprint narrows in steps of this many units
+
+/* ---- texts: en/de for the page, tr/fr/es/la for the confusion of tongues (only what the tower screen shows) ---- */
 const TW_T = {
   en: {
-    toy: "A building game", craft: "Craft", build: "Build", combine: "Combine two things", drag: "Drag a piece onto the tower", again: "Rebuild",
-    height: "Height", best: "Best", pieces: "Pieces", discovered: "Discovered", current: "Selected",
-    newItem: "New: {n}!", miss: "Missed the tower!", wobble: "The tower wobbles … {k} pieces fall.", won: "The tower touches the sky!",
-    widths: ["narrow", "medium", "wide"], grips: ["slippery", "okay", "grippy"],
-    events: { 25: "Confusion of tongues! The builders no longer understand each other.", 50: "A cloud brushes the tower …", 75: "The air gets thin. Hold on tight." },
-    stage: "Building site", pickLabel: "Pieces",
-    levels: ["Double ", "Super Saiyan ", "Super Saiyan 2 ", "Super Saiyan 3 ", "Super Saiyan God ", "Ultra Instinct "]
+    toy: "A building game", again: "Rebuild", height: "Height", best: "Best", pieces: "Pieces", material: "Material", current: "Selected",
+    drag: "Drag a piece onto the tower", outside: "Outside the blueprint!", wobble: "The tower wobbles … {k} pieces fall.", won: "The tower touches the sky!",
+    unlock: "New material: {n}", tongues: "Confusion of tongues! Everyone speaks differently now.", next: "More material from {m} m",
+    widths: ["narrow", "medium", "wide"], grips: ["slippery", "okay", "grippy"], stage: "Building site"
   },
   de: {
-    toy: "Ein Bauspiel", craft: "Basteln", build: "Bauen", combine: "Kombiniere zwei Dinge", drag: "Zieh ein Teil auf den Turm", again: "Neu bauen",
-    height: "Höhe", best: "Rekord", pieces: "Teile", discovered: "Entdeckt", current: "Ausgewählt",
-    newItem: "Neu: {n}!", miss: "Daneben!", wobble: "Der Turm wankt … {k} Teile fallen.", won: "Der Turm berührt den Himmel!",
-    widths: ["schmal", "mittel", "breit"], grips: ["rutschig", "okay", "fest"],
-    events: { 25: "Sprachverwirrung! Die Bauleute verstehen sich nicht mehr.", 50: "Eine Wolke streift den Turm …", 75: "Die Luft wird dünn. Gut festhalten." },
-    stage: "Baustelle", pickLabel: "Teile",
-    levels: ["Doppel-", "Super-Saiyajin-", "Super-Saiyajin-2-", "Super-Saiyajin-3-", "Super-Saiyajin-Gott-", "Ultra-Instinkt-"]
+    toy: "Ein Bauspiel", again: "Neu bauen", height: "Höhe", best: "Rekord", pieces: "Teile", material: "Material", current: "Ausgewählt",
+    drag: "Zieh ein Teil auf den Turm", outside: "Außerhalb des Bauplans!", wobble: "Der Turm wankt … {k} Teile fallen.", won: "Der Turm berührt den Himmel!",
+    unlock: "Neues Material: {n}", tongues: "Sprachverwirrung! Alle sprechen jetzt anders.", next: "Mehr Material ab {m} m",
+    widths: ["schmal", "mittel", "breit"], grips: ["rutschig", "okay", "fest"], stage: "Baustelle"
+  },
+  tr: {
+    again: "Yeniden kur", height: "Yükseklik", best: "Rekor", pieces: "Parça", material: "Malzeme", current: "Seçili",
+    drag: "Bir parçayı kuleye sürükle", outside: "Planın dışında!", wobble: "Kule sallanıyor … {k} parça düşüyor.", won: "Kule göğe dokunuyor!",
+    unlock: "Yeni malzeme: {n}", tongues: "Dil karışıklığı! Artık herkes farklı konuşuyor.", next: "{m} m'den sonra yeni malzeme",
+    widths: ["dar", "orta", "geniş"], grips: ["kaygan", "idare eder", "sağlam"], stage: "İnşaat alanı"
+  },
+  fr: {
+    again: "Recommencer", height: "Hauteur", best: "Record", pieces: "Pièces", material: "Matériau", current: "Choisi",
+    drag: "Glisse une pièce sur la tour", outside: "Hors du plan !", wobble: "La tour vacille … {k} pièces tombent.", won: "La tour touche le ciel !",
+    unlock: "Nouveau matériau : {n}", tongues: "Confusion des langues ! Tout le monde parle autrement.", next: "Plus de matériaux dès {m} m",
+    widths: ["étroit", "moyen", "large"], grips: ["glissant", "correct", "adhérent"], stage: "Chantier"
+  },
+  es: {
+    again: "Reconstruir", height: "Altura", best: "Récord", pieces: "Piezas", material: "Material", current: "Elegida",
+    drag: "Arrastra una pieza a la torre", outside: "¡Fuera del plano!", wobble: "La torre se tambalea … caen {k} piezas.", won: "¡La torre toca el cielo!",
+    unlock: "Material nuevo: {n}", tongues: "¡Confusión de lenguas! Ahora todos hablan distinto.", next: "Más material desde {m} m",
+    widths: ["estrecho", "medio", "ancho"], grips: ["resbaladizo", "normal", "agarra bien"], stage: "Obra"
+  },
+  la: {
+    again: "Iterum aedifica", height: "Altitudo", best: "Maximum", pieces: "Partes", material: "Materia", current: "Electum",
+    drag: "Trahe partem ad turrim", outside: "Extra formam!", wobble: "Turris nutat … {k} partes cadunt.", won: "Turris caelum tangit!",
+    unlock: "Nova materia: {n}", tongues: "Confusio linguarum! Iam omnes aliter loquuntur.", next: "Plus materiae ab {m} m",
+    widths: ["angustum", "medium", "latum"], grips: ["lubricum", "tolerabile", "firmum"], stage: "Aedificium"
   }
 };
-const tt = (k) => (TW_T[lang] || TW_T.en)[k];
+const tt = (k) => { const b = tw.babel && TW_T[tw.babel]; return b && b[k] !== undefined ? b[k] : (TW_T[lang] || TW_T.en)[k]; };
 
-/* ---- things: emoji, names [en, de], width, height, grip (1 = sticks, low = slides off) ---- */
+/* what the page says in those other languages (menu bar and breadcrumbs) */
+if (typeof SHELL_T !== "undefined") {
+  Object.assign(SHELL_T, {
+    tr: { projects: "Projeler", experience: "Deneyim", contact: "İletişim", play: "Oyun Bahçesi" },
+    fr: { projects: "Projets", experience: "Parcours", contact: "Contact", play: "Terrain de jeu" },
+    es: { projects: "Proyectos", experience: "Trayectoria", contact: "Contacto", play: "Zona de juegos" },
+    la: { projects: "Opera", experience: "Cursus", contact: "Epistula", play: "Ludus" }
+  });
+}
+function twPatchTexts() { // PLAY_T lives in play.js, which loads after this file
+  if (typeof PLAY_T === "undefined" || PLAY_T.tr) return;
+  Object.assign(PLAY_T, {
+    tr: { home: "Ana sayfa", title: "Oyun Bahçesi", g3: "Babil Kulesi", back: "Geri" },
+    fr: { home: "Accueil", title: "Terrain de jeu", g3: "La Tour de Babel", back: "Retour" },
+    es: { home: "Inicio", title: "Zona de juegos", g3: "La Torre de Babel", back: "Volver" },
+    la: { home: "Domus", title: "Ludus", g3: "Turris Babel", back: "Redi" }
+  });
+}
+const TW_BABEL = [[1000, "tr"], [1100, "fr"], [1200, "es"], [1300, "la"]]; // from this height (m) the page speaks this language
+
+/* ---- material: emoji, names [en, de], width, height, grip (1 = sticks, low = slides off) ---- */
 const TW_ITEMS = {
   brick: { e: "🧱", n: ["Brick", "Ziegel"], w: 90, h: 38, g: .95 },
+  stone: { e: "🪨", n: ["Stone", "Stein"], w: 80, h: 42, g: .9 },
+  wood: { e: "🪵", n: ["Log", "Holzbalken"], w: 110, h: 30, g: .85 },
+  wall: { e: "🧱", n: ["Wall", "Mauer"], w: 150, h: 44, g: 1 },
   cat: { e: "🐱", n: ["Cat", "Katze"], w: 58, h: 52, g: .6 },
-  cloud: { e: "☁️", n: ["Cloud", "Wolke"], w: 110, h: 40, g: .5 },
   cheese: { e: "🧀", n: ["Cheese", "Käse"], w: 80, h: 40, g: .7 },
   sock: { e: "🧦", n: ["Sock", "Socke"], w: 50, h: 56, g: .55 },
-  water: { e: "💧", n: ["Water", "Wasser"], w: 40, h: 40, g: .4 },
-  wall: { e: "🧱", n: ["Wall", "Mauer"], w: 150, h: 44, g: 1 },
-  puddle: { e: "💦", n: ["Puddle", "Pfütze"], w: 120, h: 20, g: .35 },
-  mud: { e: "🟫", n: ["Mud", "Matsch"], w: 90, h: 30, g: .75 },
-  mortar: { e: "🪣", n: ["Mortar", "Mörtel"], w: 110, h: 30, g: 1 },
-  rain: { e: "🌧️", n: ["Rain", "Regen"], w: 100, h: 40, g: .4 },
-  fluffcat: { e: "😺", n: ["Cloud cat", "Wolkenkatze"], w: 84, h: 56, g: .55 },
-  wetcat: { e: "😾", n: ["Wet cat", "Nasse Katze"], w: 56, h: 52, g: .45 },
-  mouse: { e: "🐭", n: ["Mouse", "Maus"], w: 40, h: 34, g: .6 },
-  fondue: { e: "🫕", n: ["Fondue", "Fondue"], w: 96, h: 44, g: .5 },
-  cheesebrick: { e: "🟨", n: ["Cheese brick", "Käseziegel"], w: 104, h: 46, g: .8 },
-  moon: { e: "🌙", n: ["Moon", "Mond"], w: 76, h: 56, g: .5 },
-  stinksock: { e: "💨", n: ["Stink sock", "Stinksocke"], w: 56, h: 60, g: .45 },
-  wetsock: { e: "🧦", n: ["Wet sock", "Nasse Socke"], w: 52, h: 58, g: .4 },
-  slipper: { e: "🥿", n: ["Slipper", "Pantoffel"], w: 74, h: 38, g: .85 },
-  sockstone: { e: "🪨", n: ["Sock stone", "Sockenstein"], w: 70, h: 50, g: .7 },
-  cloudbrick: { e: "🫧", n: ["Cloud brick", "Wolkenziegel"], w: 104, h: 42, g: .6 },
-  house: { e: "🏠", n: ["House", "Haus"], w: 130, h: 76, g: .95 },
-  tower: { e: "🗼", n: ["Tall tower", "Hoher Turm"], w: 96, h: 104, g: .9 },
-  stars: { e: "⭐", n: ["Stars", "Sterne"], w: 70, h: 48, g: .55 },
-  goldbrick: { e: "🥇", n: ["Gold brick", "Goldziegel"], w: 100, h: 44, g: 1 },
+  cloud: { e: "☁️", n: ["Cloud", "Wolke"], w: 110, h: 40, g: .5 },
+  pizza: { e: "🍕", n: ["Pizza", "Pizza"], w: 96, h: 26, g: .55 },
+  donut: { e: "🍩", n: ["Donut", "Donut"], w: 70, h: 36, g: .6 },
+  duck: { e: "🦆", n: ["Rubber duck", "Quietscheente"], w: 56, h: 50, g: .5 },
+  ufo: { e: "🛸", n: ["UFO", "UFO"], w: 110, h: 40, g: .5 },
+  rocket: { e: "🚀", n: ["Rocket", "Rakete"], w: 50, h: 100, g: .5 },
+  piano: { e: "🎹", n: ["Piano", "Klavier"], w: 120, h: 56, g: .85 },
+  moon: { e: "🌙", n: ["Moon", "Mond"], w: 76, h: 58, g: .5 },
+  planet: { e: "🪐", n: ["Planet", "Planet"], w: 120, h: 62, g: .55 },
+  whale: { e: "🐋", n: ["Whale", "Wal"], w: 140, h: 60, g: .4 },
   rainbow: { e: "🌈", n: ["Rainbow", "Regenbogen"], w: 140, h: 40, g: .5 },
-  bridge: { e: "🌉", n: ["Bridge", "Brücke"], w: 160, h: 34, g: .9 },
+  angel: { e: "👼", n: ["Angel", "Engel"], w: 60, h: 56, g: .5 },
+  dragon: { e: "🐉", n: ["Dragon", "Drache"], w: 120, h: 70, g: .6 },
   castle: { e: "🏰", n: ["Castle", "Burg"], w: 150, h: 110, g: .95 },
-  angelcat: { e: "😇", n: ["Angel cat", "Engelskatze"], w: 84, h: 58, g: .5 },
+  stairway: { e: "🪜", n: ["Stairway", "Himmelsleiter"], w: 70, h: 130, g: .7 },
   babelstone: { e: "🗿", n: ["Babel stone", "Babelstein"], w: 124, h: 90, g: 1 },
-  stairway: { e: "🪜", n: ["Stairway", "Himmelsleiter"], w: 70, h: 130, g: .7 }
+  tongue: { e: "👅", n: ["Tongue", "Zunge"], w: 90, h: 34, g: .3 },
+  clown: { e: "🤡", n: ["Clown", "Clown"], w: 56, h: 56, g: .5 },
+  trophy: { e: "🏆", n: ["Trophy", "Pokal"], w: 60, h: 70, g: .8 }
 };
-const TW_START = ["brick", "cat", "cloud", "cheese", "sock", "water"];
-const TW_RECIPES = {};
-[["brick", "brick", "wall"], ["water", "water", "puddle"], ["brick", "water", "mud"], ["brick", "mud", "mortar"], ["cloud", "water", "rain"],
- ["cat", "cloud", "fluffcat"], ["cat", "water", "wetcat"], ["cat", "cheese", "mouse"], ["cheese", "water", "fondue"], ["brick", "cheese", "cheesebrick"],
- ["cheese", "cloud", "moon"], ["cheese", "sock", "stinksock"], ["sock", "water", "wetsock"], ["cat", "sock", "slipper"], ["brick", "sock", "sockstone"],
- ["brick", "cloud", "cloudbrick"], ["mortar", "wall", "house"], ["wall", "wall", "tower"], ["cloud", "moon", "stars"], ["mortar", "stars", "goldbrick"],
- ["moon", "rain", "rainbow"], ["water", "wall", "bridge"], ["house", "tower", "castle"], ["cat", "stars", "angelcat"], ["castle", "tower", "babelstone"],
- ["bridge", "tower", "stairway"]
-].forEach(([a, b, r]) => { TW_RECIPES[[a, b].sort().join("+")] = r; });
+/* from this height (m) on, these things are available; the higher, the stranger */
+const TW_TIERS = [
+  [0, ["brick", "stone", "wood", "wall"]],
+  [100, ["cat", "cheese", "sock"]],
+  [250, ["cloud", "pizza", "donut", "duck"]],
+  [400, ["ufo", "rocket", "piano"]],
+  [600, ["moon", "planet", "whale"]],
+  [800, ["rainbow", "angel", "dragon"]],
+  [1000, ["castle", "stairway", "babelstone"]],
+  [1100, ["tongue", "clown", "trophy"]]
+];
 
 /* ---- state ---- */
-const tw = { found: [], mash: {}, best: 0, cur: "brick", mode: "craft", slots: [], tower: [], fired: {}, x: 0, won: false, lock: false, pressing: false, bannerT: 0, u: 1 };
-function twLoad() {
-  try { tw.found = JSON.parse(localStorage.getItem("towerFound") || "null") || [...TW_START]; } catch (e) { tw.found = [...TW_START]; }
-  try { tw.mash = JSON.parse(localStorage.getItem("towerMash") || "{}"); } catch (e) { tw.mash = {}; }
-  tw.best = twBestSaved();
-  Object.values(tw.mash).forEach((m) => { // older saves: "Double Double Cheese" becomes a level on the ladder
-    if (m.lvl || !/^Double /.test(m.n[0])) return;
-    const lvl = Math.min(6, (m.n[0].match(/Double /g) || []).length);
-    m.bn = [m.n[0].replace(/^(Double )+/, ""), m.n[1].replace(/^(Doppel-)+/, "")];
-    m.lvl = lvl; m.n = twLevelName(m.bn, lvl);
-  });
-  TW_START.forEach((id) => { if (!tw.found.includes(id)) tw.found.push(id); });
-}
+const tw = { best: 0, cur: "brick", tower: [], fired: {}, peak: 0, x: 0, won: false, pressing: false, bannerT: 0, u: 1, babel: null, newest: [] };
 const twBestSaved = () => { try { return +localStorage.getItem("towerBest") || 0; } catch (e) { return 0; } };
-function twSave() {
-  try { localStorage.setItem("towerFound", JSON.stringify(tw.found)); localStorage.setItem("towerMash", JSON.stringify(tw.mash)); localStorage.setItem("towerBest", String(tw.best)); } catch (e) {}
-}
-const twItem = (id) => TW_ITEMS[id] || tw.mash[id];
-const twName = (id) => twItem(id).n[lang === "de" ? 1 : 0];
-const twHash = (s) => { let h = 2166136261; for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); } return (h >>> 0) / 4294967295; };
+const twSaveBest = () => { try { localStorage.setItem("towerBest", String(tw.best)); } catch (e) {} };
+const twItem = (id) => TW_ITEMS[id];
+const twName = (id) => TW_ITEMS[id].n[tw.babel ? 0 : (lang === "de" ? 1 : 0)];
 const twClamp = (v, a, b) => Math.min(b, Math.max(a, v));
-const twHue = (id) => Math.round(twHash("hue" + id) * 360);
+const twMeters = () => Math.round(twHeight() / TW_K);
+const twAvailable = () => TW_TIERS.filter(([m]) => m <= tw.peak).flatMap(([, ids]) => ids);
 
-/* ---- crafting ---- */
-function twMashName(a, b, i) { // "Cheese" + "Sock" = "Cheesock"
-  const x = a.n[i].split(" ")[0], y = b.n[i].split(" ").pop();
-  const name = x.slice(0, Math.ceil(x.length * 0.7)) + y.slice(Math.floor(y.length * 0.45)).toLowerCase();
-  return name.charAt(0).toUpperCase() + name.slice(1);
-}
-/* doubling the same thing again and again climbs a ladder: Double Cheese, Super Saiyan Cheese, … Ultra Instinct Cheese */
-const twLevelName = (bn, lvl) => [0, 1].map((i) => TW_T[i ? "de" : "en"].levels[Math.min(lvl, 6) - 1] + bn[i]);
-function twCombine(a, b) {
-  const key = [a, b].sort().join("+");
-  if (TW_RECIPES[key]) return TW_RECIPES[key];
-  if (a === b && (twItem(a).lvl || 0) >= 6) return a; // already at the top of the ladder
-  const id = "m:" + key;
-  if (!tw.mash[id]) {
-    const A = twItem(a), B = twItem(b), r = twHash(key), r2 = twHash(key + "!");
-    if (a === b) {
-      const lvl = (A.lvl || 0) + 1, bn = A.bn || A.n;
-      tw.mash[id] = {
-        e: A.e, bn, lvl, n: twLevelName(bn, lvl),
-        w: Math.round(twClamp(A.w * 1.12, 34, 150)), h: Math.round(twClamp(A.h * 1.1, 24, 110)), g: +twClamp(A.g + 0.03, 0.36, 0.98).toFixed(2)
-      };
-    } else tw.mash[id] = {
-      e: r < 0.5 ? A.e : B.e,
-      n: [twMashName(A, B, 0), twMashName(A, B, 1)],
-      w: Math.round(twClamp((A.w + B.w) / 2 * (0.85 + r * 0.4), 34, 150)),
-      h: Math.round(twClamp((A.h + B.h) / 2 * (0.85 + r2 * 0.4), 24, 92)),
-      g: +twClamp((A.g + B.g) / 2 + (r2 - 0.5) * 0.2, 0.36, 0.95).toFixed(2)
-    };
+/* ---- the blueprint ---- */
+const twHalfWidth = (y) => Math.max(64, 160 - Math.floor(y / TW_STEP) * 12);
+function twPlanSVG() { // a stepped outline, wider at the bottom, narrower towards the sky
+  const H = TW_GOAL, left = [], right = [];
+  for (let y = 0; y < H; y += TW_STEP) {
+    const w = twHalfWidth(y), top = Math.min(H, y + TW_STEP);
+    left.push([-w, y], [-w, top]); right.push([w, y], [w, top]);
   }
-  return id;
-}
-function twPick(id) {
-  if (tw.mode === "build") { tw.cur = id; twPaintAll(); if (!playMuted) ORCH_VOICE.octo(orchCtx().currentTime + 0.01, 523); return; }
-  if (tw.lock || tw.slots.length >= 2) return;
-  tw.slots.push(id);
-  if (!playMuted) ORCH_VOICE.octo(orchCtx().currentTime + 0.01, tw.slots.length === 1 ? 392 : 494);
-  twPaintCraft();
-  if (tw.slots.length === 2) {
-    tw.lock = true;
-    const res = twCombine(tw.slots[0], tw.slots[1]);
-    setTimeout(() => {
-      const isNew = !tw.found.includes(res);
-      if (isNew) {
-        tw.found.push(res); twSave();
-        twBanner(tt("newItem").replace("{n}", twItem(res).e + " " + twName(res)));
-        if (!playMuted) [523, 659, 784, 1047].forEach((f, i) => oTone(f, orchCtx().currentTime + i * 0.07, 0.28, "triangle", 0.1));
-        if (tw.found.length - TW_START.length >= 15) unlock("alchemist");
-      } else if (!playMuted) oTone(660, orchCtx().currentTime, 0.12, "triangle", 0.08);
-      tw.cur = res;
-      tw.slots = [res];
-      tw.newest = isNew ? res : null;
-      twPaintAll();
-      setTimeout(() => { tw.slots = []; tw.lock = false; tw.newest = null; twPaintCraft(); twPaintInv(); }, 1100);
-    }, 260);
-  }
+  const pt = ([x, y]) => `${x + TW_W / 2},${H - y}`;
+  const d = "M" + left.map(pt).join(" L") + " L" + right.reverse().map(pt).join(" L") + " Z";
+  const ticks = TW_TIERS.filter(([m]) => m > 0).map(([m]) => {
+    const y = H - m * TW_K;
+    return `<line x1="0" x2="${TW_W}" y1="${y}" y2="${y}" class="tw__tick"/><text x="8" y="${y - 6}" class="tw__ticklabel">${m} m</text>`;
+  }).join("");
+  return `<path d="${d}" class="tw__planpath"/>${ticks}<text x="${TW_W / 2}" y="22" text-anchor="middle" class="tw__ticklabel">☁ ${Math.round(H / TW_K)} m ☁</text>`;
 }
 
 /* ---- the tower ---- */
@@ -164,18 +148,23 @@ function twStable(list) { // lowest joint that does not hold: returns the index 
   }
   return -1;
 }
+const twFits = (it, x) => Math.abs(x) + it.w / 2 <= twHalfWidth(twHeight()) + 12; // inside the blueprint at this height
 function twDrop() {
   if (tw.won) return;
   const it = twItem(tw.cur), top = tw.tower[tw.tower.length - 1], px = Math.round(tw.x);
+  if (!twFits(it, px)) { // the blueprint says no
+    twBanner(tt("outside"), 1800);
+    if (!playMuted) oTone(260, orchCtx().currentTime, 0.2, "sawtooth", 0.05, 150);
+    return;
+  }
   const piece = { id: tw.cur, x: px, w: it.w, h: it.h, g: it.g, m: it.w * it.h / 1000, e: it.e };
-  if (top && Math.abs(px - top.x) >= (piece.w + top.w) / 2 - 4) { // not even touching
-    twBanner(tt("miss"));
-    if (!playMuted) oTone(300, orchCtx().currentTime, 0.25, "sawtooth", 0.05, 120);
+  if (top && Math.abs(px - top.x) >= (piece.w + top.w) / 2 - 4) { // not even touching the tower
+    twBanner(tt("outside"), 1800);
     twFall([{ ...piece, y: twHeight() + 40 }]);
     return;
   }
   tw.tower.push(piece);
-  if (!playMuted) { ORCH_VOICE.blob(orchCtx().currentTime + 0.12); oTone(180 + Math.min(300, twHeight() / 4), orchCtx().currentTime + 0.1, 0.1, "triangle", 0.08); }
+  if (!playMuted) { ORCH_VOICE.blob(orchCtx().currentTime + 0.12); oTone(180 + Math.min(300, twHeight() / 8), orchCtx().currentTime + 0.1, 0.1, "triangle", 0.08); }
   const bad = twStable(tw.tower);
   if (bad >= 0) {
     const lost = tw.tower.splice(bad + 1);
@@ -187,29 +176,56 @@ function twDrop() {
       if (!playMuted) [300, 240, 190, 140].forEach((f, i) => oTone(f, orchCtx().currentTime + i * 0.09, 0.3, "sawtooth", 0.06, f * 0.6));
       twFall(falling);
       twPaintAll();
+      twLanguage();
     }, 260);
     return;
   }
   twPaintAll(true);
-  const meters = Math.round(twHeight() / 10);
-  for (const at of [25, 50, 75]) if (meters >= at && !tw.fired[at]) {
-    tw.fired[at] = true; twBanner(tt("events")[at]);
-    if (at === 50) { const c = document.getElementById("twCloud"); if (c) { c.classList.remove("is-on"); void c.offsetWidth; c.classList.add("is-on"); } }
-  }
-  if (twHeight() > tw.best * 10) { tw.best = Math.round(twHeight() / 10); twSave(); }
+  const m = twMeters();
+  if (m > tw.peak) tw.peak = m;
+  twUnlock();
+  if (m >= 500 && !tw.fired.cloud) { tw.fired.cloud = true; const c = document.getElementById("twCloud"); if (c) { c.classList.remove("is-on"); void c.offsetWidth; c.classList.add("is-on"); } }
+  if (m > tw.best) { tw.best = m; twSaveBest(); }
   if (twHeight() >= TW_GOAL) twWin();
+  setTimeout(twLanguage, 380);
+}
+function twUnlock() { // stranger material the higher you get
+  TW_TIERS.forEach(([at, ids], i) => {
+    if (at === 0 || tw.peak < at || tw.fired["t" + i]) return;
+    tw.fired["t" + i] = true;
+    tw.newest = ids;
+    twBanner(tt("unlock").replace("{n}", ids.map((id) => twItem(id).e + " " + twName(id)).join(", ")), 4200);
+    if (!playMuted) [523, 659, 784].forEach((f, k) => oTone(f, orchCtx().currentTime + k * 0.08, 0.25, "triangle", 0.1));
+    twPaintInv();
+  });
+}
+function twLanguage() { // confusion of tongues: the page speaks another language at 1000 m, 1100 m, …
+  twPatchTexts();
+  let l = null;
+  TW_BABEL.forEach(([at, lg]) => { if (twMeters() >= at) l = lg; });
+  if (l === tw.babel) return;
+  tw.babel = l; babelLang = l;
+  applyShell();
+  renderPlay();
+  if (l) {
+    twBanner(tt("tongues"), 4200);
+    if (!playMuted) [196, 233, 175, 262].forEach((f, i) => oTone(f, orchCtx().currentTime + i * 0.12, 0.3, "sawtooth", 0.05));
+  }
 }
 function twWin() {
   tw.won = true;
   twBanner(tt("won"), 6000);
-  document.getElementById("twStage")?.classList.add("is-won");
+  const st = document.getElementById("twStage");
+  if (st) st.classList.add("is-won");
   if (!playMuted) [262, 330, 392, 523, 659, 784, 1047].forEach((f, i) => oTone(f, orchCtx().currentTime + i * 0.1, 0.5, "triangle", 0.11));
   unlock("babel");
   twPaintAll();
 }
 function twReset() {
-  tw.tower = []; tw.fired = {}; tw.won = false;
-  document.getElementById("twStage")?.classList.remove("is-won");
+  tw.tower = []; tw.fired = {}; tw.won = false; tw.peak = 0; tw.cur = "brick"; tw.newest = [];
+  const st = document.getElementById("twStage");
+  if (st) st.classList.remove("is-won");
+  if (tw.babel) { tw.babel = null; babelLang = null; applyShell(); renderPlay(); return; }
   twPaintAll();
 }
 function twFall(list) { // pieces that slide off tumble away and fade
@@ -225,17 +241,19 @@ function twFall(list) { // pieces that slide off tumble away and fade
   });
 }
 
-/* ---- drawing ---- */
+/* ---- drawing: the things themselves, no coloured tiles ---- */
+function twFace(it) { // a wide piece is a row of the same thing, so a wall looks like a wall
+  const n = twClamp(Math.round(it.w / it.h), 1, 5), size = Math.min(it.h * 0.95, it.w / n * 0.95);
+  return `<span style="font-size:${size * tw.u}px">${it.e}</span>`.repeat(n);
+}
 function twPieceEl(p, y) {
-  const el = document.createElement("div");
-  const u = tw.u;
+  const el = document.createElement("div"), u = tw.u;
   el.className = "tw__piece";
-  el.style.cssText = `width:${p.w * u}px;height:${p.h * u}px;left:${(TW_W / 2 + p.x - p.w / 2) * u}px;bottom:${y * u}px;` +
-    `background:hsl(${twHue(p.id)} 55% 60%);font-size:${Math.max(14, Math.min(p.h, p.w) * 0.72) * u}px`;
-  el.textContent = p.e;
+  el.style.cssText = `width:${p.w * u}px;height:${p.h * u}px;left:${(TW_W / 2 + p.x - p.w / 2) * u}px;bottom:${y * u}px`;
+  el.innerHTML = twFace(p);
   return el;
 }
-function twCamera() { return Math.max(0, twHeight() - 170); }
+const twCamera = () => Math.max(0, twHeight() - 170);
 function twPaintTower(animateTop) {
   const world = document.getElementById("twTower");
   if (!world) return;
@@ -247,9 +265,10 @@ function twPaintTower(animateTop) {
     world.appendChild(el);
     y += p.h;
   });
-  const worldEl = document.getElementById("twWorld");
-  worldEl.style.bottom = TW_GROUND * tw.u + "px"; // the ground strip stays visible below the first piece
-  worldEl.style.transform = `translateY(${twCamera() * tw.u}px)`;
+  const worldEl = document.getElementById("twWorld"), plan = document.getElementById("twPlan"), u = tw.u;
+  worldEl.style.bottom = TW_GROUND * u + "px";
+  worldEl.style.transform = `translateY(${twCamera() * u}px)`;
+  plan.style.height = TW_GOAL * u + "px";
   // sway: the closer a joint is to giving way, the more the tower leans and wobbles
   let risk = 0;
   for (let i = 0; i < tw.tower.length - 1; i++) {
@@ -258,38 +277,26 @@ function twPaintTower(animateTop) {
     risk = Math.max(risk, Math.abs(mx / m - tw.tower[i].x) / (tw.tower[i].w / 2 * tw.tower[i].g));
   }
   const stage = document.getElementById("twStage");
-  stage.style.setProperty("--sway", (risk * 2.4 + twHeight() / TW_GOAL * 0.8).toFixed(2) + "deg");
+  stage.style.setProperty("--sway", (risk * 2.2 + twHeight() / TW_GOAL * 0.7).toFixed(2) + "deg");
   stage.style.setProperty("--r", Math.min(1, twHeight() / TW_GOAL).toFixed(3));
 }
 function twPaintHud() {
   const hud = document.getElementById("twHud");
-  if (hud) hud.innerHTML = `<span>${esc(tt("height"))}: <b>${Math.round(twHeight() / 10)} m</b></span><span>${esc(tt("pieces"))}: <b>${tw.tower.length}</b></span><span>${esc(tt("best"))}: <b>${tw.best} m</b></span>`;
-  const cur = twItem(tw.cur);
-  const wi = cur.w < 60 ? 0 : cur.w < 100 ? 1 : 2, gi = cur.g < 0.55 ? 0 : cur.g < 0.8 ? 1 : 2;
+  if (hud) hud.innerHTML = `<span>${esc(tt("height"))}: <b>${twMeters()} m</b></span><span>${esc(tt("pieces"))}: <b>${tw.tower.length}</b></span><span>${esc(tt("best"))}: <b>${tw.best} m</b></span>`;
+  const cur = twItem(tw.cur), wi = cur.w < 60 ? 0 : cur.w < 100 ? 1 : 2, gi = cur.g < 0.55 ? 0 : cur.g < 0.8 ? 1 : 2;
   document.getElementById("twCur").innerHTML = `${esc(tt("current"))}: <b>${cur.e} ${esc(twName(tw.cur))}</b> · ${esc(tt("widths")[wi])} · ${esc(tt("grips")[gi])}`;
-}
-function twPaintCraft() {
-  const box = document.getElementById("twSlots");
-  if (!box) return;
-  const slot = (id) => id ? `<span class="tw__slot is-full">${twItem(id).e}</span>` : `<span class="tw__slot"></span>`;
-  box.innerHTML = tw.slots.length === 1 && tw.lock
-    ? `${slot(tw.slots[0])}<span class="tw__newlabel">${esc(twName(tw.slots[0]))}${tw.newest ? " ✨" : ""}</span>`
-    : `${slot(tw.slots[0])}<span class="tw__plus">+</span>${slot(tw.slots[1])}<span class="tw__plus">=</span><span class="tw__slot tw__slot--res">?</span>`;
 }
 function twPaintInv() {
   const inv = document.getElementById("twInv");
   if (!inv) return;
-  inv.innerHTML = tw.found.map((id) => {
+  const room = (twHalfWidth(twHeight()) + 12) * 2; // what still fits at the current height
+  const next = TW_TIERS.find(([m]) => m > tw.peak);
+  inv.innerHTML = twAvailable().map((id) => {
     const it = twItem(id);
-    return `<button type="button" class="tw__chip${id === tw.cur && tw.mode === "build" ? " is-current" : ""}${id === tw.newest ? " is-newest" : ""}" data-id="${esc(id)}"><span>${it.e}</span> ${esc(twName(id))}</button>`;
-  }).join("");
-  document.getElementById("twCount").textContent = `${tw.found.length}`;
+    return `<button type="button" class="tw__chip${id === tw.cur ? " is-current" : ""}${tw.newest.includes(id) ? " is-newest" : ""}${it.w > room ? " is-toowide" : ""}" data-id="${id}"><span>${it.e}</span> ${esc(twName(id))}</button>`;
+  }).join("") + (next ? `<p class="tw__next">🔒 ${esc(tt("next").replace("{m}", next[0]))}</p>` : "");
 }
-function twPaintAll(animateTop) {
-  twPaintTower(animateTop); twPaintHud(); twPaintCraft(); twPaintInv();
-  document.querySelectorAll(".tw__tab").forEach((b) => b.setAttribute("aria-selected", String(b.dataset.mode === tw.mode)));
-  document.getElementById("twCraftBox").hidden = tw.mode !== "craft";
-}
+function twPaintAll(animateTop) { twPaintTower(animateTop); twPaintHud(); twPaintInv(); }
 function twBanner(text, ms = 3200) {
   const b = document.getElementById("twBanner");
   if (!b) return;
@@ -298,21 +305,23 @@ function twBanner(text, ms = 3200) {
 }
 
 /* ---- placing pieces yourself: drag from the list onto the tower, or press on the stage and slide ---- */
-function twShowPreview(clientX) { // the piece hovers where it would land
+function twShowPreview(clientX) { // the piece hovers where it would land; red when the blueprint does not allow it
   const stage = document.getElementById("twStage"), h = document.getElementById("twHover");
   if (!stage || !h || tw.won) return;
   const r = stage.getBoundingClientRect(), it = twItem(tw.cur), u = tw.u;
   tw.x = twClamp((clientX - r.left) / u - TW_W / 2, -(TW_W / 2 - 10), TW_W / 2 - 10);
   h.style.display = "";
   h.style.width = it.w * u + "px"; h.style.height = it.h * u + "px";
-  h.style.fontSize = Math.max(14, Math.min(it.h, it.w) * 0.72) * u + "px";
-  h.style.background = `hsl(${twHue(tw.cur)} 55% 60%)`;
+  h.innerHTML = twFace(it);
+  h.classList.toggle("is-bad", !twFits(it, tw.x));
   h.style.transform = `translate(${(TW_W / 2 + tw.x - it.w / 2) * u}px, ${-(TW_GROUND + twHeight() - twCamera() + 6) * u}px)`;
-  h.textContent = it.e;
 }
 function twHidePreview() { const h = document.getElementById("twHover"); if (h) h.style.display = "none"; }
 const twOverStage = (x, y) => { const r = document.getElementById("twStage").getBoundingClientRect(); return x >= r.left && x <= r.right && y >= r.top && y <= r.bottom; };
-function twStop() { tw.drag = null; }
+function twStop() { // leaving the game: the page speaks your language again
+  tw.pressing = false;
+  if (tw.babel) { tw.babel = null; babelLang = null; applyShell(); }
+}
 function twResize() {
   const s = document.getElementById("twStage");
   if (!s) return;
@@ -322,13 +331,17 @@ function twResize() {
 addEventListener("resize", () => { if (document.getElementById("twStage")) twResize(); });
 
 function renderTower() {
-  if (!tw.found.length) twLoad();
+  twPatchTexts();
+  if (!tw.best) tw.best = twBestSaved();
   playBody.innerHTML = `
     <div class="tw">
       <div class="tw__main">
         <div class="tw__stage" id="twStage" tabindex="0" role="application" aria-label="${esc(tt("stage"))}">
           <div class="tw__sky" aria-hidden="true"></div>
-          <div class="tw__world" id="twWorld" style="bottom:0"><div class="tw__tower" id="twTower"><div class="tw__ground"></div></div></div>
+          <div class="tw__world" id="twWorld" style="bottom:0">
+            <svg class="tw__plan" id="twPlan" viewBox="0 0 ${TW_W} ${TW_GOAL}" aria-hidden="true">${twPlanSVG()}</svg>
+            <div class="tw__tower" id="twTower"><div class="tw__ground"></div></div>
+          </div>
           <div class="tw__cloud" id="twCloud" aria-hidden="true">☁️</div>
           <div class="tw__piece tw__hover" id="twHover" aria-hidden="true" style="display:none"></div>
           <p class="tw__hud" id="twHud"></p>
@@ -340,12 +353,7 @@ function renderTower() {
         </div>
       </div>
       <div class="tw__side">
-        <div class="tw__tabs" role="tablist">
-          <button type="button" role="tab" class="tw__tab" data-mode="craft" aria-selected="true">${esc(tt("craft"))}</button>
-          <button type="button" role="tab" class="tw__tab" data-mode="build" aria-selected="false">${esc(tt("build"))}</button>
-        </div>
-        <div class="tw__craftbox" id="twCraftBox"><p class="tw__hint">${esc(tt("combine"))}</p><div class="tw__slots" id="twSlots"></div></div>
-        <h3 class="tw__invtitle">${esc(tt("discovered"))} <span id="twCount"></span> <span class="tw__draghint">· ${esc(tt("drag"))}</span></h3>
+        <h3 class="tw__invtitle">${esc(tt("material"))} <span class="tw__draghint">· ${esc(tt("drag"))}</span></h3>
         <div class="tw__inv" id="twInv"></div>
       </div>
     </div>`;
@@ -357,7 +365,7 @@ function renderTower() {
   /* the stage: the piece follows the mouse; press and slide on touch screens; let go to place it */
   stage.addEventListener("pointermove", (e) => { if (!tw.won && (e.pointerType === "mouse" || tw.pressing)) twShowPreview(e.clientX); });
   stage.addEventListener("pointerleave", () => { if (!tw.pressing) twHidePreview(); });
-  stage.addEventListener("pointerdown", (e) => { if (tw.won) return; tw.pressing = true; stage.setPointerCapture?.(e.pointerId); twShowPreview(e.clientX); });
+  stage.addEventListener("pointerdown", (e) => { if (tw.won) return; tw.pressing = true; if (stage.setPointerCapture) stage.setPointerCapture(e.pointerId); twShowPreview(e.clientX); });
   stage.addEventListener("pointerup", (e) => {
     if (!tw.pressing) return;
     tw.pressing = false;
@@ -371,25 +379,30 @@ function renderTower() {
       e.preventDefault();
       const r = stage.getBoundingClientRect();
       twShowPreview(r.left + (TW_W / 2 + tw.x + (e.key === "ArrowLeft" ? -14 : 14)) * tw.u);
-    } else if (e.key === " " || e.key === "Enter") { e.preventDefault(); if (document.getElementById("twHover").style.display === "none") twShowPreview(stage.getBoundingClientRect().left + stage.clientWidth / 2); twDrop(); }
+    } else if (e.key === " " || e.key === "Enter") {
+      e.preventDefault();
+      if (document.getElementById("twHover").style.display === "none") twShowPreview(stage.getBoundingClientRect().left + stage.clientWidth / 2);
+      twDrop();
+    }
   });
 
-  /* the list: tap to craft or select; drag a piece onto the stage to build with it */
+  /* the list: tap to select; drag a piece onto the stage to build with it */
   const inv = document.getElementById("twInv");
   inv.addEventListener("pointerdown", (e) => {
     const chip = e.target.closest(".tw__chip");
     if (!chip) return;
     const id = chip.dataset.id, sx = e.clientX, sy = e.clientY;
     let ghost = null;
+    const select = () => { tw.cur = id; tw.newest = []; twPaintHud(); twPaintInv(); if (!playMuted) ORCH_VOICE.octo(orchCtx().currentTime + 0.01, 523); };
     const move = (ev) => {
       if (!ghost && Math.hypot(ev.clientX - sx, ev.clientY - sy) > 8) {
         const it = twItem(id);
         ghost = document.createElement("div");
         ghost.className = "tw__piece tw__dragghost";
-        ghost.style.cssText = `width:${it.w * tw.u}px;height:${it.h * tw.u}px;background:hsl(${twHue(id)} 55% 60%);font-size:${Math.max(14, Math.min(it.h, it.w) * 0.72) * tw.u}px`;
-        ghost.textContent = it.e;
+        ghost.style.cssText = `width:${it.w * tw.u}px;height:${it.h * tw.u}px`;
+        ghost.innerHTML = twFace(it);
         document.body.appendChild(ghost);
-        tw.cur = id; twPaintHud();
+        select();
       }
       if (ghost) {
         ghost.style.left = ev.clientX + "px"; ghost.style.top = ev.clientY + "px";
@@ -403,11 +416,10 @@ function renderTower() {
       if (ghost) {
         ghost.remove();
         if (twOverStage(ev.clientX, ev.clientY)) { twShowPreview(ev.clientX); twDrop(); if (ev.pointerType !== "mouse") twHidePreview(); }
-        else { twHidePreview(); twPaintAll(); }
-      } else twPick(id); // a plain tap
+        else twHidePreview();
+      } else select(); // a plain tap
     };
     addEventListener("pointermove", move); addEventListener("pointerup", up); addEventListener("pointercancel", up);
   });
-  inv.addEventListener("click", (e) => { const c = e.target.closest(".tw__chip"); if (c && e.detail === 0) twPick(c.dataset.id); }); // keyboard
-  playBody.querySelectorAll(".tw__tab").forEach((b) => b.addEventListener("click", () => { tw.mode = b.dataset.mode; sfx.click(); twPaintAll(); }));
+  inv.addEventListener("click", (e) => { const c = e.target.closest(".tw__chip"); if (c && e.detail === 0) { tw.cur = c.dataset.id; tw.newest = []; twPaintHud(); twPaintInv(); } }); // keyboard
 }

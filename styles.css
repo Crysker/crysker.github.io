@@ -1187,15 +1187,14 @@ body.view-all .p-card__play, body.view-all .p-card__video { display: none; }
 .tw__tower { position: absolute; left: 0; right: 0; bottom: 0; height: 0; transform-origin: 50% 100%; animation: tw-sway 2.6s ease-in-out infinite alternate; }
 @keyframes tw-sway { from { transform: rotate(calc(var(--sway) * -1)); } to { transform: rotate(var(--sway)); } }
 .tw__ground { position: absolute; left: -10%; right: -10%; bottom: -80px; height: 80px; background: color-mix(in srgb, var(--ink-soft) 28%, var(--surface-2)); border-top: 3px solid var(--ink-soft); }
-.tw__piece {
-  position: absolute; display: grid; place-items: center; border-radius: 10px; line-height: 1; box-shadow: inset 0 -3px 0 rgba(0,0,0,.18), 0 2px 6px rgba(0,0,0,.25);
-  border: 2px solid rgba(255,255,255,.35); pointer-events: none;
-}
+.tw__piece { position: absolute; display: flex; align-items: center; justify-content: center; line-height: 1; pointer-events: none; filter: drop-shadow(0 3px 3px rgba(0,0,0,.35)); }
+.tw__piece span { display: block; line-height: 1; }
 .tw__piece.is-new { animation: tw-land .25s ease-in; }
 @keyframes tw-land { from { transform: translateY(-46px); opacity: .7; } to { transform: none; opacity: 1; } }
 .tw__piece.is-falling { transition: transform 1.1s ease-in, opacity 1.1s ease-in; animation: tw-fall 1.1s ease-in forwards; }
 @keyframes tw-fall { to { transform: translate(var(--dx), 420px) rotate(var(--rot)); opacity: 0; } }
-.tw__hover { left: 0; bottom: 0; outline: 2px dashed color-mix(in srgb, var(--ink) 40%, transparent); outline-offset: 3px; }
+.tw__hover { left: 0; bottom: 0; outline: 2px dashed color-mix(in srgb, var(--turq) 70%, transparent); outline-offset: 3px; border-radius: 8px; }
+.tw__hover.is-bad { outline-color: #ef4444; opacity: .55; }
 .tw__cloud { position: absolute; top: 18%; left: -20%; font-size: 64px; opacity: 0; pointer-events: none; }
 .tw__cloud.is-on { animation: tw-cloud 6s linear; }
 @keyframes tw-cloud { 0% { left: -20%; opacity: .9; } 100% { left: 110%; opacity: .9; } }
@@ -1239,3 +1238,12 @@ body.view-all .p-card__play, body.view-all .p-card__video { display: none; }
 .tw__hover { opacity: .78; }
 .tw__draghint { text-transform: none; letter-spacing: 0; font-weight: 600; color: var(--ink-soft); }
 .tw__stage { cursor: crosshair; }
+
+/* the blueprint */
+.tw__plan { position: absolute; left: 0; bottom: 0; width: 100%; pointer-events: none; overflow: visible; }
+.tw__planpath { fill: color-mix(in srgb, var(--turq) 8%, transparent); stroke: var(--turq); stroke-width: 2; stroke-dasharray: 9 7; stroke-linejoin: round; }
+.tw__tick { stroke: color-mix(in srgb, var(--ink-soft) 55%, transparent); stroke-width: 1; stroke-dasharray: 3 6; }
+.tw__ticklabel { fill: var(--ink-soft); font: 700 11px var(--sans); }
+.tw__chip.is-toowide { opacity: .4; }
+.tw__next { flex-basis: 100%; margin: 6px 0 0; font-size: 13px; color: var(--ink-soft); }
+.tw__chip.is-newest { border-color: var(--orange); animation: orch-hop .4s ease-out; }
