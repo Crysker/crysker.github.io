@@ -222,13 +222,11 @@ html[lang="de"] .lang [data-lang="de"] { background: var(--ink); color: var(--bg
 }
 .hero__lead { max-width: 46ch; margin: 32px 0 24px; font-size: 19px; color: var(--ink-soft); }
 
-.hero__contact { margin-top: 10px; font: 600 15px var(--sans); color: var(--turq-text); text-decoration: none; }
-.hero__contact:hover { text-decoration: underline; text-underline-offset: 4px; }
 @media (max-width: 700px) {
   /* Phones: a compact header (small photo next to the title) so the first project is close to the top of the screen */
   .hero {
     display: grid; grid-template-columns: 104px minmax(0, 1fr); column-gap: 16px; align-items: center; justify-items: start; text-align: left;
-    grid-template-areas: "hello hello" "name name" "photo title" "lead lead" "more more";
+    grid-template-areas: "hello hello" "name name" "photo title" "lead lead";
     min-height: 0; padding: 36px 16px 8px; width: min(1100px, calc(100% - 32px)); margin: 0 auto;
   }
   .hero__hello { grid-area: hello; font-size: 17px; }
@@ -238,7 +236,6 @@ html[lang="de"] .lang [data-lang="de"] { background: var(--ink); color: var(--bg
   .hero__photo { border-radius: 22px; }
   .hero__sig { width: 44px; height: 50px; right: -14px; bottom: -12px; }
   .hero__lead { grid-area: lead; margin: 18px 0 0; font-size: 17px; }
-  .hero__contact { grid-area: more; display: inline-flex; align-items: center; min-height: 44px; margin-top: 0; }
 }
 /* Desktop: text + buttons left, photo right – everything a recruiter needs fits on the first screen */
 @media (min-width: 960px) {
@@ -249,8 +246,7 @@ html[lang="de"] .lang [data-lang="de"] { background: var(--ink); color: var(--bg
       "hello  photo"
       "name   photo"
       "title  photo"
-      "lead   photo"
-      "more   photo";
+      "lead   photo";
     justify-items: start; text-align: left;
     width: min(1100px, calc(100% - 32px)); margin: 0 auto;
     min-height: min(92vh, 860px); padding: 48px 0 32px;
@@ -261,11 +257,10 @@ html[lang="de"] .lang [data-lang="de"] { background: var(--ink); color: var(--bg
   .hero__title { grid-area: title; }
   .hero__portrait { grid-area: photo; align-self: center; justify-self: center; width: min(320px, 100%); }
   .hero__lead { grid-area: lead; margin: 20px 0 0; }
-  .hero__contact { grid-area: more; }
 }
 
 /* ============ Sections ============ */
-.section { width: min(1100px, calc(100% - 32px)); margin: 0 auto; padding: 88px 0 24px; }
+.section { width: min(1100px, calc(100% - 32px)); margin: 0 auto; padding: 64px 0 16px; } /* the gap between two sections is always 80px (64px on phones) */
 /* one size for every section heading (Projects, Stack & Skills, Experience …) */
 .section__title {
   font: 700 clamp(32px, 4.4vw, 44px)/1.1 var(--serif); letter-spacing: -.03em; margin-bottom: 14px;
@@ -943,7 +938,7 @@ button.ptile:hover, button.ptile:focus-visible { transform: translateY(-4px) rot
   .hero__title { margin-top: 6px; }
   .hero__lead { margin: 14px 0 0; font-size: 17px; }
   .hero__portrait { width: min(200px, 100%); }
-  #projects.section { padding-top: 8px; }
+  #projects.section { padding-top: 24px; }
   #projects .section__title { margin-bottom: 8px; }
   .themes { margin: 0 0 12px; }
   .p-card__body { padding-top: 12px; }
@@ -988,7 +983,7 @@ body.view-all #projects.section { padding-top: 110px; padding-bottom: 60px; } /*
   .footer a { display: inline-block; padding: 12px 6px; }
   .play__back, .play__close { width: 44px; height: 44px; }
 }
-@media (max-width: 760px) { .section { padding-top: 64px; } }
+@media (max-width: 760px) { .section { padding-top: 48px; } }
 
 /* ============ Skills: tighter on phones ============ */
 @media (max-width: 760px) {
