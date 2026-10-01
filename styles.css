@@ -643,6 +643,12 @@ button.ptile:hover, button.ptile:focus-visible { transform: translateY(-4px) rot
   background: var(--orange); border: 4px solid var(--bg);
 }
 .timeline li.timeline__edu::before { background: var(--blue); border-radius: 6px; }
+/* labelled dividers: work experience / education */
+.timeline li.timeline__divider { display: flex; align-items: center; gap: 14px; padding: 0 0 22px 12px; }
+.timeline li.timeline__divider::before { display: none; }
+.timeline li.timeline__divider::after { content: ""; flex: 1; height: 1px; background: var(--line); }
+.timeline__divider span { font: 800 12px var(--sans); letter-spacing: .08em; text-transform: uppercase; color: var(--ink-soft); }
+.timeline li.timeline__divider ~ li.timeline__divider { padding-top: 14px; }
 .timeline__date { font-size: 13px; font-weight: 800; color: var(--ink-soft); letter-spacing: .04em; }
 .timeline h3 { font: 700 22px var(--serif); margin: 2px 0 6px; }
 .timeline p { color: var(--ink-soft); max-width: 70ch; margin: 0; }
@@ -678,17 +684,17 @@ button.ptile:hover, button.ptile:focus-visible { transform: translateY(-4px) rot
 /* Character sheet – RPG stats screen with skill points */
 .sheet {
   grid-column: 1 / -1; padding: 24px; border-radius: var(--radius);
-  background: var(--surface); border: 2px solid var(--turq); box-shadow: 5px 5px 0 var(--orange);
+  background: var(--surface); border: 1px solid var(--line);
 }
-.sheet__head { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; padding-bottom: 18px; margin-bottom: 18px; border-bottom: 1px dashed var(--line); }
-.sheet__avatar { flex: none; width: 60px; height: 60px; border-radius: 16px; overflow: hidden; border: 2px solid var(--turq); background: var(--surface-2); }
+.sheet__head { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; padding-bottom: 18px; margin-bottom: 18px; border-bottom: 1px solid var(--line); }
+.sheet__avatar { flex: none; width: 60px; height: 60px; border-radius: 16px; overflow: hidden; border: 1px solid var(--line); background: var(--surface-2); }
 .sheet__avatar img { width: 100%; height: 100%; object-fit: cover; transform: scale(1.65); transform-origin: 62% 46%; }
-.sheet__kicker { display: block; font: 800 12px var(--sans); text-transform: uppercase; letter-spacing: .1em; color: var(--turq-text); }
+.sheet__kicker { display: block; font: 800 12px var(--sans); text-transform: uppercase; letter-spacing: .1em; color: var(--ink-soft); }
 .sheet__name { display: block; font: 700 24px/1.15 var(--serif); }
-.sheet__class { font-size: 14px; font-weight: 700; color: var(--orange-text); }
+.sheet__class { font-size: 14px; font-weight: 600; color: var(--ink-soft); }
 .sheet__note { margin-left: auto; font-size: 13px; font-style: italic; color: var(--ink-soft); }
 .sheet__cols { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px 32px; }
-.sheet__col h3 { font: 800 12px var(--sans); text-transform: uppercase; letter-spacing: .08em; color: var(--turq-text); margin-bottom: 6px; }
+.sheet__col h3 { font: 800 12px var(--sans); text-transform: uppercase; letter-spacing: .08em; color: var(--ink-soft); margin-bottom: 6px; }
 .sheet__col ul { list-style: none; margin: 0; padding: 0; }
 .stat { display: grid; grid-template-columns: 30px minmax(0, 1fr) auto; align-items: center; gap: 10px; padding: 7px 0; }
 .stat__icon {
@@ -701,9 +707,7 @@ button.ptile:hover, button.ptile:focus-visible { transform: translateY(-4px) rot
 /* diamond pips, filled ones glow turquoise */
 .pips { display: flex; gap: 7px; }
 .pip { display: block; width: 11px; height: 11px; rotate: 45deg; border-radius: 2px; border: 2px solid var(--line); }
-.pip.is-on { background: var(--turq); border-color: var(--turq); box-shadow: 0 0 8px color-mix(in srgb, var(--turq) 55%, transparent); }
-.stack.is-in .pips:not(.pips--mini) .pip.is-on { animation: pip-in .35s cubic-bezier(.3, 1.6, .5, 1) backwards; animation-delay: calc(var(--i) * 90ms + .2s); }
-@keyframes pip-in { from { scale: 0; } }
+.pip.is-on { background: var(--turq); border-color: var(--turq); }
 /* small diamonds in the legend */
 .pips--mini { gap: 4px; }
 .pips--mini .pip { width: 7px; height: 7px; border-width: 1px; box-shadow: none; }
@@ -713,7 +717,7 @@ button.ptile:hover, button.ptile:focus-visible { transform: translateY(-4px) rot
   border-top: 1px dashed var(--line); font-size: 13px; font-weight: 700; color: var(--ink-soft);
 }
 .sheet__legend span { display: inline-flex; align-items: center; gap: 6px; }
-.sheet__legend em { font-style: normal; color: var(--turq-text); }
+.sheet__legend em { font-style: normal; color: var(--ink-soft); }
 @media (max-width: 860px) { .sheet__cols { grid-template-columns: 1fr; } .sheet__note { margin-left: 0; width: 100%; } }
 /* Contact */
 .contact { text-align: center; padding-bottom: 72px; }
