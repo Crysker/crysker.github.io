@@ -1025,12 +1025,35 @@ body.view-all .p-card__play, body.view-all .p-card__video { display: none; }
 }
 
 /* ============ Tiny Orchestra ============ */
+/* the orchestra uses the whole page: no card around it */
+.play-card.is-wide { width: min(1100px, 100%); background: none; border: 0; box-shadow: none; overflow: visible; }
+.play-card.is-wide .play__bar { padding: 0 0 8px; border: 0; background: none; }
+.play-card.is-wide .play__bar h1 { font-size: clamp(30px, 5vw, 40px); }
+.play-card.is-wide .play__body { padding: 0; }
+.play-card.is-wide .crumbs { padding: 0 0 10px; }
+
+.orch { display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; }
+.orch__intro { order: 0; margin: 0; }
+.orch__stagewrap { order: 1; position: relative; }
+.orch__side { display: contents; }
+.orch__tray { order: 2; }
+.orch__bar { order: 3; }
+.orch__foundbox { order: 4; }
+@media (min-width: 900px) {
+  .orch { grid-template-columns: minmax(0, 1fr) 340px; grid-template-areas: "intro intro" "stage side" "bar side"; grid-template-rows: auto auto 1fr; gap: 16px 28px; align-items: start; }
+  .orch__intro { grid-area: intro; }
+  .orch__stagewrap { grid-area: stage; }
+  .orch__bar { grid-area: bar; }
+  .orch__side { grid-area: side; display: flex; flex-direction: column; gap: 18px; }
+  .orch__side .orch__tray { order: 0; grid-template-columns: repeat(3, 1fr); margin-top: 0; }
+  .orch__foundbox { order: 1; }
+}
 .orch__stage {
-  display: grid; grid-template-columns: repeat(8, 1fr); gap: 5px; padding: 8px; border-radius: 18px;
+  display: grid; grid-template-columns: repeat(8, 1fr); gap: 7px; padding: 12px; border-radius: 22px;
   background: var(--surface-2); border: 1px solid var(--line);
 }
 .orch__cell {
-  position: relative; aspect-ratio: 1; padding: 3px; border-radius: 12px; cursor: pointer;
+  position: relative; aspect-ratio: 1; padding: 4px; border-radius: 14px; cursor: pointer;
   border: 1.5px dashed var(--line); background: transparent; color: inherit; transition: background .15s, border-color .15s;
 }
 .orch__cell.is-beat { border-color: color-mix(in srgb, var(--ink-soft) 45%, transparent); }
@@ -1040,8 +1063,17 @@ body.view-all .p-card__play, body.view-all .p-card__video { display: none; }
 .orch__cell.is-now { background: var(--turq-soft); border-color: var(--turq); }
 .orch__cell svg { display: block; width: 100%; height: 100%; }
 .orch__cell.is-hit svg, .orch__face.is-hit { animation: orch-hop .22s ease-out; }
+.orch__cell.is-dance svg { animation: orch-dance .55s ease-in-out infinite alternate; }
+.orch__cell.is-dance.is-hit svg { animation: orch-dance .55s ease-in-out infinite alternate, orch-hop .22s ease-out; }
 @keyframes orch-hop { 0% { transform: scale(1); } 40% { transform: scale(1.22) translateY(-3px); } 100% { transform: scale(1); } }
-.orch__tray { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; margin-top: 12px; }
+@keyframes orch-dance { from { transform: rotate(-9deg) translateY(1px); } to { transform: rotate(9deg) translateY(-3px); } }
+.orch__banner {
+  position: absolute; left: 50%; top: 50%; translate: -50% -50%; margin: 0; padding: 12px 22px; border-radius: 999px; z-index: 3;
+  background: var(--turq); color: #062624; font: 700 17px var(--sans); white-space: nowrap; pointer-events: none;
+  opacity: 0; scale: .9; transition: opacity .3s, scale .3s; box-shadow: var(--shadow);
+}
+.orch__banner.is-on { opacity: 1; scale: 1; }
+.orch__tray { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; }
 .orch__pick {
   display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 8px 4px 7px; border-radius: 14px; cursor: grab; touch-action: none;
   border: 1.5px solid var(--line); background: var(--surface); color: var(--ink); font: inherit; user-select: none;
@@ -1053,8 +1085,14 @@ body.view-all .p-card__play, body.view-all .p-card__video { display: none; }
 .orch__face svg { display: block; width: 100%; height: 100%; }
 .orch__name { font: 700 13px var(--sans); }
 .orch__pick small { font: 600 11px var(--sans); color: var(--ink-soft); }
+.orch__foundbox { padding: 16px 18px; border-radius: 18px; background: var(--surface); border: 1px solid var(--line); }
+.orch__foundbox h3 { margin: 0 0 10px; font: 800 12px var(--sans); text-transform: uppercase; letter-spacing: .08em; color: var(--turq-text); }
+.orch__found { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.orch__found li { display: grid; gap: 1px; font-size: 13px; color: var(--ink-soft); }
+.orch__found b { font: 700 14px var(--sans); color: var(--ink-soft); }
+.orch__found .is-found b { color: var(--turq-text); }
 .orch__ghost { position: fixed; z-index: 100; width: 56px; height: 56px; margin: -28px 0 0 -28px; pointer-events: none; opacity: .92; filter: drop-shadow(0 6px 10px rgba(0,0,0,.35)); }
-.orch__bar { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-top: 14px; }
+.orch__bar { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
 .orch__go, .orch__clear {
   display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 10px 20px; border-radius: 999px; cursor: pointer;
   font: 700 15px var(--sans); border: 2px solid var(--ink); background: transparent; color: var(--ink);
@@ -1067,10 +1105,11 @@ body.view-all .p-card__play, body.view-all .p-card__video { display: none; }
 .orch__tempo input { flex: 1; min-width: 80px; accent-color: var(--turq); }
 .orch__tempo output { min-width: 3ch; text-align: right; color: var(--ink); font-variant-numeric: tabular-nums; }
 @media (max-width: 520px) {
-  .orch__stage { gap: 3px; padding: 6px; }
+  .orch__stage { gap: 3px; padding: 6px; border-radius: 16px; }
   .orch__cell { border-radius: 9px; padding: 2px; }
   .orch__tray { gap: 5px; }
   .orch__name { font-size: 12px; }
   .orch__pick small { display: none; }
+  .orch__banner { font-size: 15px; padding: 10px 16px; }
 }
-@media (prefers-reduced-motion: reduce) { .orch__cell.is-hit svg, .orch__face.is-hit { animation: none; } }
+@media (prefers-reduced-motion: reduce) { .orch__cell.is-hit svg, .orch__face.is-hit, .orch__cell.is-dance svg { animation: none; } }

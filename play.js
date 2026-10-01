@@ -145,6 +145,8 @@ function renderPlay() {
     (play.screen === "menu" ? `<li aria-current="page">${esc(pt("title"))}</li>`
       : `<li><a href="#" data-menu>${esc(pt("title"))}</a></li><li aria-current="page">${esc(play.screen === "orch" ? pt("g2") : pt("g1")[0])}</li>`) + "</ol>";
   document.querySelector(".play-card").classList.toggle("is-menu", play.screen === "menu");
+  document.querySelector(".play-card").classList.toggle("is-wide", play.screen === "orch"); // the orchestra uses the whole page
+  if (play.screen === "orch") document.getElementById("playTitle").textContent = pt("g2");
   if (play.screen !== "orch") orchStop();
   if (play.screen === "menu") renderMenu();
   else if (play.screen === "orch") renderOrchestra();
@@ -392,7 +394,7 @@ function showFromHash() {
   const h = location.hash, dlg = document.getElementById("game");
   if (h === "#reshaptcha") { if (!dlg.open) { play = { screen: "menu" }; renderPlay(); startCaptcha(); } return; }
   if (dlg.open) dlg.close();
-  if (h === "#orchestra") play = { screen: "orch" };
+  if (h.startsWith("#orchestra")) play = { screen: "orch" };
   else if (h === "#guess") { if (play.screen !== "q" && play.screen !== "end") { startGame(); return; } }
   else play = { screen: "menu" };
   renderPlay();

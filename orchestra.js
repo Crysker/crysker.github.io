@@ -11,14 +11,36 @@ const ORCH_T = {
     play: "Play", pause: "Pause", clear: "Clear all", tempo: "Tempo", stage: "Stage",
     empty: "empty", row: "Row", beat: "beat", pick: "Creature",
     names: { blob: "Blobby", frog: "Froggo", bird: "Pip", ghost: "Boo", robot: "Bleep", octo: "Inky" },
-    sounds: { blob: "kick", frog: "bass", bird: "chirp", ghost: "pad", robot: "tick", octo: "pluck" }
+    sounds: { blob: "kick", frog: "bass", bird: "chirp", ghost: "pad", robot: "tick", octo: "pluck" },
+    found: "Discoveries", share: "Share my beat", copied: "Link copied", newFound: "Discovered: {n}!", creatures: "Creatures",
+    combos: {
+      frogs: ["Frog choir", "A choir needs many voices. How many frogs?"],
+      ghosts: ["Witching hour", "With enough ghosts it gets spooky."],
+      birds: ["Flock", "Four birds, one sky: all in one row."],
+      robots: ["Robot parade", "Robots march in step: every other beat."],
+      octo: ["Inky's stairs", "Inky climbs the stage, step by step."],
+      floor: ["Four on the floor", "Four kicks along the bottom, on every other beat."],
+      all: ["Full band", "All six at once."],
+      wall: ["Wall of sound", "Not a single gap."]
+    }
   },
   de: {
     toy: "Ein Spielzeug", hint: "Such dir ein Wesen aus und tippe dann auf die Bühne. Ziehen geht auch. Tippe ein gesetztes Wesen noch einmal an, um es zu entfernen.",
     play: "Abspielen", pause: "Pause", clear: "Alles leeren", tempo: "Tempo", stage: "Bühne",
     empty: "leer", row: "Reihe", beat: "Schlag", pick: "Wesen",
     names: { blob: "Blobby", frog: "Froggo", bird: "Pip", ghost: "Boo", robot: "Bleep", octo: "Inky" },
-    sounds: { blob: "Bassdrum", frog: "Bass", bird: "Zwitschern", ghost: "Klangteppich", robot: "Tick", octo: "Zupfen" }
+    sounds: { blob: "Bassdrum", frog: "Bass", bird: "Zwitschern", ghost: "Klangteppich", robot: "Tick", octo: "Zupfen" },
+    found: "Entdeckungen", share: "Meinen Beat teilen", copied: "Link kopiert", newFound: "Neu entdeckt: {n}!", creatures: "Wesen",
+    combos: {
+      frogs: ["Froschchor", "Ein Chor braucht viele Stimmen. Wie viele Frösche?"],
+      ghosts: ["Geisterstunde", "Mit genug Geistern wird es unheimlich."],
+      birds: ["Vogelschwarm", "Vier Vögel, ein Himmel: alle in einer Reihe."],
+      robots: ["Roboter-Parade", "Roboter marschieren im Gleichschritt: jeden zweiten Schlag."],
+      octo: ["Inkys Treppe", "Inky steigt die Bühne hinauf, Stufe für Stufe."],
+      floor: ["Vier auf den Boden", "Vier Bassdrums ganz unten, auf jedem zweiten Schlag."],
+      all: ["Volle Besetzung", "Alle sechs auf einmal."],
+      wall: ["Klangwand", "Keine einzige Lücke."]
+    }
   }
 };
 const ot = (k) => (ORCH_T[lang] || ORCH_T.en)[k];
@@ -78,9 +100,36 @@ const ORCH_VOICE = {
   octo: (t, f) => oTone(f, t, 0.32, "triangle", 0.14, f * 0.99)
 };
 
+/* ---- secret combinations: find them by trying things; each one is a little reward ---- */
+const orchCells = (g, id) => { const out = []; g.forEach((row, r) => row.forEach((v, c) => { if (v === id) out.push([r, c]); })); return out; };
+const orchFilled = (g) => { const out = []; g.forEach((row, r) => row.forEach((v, c) => { if (v) out.push([r, c]); })); return out; };
+const ORCH_COMBOS = [
+  { id: "frogs", notes: [262, 330, 392, 523], find: (g) => { const f = orchCells(g, "frog"); return f.length >= 4 ? f : null; } },
+  { id: "ghosts", notes: [330, 392, 494, 659], find: (g) => { const f = orchCells(g, "ghost"); return f.length >= 4 ? f : null; } },
+  { id: "birds", notes: [659, 784, 988, 1319], find: (g) => {
+    for (let r = 0; r < ORCH_ROWS; r++) { const f = g[r].map((v, c) => v === "bird" ? [r, c] : null).filter(Boolean); if (f.length >= 4) return f; }
+    return null; } },
+  { id: "robots", notes: [294, 370, 440, 587], find: (g) => {
+    for (let r = 0; r < ORCH_ROWS; r++) for (const p of [0, 1]) {
+      const cols = [p, p + 2, p + 4, p + 6];
+      if (cols.every((c) => g[r][c] === "robot")) return cols.map((c) => [r, c]);
+    }
+    return null; } },
+  { id: "octo", notes: [262, 294, 330, 392, 440, 523], find: (g) => {
+    for (let c0 = 0; c0 + 3 < ORCH_COLS; c0++) for (const up of [false, true]) {
+      const line = [0, 1, 2, 3].map((i) => [up ? 3 - i : i, c0 + i]);
+      if (line.every(([r, c]) => g[r][c] === "octo")) return line;
+    }
+    return null; } },
+  { id: "floor", notes: [131, 165, 196, 262], find: (g) => [0, 2, 4, 6].every((c) => g[ORCH_ROWS - 1][c] === "blob") ? [0, 2, 4, 6].map((c) => [ORCH_ROWS - 1, c]) : null },
+  { id: "all", notes: [262, 330, 392, 523, 659, 784], find: (g) => new Set(g.flat().filter(Boolean)).size === ORCH_CREATURES.length ? orchFilled(g) : null },
+  { id: "wall", notes: [262, 392, 523, 659, 784, 1047], find: (g) => g.flat().every(Boolean) ? orchFilled(g) : null }
+];
+
 /* ---- the stage and the clock ---- */
-const orch = { grid: null, bpm: 100, sel: "blob", playing: false, step: 0, next: 0, timer: null, placed: 0 };
+const orch = { grid: null, bpm: 100, sel: "blob", playing: false, step: 0, next: 0, timer: null, placed: 0, found: [] };
 function orchLoad() {
+  try { orch.found = JSON.parse(localStorage.getItem("orchFound") || "[]"); } catch (e) { orch.found = []; }
   let saved = null;
   try { saved = JSON.parse(localStorage.getItem("orchestra") || "null"); } catch (e) {}
   if (saved && Array.isArray(saved.g) && saved.g.length === ORCH_ROWS) { orch.grid = saved.g; orch.bpm = saved.bpm || 100; return; }
@@ -152,41 +201,104 @@ function orchPlace(r, c) {
   }
   orchSave();
   orchPaintStage();
+  orchCheck();
+}
+function orchCheck() { // did this placement complete a combination nobody has found yet?
+  for (const cb of ORCH_COMBOS) {
+    if (orch.found.includes(cb.id) || !cb.find(orch.grid)) continue;
+    orch.found.push(cb.id);
+    try { localStorage.setItem("orchFound", JSON.stringify(orch.found)); } catch (e) {}
+    cb.notes.forEach((f, i) => { if (!playMuted) oTone(f, orchCtx().currentTime + 0.12 + i * 0.09, 0.4, "triangle", 0.12); });
+    const name = ot("combos")[cb.id][0];
+    const b = document.getElementById("orchBanner");
+    if (b) { b.textContent = ot("newFound").replace("{n}", name); b.classList.add("is-on"); clearTimeout(orch.bannerT); orch.bannerT = setTimeout(() => b.classList.remove("is-on"), 3600); }
+    orchPaintStage();
+    if (orch.found.length === ORCH_COMBOS.length) unlock("conductor");
+  }
+}
+function orchPaintFound() {
+  const list = document.getElementById("orchFound");
+  if (!list) return;
+  document.getElementById("orchFoundCount").textContent = `${orch.found.length}/${ORCH_COMBOS.length}`;
+  list.innerHTML = ORCH_COMBOS.map((cb) => {
+    const [name, hint] = ot("combos")[cb.id];
+    return orch.found.includes(cb.id)
+      ? `<li class="is-found"><b>✓ ${esc(name)}</b><span>${esc(hint)}</span></li>`
+      : `<li><b>? ???</b><span>${esc(hint)}</span></li>`;
+  }).join("");
+}
+function orchDancers() { // cells that belong to a discovered combination and are on stage right now
+  const set = new Set();
+  ORCH_COMBOS.filter((cb) => orch.found.includes(cb.id)).forEach((cb) => (cb.find(orch.grid) || []).forEach(([r, c]) => set.add(r + "," + c)));
+  return set;
 }
 function orchPaintStage() {
   const clr = document.getElementById("orchClear");
   if (clr) clr.disabled = orchCount() === 0;
-  const names = ot("names");
+  const names = ot("names"), dancers = orchDancers();
   document.querySelectorAll(".orch__cell").forEach((el) => {
     const r = +el.dataset.r, c = +el.dataset.c, id = orch.grid[r][c];
     el.dataset.id = id || "";
+    el.classList.toggle("is-dance", dancers.has(r + "," + c));
     el.innerHTML = id ? creatureSVG(ORCH_BY_ID[id]) : "";
     el.setAttribute("aria-label", `${ot("row")} ${r + 1}, ${ot("beat")} ${c + 1}: ${id ? names[id] : ot("empty")}`);
   });
+  orchPaintFound();
 }
 function orchPaintTray() {
   document.querySelectorAll(".orch__pick").forEach((el) => el.setAttribute("aria-pressed", String(el.dataset.id === orch.sel)));
 }
 
+/* ---- sharing: the whole beat lives in the address (play.html#orchestra/<32 letters>.<tempo>) ---- */
+const ORCH_IDS = ["blob", "frog", "bird", "ghost", "robot", "octo"], ORCH_CODE = "bfpgro";
+const orchEncode = () => orch.grid.flat().map((id) => id ? ORCH_CODE[ORCH_IDS.indexOf(id)] : "-").join("");
+function orchApplyHash() {
+  const m = location.hash.match(/^#orchestra\/([bfpgro-]{32})\.(\d{2,3})$/);
+  if (!m) return;
+  const flat = [...m[1]].map((ch) => ch === "-" ? null : ORCH_IDS[ORCH_CODE.indexOf(ch)]);
+  orch.grid = Array.from({ length: ORCH_ROWS }, (_, r) => flat.slice(r * ORCH_COLS, (r + 1) * ORCH_COLS));
+  orch.bpm = Math.min(150, Math.max(60, +m[2]));
+  orchSave();
+  history.replaceState(null, "", location.pathname + location.search + "#orchestra"); // the shared beat is now yours to change
+}
+function orchShare(btn) {
+  const url = location.origin + location.pathname + "#orchestra/" + orchEncode() + "." + orch.bpm;
+  const label = btn.innerHTML;
+  const done = () => { btn.innerHTML = `<span aria-hidden="true">✓</span> ${esc(ot("copied"))}`; setTimeout(() => { btn.innerHTML = label; }, 1900); sfx.pop(); };
+  if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(url).then(done, () => window.prompt(ot("share"), url));
+  else window.prompt(ot("share"), url);
+}
+
 function renderOrchestra() {
   if (!orch.grid) orchLoad();
+  orchApplyHash();
   const names = ot("names"), sounds = ot("sounds");
   playBody.innerHTML = `
     <div class="orch">
-      <p class="play__intro">${esc(ot("hint"))}</p>
-      <div class="orch__stage" role="group" aria-label="${esc(ot("stage"))}">
-        ${Array.from({ length: ORCH_ROWS }, (_, r) => Array.from({ length: ORCH_COLS }, (_, c) =>
-          `<button type="button" class="orch__cell${c % 4 === 0 ? " is-beat" : ""}" data-r="${r}" data-c="${c}"></button>`).join("")).join("")}
+      <p class="play__intro orch__intro">${esc(ot("hint"))}</p>
+      <div class="orch__stagewrap">
+        <div class="orch__stage" role="group" aria-label="${esc(ot("stage"))}">
+          ${Array.from({ length: ORCH_ROWS }, (_, r) => Array.from({ length: ORCH_COLS }, (_, c) =>
+            `<button type="button" class="orch__cell${c % 4 === 0 ? " is-beat" : ""}" data-r="${r}" data-c="${c}"></button>`).join("")).join("")}
+        </div>
+        <p class="orch__banner" id="orchBanner" role="status" aria-live="polite"></p>
       </div>
-      <div class="orch__tray" role="group" aria-label="${esc(ot("pick"))}">
-        ${ORCH_CREATURES.map((c) => `<button type="button" class="orch__pick" data-id="${c.id}" aria-pressed="false">
-          <span class="orch__face">${creatureSVG(c)}</span>
-          <span class="orch__name">${esc(names[c.id])}</span><small>${esc(sounds[c.id])}</small></button>`).join("")}
+      <div class="orch__side">
+        <div class="orch__tray" role="group" aria-label="${esc(ot("creatures"))}">
+          ${ORCH_CREATURES.map((c) => `<button type="button" class="orch__pick" data-id="${c.id}" aria-pressed="false">
+            <span class="orch__face">${creatureSVG(c)}</span>
+            <span class="orch__name">${esc(names[c.id])}</span><small>${esc(sounds[c.id])}</small></button>`).join("")}
+        </div>
+        <section class="orch__foundbox" aria-labelledby="orchFoundTitle">
+          <h3 id="orchFoundTitle">${esc(ot("found"))} <span id="orchFoundCount"></span></h3>
+          <ul class="orch__found" id="orchFound"></ul>
+        </section>
       </div>
       <div class="orch__bar">
         <button type="button" class="orch__go" id="orchPlay" aria-pressed="false"></button>
         <label class="orch__tempo"><span>${esc(ot("tempo"))}</span>
           <input type="range" id="orchTempo" min="60" max="150" step="5" value="${orch.bpm}"><output id="orchBpm">${orch.bpm}</output></label>
+        <button type="button" class="orch__clear" id="orchShare"><span aria-hidden="true">↗</span> ${esc(ot("share"))}</button>
         <button type="button" class="orch__clear" id="orchClear"><span aria-hidden="true">✕</span> ${esc(ot("clear"))}</button>
       </div>
     </div>`;
@@ -197,7 +309,7 @@ function renderOrchestra() {
     const cell = e.target.closest(".orch__cell");
     if (cell) orchPlace(+cell.dataset.r, +cell.dataset.c);
   });
-  /* tray: tap to choose, or drag a creature onto the stage */
+  /* tray: press to hear a creature and choose it, or drag it onto the stage */
   playBody.querySelectorAll(".orch__pick").forEach((pick) => pick.addEventListener("pointerdown", (e) => {
     const sx = e.clientX, sy = e.clientY, id = pick.dataset.id;
     let ghost = null;
@@ -215,7 +327,8 @@ function renderOrchestra() {
       orch.sel = id; orchPaintTray();
       if (ghost) {
         ghost.remove();
-        const cell = document.elementFromPoint(ev.clientX, ev.clientY)?.closest(".orch__cell");
+        const hit = document.elementFromPoint(ev.clientX, ev.clientY);
+        const cell = hit && hit.closest(".orch__cell");
         if (cell) orchPlace(+cell.dataset.r, +cell.dataset.c);
       }
     };
@@ -225,6 +338,7 @@ function renderOrchestra() {
   document.getElementById("orchTempo").addEventListener("input", (e) => {
     orch.bpm = +e.target.value; document.getElementById("orchBpm").textContent = orch.bpm; orchSave();
   });
+  document.getElementById("orchShare").addEventListener("click", (e) => orchShare(e.currentTarget));
   document.getElementById("orchClear").addEventListener("click", () => {
     orch.grid = Array.from({ length: ORCH_ROWS }, () => Array(ORCH_COLS).fill(null));
     orchSave(); orchPaintStage(); sfx.pop();
