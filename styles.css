@@ -1663,3 +1663,19 @@ body.view-all .p-card__play, body.view-all .p-card__video { display: none; }
 .wd4__dots i { transition: background .25s, transform .25s; }
 .wd4__dots i:not(.is-on) { transform: scale(.7); }
 @media (prefers-reduced-motion: reduce) { .wd4__toast, .wd4__tile.is-shake { animation: none; } }
+
+/* ============ Imprint & privacy page ============ */
+.legal h1 { font: 700 clamp(30px, 5vw, 40px)/1.1 var(--serif); letter-spacing: -.02em; margin-bottom: 8px; }
+.legal__body { line-height: 1.65; }
+.legal__body h2 { font: 700 clamp(24px, 3.6vw, 30px)/1.15 var(--serif); letter-spacing: -.02em; margin: 40px 0 6px; }
+.legal__body h3 { font: 700 16px var(--sans); margin: 24px 0 4px; }
+.legal__body p { margin: 0 0 10px; }
+.legal__body a { color: var(--turq-text); text-underline-offset: 2px; overflow-wrap: anywhere; }
+.legal__small { font-size: 13px; color: var(--ink-soft); }
+.legal__lead { padding: 12px 16px; border-radius: 12px; background: var(--surface); border: 1px solid var(--line); }
+.legal__facts { display: grid; grid-template-columns: max-content 1fr; gap: 6px 18px; margin: 14px 0 0; }
+.legal__facts dt { font-weight: 700; }
+.legal__facts dd { margin: 0; }
+@media (max-width: 560px) { .legal__facts { grid-template-columns: 1fr; gap: 0; } .legal__facts dd { margin-bottom: 8px; } }
+.legal__updated { margin-top: 28px; }
+.footer__legal { color: inherit; }

@@ -35,3 +35,7 @@ summary is still a placeholder is hidden entirely. ARoom is finished; its empty 
 3. After ~1 min it's live at `https://<username>.github.io/portfolio/`.
 4. Own domain: buy e.g. `serkan-soenmez.at`, enter it under Settings → Pages → Custom domain,
    and set the DNS records your registrar shows (GitHub docs: "Managing a custom domain").
+
+## Imprint & privacy
+
+`legal.html` (texts in `legal.js`, DE + EN) lists everything the site sends to other servers. Fonts and the MP3 encoder are self-hosted (`assets/fonts/`, `assets/vendor/`), so the only third parties are GitHub Pages (hosting) and YouTube (videos). If you add a new external service (font, script, embed), add it to the privacy section too.

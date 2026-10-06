@@ -912,7 +912,7 @@ function orchLoadLame() { // the MP3 encoder is only fetched when someone presse
   if (window.lamejs) return Promise.resolve();
   return new Promise((res, rej) => {
     const s = document.createElement("script");
-    s.src = "https://cdnjs.cloudflare.com/ajax/libs/lamejs/1.2.1/lame.min.js"; s.onload = res; s.onerror = rej;
+    s.src = "assets/vendor/lame.min.js"; s.onload = res; s.onerror = rej;
     document.head.appendChild(s);
   });
 }

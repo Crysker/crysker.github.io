@@ -16,11 +16,9 @@
   <meta property="og:image" content="https://crysker.github.io/assets/og-image.jpg?v=2">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="icon" type="image/svg+xml" href="assets/favicon.svg?v=2">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,700;1,9..144,600;1,9..144,700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/fonts/fonts.css?v=1">
   <script>try { var th = localStorage.getItem("theme"); if (th === "light" || th === "dark") document.documentElement.dataset.theme = th; } catch (e) {}</script>
-  <link rel="stylesheet" href="styles.css?v=180">
+  <link rel="stylesheet" href="styles.css?v=181">
 </head>
 <body>
   <a class="skip" href="#main" data-nav="skip">Skip to content</a>
@@ -61,6 +59,10 @@
     </div>
   </main>
 
+  <footer class="footer">
+    <p><a class="footer__legal" href="legal.html" data-nav="legal">Imprint &amp; privacy</a></p>
+  </footer>
+
   <!-- reSHAPTCHA minigame: slot the hero shapes, get a meme -->
   <dialog class="game" id="game" aria-labelledby="gameTitle">
     <div class="game__head">
@@ -90,10 +92,10 @@
 
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-  <script src="play-shell.js?v=15"></script>
+  <script src="play-shell.js?v=16"></script>
   <script src="guess-data.js?v=4"></script>
   <script src="captcha.js?v=5"></script>
-  <script src="orchestra.js?v=58"></script>
+  <script src="orchestra.js?v=59"></script>
   <script src="tower.js?v=17"></script>
   <script src="words-data.js?v=1"></script>
   <script src="words-valid.js?v=1"></script>

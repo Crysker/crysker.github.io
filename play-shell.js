@@ -11,6 +11,7 @@ if (lang !== "de") lang = "en";
 
 const SHELL_T = {
   en: {
+    legal: "Imprint & privacy",
     skip: "Skip to content", menu: "Menu", projects: "Projects", experience: "Experience", contact: "Contact", play: "Playground",
     toLang: "Auf Deutsch umschalten", toDark: "Switch to dark mode", toLight: "Switch to light mode", unlocked: "Achievement unlocked",
     ach: {
@@ -29,6 +30,7 @@ const SHELL_T = {
     }
   },
   de: {
+    legal: "Impressum & Datenschutz",
     skip: "Zum Inhalt springen", menu: "Menü", projects: "Projekte", experience: "Werdegang", contact: "Kontakt", play: "Spielwiese",
     toLang: "Switch to English", toDark: "Zum dunklen Modus wechseln", toLight: "Zum hellen Modus wechseln", unlocked: "Erfolg freigeschaltet",
     ach: {

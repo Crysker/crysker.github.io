@@ -280,6 +280,7 @@ const I18N = {
       skeptic: ["Healthy skeptic", "Scored 12 points or more in Two truths, one lie"]
     },
     "footer.top": "Back to top ↑",
+    "footer.legal": "Imprint &amp; privacy",
     ui: {
       duration: "Duration", role: "My role", team: "Team", solo: "Solo project", more: "More projects",
       challenge: "Challenge", approach: "What we built", approachSolo: "What I built", scan: "Scan to watch it on your phone or in VR", result: "Result", learned: "What I learned", sketches: "Early sketches",
@@ -577,6 +578,7 @@ const I18N = {
       skeptic: ["Gesunde Skepsis", "12 Punkte oder mehr bei Zwei Wahrheiten, eine Lüge geholt"]
     },
     "footer.top": "Nach oben ↑",
+    "footer.legal": "Impressum &amp; Datenschutz",
     ui: {
       duration: "Dauer", role: "Meine Rolle", team: "Team", solo: "Einzelprojekt", more: "Weitere Projekte",
       challenge: "Herausforderung", approach: "Was wir gebaut haben", approachSolo: "Was ich gebaut habe", scan: "Scannen und am Handy oder in VR ansehen", result: "Ergebnis", learned: "Was ich gelernt habe", sketches: "Erste Skizzen",
