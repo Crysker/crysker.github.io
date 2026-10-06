@@ -192,7 +192,8 @@ html[lang="de"] .lang [data-lang="de"] { background: var(--ink); color: var(--bg
 /* the signature sits on the corner of the photo and writes itself when you hover or tap the photo */
 .hero__sig {
   position: absolute; right: -34px; bottom: -22px; z-index: 2; width: 96px; height: 109px;
-  color: var(--turq-text); rotate: -6deg; pointer-events: none;
+  color: var(--turq); rotate: -6deg; pointer-events: none; /* decoration, so the bright turquoise in both modes (the dark text teal looked muddy on the photo) */
+  filter: drop-shadow(0 1px 1.5px rgba(0, 0, 0, .25));
 }
 .hero__sig path {
   stroke: currentColor; stroke-width: 3.2; stroke-linecap: round; stroke-linejoin: round;
