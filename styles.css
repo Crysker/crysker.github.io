@@ -1687,3 +1687,88 @@ body.view-all .p-card__play, body.view-all .p-card__video { display: none; }
 .case__gallery .case__zoom:hover img { transform: translateY(-3px); border-color: var(--turq); }
 .case__gallery img:hover { transform: none; } /* the button handles the hover now */
 .socials a, .timeline__link, .footer a, .footer__trophies { display: inline-flex; align-items: center; min-height: 28px; }
+
+/* ============ Print / Save as PDF ============
+   Light colours (dark pages waste ink and print streaky), no menu or buttons, every project in a compact list
+   with a QR code to its page, and a QR code to the site at the top. */
+.print-head, .print-projects { display: none; }
+@media print {
+  @page { size: A4; margin: 14mm 14mm 16mm; }
+  :root:root:root {
+    --bg: #fff; --surface: #fff; --surface-2: #f3eee6; --ink: #1d1b2e; --ink-soft: #4a4760; --line: #ddd6ca;
+    --turq: #0fb8b0; --turq-ink: #067c77; --turq-soft: #d6f6f3; --orange-text: #c2410c; --turq-text: #0f766e;
+    --shadow: none; color-scheme: light;
+  }
+  * { -webkit-print-color-adjust: exact; print-color-adjust: exact; animation: none !important; transition: none !important; }
+  html { scroll-padding-top: 0; }
+  body { background: #fff; color: var(--ink); font-size: 11pt; line-height: 1.5; }
+
+  /* what only makes sense on a screen */
+  .nav, .skip, .to-top, .toast, dialog, .crumbs, .themes, .themes__desc, .section__intro, .more-projects, #projectGrid,
+  .email__copy, .email__status, .contact__actions .btn:not(.btn--primary), .footer__trophies, .footer a[href="#top"],
+  .p-card__play, .captcha, .trophy-btn { display: none !important; }
+  body.view-all .hero, body.view-all #stack, body.view-all #experience, body.view-all #contact { display: revert; }
+  .reveal { opacity: 1 !important; transform: none !important; }
+
+  /* print head: QR code to the live site */
+  .print-head { display: flex; align-items: center; gap: 14px; justify-content: flex-end; margin: 0 0 4mm; }
+  .print-head img { width: 24mm; height: 24mm; }
+  .print-head p { margin: 0; font-size: 10pt; color: var(--ink-soft); text-align: right; }
+  .print-head b { display: block; font: 700 14pt var(--serif); color: var(--turq-text); }
+
+  /* hero: name and text on the left, photo on the right */
+  .hero {
+    display: grid; grid-template-columns: 1fr 44mm; grid-template-areas: "hello photo" "name photo" "title photo" "lead photo";
+    column-gap: 10mm; align-items: center; justify-items: start; text-align: left;
+    min-height: 0; padding: 0 0 6mm; width: 100%; margin: 0; overflow: visible;
+  }
+  .hero > * { grid-area: auto; }
+  .hero__hello { grid-area: hello; font-size: 13pt; }
+  .hero__name { grid-area: name; font-size: 54pt; }
+  .hero__title { grid-area: title; font-size: 16pt; margin-top: 2mm; }
+  .hero__lead { grid-area: lead; font-size: 11pt; margin: 4mm 0 0; max-width: none; }
+  .hero__portrait { grid-area: photo; width: 44mm; }
+  .hero__sig { right: -8mm; bottom: -6mm; width: 22mm; height: 25mm; }
+  .hero__sig path { stroke-dasharray: none !important; stroke-dashoffset: 0 !important; }
+  .hero__photo { box-shadow: none; }
+  .hero__shape, .hero__ring, .hero__pill { display: none; }
+
+  .section { padding: 6mm 0 0 !important; width: 100% !important; }
+  .section__title, #projectsTitle { font-size: 22pt !important; margin: 0 0 4mm !important; break-after: avoid; }
+  #projects.section { padding-top: 2mm !important; }
+
+  /* every project, compact */
+  .print-projects { display: block; }
+  .pp { display: grid; grid-template-columns: 36mm 1fr 19mm; gap: 5mm; align-items: center; padding: 2.5mm 0; border-top: 1px solid var(--line); break-inside: avoid; }
+  .pp__img { aspect-ratio: 16/10; border-radius: 3mm; overflow: hidden; background: var(--surface-2); }
+  .pp__img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .pp__text .p-card__kicker { margin: 0; font-size: 7.5pt; }
+  .pp__text h3 { font: 700 13pt/1.15 var(--serif); margin: 0.3mm 0 0.6mm; }
+  .pp__text p { margin: 0; font-size: 9pt; line-height: 1.4; }
+  .pp__role { color: var(--ink-soft); margin-top: 1mm !important; }
+  .pp__qr { text-align: center; }
+  .pp__qr img { width: 17mm; height: 17mm; display: block; margin: 0 auto; }
+  .pp__qr small { display: block; font-size: 6.5pt; color: var(--ink-soft); line-height: 1.2; margin-top: 0.5mm; }
+  .pp__group { font: 700 13pt var(--serif); margin: 6mm 0 1mm; break-after: avoid; }
+
+  /* skills: the three columns next to each other, nothing cut in half */
+  .sheet, .skill-more { box-shadow: none; }
+  .sheet__cols { grid-template-columns: repeat(3, 1fr) !important; }
+  .sheet, .stat, .skill-group, .sheet__legend { break-inside: avoid; }
+  .skill-group--fold summary { list-style: none; pointer-events: none; }
+  .skill-group--fold summary::before, .skill-group--fold summary::after { display: none !important; }
+  .skill-group--fold summary::-webkit-details-marker { display: none; }
+
+  /* experience */
+  .facts li, .timeline li, .timeline__item { break-inside: avoid; }
+  .timeline__link { display: none; }
+
+  /* contact: plain text the reader can type in */
+  .contact { text-align: center; break-inside: avoid; }
+  .contact__title { font-size: 26pt; margin-bottom: 4mm; }
+  .btn--primary { box-shadow: none; }
+  .socials { flex-direction: column; align-items: center; gap: 1mm; margin-top: 4mm; font-size: 10pt; }
+  .socials a { display: inline; min-height: 0; border: 0; }
+  .socials a::after { content: ": " attr(href); font-weight: 400; color: var(--ink-soft); }
+  .footer { padding: 6mm 0 0; width: 100%; }
+}

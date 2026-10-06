@@ -29,7 +29,7 @@
   <link rel="icon" type="image/svg+xml" href="assets/favicon.svg?v=2">
   <link rel="stylesheet" href="assets/fonts/fonts.css?v=1">
   <script>try { var th = localStorage.getItem("theme"); if (th === "light" || th === "dark") document.documentElement.dataset.theme = th; } catch (e) {}</script>
-  <link rel="stylesheet" href="styles.css?v=182">
+  <link rel="stylesheet" href="styles.css?v=183">
 </head>
 <body>
   <a class="skip" href="#main" data-i18n="skip">Skip to content</a>
@@ -60,6 +60,11 @@
   </header>
 
   <main id="main">
+    <!-- Only on paper / PDF: where to find the interactive version -->
+    <div class="print-head" aria-hidden="true">
+      <img src="assets/qr/site.svg" alt="" width="90" height="90">
+      <p><b>crysker.github.io</b><span data-i18n="print.site">The interactive version with videos and minigames</span></p>
+    </div>
     <!-- HERO -->
     <section class="hero">
 
@@ -84,6 +89,8 @@
       <p class="themes__desc" id="themeDesc" aria-live="polite" hidden></p>
       <div class="projects__grid" id="projectGrid"></div>
       <a class="btn more-projects" id="moreProjects" href="#projects-all"></a>
+      <!-- Only on paper / PDF: every project in a compact list, each with a QR code to its page -->
+      <div class="print-projects" id="printProjects" aria-hidden="true"></div>
     </section>
 
     <!-- STACK -->
@@ -215,6 +222,6 @@
   </dialog>
 
   <script src="logos.js?v=4"></script>
-  <script src="main.js?v=113"></script>
+  <script src="main.js?v=114"></script>
 </body>
 </html>

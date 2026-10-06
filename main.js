@@ -316,6 +316,7 @@ const I18N = {
     },
     "footer.top": "Back to top ↑",
     "footer.legal": "Imprint &amp; privacy",
+    "print.site": "The interactive version with videos and minigames", "print.early": "Earlier projects from my bachelor's", "print.scan": "Scan for video & details",
     ui: {
       duration: "Duration", role: "My role", team: "Team", solo: "Solo project", more: "More projects",
       challenge: "Challenge", approach: "What we built", approachSolo: "What I built", scan: "Scan to watch it on your phone or in VR", enlarge: "Enlarge image", clip: "Video clip", result: "Result", learned: "What I learned", sketches: "Early sketches",
@@ -614,6 +615,7 @@ const I18N = {
     },
     "footer.top": "Nach oben ↑",
     "footer.legal": "Impressum &amp; Datenschutz",
+    "print.site": "Die interaktive Version mit Videos und Minispielen", "print.early": "Frühere Projekte aus dem Bachelor", "print.scan": "Scannen für Video & Details",
     ui: {
       duration: "Dauer", role: "Meine Rolle", team: "Team", solo: "Einzelprojekt", more: "Weitere Projekte",
       challenge: "Herausforderung", approach: "Was wir gebaut haben", approachSolo: "Was ich gebaut habe", scan: "Scannen und am Handy oder in VR ansehen", enlarge: "Bild vergrößern", clip: "Videoclip", result: "Ergebnis", learned: "Was ich gelernt habe", sketches: "Erste Skizzen",
@@ -1036,7 +1038,39 @@ function renderProjects() {
         </div>
       </button>`;
   }).join("");
+  renderPrint();
 }
+
+/* Print / "Save as PDF": a compact list of every project with a QR code to its page (hidden on screen).
+   The images only go in once the page is idle, so they don't slow down the first load. */
+let printImages = false;
+function renderPrint() {
+  const P = I18N[lang].p;
+  const rank = (id) => (ORDER.indexOf(id) + 1 || 99);
+  const list = visibleProjects().sort((a, b) => rank(a.id) - rank(b.id));
+  const row = (pr) => {
+    const x = P[pr.id];
+    return `<article class="pp">
+      <div class="pp__img">${printImages && pr.img ? `<img src="${pr.img}" alt="">` : ""}</div>
+      <div class="pp__text">
+        <p class="p-card__kicker">${esc(x.kicker)}</p>
+        <h3>${esc(x.title)}</h3>
+        ${filled(x.highlight) ? `<p>${esc(x.highlight)}</p>` : ""}
+        ${filled(x.role) ? `<p class="pp__role"><b>${esc(t("ui").role)}:</b> ${esc(x.role)}</p>` : ""}
+      </div>
+      <div class="pp__qr"><img src="assets/qr/page/${pr.id}.svg" alt=""><small>${esc(t("print.scan"))}</small></div>
+    </article>`;
+  };
+  const main = list.filter((pr) => !pr.early), early = list.filter((pr) => pr.early);
+  document.getElementById("printProjects").innerHTML = main.map(row).join("")
+    + (early.length ? `<h3 class="pp__group">${esc(t("print.early"))}</h3>${early.map(row).join("")}` : "");
+}
+const loadPrintImages = () => { if (!printImages) { printImages = true; renderPrint(); } };
+addEventListener("load", () => (window.requestIdleCallback || setTimeout)(loadPrintImages, { timeout: 4000 }));
+addEventListener("beforeprint", () => {
+  loadPrintImages();
+  document.querySelectorAll("details[data-fold]").forEach((d) => { d.open = true; }); // folded perks would print empty
+});
 
 /* switching between the home page and the "All projects" view follows the address (#projects-all) */
 function syncView() {
