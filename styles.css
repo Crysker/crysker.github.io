@@ -741,6 +741,14 @@ button.ptile:hover, button.ptile:focus-visible { transform: translateY(-4px) rot
 }
 .sheet__legend span { display: inline-flex; align-items: center; gap: 6px; }
 .sheet__legend em { font-style: normal; color: var(--ink-soft); }
+@media (min-width: 861px) and (max-width: 1080px) {
+  .sheet__cols { column-gap: 24px; }
+  .stat { grid-template-columns: 26px minmax(0, 1fr) auto; gap: 8px; }
+  .stat__icon { width: 26px; height: 26px; }
+  .stat__icon img { width: 18px; height: 18px; }
+  .pips { gap: 5px; }
+  .pip { width: 9px; height: 9px; }
+}
 @media (max-width: 860px) { .sheet__cols { grid-template-columns: 1fr; } .sheet__note { margin-left: 0; width: 100%; } }
 /* Contact */
 .contact { text-align: center; padding-bottom: 72px; }
@@ -1716,9 +1724,10 @@ body.view-all .p-card__play, body.view-all .p-card__video { display: none; }
   .reveal { opacity: 1 !important; transform: none !important; }
 
   /* print head: QR code to the live site */
-  .print-head { display: flex; align-items: center; gap: 14px; justify-content: flex-end; margin: 0 0 4mm; }
-  .print-head img { width: 24mm; height: 24mm; }
-  .print-head p { margin: 0; font-size: 10pt; color: var(--ink-soft); text-align: right; }
+  /* letterhead: address on the left, QR code on the right, a line below */
+  .print-head { display: flex; align-items: center; justify-content: space-between; gap: 8mm; margin: 0 0 6mm; padding-bottom: 4mm; border-bottom: 1px solid var(--line); }
+  .print-head img { order: 2; width: 22mm; height: 22mm; }
+  .print-head p { margin: 0; font-size: 10pt; color: var(--ink-soft); text-align: left; }
   .print-head b { display: block; font: 700 14pt var(--serif); color: var(--turq-text); }
 
   /* hero: name and text on the left, photo on the right */
@@ -1758,7 +1767,14 @@ body.view-all .p-card__play, body.view-all .p-card__video { display: none; }
 
   /* skills: the three columns next to each other, nothing cut in half */
   .sheet, .skill-more { box-shadow: none; }
-  .sheet__cols { grid-template-columns: repeat(3, 1fr) !important; }
+  .sheet__cols { grid-template-columns: repeat(3, minmax(0, 1fr)) !important; column-gap: 9mm !important; }
+  .stat { grid-template-columns: 6mm minmax(0, 1fr) auto; gap: 2.5mm; padding: 1.6mm 0; }
+  .stat__icon { width: 6mm; height: 6mm; border-radius: 1.5mm; }
+  .stat__icon img { width: 4.5mm; height: 4.5mm; }
+  .stat__name { font-size: 9.5pt; }
+  .stat__name small { font-size: 7pt; }
+  .pips { gap: 1.3mm; }
+  .pip { width: 2.3mm; height: 2.3mm; border-width: 1.5px; }
   .sheet, .stat, .skill-group, .sheet__legend { break-inside: avoid; }
   .skill-group--fold summary { list-style: none; pointer-events: none; }
   .skill-group--fold summary::before, .skill-group--fold summary::after { display: none !important; }
