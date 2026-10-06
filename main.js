@@ -163,6 +163,41 @@ const PROJECTS = [
   }
 ];
 
+/* Descriptions of the gallery images, read out by screen readers. Key: path inside assets/img/ (or assets/). */
+const GALLERY_ALT = {
+  "historia/village.webp": { en: "Roman village in the game: half-timbered houses with red roofs, a wooden fence and a cart on the grass", de: "Römisches Dorf im Spiel: Fachwerkhäuser mit roten Dächern, ein Holzzaun und ein Karren auf der Wiese" },
+  "historia/well.webp": { en: "Stone well in the village square, surrounded by fences and houses", de: "Steinbrunnen am Dorfplatz, umgeben von Zäunen und Häusern" },
+  "historia/street.webp": { en: "Village street leading to a Roman arch with a statue on top", de: "Dorfstraße, die zu einem römischen Torbogen mit einer Statue führt" },
+  "historia/well-close.webp": { en: "Close-up of the well with clay pots, next to a house with boarded-up windows", de: "Nahaufnahme des Brunnens mit Tonkrügen, daneben ein Haus mit vernagelten Fenstern" },
+  "historia/bakery-front.webp": { en: "Front of the bakery, with fences and the arch in the background", de: "Vorderseite der Bäckerei, im Hintergrund Zäune und der Torbogen" },
+  "historia/bakery-inside.webp": { en: "Inside the dark bakery: the brick oven, a table and a note on the wall", de: "In der dunklen Bäckerei: der Ziegelofen, ein Tisch und ein Zettel an der Wand" },
+  "ocean/goblin.webp": { en: "My 3D model of the blue goblin, shown from four sides", de: "Mein 3D-Modell des blauen Goblins, von vier Seiten" },
+  "ocean/house.webp": { en: "My 3D model of the goblin hut with a straw roof and horns, from four sides", de: "Mein 3D-Modell der Goblin-Hütte mit Strohdach und Hörnern, von vier Seiten" },
+  "ocean/straws.webp": { en: "My 3D model of a striped drinking straw, from four sides", de: "Mein 3D-Modell eines gestreiften Strohhalms, von vier Seiten" },
+  "ocean/water_bottle.webp": { en: "My 3D model of a plastic water bottle, from two sides", de: "Mein 3D-Modell einer Plastikwasserflasche, von zwei Seiten" },
+  "ocean/nuclear_waste.webp": { en: "My 3D model of a yellow nuclear waste barrel, from four sides", de: "Mein 3D-Modell eines gelben Atommüllfasses, von vier Seiten" },
+  "ocean/ogres.webp": { en: "3D model of the green ogre in a T-pose, from four sides", de: "3D-Modell des grünen Ogers in T-Pose, von vier Seiten" },
+  "ocean/shark.webp": { en: "3D model of Sigurd the Tainted, the mutated shark boss, from four sides", de: "3D-Modell von Sigurd dem Verseuchten, dem mutierten Hai-Boss, von vier Seiten" },
+  "ocean/bucket.webp": { en: "3D model of the bucket you collect the trash in, from three sides", de: "3D-Modell des Eimers, in dem man den Müll sammelt, von drei Seiten" },
+  "nott/boss.webp": { en: "Boss level: a pixel-art hero dodges fireballs from two red dragons", de: "Boss-Level: Ein Pixel-Art-Held weicht den Feuerbällen von zwei roten Drachen aus" },
+  "nott/level2.png": { en: "Level 2 on a wooden floor with fireballs and the message 'You Died'", de: "Level 2 auf einem Holzboden mit Feuerbällen und der Meldung 'You Died'" },
+  "nott/win.webp": { en: "End screen: 'You escaped the dragons. However, outside are more monsters'", de: "Endbildschirm: 'You escaped the dragons. However, outside are more monsters'" },
+  "nott/architecture.png": { en: "Diagram of the code structure: how the JavaScript files of the game connect", de: "Diagramm der Code-Struktur: wie die JavaScript-Dateien des Spiels zusammenhängen" },
+  "nftrade/inventory.webp": { en: "NFTrade marketplace on desktop: 'Best Deals' with two pixel NFTs and 'Make offer' buttons", de: "NFTrade-Marktplatz am Desktop: 'Best Deals' mit zwei Pixel-NFTs und 'Make Offer'-Buttons" },
+  "nftrade/mobile-figma.webp": { en: "Mobile design of NFTrade in Figma: profile with inventory and offers", de: "Mobiles Design von NFTrade in Figma: Profil mit Inventar und Angeboten" },
+  "nftrade/mobile-built.webp": { en: "All mobile screens of the finished NFTrade app side by side", de: "Alle mobilen Screens der fertigen NFTrade-App nebeneinander" },
+  "memeit/mockups.webp": { en: "Overview of all Meme-It app screens as a user flow", de: "Übersicht aller Screens der Meme-It-App als User Flow" },
+  "memeit/heuristic.png": { en: "Table of the heuristic evaluation: 5 usability issues with heuristic and severity", de: "Tabelle der heuristischen Evaluation: 5 Usability-Probleme mit Heuristik und Schweregrad" },
+  "memeit/sus.png": { en: "Bar chart of the SUS scores of five participants, between 87.5 and 95", de: "Balkendiagramm der SUS-Werte von fünf Teilnehmenden, zwischen 87,5 und 95" },
+  "thesis/fire.jpg": { en: "Study scene in VR: a campfire with a bucket next to a big red button", de: "Studienszene in VR: ein Lagerfeuer mit Eimer neben einem großen roten Knopf" },
+  "thesis/tracks.jpg": { en: "Study scene in VR: animals in cages with paw prints, each with a red button to choose", de: "Studienszene in VR: Tiere in Gehegen mit Pfotenabdrücken, jeweils mit einem roten Knopf zur Auswahl" }
+};
+const galleryAlt = (src, title) => {
+  const key = src.replace(IMG, "").replace(/^assets\//, "").replace(/\?.*$/, "");
+  const a = GALLERY_ALT[key];
+  return a ? a[lang] || a.en : title;
+};
+
 /* Skills from the CV. Items: [label, logoKey?] – labels starting with "@" are translated via I18N.skill */
 /* Character sheet: self-assessed skill points (1–5), [label, logoKey | null, points] */
 const STATS = [
@@ -283,7 +318,7 @@ const I18N = {
     "footer.legal": "Imprint &amp; privacy",
     ui: {
       duration: "Duration", role: "My role", team: "Team", solo: "Solo project", more: "More projects",
-      challenge: "Challenge", approach: "What we built", approachSolo: "What I built", scan: "Scan to watch it on your phone or in VR", result: "Result", learned: "What I learned", sketches: "Early sketches",
+      challenge: "Challenge", approach: "What we built", approachSolo: "What I built", scan: "Scan to watch it on your phone or in VR", enlarge: "Enlarge image", clip: "Video clip", result: "Result", learned: "What I learned", sketches: "Early sketches",
       open: "View project", close: "Close", next: "Next project", watch: "Watch video", video: "Video", tools: "Tools & tech", when: "When",
       devpost: "Devpost", ggj: "Global Game Jam page", itch: "Play on itch.io",
       award: "Contest winners", vernissage: "USTP Projektvernissage", instagram: "Instagram", tiktok: "TikTok", linkedin: "LinkedIn post", makingof: "Making-of video"
@@ -581,7 +616,7 @@ const I18N = {
     "footer.legal": "Impressum &amp; Datenschutz",
     ui: {
       duration: "Dauer", role: "Meine Rolle", team: "Team", solo: "Einzelprojekt", more: "Weitere Projekte",
-      challenge: "Herausforderung", approach: "Was wir gebaut haben", approachSolo: "Was ich gebaut habe", scan: "Scannen und am Handy oder in VR ansehen", result: "Ergebnis", learned: "Was ich gelernt habe", sketches: "Erste Skizzen",
+      challenge: "Herausforderung", approach: "Was wir gebaut haben", approachSolo: "Was ich gebaut habe", scan: "Scannen und am Handy oder in VR ansehen", enlarge: "Bild vergrößern", clip: "Videoclip", result: "Ergebnis", learned: "Was ich gelernt habe", sketches: "Erste Skizzen",
       open: "Projekt ansehen", close: "Schließen", next: "Nächstes Projekt", watch: "Video ansehen", video: "Video", tools: "Tools & Technik", when: "Wann",
       devpost: "Devpost", ggj: "Global-Game-Jam-Seite", itch: "Auf itch.io spielen",
       award: "Gewinner:innen des Wettbewerbs", vernissage: "USTP Projektvernissage", instagram: "Instagram", tiktok: "TikTok", linkedin: "LinkedIn-Beitrag", makingof: "Making-of-Video"
@@ -1049,7 +1084,9 @@ function openProject(id, { push = true } = {}) {
          <span class="video__btn" aria-hidden="true"></span>
          <span class="video__label">${esc(ui.watch)}</span>
        </button>`
-    : pic(pr, false);
+    : `<button type="button" class="case__zoom" data-alt="${esc(x.title)}" aria-label="${esc(ui.enlarge)}: ${esc(x.title)}">${pic(pr, false)}</button>`;
+  // an image that opens the viewer: a button, so it works with the keyboard and is read out
+  const zoomBtn = (src, alt) => `<button type="button" class="case__zoom" data-alt="${esc(alt)}" aria-label="${esc(ui.enlarge)}: ${esc(alt)}"><img src="${src}" alt="" loading="lazy"></button>`;
   const block = (label, val) => filled(val) ? `
     <section class="case__block"><h3>${esc(label)}</h3>${
       Array.isArray(val) ? `<ul>${val.map((v) => `<li>${esc(v)}</li>`).join("")}</ul>` : `<p>${esc(val)}</p>`
@@ -1080,12 +1117,12 @@ function openProject(id, { push = true } = {}) {
           ${block(ui.result, x.result)}
           ${block(ui.learned, x.learned)}
           ${pr.sketches ? `<section class="case__block"><h3>${esc(ui.sketches)}</h3>
-            <div class="case__gallery">${pr.sketches.map((g) => `<img src="${g}" alt="${esc(ui.sketches)}: ${esc(x.title)}" loading="lazy">`).join("")}</div></section>` : ""}
+            <div class="case__gallery">${pr.sketches.map((g, i) => zoomBtn(g, `${ui.sketches} ${i + 1}: ${x.title}`)).join("")}</div></section>` : ""}
           ${pr.gallery ? `<div class="case__gallery">${pr.gallery.map((g) => !g.video
-            ? `<img src="${g}" alt="" loading="lazy">`
+            ? zoomBtn(g, galleryAlt(g, x.title))
             : g.loop // short animation: plays by itself like a GIF
-              ? `<video src="${g.video}" poster="${g.poster}" autoplay muted loop playsinline preload="metadata"></video>`
-              : `<video src="${g.video}" poster="${g.poster}" controls muted loop playsinline preload="none"></video>`).join("")}</div>` : ""}
+              ? `<video src="${g.video}" poster="${g.poster}" autoplay muted loop playsinline preload="metadata" aria-label="${esc(ui.clip)}: ${esc(x.title)}"></video>`
+              : `<video src="${g.video}" poster="${g.poster}" controls muted loop playsinline preload="none" aria-label="${esc(ui.clip)}: ${esc(x.title)}"></video>`).join("")}</div>` : ""}
         </div>
       </div>
       ${others.length ? `<section class="case__more" aria-labelledby="moreTitle">
@@ -1227,6 +1264,7 @@ modal.addEventListener("click", (e) => {
 /* ============ Image viewer (lightbox): click, zoom, pan ============ */
 const lb = document.getElementById("lightbox");
 const lbImg = document.getElementById("lbImg");
+let lbAlts = [];
 const lbStage = document.getElementById("lbStage");
 let lbList = [], lbIndex = 0;
 const view = { s: 1, x: 0, y: 0 }; // scale + translate (px), transform-origin is the image centre
@@ -1253,11 +1291,13 @@ function lbZoom(next, px, py, animate) {
 function lbShow(i) {
   lbIndex = (i + lbList.length) % lbList.length;
   lbImg.src = lbList[lbIndex];
+  lbImg.alt = lbAlts[lbIndex] || "";
   view.s = 1; view.x = 0; view.y = 0; lbApply(false);
   document.getElementById("lbCount").textContent = lbList.length > 1 ? `${lbIndex + 1} / ${lbList.length}` : "";
   document.getElementById("lbPrev").hidden = document.getElementById("lbNext").hidden = lbList.length < 2;
 }
-function openLightbox(list, index) {
+function openLightbox(list, index, alts = []) {
+  lbAlts = alts;
   const L = t("lb");
   document.getElementById("lbHint").textContent = L.hint;
   [["lbClose", L.close], ["lbPrev", L.prev], ["lbNext", L.next], ["lbIn", L.zin], ["lbOut", L.zout]]
@@ -1330,10 +1370,11 @@ lb.addEventListener("close", () => { if (!lb.open) lbImg.removeAttribute("src");
 
 // Every image in a case study opens the viewer (videos keep their own player)
 modalBody.addEventListener("click", (e) => {
-  const img = e.target.closest(".case__gallery img, .case__media > img");
-  if (!img) return;
-  const all = [...modalBody.querySelectorAll(".case__media > img, .case__gallery img")];
-  openLightbox(all.map((i) => i.currentSrc || i.src), all.indexOf(img));
+  const btn = e.target.closest(".case__zoom");
+  if (!btn || !btn.querySelector("img")) return;
+  const all = [...modalBody.querySelectorAll(".case__zoom")].filter((b) => b.querySelector("img"));
+  const src = (b) => { const i = b.querySelector("img"); return i.currentSrc || i.src; };
+  openLightbox(all.map(src), all.indexOf(btn), all.map((b) => b.dataset.alt));
 });
 
 document.addEventListener("click", (e) => {
@@ -1363,7 +1404,8 @@ function renderSkills() {
   const G = t("skillGroups"), K = t("skill"), S = t("sheet");
   // RPG-style character sheet: 5 diamond pips per skill, they light up one by one when the section scrolls in
   const stat = ([label, logo, pts]) => `
-    <li class="stat" aria-label="${esc(label)}: ${pts} ${esc(S.of)} 5, ${esc(S.levels[pts - 1])}">
+    <li class="stat">
+      <span class="sr-only">${esc(label)}: ${pts} ${esc(S.of)} 5, ${esc(S.levels[pts - 1])}</span>
       <span class="stat__icon" aria-hidden="true">${logo ? `<img src="${LOGOS[logo]}" alt="">` : esc(label.slice(0, 2))}</span>
       <span class="stat__name" aria-hidden="true">${esc(label)}<small>${esc(S.levels[pts - 1])}</small></span>
       <span class="pips" aria-hidden="true">${[1, 2, 3, 4, 5].map((n) =>

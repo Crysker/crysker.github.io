@@ -1679,3 +1679,11 @@ body.view-all .p-card__play, body.view-all .p-card__video { display: none; }
 @media (max-width: 560px) { .legal__facts { grid-template-columns: 1fr; gap: 0; } .legal__facts dd { margin-bottom: 8px; } }
 .legal__updated { margin-top: 28px; }
 .footer__legal { color: inherit; }
+
+/* ============ Accessibility: zoomable images are buttons, small links get a 24px+ hit area ============ */
+.case__zoom { display: block; width: 100%; padding: 0; border: 0; border-radius: 16px; background: none; cursor: zoom-in; color: inherit; }
+.case__media > .case__zoom { height: 100%; border-radius: inherit; }
+.case__zoom:focus-visible { outline: 3px solid var(--turq); outline-offset: 3px; }
+.case__gallery .case__zoom:hover img { transform: translateY(-3px); border-color: var(--turq); }
+.case__gallery img:hover { transform: none; } /* the button handles the hover now */
+.socials a, .timeline__link, .footer a, .footer__trophies { display: inline-flex; align-items: center; min-height: 28px; }
