@@ -988,7 +988,7 @@ body.view-all #projects.section { padding-top: 110px; padding-bottom: 60px; } /*
   .nav__logo { display: inline-flex; align-items: center; min-height: 44px; padding: 0 8px; }
   .lang { min-height: 44px; align-items: center; }
   .theme-btn { width: 44px; height: 44px; }
-  .timeline__link, .facts__link { display: inline-block; padding: 12px 0; }
+  .timeline__link { display: inline-block; padding: 12px 0; } /* the awards tile (.facts__link) is a whole card, already big enough */
   .footer__trophies { min-height: 44px; padding: 10px 12px; }
   .footer a { display: inline-block; padding: 12px 6px; }
   .play__back, .play__close { width: 44px; height: 44px; }
